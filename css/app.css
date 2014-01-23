@@ -1,0 +1,136 @@
+body {
+	background: rgb(226, 226, 226);
+}
+textarea {
+	width: 100%;
+	height: 20em;
+	overflow: auto;
+}
+input {
+	width: 70%;
+}
+ol, ul {
+	margin: 0;
+	padding: 0;
+}
+ol li {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+}
+footer {
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	height: 100px;
+	overflow: auto;
+	box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+	background: rgb(230, 230, 240);
+}
+
+.large {
+	font-size: 2em;
+}
+.small {
+	font-size: .7em;
+}
+
+.truncated {
+	width: 100%;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.editable {
+	border: 1px solid transparent;
+	color: black;
+	background: white;
+	margin-bottom: 5px;
+	padding: 5px;
+}
+.editable:hover {
+	border: 1px dashed rgb(100, 100, 100);
+	color: rgb(50, 100, 50);
+}
+.editable:focus {
+	border: 1px solid rgb(50, 50, 50);
+	background: white;
+}
+.editable.title {
+	background: transparent;
+}
+
+.pure-button {
+	color: white;
+	background: rgb(147, 147, 194);
+	border-radius: 4px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.story {
+	margin: 0 30% 0 10%;
+	padding: 1em;
+	width: 60%;
+	height: 100%;
+	background: rgb(240, 240, 240);
+	box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
+}
+
+.slider {
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-o-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+}
+
+menu {
+	position: fixed;
+	top: 0;
+	left: -19%;;
+	width: 20%;
+	height: 100%;
+	overflow: auto;
+	margin: 0;
+	padding: 1em;
+	box-shadow: 5px 0 20px rgba(0, 0, 0, 0.2);
+	background: white;
+}
+menu:hover {
+	left: 0;
+}
+
+.sidebar {
+	position: fixed;
+	right: -18%;
+	width: 20%;
+	height: 100%;
+	overflow: auto;
+	padding: 1px;
+	box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+}
+.sidebar:hover, .sidebar.out {
+	right: 0;
+}
+.sidebar ol {
+	padding-left: 3em;
+}
+.sidebar:hover ol {
+	padding-left: 0em;
+}
+.sidebar i {
+	color: rgb(60, 50, 60);
+}
+
+.passage {
+	border-bottom: 1px solid rgb(140, 140, 140);
+	margin: 1em;
+}
+
+.choices input.editable {
+	display: inline;
+	margin-right: 1em;
+	width: 60%;
+}

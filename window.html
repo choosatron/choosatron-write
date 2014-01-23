@@ -1,9 +1,78 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<script src="lib/angular.min.js"></script>
-	</head>
-  	<body>
-    	<div>Choosatron your destiny.</div>
-  	</body>
+<html ng-app="storyApp">
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/models.js"></script>
+<script src="js/app.js"></script>
+
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="css/app.css">
+
+</head>
+<body ng-controller="StoryCtrl">
+	<menu class="menu slider">
+		<button class="pure-button" ng-click="new_story()">
+			<i class="fa fa-plus"></i> New Story
+		</button>
+		<h1 ng-show="stories">Your Saved Stories</h1>
+		<ol ng-repeat="s in stories">
+			<li>
+				<a class="truncated" href="#edit-{{s.id}}" ng-click="select_story(s)">
+					<i class="fa fa-book"></i>
+					{{s.title}}
+				</a>
+			</li>
+		</ol>
+	</menu>
+	<div ng-show="story" class="sidebar slider">
+		<i class="fa fa-list fa-3x"></i>
+		<ol ng-repeat="p in story.passages">
+			<li class="passage">
+				<h3 class="truncated" title="{{p.content}}">
+					<a ng-click="edit_passage(p)" href="#edit-{{p.id}}">
+						<i class="fa fa-edit"></i>
+						{{p.content}}
+					</a>
+				</h3>
+			</li>
+		</ol>
+	</div>
+	<div ng-show="story" class="story">
+		<form class="pure-form-stacked">
+			<input ng-model="story.title" placeholder="Untitled Story" class="editable large title" />
+
+			<div class="passage">
+				<div ng-repeat="entrance in story.collect_entrances(passage)">
+					<h3 class="truncated"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance)">
+						<i class="fa fa-edit"></i>
+						{{entrance.content}}
+					</a></h3>
+				</div>
+				<div class="current_passage">
+					<textarea ng-model="passage.content" class="editable passage_{{passage.id}}" placeholder="Enter passage content"></textarea>
+					<ol ng-repeat="choice in passage.choices" class="choices">
+						<li>
+							<button class="pure-button" ng-click="delete_choice(passage, choice)">
+								<i class="fa fa-trash-o"></i>
+							</button>
+							<input type="text" ng-model="choice.content" class="editable" placeholder="Enter choice content" />
+							<button ng-hide="choice.has_destination()" class="pure-button" ng-click="new_passage(choice)">
+								<i class="fa fa-long-arrow-right"></i> new passage
+							</button>
+							<button ng-show="choice.has_destination()" class="pure-button" ng-click="edit_passage(choice.path.destination)">
+								<i class="fa fa-share"></i> go to passage
+							</button>
+						</li>
+					</ol>
+					<button class="pure-button" ng-click="new_choice(passage)">
+						<i class="fa fa-plus"></i>
+						Add Choice
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
 </html>
