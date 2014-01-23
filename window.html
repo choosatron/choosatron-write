@@ -1,4 +1,4 @@
-<html ng-app="storyApp">
+<html ng-app="storyApp" ng-csp>
 <head>
 
 <script src="js/angular.min.js"></script>
@@ -22,7 +22,8 @@
 					<i class="fa fa-plus"></i> New Story
 				</a>
 			</li>
-			<li ng-show="stories"><a href="#open" class="toggle" data-target="#menu-stories"><i class="fa fa-file-o"></i> Open Story</a>
+			<li ng-show="stories"><a href="#open" class="toggle" data-target="#menu-stories"><i class="fa fa-file-o"></i> Open Story</a></li>
+			<li>
 				<ul id="menu-stories" ng-repeat="s in stories">
 					<li>
 						<a href="#edit-{{s.id}}" ng-click="select_story(s)">

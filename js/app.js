@@ -3,7 +3,7 @@ angular.module('storyApp', [])
 .value('storiesNamespace',     'choosatron/stories/')
 .value('preferencesNamespace', 'choosatron/preferences/')
 
-.service('$storageEngine', StorageEngine)
+.service('$storageEngine', ['$q', StorageEngine])
 
 .service('$stories', ['$storageEngine', 'storiesNamespace', Storage])
 .service('$autosave', ['$stories', AutoSave])
@@ -27,8 +27,26 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 		return story.id;
 	};
 
+	$scope.get_story  =  function(id) {
+		if (!id) return null;
+		for (var i=0, story; story = $scope.stories[i]; i++) {
+			if (story.id == id) return story;
+		}
+		return null;
+	};
+
 	$scope.load_stories  =  function() {
-		$scope.stories = $stories.values();
+		$stories.values().then(function(stories) {
+			console.info("found saved stories!", stories);
+			$scope.stories = [];
+			for (var i=0, data; data = stories[i]; i++) {
+				$scope.stories.push(new Story(data));
+			}
+			$preferences.get('last_story_id').then(function(id) {
+				var story = $scope.get_story(id);
+				if (story) $scope.select_story(story);
+			});
+		});
 	};
 
 	$scope.delete_story  =  function(story) {
@@ -41,17 +59,17 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	};
 
 	$scope.select_story  =  function(story) {
-		story           =  story instanceof Story ? story : new Story(story);
 		$scope.story    =  story;
-		$scope.passage  =  story.get_opening();
+		$scope.passage  =  story ? story.get_opening() : null;
+		$preferences.set('last_story_id', story ? story.id : null);
 	};
 
 	$scope.new_story  =  function() {
 		var story    = new Story();
-		story.id = $stories.length() + 1;
+		story.id = $scope.stories.length + 1;
+		$scope.story = story;
 		$scope.new_passage();
 		$scope.stories.push(story);
-		$scope.select_story(story);
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {
@@ -70,6 +88,10 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 		var choice  =  new Choice();
 		passage.add_choice(choice);
 	};
+
+	$scope.has_destination  =  function(choice) {
+		return choice.has_destination();
+	}
 
 	$scope.delete_choice  =  function(passage, choice) {
 		passage.remove_choice(choice);

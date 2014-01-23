@@ -114,6 +114,8 @@ function Choice(data) {
 	if (data) {
 		this.id = data.id;
 		this.content = data.content;
+		this.paths = [];
+		this.path = null;
 		for (var i in data.paths) {
 			this.paths.push(new Path(data.paths[i]));
 		}

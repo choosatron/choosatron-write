@@ -1,7 +1,37 @@
-function StorageEngine() {
-	if (chrome && chrome.storage) return chrome.storage;
-	if (window.localStorage) return window.localStorage;
-	return new MemoryStorage();
+function StorageEngine($q) {
+	if (chrome && chrome.storage) return new ChromeStorageEngine($q);
+	if (window.localStorage) return new LocalStorageEngine($q);
+	return null;
+}
+
+function LocalStorageEngine($q) {
+	this.area     =  window.localStorage;
+	this.getItem  =  function(key) {
+		var deferred = $q.defer();
+		var result   = this.area.getItem(key);
+		deferred.resolve(result);
+		return deferred.promise;
+	};
+
+	this.setItem  =  function(key, value) {
+		this.area.setItem(key, value);
+	};
+}
+
+function ChromeStorageEngine($q) {
+	this.area     =  chrome.storage.sync;
+	this.getItem  =  function(key) {
+		var deferred = $q.defer();
+		var cb = function(items) {
+			deferred.resolve(items);
+		};
+		this.area.get(key, cb);
+		return deferred.promise;
+	}
+
+	this.setItem  =  function(key, value) {
+		this.area.set(key, value);
+	}
 }
 
 function Storage(engine, namespace) {
@@ -14,6 +44,7 @@ function Storage(engine, namespace) {
 
 	this.decode = function(val) {
 		if (!val || val.length == 0) {
+			if (console) console.warn("No value found; returning empty object.", val);
 			return {};
 		}
 		try {
@@ -27,53 +58,68 @@ function Storage(engine, namespace) {
 
 	/** 
 	 * Operates much like the jQuery.data method.
-	 * With no arguments, returns all of the data stored in the specified namespace.
-	 * With 1 argument, returns the value stored in that key
+	 * With no arguments, returns a promise that will resolve with all of the items in the namespace
+	 * With 1 argument, returns a promise that will resolve with value stored in that key
+	 * With 2 arguments, sets the key on the list to the specified value;
 	**/
 	this.data  =  function() {
 		if (!this.engine) return null;
-		var data = this.decode(this.engine.getItem(this.namespace));
+		var promise = this.engine.getItem(this.namespace);
+		var decode  = this.decode;
 		switch (arguments.length) {
 			case 1: 
-				return data[arguments[0]];
+				var key = arguments[0];
+				return promise.then(function(items) {
+					var data = decode(items);
+					return data[key];
+				});
 			case 2: 
 				var key = arguments[0];
 				var val = arguments[1];
 				if (!key) {
-					if (console) console.error("Attempt to save with undefined key", key);
+					if (console) console.trace("Attempt to save with undefined key", arguments);
 					return;
 				}
-				if (val !== null) {
-					data[key] = val;
-				}
-				else {
-					delete data[key];
-				}
-				this.engine.setItem(this.namespace, this.encode(data));
-				return; 
+				var encode = this.encode;
+				var engine = this.engine;
+				var namespace = this.namespace;
+				return promise.then(function(items) {
+					var data = decode(items);
+					if (val !== null) {
+						data[key] = val;
+					}
+					else {
+						delete data[key];
+					}
+					engine.setItem(namespace, encode(data));
+				});
 			default: 
-				return data;
+				return promise.then(function(items) {
+					return decode(items);
+				});
 		}
 	};
 
 	this.keys  =  function() {
-		var data = this.data();
-		if (!data) return [];
-		var keys = [];
-		for (var key in data) {
-			keys.push(key);
-		}
-		return keys;
+		return this.data().then(function(data) {
+			if (!data) return [];
+			var keys = [];
+			for (var key in data) {
+				keys.push(key);
+			}
+			return keys;
+		});
 	};
 
 	this.values  =  function() {
-		var data = this.data();
-		if (!data) return [];
-		var values = [];
-		for (var key in data) {
-			values.push(data[key]);
-		}
-		return values;
+		return this.data().then(function(data) {
+			if (!data) return [];
+			var values = [];
+			for (var key in data) {
+				values.push(data[key]);
+			}
+			return values;
+		});
 	};
 
 	this.set  =  function(key, data) {
@@ -87,33 +133,6 @@ function Storage(engine, namespace) {
 	this.remove  =  function(key) {
 		this.data(key, null);
 	}
-
-	this.length  =  function() {
-		return this.keys().length;
-	}
-}
-
-function MemoryStorage() {
-	this.data    =  {};
-	this.length  =  0;
-
-	this.key  =  function(index) {
-		return null;
-	}
-
-	this.setItem  =  function(key, value) {
-		this.data[key] = value;
-		this.length    = this.data.length;
-	};
-
-	this.getItem  =  function(key) {
-		return this.data[key];
-	};
-
-	this.removeItem  =  function(key) {
-		delete this.data[key];
-		this.length = this.data.length;
-	};
 }
 
 function AutoSave($storage) {
@@ -127,7 +146,7 @@ function AutoSave($storage) {
 	this.watch = function($scope, modelName, getKey) {
 		$scope.$watch(modelName, function(nv, ov, scope) {
 			var key = getKey ? getKey(nv) : modelName;
-			if (key === null) return;
+			if (!key) return;
 			$storage.set(key, nv);
 		}, true);
 	}

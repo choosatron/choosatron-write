@@ -104,7 +104,12 @@ menu {
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 menu .menu-heading {
-	color: rgb(90, 90, 90);
+	color: rgb(90, 90, 120);
+	margin-left: 0;
+}
+menu strong.menu-heading {
+	font-size: 1.5em;
+	padding: 1em 0;
 }
 menu:hover {
 	background: rgb(30, 30, 60);
@@ -122,6 +127,8 @@ menu ul, menu li {
 	list-style: none;
 }
 menu li {
+	margin-left: 1em;
+	margin-bottom: 0.5em;
 	width: 100%;
 	display: block;
 	white-space: nowrap;
@@ -140,6 +147,7 @@ menu a:hover {
 	overflow: auto;
 	padding: 1px;
 	box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+	background: rgb(200, 200, 220);
 }
 .sidebar:hover, .sidebar.out {
 	right: 0;
