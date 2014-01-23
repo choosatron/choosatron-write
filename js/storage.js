@@ -119,11 +119,14 @@ function MemoryStorage() {
 function AutoSave($storage) {
 	this.limit  =  1000;
 
-	// Watches a particular model within the scope and saves to local storage
-	// whenever the model has changed and the time limit has elapsed 
+	/** 
+	 * Watches a particular model within the scope and saves to local storage
+	 * whenever the model has changed and the time limit has elapsed 
+	 * @todo: Enforce the time limit
+	**/
 	this.watch = function($scope, modelName, getKey) {
 		$scope.$watch(modelName, function(nv, ov, scope) {
-			var key = getKey(nv);
+			var key = getKey ? getKey(nv) : modelName;
 			if (key === null) return;
 			$storage.set(key, nv);
 		}, true);

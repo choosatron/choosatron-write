@@ -4,17 +4,18 @@ angular.module('storyApp', [])
 .value('preferencesNamespace', 'choosatron/preferences/')
 
 .service('$storageEngine', StorageEngine)
-.service('$stories', ['$storageEngine', 'storiesNamespace', Storage])
-.service('$preferences', ['$storageEngine', 'preferencesNamespace', Storage])
-.service('$autosave', ['$stories', AutoSave])
 
-.controller('StoryCtrl', ['$scope', '$autosave', '$stories', '$preferences', 
+.service('$stories', ['$storageEngine', 'storiesNamespace', Storage])
+.service('$autosave', ['$stories', AutoSave])
+.service('$preferences', ['$storageEngine', 'preferencesNamespace', Storage])
+
+.controller('StoryCtrl', ['$scope', '$autosave', '$stories', '$preferences',
 
 function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
-	$scope.story    =  null;
-	$scope.stories  =  [];
-	$scope.passage  =  null;
+	$scope.story          =  null;
+	$scope.stories        =  [];
+	$scope.passage        =  null;
 
 	this.init  =  function() {
 		$scope.load_stories();
@@ -27,7 +28,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	};
 
 	$scope.load_stories  =  function() {
-		$scope.stories  =  $stories.values();
+		$scope.stories = $stories.values();
 	};
 
 	$scope.delete_story  =  function(story) {
@@ -46,10 +47,11 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	};
 
 	$scope.new_story  =  function() {
-		$scope.story    = new Story();
-		$scope.story.id = $stories.length() + 1;
+		var story    = new Story();
+		story.id = $stories.length() + 1;
 		$scope.new_passage();
-		$scope.stories.push($scope.story);
+		$scope.stories.push(story);
+		$scope.select_story(story);
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {
