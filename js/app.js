@@ -37,12 +37,15 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
 	$scope.load_stories  =  function() {
 		$stories.values().then(function(stories) {
-			console.info("found saved stories!", stories);
 			$scope.stories = [];
+			var story = null;
 			for (var i=0, data; data = stories[i]; i++) {
-				$scope.stories.push(new Story(data));
+				story = new Story(data);
+				console.info(data, story);
+				$scope.stories.push(story);
 			}
 			$preferences.get('last_story_id').then(function(id) {
+				if (!id) return;
 				var story = $scope.get_story(id);
 				if (story) $scope.select_story(story);
 			});
@@ -66,7 +69,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
 	$scope.new_story  =  function() {
 		var story    = new Story();
-		story.id = $scope.stories.length + 1;
+		story.id = $scope.stories ? $scope.stories.length + 1 : 1;
 		$scope.story = story;
 		$scope.new_passage();
 		$scope.stories.push(story);

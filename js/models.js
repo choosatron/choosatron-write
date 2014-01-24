@@ -102,13 +102,13 @@ function Choice(data) {
 			return this.path.destination != null;
 		}
 		for (var i=0,p; p = this.paths[i]; i++) {
-			if (p.destination && p.destination.id == passage.id) return true;
+			if (p.destination == passage.id) return true;
 		}
 		return false;
 	};
 
 	this.set_destination  =  function(passage) {
-		this.path.destination  =  passage;
+		this.path.destination  =  passage.id;
 	}
 
 	if (data) {
@@ -128,7 +128,7 @@ function Choice(data) {
 function Path(data) {
 	this.destination  =  null;
 
-	if (data) {
+	if (data && data.destination) {
 		this.destination = data.destination;
 	}
 }

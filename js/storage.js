@@ -44,7 +44,6 @@ function Storage(engine, namespace) {
 
 	this.decode = function(val) {
 		if (!val || val.length == 0) {
-			if (console) console.warn("No value found; returning empty object.", val);
 			return {};
 		}
 		try {
@@ -145,6 +144,7 @@ function AutoSave($storage) {
 	**/
 	this.watch = function($scope, modelName, getKey) {
 		$scope.$watch(modelName, function(nv, ov, scope) {
+			if (!nv && !ov) return;
 			var key = getKey ? getKey(nv) : modelName;
 			if (!key) return;
 			$storage.set(key, nv);
