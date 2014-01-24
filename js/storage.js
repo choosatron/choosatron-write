@@ -142,12 +142,13 @@ function AutoSave($storage) {
 	 * whenever the model has changed and the time limit has elapsed 
 	 * @todo: Enforce the time limit
 	**/
-	this.watch = function($scope, modelName, getKey) {
+	this.watch = function($scope, modelName, getKey, getValue) {
 		$scope.$watch(modelName, function(nv, ov, scope) {
 			if (!nv && !ov) return;
 			var key = getKey ? getKey(nv) : modelName;
 			if (!key) return;
-			$storage.set(key, nv);
+			var val = getValue ? getValue(nv) : nv;
+			$storage.set(key, val);
 		}, true);
 	}
 }

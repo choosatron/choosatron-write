@@ -19,13 +19,8 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
 	this.init  =  function() {
 		$scope.load_stories();
-		$autosave.watch($scope, 'story', this.story_key);
+		$autosave.watch($scope, 'story', function(s) {return s.id}, function(s) {return s.object()});
 	}
-
-	this.story_key = function(story) {
-		if (!story) return null;
-		return story.id;
-	};
 
 	$scope.get_story  =  function(id) {
 		if (!id) return null;
@@ -41,7 +36,6 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 			var story = null;
 			for (var i=0, data; data = stories[i]; i++) {
 				story = new Story(data);
-				console.info(data, story);
 				$scope.stories.push(story);
 			}
 			$preferences.get('last_story_id').then(function(id) {
@@ -69,10 +63,10 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
 	$scope.new_story  =  function() {
 		var story    = new Story();
-		story.id = $scope.stories ? $scope.stories.length + 1 : 1;
 		$scope.story = story;
 		$scope.new_passage();
 		$scope.stories.push(story);
+		$preferences.set('last_story_id', story.id);
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {
@@ -83,8 +77,15 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 		}
 	};
 
-	$scope.edit_passage  =  function(passage) {
-		$scope.passage  =  passage;
+	$scope.edit_passage  =  function(id) {
+		var passage  =  null;
+		$scope.story.each_passage(function(p) {
+			if (p.id == id) {
+				passage = p;
+				return false;
+			}
+		});
+		if (passage) $scope.passage = passage;
 	};
 
 	$scope.new_choice  =  function(passage) {
@@ -101,7 +102,8 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	}
 
 	$scope.json_story  =  function() {
-		return JSON.stringify($scope.story);
+		if (!$scope.story) return '{}';
+		return $scope.story.serialize();
 	};
 
 	this.init();

@@ -1,69 +1,143 @@
-function Story(data) {
-	this.title     =  '';
-	this.version   =  1.0;
-	this.id        =  '';
-	this.passages  =  [];
+function RandomId(len) {
+	this.length = len ? len : 8;
+	this.chars  = [];
+};
 
-	this.get_opening  =  function() {
-		if (!this.passages) return null;
-		return this.passages[0];
-	};
+RandomId.prototype = {
+	pick_one: function() {
+		return String.fromCharCode(65 + Math.floor(Math.random() * 26));
+	},
 
-	this.add_passage  =  function(passage) {
-		passage.id  =  this.passages.length + 1;
-		this.passages.push(passage);
-		return passage.id;
-	};
+	generate: function() {
+		for (var i=0; i<this.length; i++) {
+			this.chars.push(this.pick_one());
+		}
+	},
 
-	this.each_passage  =  function(callback) {
-		for (var i=0,p; p = this.passages[i]; i++) {
-			var stop = callback.call(this, p);
+	toString: function() {
+		if (this.chars.length != this.length) {
+			this.generate();
+		}
+		return this.chars.join('');
+	}
+}
+
+function Model() {
+	var id = new RandomId(8);
+	this.id = id.toString();
+}
+
+Model.extend = function(cls, data) {
+	cls.prototype = new Model();
+	angular.forEach(data, function(func, name) {
+		cls.prototype[name] = func;
+	});
+};
+
+Model.prototype = {
+	load: function(data) {
+		for (var key in data) {
+			var loader = 'load_' + key;
+			if (typeof this[loader] === 'function') {
+				this[loader]( data[key] );
+			}
+			else {
+				this[key] = data[key];
+			}
+		}
+	},
+
+	each: function(field, callback) {
+		var list = this[field];
+		for (var i=0, item; item = list[i]; i++) {
+			var stop = callback(item);
 			if (stop === false) break;
 		}
 		return this;
-	};
+	},
 
-	this.collect_entrances  =  function(passage) {
-		var entrances = [];
-		this.each_passage( function( p ) {
-			if ( p.has_destination( passage ) ) {
-				entrances.push( p );
+	object: function() {
+		var o = {};
+		for (var key in this) {
+			var val = this[key];
+			if (val instanceof Model) {
+				o[key] = val.serialize();
 			}
-		} );
-		return entrances;
-	};
-
-	if (data) {
-		this.title = data.title;
-		this.version = data.version;
-		this.id = data.id;
-		for (var i in data.passages) {
-			this.passages.push(new Passage(data.passages[i]));
+			else {
+				o[key] = val;
+			}
 		}
+		return o;
+	},
+
+	serialize: function() {
+		var o = this.object();
+		return JSON.stringify(o);
 	}
 };
 
+function Story(data) {
+	this.title     =  '';
+	this.version   =  1.0;
+	this.passages  =  [];
+	if (data) this.load(data);
+}
+
+Story.methods = {
+	get_opening: function() {
+		if (!this.passages) return null;
+		return this.passages[0];
+	},
+
+	add_passage: function(passage) {
+		this.passages.push(passage);
+		return passage.id;
+	},
+
+	each_passage: function(callback) {
+		return this.each('passages', callback);
+	},
+
+	collect_entrances: function(passage) {
+		var entrances = [];
+		this.each_passage(function(p) {
+			if (p.has_destination(passage)) {
+				entrances.push(p);
+			}
+		});
+		return entrances;
+	},
+
+	load_passages: function(passages) {
+		for (var i=0; i<passages.length; i++) {
+			this.passages.push(new Passage(passages[i]));
+		}
+	}
+};
+Model.extend(Story, Story.methods);
+
 function Passage(data) {
-	this.id         =  '';
 	this.content    =  '';
 	this.choices    =  [];
+	if (data) this.load(data);
+}
 
-	this.add_choice  =  function(choice) {
-		choice.id  =  this.choices.length + 1;
+Passage.methods = {
+	add_choice: function(choice) {
 		this.choices.push(choice);
 		return choice.id;
-	};
+	},
 
-	this.remove_choice  =  function(choice) {
+	remove_choice: function(choice) {
 		for (var i=0,c; c=this.choices[i]; i++) {
 			if (c.id == choice.id) {
 				this.choices.splice(i, 1);
 				break;
 			}
 		}
-	}
+	},
 
-	this.has_destination  =  function(passage) {
+	has_destination: function(passage) {
 		var has  =  false;
 		this.each_choice( function( c ) {
 			if ( c.has_destination( passage ) ) {
@@ -72,63 +146,65 @@ function Passage(data) {
 			}
 		} );
 		return has;
-	};
+	},
 
-	this.each_choice  =  function(callback) {
-		for (var i=0,c; c=this.choices[i]; i++) {
-			var stop = callback.call(this, c);
-			if (stop === false) break;
-		}
-		return this;
-	};
+	each_choice: function(callback) {
+		return this.each('choices', callback);
+	},
 
-	if (data) {
-		this.id = data.id;
-		this.content = data.content;
-		for (var i in data.choices) {
-			this.choices.push(new Choice(data.choices[i]));
+	load_choices: function(choices) {
+		for (var i=0; i<choices.length; i++) {
+			this.choices.push(new Choice(choices[i]));
 		}
 	}
 };
+Model.extend(Passage, Passage.methods);
 
 function Choice(data) {
-	this.id       =  '';
 	this.content  =  '';
-	this.path     =  new Path();
-	this.paths    =  [this.path];
+	this.paths    =  [new Path()];
+	if (data) this.load(data);
+}
 
-	this.has_destination  =  function(passage) {
-		if (!passage) {
-			return this.path.destination != null;
+Choice.methods = {
+	has_destination: function(passage) {
+		var has = false;
+		angular.forEach(this.paths, function(path) {
+			if (has) return;
+			if (path.destination) {
+				if (passage && passage.id == path.destination) {
+					has = true;
+				}
+				else if (!passage) {
+					has = true;
+				}
+			}
+		});
+		return has;
+	},
+
+	set_destination: function(passage) {
+		if (this.paths.length > 0) {
+			this.paths[0].destination = passage.id;
 		}
-		for (var i=0,p; p = this.paths[i]; i++) {
-			if (p.destination == passage.id) return true;
+		else {
+			var path = new Path();
+			path.destination = passage.id;
+			this.paths.push(path);
 		}
-		return false;
-	};
+	},
 
-	this.set_destination  =  function(passage) {
-		this.path.destination  =  passage.id;
-	}
-
-	if (data) {
-		this.id = data.id;
-		this.content = data.content;
+	load_paths: function(paths) {
 		this.paths = [];
-		this.path = null;
-		for (var i in data.paths) {
-			this.paths.push(new Path(data.paths[i]));
-		}
-		if (this.paths.length) {
-			this.path = this.paths[0];
+		for (var i=0; i<paths.length; i++) {
+			this.paths.push(new Path(paths[i]));
 		}
 	}
 }
+Model.extend(Choice, Choice.methods);
 
 function Path(data) {
-	this.destination  =  null;
-
-	if (data && data.destination) {
-		this.destination = data.destination;
-	}
+	this.destination = null;
+	if (data) this.load(data);
 }
+Path.prototype = new Model();

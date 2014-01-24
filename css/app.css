@@ -115,7 +115,7 @@ menu:hover {
 	background: rgb(30, 30, 60);
 }
 menu li a, menu li {
-	color: transparent;
+	color: rgba(0, 0, 0, 0.2);
 }
 menu:hover li a, menu:hover li {
 	color: white;
@@ -134,6 +134,9 @@ menu li {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+menu li i {
+	width: 1.5em;
 }
 menu a:hover {
 	color: white;

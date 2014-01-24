@@ -14,14 +14,10 @@
 <body ng-controller="StoryCtrl">
 	<menu class="slider">
 		<div class="menu">
-		<strong class="menu-heading">Choosatron</strong>
 		<ul>
 			<li class="menu-heading"><i class="fa fa-list"></i> Stories</li>
-			<li>
-				<a ng-click="new_story()" href="#new">
-					<i class="fa fa-plus"></i> New Story
-				</a>
-			</li>
+			<li><a ng-click="new_story()" href="#new"><i class="fa fa-plus"></i> New Story</a></li>
+			<li><a ng-click="import_story()" href="#import"><i class="fa fa-upload"></i> Import Story</a></li>
 			<li ng-show="stories"><a href="#open" class="toggle" data-target="#menu-stories"><i class="fa fa-file-o"></i> Open Story</a></li>
 			<li>
 				<ul id="menu-stories" ng-repeat="s in stories">
@@ -41,7 +37,7 @@
 		<ol ng-repeat="p in story.passages">
 			<li class="passage">
 				<h3 class="truncated" title="{{p.content}}">
-					<a ng-click="edit_passage(p)" href="#edit-{{p.id}}">
+					<a ng-click="edit_passage(p.id)" href="#edit-{{p.id}}">
 						<i class="fa fa-edit"></i>
 						{{p.content}}
 					</a>
@@ -56,7 +52,7 @@
 
 			<div>
 				<div ng-repeat="entrance in story.collect_entrances(passage)">
-					<h3 class="truncated"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance)">
+					<h3 class="truncated"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)">
 						<i class="fa fa-edit"></i>
 						{{entrance.content}}
 					</a></h3>
@@ -67,10 +63,12 @@
 						<li>
 							<button class="pure-button pure-button-warn" ng-click="delete_choice(passage, choice)"><i class="fa fa-trash-o"></i></button>
 							<input type="text" ng-model="choice.content" class="editable" placeholder="Enter choice content" />
-							<button ng-hide="choice.has_destination()" class="pure-button" ng-click="new_passage(choice)"><i class="fa fa-long-arrow-right"></i> new passage</button>
-							<button ng-show="choice.has_destination()" class="pure-button" ng-click="edit_passage(choice.path.destination)">
-								<i class="fa fa-share"></i> go to passage
-							</button>
+							<span ng-repeat="path in choice.paths">
+								<button ng-hide="choice.has_destination()" class="pure-button" ng-click="new_passage(choice)"><i class="fa fa-long-arrow-right"></i> new passage</button>
+								<button ng-show="choice.has_destination()" class="pure-button" ng-click="edit_passage(path.destination)">
+									<i class="fa fa-share"></i> go to passage
+								</button>
+							</span>
 						</li>
 					</ol>
 					<button class="pure-button" ng-click="new_choice(passage)">
