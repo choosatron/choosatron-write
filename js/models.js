@@ -1,16 +1,17 @@
-Array.prototype.addRange = function(start, end) {
-	for (var i=start; i<=end; i++) {
-		this.push(i);
-	}
-};
 
 function RandomId(len) {
 	this.length = len ? len : 10;
 	this.chars  = [];
 };
 
+RandomId.addRange = function(a, start, end) {
+	for (var i=start; i<=end; i++) {
+		a.push(i);
+	}
+};
+
 RandomId.candidates = [];
-RandomId.candidates.addRange(97, 122);
+RandomId.addRange(RandomId.candidates, 97, 122);
 
 RandomId.prototype = {
 	pick_one: function() {
@@ -33,13 +34,15 @@ RandomId.prototype = {
 	}
 }
 
-function Model() {
+function Model(data) {
 	var id = new RandomId();
 	this.id = id.toString();
+	if (data) this.load(data);
 }
 
 Model.extend = function(cls, data) {
 	cls.prototype = new Model();
+	cls.constructor = cls;
 	angular.forEach(data, function(func, name) {
 		cls.prototype[name] = func;
 	});
@@ -92,7 +95,7 @@ function Story(data) {
 	this.title     =  '';
 	this.version   =  1.0;
 	this.passages  =  [];
-	if (data) this.load(data);
+	Model.call(this, data);
 }
 
 Story.methods = {
@@ -131,7 +134,7 @@ Model.extend(Story, Story.methods);
 function Passage(data) {
 	this.content    =  '';
 	this.choices    =  [];
-	if (data) this.load(data);
+	Model.call(this, data);
 }
 
 Passage.methods = {
@@ -175,7 +178,7 @@ Model.extend(Passage, Passage.methods);
 function Choice(data) {
 	this.content  =  '';
 	this.paths    =  [new Path()];
-	if (data) this.load(data);
+	Model.call(this, data);
 }
 
 Choice.methods = {
@@ -197,11 +200,11 @@ Choice.methods = {
 
 	set_destination: function(passage) {
 		if (this.paths.length > 0) {
-			this.paths[0].destination = passage.id;
+			this.paths[0].destination = passage ? passage.id : null;
 		}
 		else {
 			var path = new Path();
-			path.destination = passage.id;
+			path.destination = passgage ? passage.id : null;
 			this.paths.push(path);
 		}
 	},
@@ -217,6 +220,6 @@ Model.extend(Choice, Choice.methods);
 
 function Path(data) {
 	this.destination = null;
-	if (data) this.load(data);
+	Model.call(this, data);
 }
 Path.prototype = new Model();

@@ -1,85 +1,96 @@
 <html ng-app="storyApp" ng-csp>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<script src="js/jquery.min.js"></script>
 <script src="js/angular.min.js"></script>
+<script src="js/ui-bootstrap.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/models.js"></script>
 <script src="js/app.js"></script>
 
 <link rel="stylesheet" href="css/angular-csp.css">
-<link rel="stylesheet" href="css/pure-min.css">
-<link rel="stylesheet" href="css/font-awesome.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="css/app.css">
 
 </head>
 <body ng-controller="StoryCtrl">
-	<menu class="slider">
-		<div class="menu">
-		<ul>
-			<li class="menu-heading"><i class="fa fa-list"></i> Stories</li>
-			<li><a ng-click="new_story()" href="#new"><i class="fa fa-plus"></i> New Story</a></li>
-			<li><a ng-click="import_story()" href="#import"><i class="fa fa-upload"></i> Import Story</a></li>
-			<li ng-show="stories.length > 0"><a href="#open" class="toggle" data-target="#menu-stories"><i class="fa fa-file-o"></i> Open Story</a></li>
-			<li>
-				<ul id="menu-stories" ng-repeat="s in stories">
-					<li>
+	<nav class="slider">
+		<ul class="nav nav-pills nav-stacked">
+			<li class="nav-heading"><span class="glyphicon glyphicon-list"></span> Stories</li>
+			<li><a ng-click="new_story()" href="#new"><span class="glyphicon glyphicon-plus-sign"></span> New Story</a></li>
+			<li><a ng-click="import_story()" href="#import"><span class="glyphicon glyphicon-upload"></span> Import Story</a></li>
+			<li class="dropdown" ng-show="stories">
+				<a href="#open" id="open-stories" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-floppy-open"></span> Open Story</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="open-stories">
+					<li ng-repeat="s in stories">
 						<a href="#edit-{{s.id}}" ng-click="select_story(s)">
-							<i class="fa fa-book"></i>
+							<span class="glyphicon glyphicon-book"></span>
 							{{s.title}}
 						</a>
 					</li>
 				</ul>
 			</li>
 		</ul>
-		</div>
-	</menu>
-	<div ng-show="story" class="sidebar slider">
-		<i class="fa fa-list fa-3x"></i>
-		<ol ng-repeat="p in story.passages">
-			<li class="passage">
-				<h3 class="truncated" title="{{p.content}}">
-					<a ng-click="edit_passage(p.id)" href="#edit-{{p.id}}">
-						<i class="fa fa-edit"></i>
-						{{p.content}}
+	</nav>
+	<div ng-show="story" class="sidebar slider ng-class:{open: picking}">
+		<ul class="list-group">
+			<li ng-repeat="passage in story.passages" class="list-group-item passage">
+				<span class="truncated" title="{{passage.content}}">
+					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}">
+						<span class="glyphicon glyphicon-hand-right"></span>
+						{{passage.content}}
 					</a>
-				</h3>
+				</span>
 			</li>
-		</ol>
+		</ul>
 	</div>
 	<div ng-show="story" class="story">
-		<form class="pure-form-stacked">
-			<button class="pure-button pure-button-warn" ng-click="delete_story(story)"><i class="fa fa-trash-o fa-2x"></i></button>
+		<form>
+			<button class="btn btn-warning btn-lg" ng-click="delete_story(story)"><span class="glyphicon glyphicon-trash"></span></button>
 			<input ng-model="story.title" placeholder="Untitled Story" class="editable large title" />
 
 			<div>
-				<div ng-repeat="entrance in story.collect_entrances(passage)">
-					<h3 class="truncated"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)">
-						<i class="fa fa-edit"></i>
+				<div class="">
+					<h3 ng-repeat="entrance in story.collect_entrances(passage)" class="truncated"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)">
+						<span class="glyphicon glyphicon-edit"></span>
 						{{entrance.content}}
 					</a></h3>
 				</div>
 				<div class="current_passage">
 					<textarea ng-model="passage.content" class="editable passage_{{passage.id}}" placeholder="Enter passage content"></textarea>
-					<ol ng-repeat="choice in passage.choices" class="choices">
-						<li>
-							<button class="pure-button pure-button-warn" ng-click="delete_choice(passage, choice)"><i class="fa fa-trash-o"></i></button>
-							<input type="text" ng-model="choice.content" class="editable" placeholder="Enter choice content" />
-							<span ng-repeat="path in choice.paths">
-								<button ng-hide="choice.has_destination()" class="pure-button" ng-click="new_passage(choice)"><i class="fa fa-long-arrow-right"></i> new passage</button>
-								<button ng-show="choice.has_destination()" class="pure-button" ng-click="edit_passage(path.destination)">
-									<i class="fa fa-share"></i> go to passage
-								</button>
-							</span>
+					<ul class="choices list-group">
+						<li ng-repeat="choice in passage.choices" class="list-group-item">
+							<div class="input-group">
+								<div class="input-group-btn">
+									<button class="btn btn-warning" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-trash"></span></button>
+								</div>
+								<input type="text" ng-model="choice.content" class="form-control editable" placeholder="Enter choice content" />
+								<div class="input-group-btn">
+									<span ng-repeat="path in choice.paths">
+										<span class="dropdown">
+											<button class="btn dropdown-toggle" data-toggle="dropdown">Destination <span class="caret"></span></button>
+											<ul class="dropdown-menu" id="option-list-{{path.id}}">
+												<li ng-hide="choice.has_destination()"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-arrow-right"></span> new passage</a></li>
+												<li><a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-hand-right"></span> select a passage</a></li>
+												<li ng-show="choice.has_destination()"><a href="#go" ng-click="edit_passage(path.destination)"><span class="glyphicon glyphicon-share"></span> go to passage</a></li>
+											</ul>
+										</span> <!-- /dropdown -->
+									</span>
+								</div> <!-- /input-group-btn -->
+							</div> <!-- / input-group -->
 						</li>
-					</ol>
-					<button class="pure-button" ng-click="new_choice(passage)">
-						<i class="fa fa-plus"></i>
+					</ul>
+					<button class="btn" ng-click="new_choice(passage)">
+						<span class="glyphicon glyphicon-plus"></span>
 						Add Choice
 					</button>
 				</div>
 			</div>
 		</form>
-		<code>{{json_story(story)}}</code>
+		<pre>{{json_story(story)}}</pre>
 	</div>
 </body>
 </html>

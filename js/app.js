@@ -16,6 +16,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	$scope.stories        =  [];
 	$scope.story          =  null;
 	$scope.passage        =  null;
+	$scope.picking        =  false;
 
 	this.init  =  function() {
 		$scope.load_stories();
@@ -70,11 +71,16 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {
-		$scope.passage  =  new Passage();
+		$scope.passage = new Passage();
 		$scope.story.add_passage($scope.passage);
 		if (entrance_choice) {
 			entrance_choice.set_destination($scope.passage);
 		}
+		$scope.picking = null;
+	};
+
+	$scope.pick_passage  =  function(choice) {
+		$scope.picking = choice;
 	};
 
 	$scope.edit_passage  =  function(id) {
@@ -85,7 +91,13 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 				return false;
 			}
 		});
-		if (passage) $scope.passage = passage;
+		if (passage) {
+			$scope.passage = passage;
+		}
+		if ($scope.picking) {
+			$scope.picking.set_destination(passage);
+			$scope.picking = null;
+		}
 	};
 
 	$scope.new_choice  =  function(passage) {

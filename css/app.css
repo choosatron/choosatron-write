@@ -9,13 +9,6 @@ textarea {
 input {
 	width: 70%;
 }
-ol, ul {
-	margin: 0;
-	padding: 0;
-}
-ol li {
-	list-style: none;
-}
 a {
 	color: rgb(50, 50, 50);
 	text-decoration: none;
@@ -64,13 +57,11 @@ footer {
 	background: transparent;
 }
 
-.pure-button {
+.btn {
 	color: white;
 	background: rgb(147, 147, 194);
-	border-radius: 4px;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
-.pure-button-warn {
+.btn-warning {
 	background: rgb(147, 62, 94);
 }
 
@@ -90,7 +81,7 @@ footer {
 	transition-duration: 0.3s;
 }
 
-menu {
+nav {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -103,43 +94,28 @@ menu {
 	background: rgba(30, 30, 60, 0.1);
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
-menu .menu-heading {
+nav .nav-heading {
 	color: rgb(90, 90, 120);
 	margin-left: 0;
 }
-menu strong.menu-heading {
+nav strong.nav-heading {
 	font-size: 1.5em;
 	padding: 1em 0;
 }
-menu:hover {
+nav:hover {
 	background: rgb(30, 30, 60);
 }
-menu li a, menu li {
+nav li a, nav li {
 	color: rgba(0, 0, 0, 0.2);
 }
-menu:hover li a, menu:hover li {
-	color: white;
+nav:hover li a, nav:hover li {
+	color: rgb(120, 120, 120);
 }
 
-menu ul, menu li {
+nav ul, nav li {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-}
-menu li {
-	margin-left: 1em;
-	margin-bottom: 0.5em;
-	width: 100%;
-	display: block;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-menu li i {
-	width: 1.5em;
-}
-menu a:hover {
-	color: white;
 }
 
 .sidebar {
@@ -152,7 +128,7 @@ menu a:hover {
 	box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
 	background: rgb(200, 200, 220);
 }
-.sidebar:hover, .sidebar.out {
+.sidebar:hover, .sidebar.open {
 	right: 0;
 }
 .sidebar ol {
@@ -165,13 +141,3 @@ menu a:hover {
 	color: rgb(60, 50, 60);
 }
 
-.passage {
-	border-bottom: 1px solid rgb(140, 140, 140);
-	margin: 1em;
-}
-
-.choices input.editable {
-	display: inline;
-	margin-right: 1em;
-	width: 60%;
-}
