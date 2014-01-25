@@ -1,11 +1,22 @@
+Array.prototype.addRange = function(start, end) {
+	for (var i=start; i<=end; i++) {
+		this.push(i);
+	}
+};
+
 function RandomId(len) {
-	this.length = len ? len : 8;
+	this.length = len ? len : 10;
 	this.chars  = [];
 };
 
+RandomId.candidates = [];
+RandomId.candidates.addRange(97, 122);
+
 RandomId.prototype = {
 	pick_one: function() {
-		return String.fromCharCode(65 + Math.floor(Math.random() * 26));
+		var i = Math.floor(Math.random() * RandomId.candidates.length);
+		var c = RandomId.candidates[i];
+		return String.fromCharCode(c);
 	},
 
 	generate: function() {
@@ -23,7 +34,7 @@ RandomId.prototype = {
 }
 
 function Model() {
-	var id = new RandomId(8);
+	var id = new RandomId();
 	this.id = id.toString();
 }
 
@@ -72,7 +83,8 @@ Model.prototype = {
 
 	serialize: function() {
 		var o = this.object();
-		return JSON.stringify(o);
+		var s = angular.toJson(o);
+		return s;
 	}
 };
 

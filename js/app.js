@@ -13,8 +13,8 @@ angular.module('storyApp', [])
 
 function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
-	$scope.story          =  null;
 	$scope.stories        =  [];
+	$scope.story          =  null;
 	$scope.passage        =  null;
 
 	this.init  =  function() {

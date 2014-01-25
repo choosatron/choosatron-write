@@ -39,7 +39,7 @@ function Storage(engine, namespace) {
 	this.namespace = namespace;
 
 	this.encode = function(val) {
-		return JSON.stringify(val);
+		return angular.toJson(val);
 	};
 
 	this.decode = function(val) {
@@ -47,7 +47,7 @@ function Storage(engine, namespace) {
 			return {};
 		}
 		try {
-			return JSON.parse(val);
+			return angular.fromJson(val);
 		}
 		catch (e) {
 			if (console) console.error("Error decoding", val);

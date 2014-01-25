@@ -6,6 +6,7 @@
 <script src="js/models.js"></script>
 <script src="js/app.js"></script>
 
+<link rel="stylesheet" href="css/angular-csp.css">
 <link rel="stylesheet" href="css/pure-min.css">
 <link rel="stylesheet" href="css/font-awesome.css">
 <link rel="stylesheet" href="css/app.css">
@@ -18,7 +19,7 @@
 			<li class="menu-heading"><i class="fa fa-list"></i> Stories</li>
 			<li><a ng-click="new_story()" href="#new"><i class="fa fa-plus"></i> New Story</a></li>
 			<li><a ng-click="import_story()" href="#import"><i class="fa fa-upload"></i> Import Story</a></li>
-			<li ng-show="stories"><a href="#open" class="toggle" data-target="#menu-stories"><i class="fa fa-file-o"></i> Open Story</a></li>
+			<li ng-show="stories.length > 0"><a href="#open" class="toggle" data-target="#menu-stories"><i class="fa fa-file-o"></i> Open Story</a></li>
 			<li>
 				<ul id="menu-stories" ng-repeat="s in stories">
 					<li>
