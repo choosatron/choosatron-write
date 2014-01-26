@@ -59,15 +59,13 @@ footer {
 	font-size: 2em;
 }
 
-/*
-.btn {
+.btn-primary {
 	color: white;
 	background: rgb(147, 147, 194);
 }
-.btn-warning {
+.btn-danger {
 	background: rgb(147, 62, 94);
 }
-*/
 
 .story {
 	margin: 0 20% 0 20%;

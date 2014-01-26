@@ -53,11 +53,12 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.story    =  null;
 		$scope.passage  =  null;
 		$stories.remove(story.id);
+
+		var stories = [];
 		angular.forEach($scope.stories, function(s, key) {
-			if (s.id == story.id) {
-				delete $scope.stories[key];
-			}
+			if (s.id != story.id) stories.push(s);
 		});
+		$scope.stories = stories;
 	};
 
 	$scope.select_story  =  function(story) {
