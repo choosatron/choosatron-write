@@ -23,14 +23,16 @@ function ChromeStorageEngine($q) {
 	this.getItem  =  function(key) {
 		var deferred = $q.defer();
 		var cb = function(items) {
-			deferred.resolve(items);
+			deferred.resolve(items[key]);
 		};
 		this.area.get(key, cb);
 		return deferred.promise;
 	}
 
 	this.setItem  =  function(key, value) {
-		this.area.set(key, value);
+		var obj = {};
+		obj[key] = value;
+		this.area.set(obj);
 	}
 }
 
