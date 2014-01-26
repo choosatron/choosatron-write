@@ -109,6 +109,17 @@ Story.methods = {
 		return passage.id;
 	},
 
+	get_passage: function(id) {
+		var passage = null;
+		this.each_passage(function(p) {
+			if (p.id == id) {
+				passage = p;
+				return false;
+			}
+		});
+		return passage;
+	},
+
 	each_passage: function(callback) {
 		return this.each('passages', callback);
 	},

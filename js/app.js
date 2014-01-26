@@ -83,19 +83,15 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 		$scope.picking = choice;
 	};
 
+	$scope.get_passage  =  function(id) {
+		if (!$scope.story) return null;
+		return $scope.story.get_passage(id);
+	};
+
 	$scope.edit_passage  =  function(id) {
-		var passage  =  null;
-		$scope.story.each_passage(function(p) {
-			if (p.id == id) {
-				passage = p;
-				return false;
-			}
-		});
-		if (passage) {
-			$scope.passage = passage;
-		}
+		$scope.passage = $scope.story.get_passage(id);
 		if ($scope.picking) {
-			$scope.picking.set_destination(passage);
+			$scope.picking.set_destination($scope.passage);
 			$scope.picking = null;
 		}
 	};
@@ -112,6 +108,10 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	$scope.delete_choice  =  function(passage, choice) {
 		passage.remove_choice(choice);
 	}
+
+	$scope.clear_passage_search  =  function() {
+		$scope.passage_search = '';
+	};
 
 	$scope.json_story  =  function() {
 		if (!$scope.story) return '{}';

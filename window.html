@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html ng-app="storyApp" ng-csp>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,11 +37,21 @@
 		</ul>
 	</nav>
 	<div ng-show="story" class="sidebar slider ng-class:{open: picking}">
+		<div class="input-group">
+			<span ng-show="picking" class="input-group-btn">
+				<button class="btn btn-cancel" ng-click="pick_passage(null)"><span class="glyphicon glyphicon-remove"></span></button>
+			</span>
+			<input ng-model="passage_search" class="form-control" placeholder="Filter Passages" />
+			<div class="input-group-btn">
+				<button class="btn" ng-click="clear_passage_search()"><span class="glyphicon glyphicon-ban-circle"></span></button>
+			</div>
+		</div>
 		<ul class="list-group">
-			<li ng-repeat="passage in story.passages" class="list-group-item passage">
+			<li ng-repeat="passage in story.passages | filter:passage_search" class="list-group-item passage">
 				<span class="truncated" title="{{passage.content}}">
 					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}">
-						<span class="glyphicon glyphicon-hand-right"></span>
+						<span ng-show="picking" class="glyphicon glyphicon-hand-right"></span>
+						<span ng-hide="picking" class="glyphicon glyphicon-edit"></span>
 						{{passage.content}}
 					</a>
 				</span>
@@ -53,34 +64,42 @@
 			<input ng-model="story.title" placeholder="Untitled Story" class="editable large title" />
 
 			<div>
-				<div class="">
-					<h3 ng-repeat="entrance in story.collect_entrances(passage)" class="truncated"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)">
-						<span class="glyphicon glyphicon-edit"></span>
+				<h4>Entrances</h4>
+				<ul class="list-group">
+					<li ng-repeat="entrance in story.collect_entrances(passage)" class="truncated list-group-item"><a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)">
+						<span class="glyphicon glyphicon-arrow-left"></span>
 						{{entrance.content}}
-					</a></h3>
-				</div>
+					</a></li>
+				</ul>
 				<div class="current_passage">
+					<h4>Passage</h4>
 					<textarea ng-model="passage.content" class="editable passage_{{passage.id}}" placeholder="Enter passage content"></textarea>
+
+					<h4>Exits</h4>
 					<ul class="choices list-group">
 						<li ng-repeat="choice in passage.choices" class="list-group-item">
 							<div class="input-group">
 								<div class="input-group-btn">
 									<button class="btn btn-warning" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-trash"></span></button>
-								</div>
-								<input type="text" ng-model="choice.content" class="form-control editable" placeholder="Enter choice content" />
-								<div class="input-group-btn">
-									<span ng-repeat="path in choice.paths">
-										<span class="dropdown">
-											<button class="btn dropdown-toggle" data-toggle="dropdown">Destination <span class="caret"></span></button>
-											<ul class="dropdown-menu" id="option-list-{{path.id}}">
-												<li ng-hide="choice.has_destination()"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-arrow-right"></span> new passage</a></li>
-												<li><a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-hand-right"></span> select a passage</a></li>
-												<li ng-show="choice.has_destination()"><a href="#go" ng-click="edit_passage(path.destination)"><span class="glyphicon glyphicon-share"></span> go to passage</a></li>
-											</ul>
-										</span> <!-- /dropdown -->
-									</span>
 								</div> <!-- /input-group-btn -->
-							</div> <!-- / input-group -->
+								<input type="text" ng-model="choice.content" class="form-control editable" placeholder="Enter choice content" />
+								<div class="input-group-btn" ng-repeat="path in choice.paths">
+									<span class="dropdown">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Destination <span class="caret"></span></button>
+										<ul class="dropdown-menu" id="option-list-{{path.id}}">
+											<li ng-hide="choice.has_destination()"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-arrow-right"></span> link to new passage</a></li>
+											<li><a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-hand-right"></span> select a different passage</a></li>
+											<li ng-show="choice.has_destination()"><a href="#go" ng-click="edit_passage(path.destination)"><span class="glyphicon glyphicon-share"></span> go to current passage</a></li>
+										</ul>
+									</span> <!-- /dropdown -->
+								</div> <!-- /input-group-btn -->
+							</div> <!-- /input-group -->
+							<div ng-repeat="path in choice.paths">
+								<a ng-show="path.destination" class="truncated text-right" ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">
+									<span class="pull-right glyphicon glyphicon-arrow-right"></span>
+									{{get_passage(path.destination).content}} 
+								</a>
+							</div>
 						</li>
 					</ul>
 					<button class="btn" ng-click="new_choice(passage)">
