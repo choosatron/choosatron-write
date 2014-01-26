@@ -70,6 +70,23 @@ Model.prototype = {
 		return this;
 	},
 
+	refresh_ids: function() {
+		var id = new RandomId();
+		this.id = id.toString();
+		angular.forEach(this, function(item, key) {
+			if (item instanceof Model) {
+				item.refresh_ids();
+			}
+			else if (item instanceof Array) {
+				angular.forEach(item, function(o) {
+					if (o instanceof Model) {
+						o.refresh_ids();
+					}
+				});
+			}
+		});
+	},
+
 	object: function() {
 		var o = {};
 		for (var key in this) {

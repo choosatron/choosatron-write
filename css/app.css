@@ -55,8 +55,11 @@ footer {
 }
 .editable.title {
 	background: transparent;
+	font-weight: bold;
+	font-size: 2em;
 }
 
+/*
 .btn {
 	color: white;
 	background: rgb(147, 147, 194);
@@ -64,6 +67,7 @@ footer {
 .btn-warning {
 	background: rgb(147, 62, 94);
 }
+*/
 
 .story {
 	margin: 0 20% 0 20%;

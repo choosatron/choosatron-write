@@ -3,16 +3,18 @@ angular.module('storyApp', [])
 .value('storiesNamespace',     'choosatron/stories/')
 .value('preferencesNamespace', 'choosatron/preferences/')
 
+.service('$file', ['$http', File])
 .service('$storageEngine', ['$q', StorageEngine])
 
 .service('$stories', ['$storageEngine', 'storiesNamespace', Storage])
 .service('$autosave', ['$stories', AutoSave])
 .service('$preferences', ['$storageEngine', 'preferencesNamespace', Storage])
 
-.controller('StoryCtrl', ['$scope', '$autosave', '$stories', '$preferences',
+.controller('StoryCtrl', ['$scope', '$autosave', '$stories', '$preferences', '$file',
 
-function StoryCtrl($scope, $autosave, $stories, $preferences) {
+function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
+	$scope.alerts         =  [];
 	$scope.stories        =  [];
 	$scope.story          =  null;
 	$scope.passage        =  null;
@@ -20,7 +22,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 
 	this.init  =  function() {
 		$scope.load_stories();
-		$autosave.watch($scope, 'story', function(s) {return s.id}, function(s) {return s.object()});
+		$autosave.watch($scope, 'story', function(s) {return s ? s.id : null}, function(s) {return s ? s.object() : null});
 	}
 
 	$scope.get_story  =  function(id) {
@@ -48,12 +50,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 	};
 
 	$scope.delete_story  =  function(story) {
+		$scope.story    =  null;
+		$scope.passage  =  null;
 		$stories.remove(story.id);
-		$scope.load_stories();
-		if ($scope.story && $scope.story.id == story.id) {
-			$scope.story    =  null;
-			$scope.passage  =  null;
-		}
+		angular.forEach($scope.stories, function(s, key) {
+			if (s.id == story.id) {
+				delete $scope.stories[key];
+			}
+		});
 	};
 
 	$scope.select_story  =  function(story) {
@@ -117,6 +121,27 @@ function StoryCtrl($scope, $autosave, $stories, $preferences) {
 		if (!$scope.story) return '{}';
 		return $scope.story.serialize();
 	};
+
+	$scope.export_story  =  function(story) {
+		$file.export(story.title + '.json', story.serialize(), 'json');
+	}
+
+	$scope.upload_story  =  function() {
+		if ($scope.upload.text) {
+			var data = angular.fromJson($scope.upload.text);
+			var story = new Story(data);
+			story.refresh_ids();
+			$scope.select_story(story);
+		}
+		else if ($scope.upload.text) {
+			$file.read($scope.upload.text, function(text) {
+				var data = angular.fromJson(text);
+				var story = new Story(data);
+				story.refresh_ids();
+				$scope.select_story(story);
+			});
+		}
+	}
 
 	this.init();
 }

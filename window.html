@@ -7,6 +7,7 @@
 <script src="js/angular.min.js"></script>
 <script src="js/ui-bootstrap.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/file.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/models.js"></script>
 <script src="js/app.js"></script>
@@ -22,7 +23,7 @@
 		<ul class="nav nav-pills nav-stacked">
 			<li class="nav-heading"><span class="glyphicon glyphicon-list"></span> Stories</li>
 			<li><a ng-click="new_story()" href="#new"><span class="glyphicon glyphicon-plus-sign"></span> New Story</a></li>
-			<li><a ng-click="import_story()" href="#import"><span class="glyphicon glyphicon-upload"></span> Import Story</a></li>
+			<li><a ng-click="import_story()" href="#import" data-toggle="modal" data-target="#upload-modal"><span class="glyphicon glyphicon-upload"></span> Import Story</a></li>
 			<li class="dropdown" ng-show="stories">
 				<a href="#open" id="open-stories" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-floppy-open"></span> Open Story</a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="open-stories">
@@ -36,6 +37,41 @@
 			</li>
 		</ul>
 	</nav>
+	<div class="modal fade" id="upload-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Import a Story</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">URL</label>
+							<div class="col-sm-10">
+								<input type="url" class="form-control" ng-model="upload.url" placeholder="Enter a valid URL" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="text-center"><strong>OR</strong></div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Paste text</label>
+							<div class="col-sm-10">
+								<textarea class="form-control" ng-model="upload.text" placeholder="Paste valid JSON"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" ng-click="upload_story()" data-dismiss="modal">Upload</button>
+					<button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 	<div ng-show="story" class="sidebar slider ng-class:{open: picking}">
 		<div class="input-group">
 			<span ng-show="picking" class="input-group-btn">
@@ -60,8 +96,27 @@
 	</div>
 	<div ng-show="story" class="story">
 		<form>
-			<button class="btn btn-warning btn-lg" ng-click="delete_story(story)"><span class="glyphicon glyphicon-trash"></span></button>
-			<input ng-model="story.title" placeholder="Untitled Story" class="editable large title" />
+			<div class="input-group">
+				<input ng-model="story.title" placeholder="Untitled Story" class="editable input-lg title form-control" />
+				<div class="input-group-btn">
+					<span class="dropdown">
+						<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#export-{{story.id}}" ng-click="export_story(story)"><span class="glyphicon glyphicon-export"></span> Export</a></li>
+							<li><a href="#delete-{{story.id}}" ng-click="delete_story(story)"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+						</ul>
+					</span> <!-- /dropdown -->
+				</div> <!-- /input-group-btn -->
+			</div>
+
+			<div ng-show="alerts.length">
+				<div ng-repeat="alert in alerts">
+					<div class="alert alert-{{alert.type}} alert-dismissable">
+						<button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+						{{alert.message}}
+					</div>
+				</div>
+			</div>
 
 			<div>
 				<h4>Entrances</h4>
@@ -80,7 +135,7 @@
 						<li ng-repeat="choice in passage.choices" class="list-group-item">
 							<div class="input-group">
 								<div class="input-group-btn">
-									<button class="btn btn-warning" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-trash"></span></button>
+									<button class="btn btn-danger" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-trash"></span></button>
 								</div> <!-- /input-group-btn -->
 								<input type="text" ng-model="choice.content" class="form-control editable" placeholder="Enter choice content" />
 								<div class="input-group-btn" ng-repeat="path in choice.paths">
@@ -102,14 +157,13 @@
 							</div>
 						</li>
 					</ul>
-					<button class="btn" ng-click="new_choice(passage)">
+					<button class="btn btn-primary" ng-click="new_choice(passage)">
 						<span class="glyphicon glyphicon-plus"></span>
 						Add Choice
 					</button>
 				</div>
 			</div>
 		</form>
-		<pre>{{json_story(story)}}</pre>
 	</div>
 </body>
 </html>
