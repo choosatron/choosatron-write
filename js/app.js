@@ -19,6 +19,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.story          =  null;
 	$scope.passage        =  null;
 	$scope.picking        =  false;
+	$scope.deleted        =  null;
 
 	this.init  =  function() {
 		$scope.load_stories();
@@ -50,6 +51,11 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	};
 
 	$scope.delete_story  =  function(story) {
+		$scope.deleted  =  { 
+			type: "story",
+			title: story.title,
+			undo: function() {$scope.story = story;} 
+		};
 		$scope.story    =  null;
 		$scope.passage  =  null;
 		$stories.remove(story.id);
@@ -101,6 +107,19 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		}
 	};
 
+	$scope.delete_passage  =  function(passage) {
+		$scope.deleted = {
+			type: "passage",
+			title: passage.content,
+			undo: function() {
+				$scope.story.add_passage(passage);
+				$scope.passage = passage;
+			}
+		};
+		$scope.story.delete_passage(passage.id);
+		$scope.passage = $scope.story.get_opening();
+	};
+
 	$scope.new_choice  =  function(passage) {
 		var choice  =  new Choice();
 		passage.add_choice(choice);
@@ -111,11 +130,22 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	}
 
 	$scope.delete_choice  =  function(passage, choice) {
+		$scope.deleted  =  {
+			type: "choice", 
+			title: choice.content,
+			undo: function() {$scope.passage.add_choice(choice);}
+		};
 		passage.remove_choice(choice);
 	}
 
 	$scope.clear_passage_search  =  function() {
 		$scope.passage_search = '';
+	};
+
+	$scope.undo_delete  =  function() {
+		if (!$scope.deleted) return;
+		$scope.deleted.undo();
+		$scope.deleted = null;
 	};
 
 	$scope.json_story  =  function() {
@@ -131,14 +161,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		if ($scope.upload.text) {
 			var data = angular.fromJson($scope.upload.text);
 			var story = new Story(data);
-			story.refresh_ids();
+			story.refresh_id();
 			$scope.select_story(story);
 		}
 		else if ($scope.upload.text) {
 			$file.read($scope.upload.text, function(text) {
 				var data = angular.fromJson(text);
 				var story = new Story(data);
-				story.refresh_ids();
+				story.refresh_id();
 				$scope.select_story(story);
 			});
 		}

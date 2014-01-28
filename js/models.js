@@ -70,21 +70,9 @@ Model.prototype = {
 		return this;
 	},
 
-	refresh_ids: function() {
+	refresh_id: function() {
 		var id = new RandomId();
 		this.id = id.toString();
-		angular.forEach(this, function(item, key) {
-			if (item instanceof Model) {
-				item.refresh_ids();
-			}
-			else if (item instanceof Array) {
-				angular.forEach(item, function(o) {
-					if (o instanceof Model) {
-						o.refresh_ids();
-					}
-				});
-			}
-		});
 	},
 
 	object: function() {
@@ -117,13 +105,46 @@ function Story(data) {
 
 Story.methods = {
 	get_opening: function() {
-		if (!this.passages) return null;
-		return this.passages[0];
+		var opening = null;
+		this.each_passage(function(p) {
+			if (p.opening) {
+				opening = p;
+				return false;
+			}
+		});
+		return opening;
+	},
+
+	get_orphans: function() {
+		var destinations = [];
+		this.each_passage(function(p) {
+			destinations.concat(p.get_destinations());
+		});
+		var ophans = [];
+		this.each_passage(function(p) {
+			if (destinations.indexOf(p.id) < 0) {
+				orphans.push(p);
+			}
+		});
+		return p;
 	},
 
 	add_passage: function(passage) {
+		if (this.passages.length == 0) {
+			passage.opening = true;
+		}
 		this.passages.push(passage);
 		return passage.id;
+	},
+
+	delete_passage: function(id) {
+		if (!this.passages) return;
+		for (var i=0; i<this.passages.length; i++) {
+			if (this.passages[i].id == id) {
+				delete this.passages[i];
+				break;
+			}
+		}
 	},
 
 	get_passage: function(id) {
@@ -162,6 +183,7 @@ Model.extend(Story, Story.methods);
 function Passage(data) {
 	this.content    =  '';
 	this.choices    =  [];
+	this.opening    =  false;
 	Model.call(this, data);
 }
 
@@ -189,6 +211,18 @@ Passage.methods = {
 			}
 		} );
 		return has;
+	},
+
+	get_destinations: function() {
+		var ids = [];
+		this.each_choice(function(c) {
+			c.each_path(function(p) {
+				if (ids.indexOf(p.destination) < 0) {
+					ids.push(p.destination);
+				}
+			});
+		});
+		return ids;
 	},
 
 	each_choice: function(callback) {
@@ -235,6 +269,10 @@ Choice.methods = {
 			path.destination = passgage ? passage.id : null;
 			this.paths.push(path);
 		}
+	},
+
+	each_path: function(callback) {
+		return this.each('paths', callback);
 	},
 
 	load_paths: function(paths) {

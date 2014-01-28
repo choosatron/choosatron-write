@@ -27,7 +27,7 @@
 			<li class="dropdown" ng-show="stories">
 				<a href="#open" id="open-stories" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-floppy-open"></span> Open Story</a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="open-stories">
-					<li ng-repeat="s in stories">
+					<li ng-repeat="s in stories | orderBy:'title'">
 						<a href="#edit-{{s.id}}" ng-click="select_story(s)">
 							<span class="glyphicon glyphicon-book"></span>
 							{{s.title}}
@@ -84,8 +84,9 @@
 		</div>
 		<ul class="list-group">
 			<li ng-repeat="passage in story.passages | filter:passage_search" class="list-group-item passage">
-				<span class="truncated" title="{{passage.content}}">
-					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}">
+				<span class="truncated">
+					<span class="badge" title="# of Entrances">{{story.collect_entrances(passage).length}}</span>
+					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}" title="{{passage.content}}">
 						<span ng-show="picking" class="glyphicon glyphicon-hand-right"></span>
 						<span ng-hide="picking" class="glyphicon glyphicon-edit"></span>
 						{{passage.content}}
@@ -94,6 +95,24 @@
 			</li>
 		</ul>
 	</div>
+
+	<div class="container messages">
+		<div ng-show="alerts.length">
+			<div ng-repeat="alert in alerts">
+				<div class="alert alert-{{alert.type}} alert-dismissable">
+					<button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					{{alert.message}}
+				</div>
+			</div>
+		</div>
+
+		<div ng-show="deleted" class="alert alert-warning alert-dismissable">
+			<button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<a href="#undo-delete" ng-click="undo_delete()"><span class="glyphicon glyphicon-circle-arrow-left"></span> Undo</a>
+			<span>Deleted {{deleted.type}}</span>
+		</div>
+	</div>
+
 	<div ng-show="story" class="story">
 		<form>
 			<div class="input-group">
@@ -102,21 +121,13 @@
 					<span class="dropdown">
 						<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 						<ul class="dropdown-menu">
-							<li><a href="#export-{{story.id}}" ng-click="export_story(story)"><span class="glyphicon glyphicon-export"></span> Export</a></li>
-							<li><a href="#delete-{{story.id}}" ng-click="delete_story(story)"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+							<li><a href="#export-{{story.id}}" ng-click="export_story(story)"><span class="glyphicon glyphicon-export"></span> Export Story</a></li>
+							<li><a href="#delete-{{story.id}}" ng-click="delete_story(story)"><span class="glyphicon glyphicon-trash"></span> Delete Story</a></li>
 						</ul>
 					</span> <!-- /dropdown -->
 				</div> <!-- /input-group-btn -->
 			</div>
 
-			<div ng-show="alerts.length">
-				<div ng-repeat="alert in alerts">
-					<div class="alert alert-{{alert.type}} alert-dismissable">
-						<button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						{{alert.message}}
-					</div>
-				</div>
-			</div>
 
 			<div>
 				<h4>Entrances</h4>
@@ -127,7 +138,7 @@
 					</a></li>
 				</ul>
 				<div class="current_passage">
-					<h4>Passage</h4>
+					<h4><button class="btn btn-danger" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></button> Passage</h4>
 					<textarea ng-model="passage.content" class="editable passage_{{passage.id}}" placeholder="Enter passage content"></textarea>
 
 					<h4>Exits</h4>
