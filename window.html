@@ -86,6 +86,7 @@
 			<li ng-repeat="passage in story.passages | filter:passage_search" class="list-group-item passage">
 				<span class="truncated">
 					<span class="badge" title="# of Entrances">{{story.collect_entrances(passage).length}}</span>
+					<span ng-show="passage.opening" class="label label-success">Opening</span>
 					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}" title="{{passage.content}}">
 						<span ng-show="picking" class="glyphicon glyphicon-hand-right"></span>
 						<span ng-hide="picking" class="glyphicon glyphicon-edit"></span>

@@ -5,7 +5,7 @@ function File($http) {
 File.prototype = {
 	export: function(filename, data, type) {
 		var a      = document.createElement('a');
-		a.href     = 'data:attachment/json,' + encodeURI(data);
+		a.href     = 'data:attachment/' + type + ',' + encodeURI(data);
 		a.target   = '_blank';
 		a.download = filename;
 		document.body.appendChild(a);

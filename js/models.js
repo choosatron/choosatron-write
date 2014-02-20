@@ -1,7 +1,6 @@
-
 function RandomId(len) {
 	this.length = len ? len : 10;
-	this.chars  = [];
+	this.id = '';
 };
 
 RandomId.addRange = function(a, start, end) {
@@ -12,6 +11,7 @@ RandomId.addRange = function(a, start, end) {
 
 RandomId.candidates = [];
 RandomId.addRange(RandomId.candidates, 97, 122);
+RandomId.used = [];
 
 RandomId.prototype = {
 	pick_one: function() {
@@ -22,15 +22,19 @@ RandomId.prototype = {
 
 	generate: function() {
 		for (var i=0; i<this.length; i++) {
-			this.chars.push(this.pick_one());
+			this.id += this.pick_one();
+		}
+		if (RandomId.used.indexOf(this.id) >= 0) {
+			this.id = '';
+			this.generate();
 		}
 	},
 
 	toString: function() {
-		if (this.chars.length != this.length) {
+		if (this.id.length != this.length) {
 			this.generate();
 		}
-		return this.chars.join('');
+		return this.id;
 	}
 }
 
