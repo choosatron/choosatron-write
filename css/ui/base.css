@@ -1,0 +1,91 @@
+/* /// For testing in browser... Chrome App's have this window behavior */
+html,
+body {
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+	background: #ccc;
+}
+
+textarea {
+	max-width: 100%;
+}
+
+.passageBack {
+	display: inline-block;
+	position: relative;
+	background: #666;
+	color: #eee;
+	text-align: right;
+	min-width: 3em;
+	border: none;
+	height: 2em;
+	margin: 0 1em;
+	padding: 0 0.25em;
+}
+
+	.passageBack:before {
+		content: " ";
+		position: absolute;
+		left: -0.95em;
+		top: 0;
+		border-right: 1em solid #666;
+		border-top: 1em solid transparent;
+		border-bottom: 1em solid transparent;
+	}
+
+.pane {
+	height: 100%;
+	background: #eee;
+	padding: 20px;
+	padding-top: 100px;
+}
+
+	.paneLeft {
+		position: absolute;
+		left: -280px;
+		top: 0;
+		width: 300px;
+	}
+
+	.paneTitle {
+		background: red;
+		position: absolute;
+		left: 20px;
+		top: 20px;
+		margin: 0;
+	}
+
+.passage {
+	background: #eee;
+	width: 80%;
+	max-width: 700px;
+	margin: 40px auto;
+	padding: 20px;
+}
+
+	.passageEntrances > ul > li {
+		padding: 5px;
+		font-size: 90%;
+	}
+
+		.passageEntrances > ul > li.lastActive {
+			font-size: 110%;
+		}
+
+		.passageEntrances > ul > li > a {
+			display: block;
+			line-height: 2em;
+		}
+
+		.passageEntrances > ul > li > p {
+			height: 0;
+			overflow: hidden;
+			margin: 0 0 0 100px;
+		}
+
+			.passageEntrances > ul > li:hover > p {
+				height: auto;
+			}
