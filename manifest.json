@@ -1,4 +1,5 @@
 {
+	"manifest_version": 2,
 	"name": "CDAM: Archimedes",
 	"description": "Interactive fiction writing platform originally designed for use with the Choosatron Deluxe Adventure Matrix hardware device. Find out more at http://choosatron.com",
 	"version": "0.1",
