@@ -5,6 +5,11 @@ body {
 	overflow: hidden;
 }
 
+* {
+	-webkit-transition: all;
+}
+/* /// */
+
 body {
 	background: #ccc;
 }
@@ -13,64 +18,85 @@ textarea {
 	max-width: 100%;
 }
 
-.passageBack,
-.passageLink {
-	display: inline-block;
-	position: relative;
-	background: #666;
-	color: #eee;
-	text-align: right;
-	min-width: 3em;
-	border: none;
-	height: 2em;
-	margin: 0 1em;
-	padding: 0 5px;
-}
-
-	.passageBack:before,
-	.passageLink:before {
-		content: " ";
-		position: absolute;
-		left: -0.95em;
-		top: 0;
-		border-right: 1em solid #666;
-		border-top: 1em solid transparent;
-		border-bottom: 1em solid transparent;
-	}
-
-	.passageLink {
-		text-align: left;
-	}
-
-		.passageLink:before {
-			left: auto;
-			right: -0.95em;
-			border-right: none;
-			border-left: 1em solid #666;
-		}
-
-.pane {
+.wrap {
+	overflow-y: auto;
 	height: 100%;
-	background: #eee;
-	padding: 20px;
-	padding-top: 100px;
 }
 
-	.paneLeft {
-		position: absolute;
-		left: -280px;
-		top: 0;
-		width: 300px;
+.row-gutter-1x {
+	margin-top: 20px;
+}
+
+
+
+/**
+ * Panes
+8888888b.                                  
+888   Y88b                                 
+888    888                                 
+888   d88P 8888b. 88888b.  .d88b. .d8888b  
+8888888P"     "88b888 "88bd8P  Y8b88K      
+888       .d888888888  88888888888"Y8888b. 
+888       888  888888  888Y8b.         X88 
+888       "Y888888888  888 "Y8888  88888P' 
+**/
+.pane {
+	/*height: 100%;*/
+	background: #333;
+	color: #eee;
+	padding: 20px;
+	/*padding-top: 100px;*/
+	height: 250px;
+	position: relative;
+	-webkit-transition-duration: 1s;
+}
+
+	.pane:hover {
+		margin-top: 0;
 	}
 
-	.paneTitle {
+	.paneTop {
+/*		position: absolute;
+		left: -280px;
+		left: 0;
+		top: 0;
+		width: 300px;*/
+
+		margin-top: -246px;
+	}
+
+/*	.paneTitle {
 		background: red;
 		position: absolute;
 		left: 20px;
+		right: 20px;
 		top: 20px;
 		margin: 0;
+	}*/
+
+	.paneToggle {
+		position: absolute;
+		left: 20px;
+		bottom: -60px;
+		font-size: 36px;
 	}
 
+
+
+/**
+ * Passage
+8888888b.                                                  
+888   Y88b                                                 
+888    888                                                 
+888   d88P 8888b. .d8888b .d8888b  8888b.  .d88b.  .d88b.  
+8888888P"     "88b88K     88K         "88bd88P"88bd8P  Y8b 
+888       .d888888"Y8888b."Y8888b..d888888888  88888888888 
+888       888  888     X88     X88888  888Y88b 888Y8b.     
+888       "Y888888 88888P' 88888P'"Y888888 "Y88888 "Y8888  
+                                               888         
+                                          Y8b d88P         
+                                           "Y88P"          
+**/
 .passage {
 	background: #eee;
 	width: 80%;
@@ -87,41 +113,153 @@ textarea {
 			margin-top: 0;
 		}
 
-	.passageEntrances > ul > li {
-		padding: 5px;
-		font-size: 90%;
+
+/**
+ * Entrances
+8888888888        888                                                   
+888               888                                                   
+888               888                                                   
+8888888   88888b. 888888888d888 8888b. 88888b.  .d8888b .d88b. .d8888b  
+888       888 "88b888   888P"      "88b888 "88bd88P"   d8P  Y8b88K      
+888       888  888888   888    .d888888888  888888     88888888"Y8888b. 
+888       888  888Y88b. 888    888  888888  888Y88b.   Y8b.         X88 
+8888888888888  888 "Y888888    "Y888888888  888 "Y8888P "Y8888  88888P' 
+**/
+.passageBack,
+.passageLink {
+	display: inline-block;
+	position: relative;
+	background: #777;
+	color: #eee;
+	text-align: right;
+	min-width: 3em;
+	border: none;
+	height: 2em;
+	margin: 0 1em;
+	padding: 0 5px;
+}
+
+	.passageBack:before,
+	.passageLink:before {
+		content: " ";
+		position: absolute;
+		left: -0.95em;
+		top: 0;
+		border-right: 1em solid #777;
+		border-top: 1em solid transparent;
+		border-bottom: 1em solid transparent;
 	}
 
-		.passageEntrances > ul > li.lastActive {
-			font-size: 110%;
-		}
-
-		.passageEntrances > ul > li > a {
-			display: block;
-			line-height: 2em;
-		}
-
-		.passageEntrances > ul > li > p {
-			height: 0;
-			overflow: hidden;
-			margin: 0 0 0 100px;
-		}
-
-			.passageEntrances > ul > li:hover > p {
-				height: auto;
-			}
-
-	.passageExits {
+	.passageLink {
+		text-align: left;
 	}
 
+		.passageLink:before {
+			left: auto;
+			right: -0.95em;
+			border-right: none;
+			border-left: 1em solid #777;
+		}
+
+.passageEntrances > ul > li {
+	padding: 5px;
+	font-size: 90%;
+}
+
+	.passageEntrances > ul > li.lastActive {
+		font-size: 110%;
+	}
+
+	.passageEntrances > ul > li > a {
+		display: block;
+		line-height: 2em;
+	}
+
+	.passageEntrances > ul > li > p {
+		height: 0;
+		overflow: hidden;
+		margin: 0 0 0 100px;
+	}
+
+		.passageEntrances > ul > li:hover > p {
+			height: auto;
+		}
+
+.passageExits {
+}
+
+
+
+/**
+ * Choices
+ .d8888b. 888             d8b                         
+d88P  Y88b888             Y8P                         
+888    888888                                         
+888       88888b.  .d88b. 888 .d8888b .d88b. .d8888b  
+888       888 "88bd88""88b888d88P"   d8P  Y8b88K      
+888    888888  888888  888888888     88888888"Y8888b. 
+Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88 
+ "Y8888P" 888  888 "Y88P" 888 "Y8888P "Y8888  88888P' 
+**/
 .tab-pane {
 	margin-top: 20px;
 }
 
-.passageChoices input {
-	width: 90%;
+.choiceContainer {
+	overflow: hidden;
+	padding: 20px 0;
+	border-bottom: 1px solid #ccc;
+	height: 100px;
 }
 
-.choicePassage {
+	.choiceContainer:first-child {
+		border-top: 1px solid #ccc;
+	}
+
+	.choiceUtil {
+		color: #ddd;
+		line-height: 70px;
+		text-align: right;
+	}
+
+		.choiceUtil a {
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			height: 1.5em;
+			margin: auto 0;
+		}
+
+		.choiceUtil .choiceNumber {
+			font-size: 70px;
+		}
+
+		.choiceLogic {
+			/*background: #ccc;*/
+			height: 100%;
+		}
+
+			.choiceLogic a {
+				display: block;
+				height: 35px;
+				line-height: 35px;
+			}
+
+.passageChoices input {
+	width: 100%;
+}
+
+.choicePassage,
+.choicePassageMenu {
 	text-align: right;
+	line-height: 2em;
+}
+
+	.choicePassageMenu a {
+		margin-left: 2em;
+	}
+
+.choicePassageUnlink {
+	margin-right: 1em;
 }

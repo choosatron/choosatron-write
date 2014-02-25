@@ -23,18 +23,23 @@
 </head>
 <body ng-controller="StoryCtrl">
 
-<div class="pane paneLeft">
-	<h2 class="paneTitle">Menu <span class="glyphicon glyphicon-align-justify"></span></h2>
+<div class="pane paneTop">
+	<!-- <h2 class="paneTitle">Menu <span class="glyphicon glyphicon-align-justify"></span></h2> -->
 
-	<p>TODO</p>
+	<p>Back to Stories Menu</p>
+
+	<p>Story Title</p>
+	<p>Story Meta Data</p>
 
 	<ul class="nav nav-pills nav-stacked">
-		<li class="active"><a href="#">Home</a></li>
-		<li><a href="#">Profile</a></li>
-		<li><a href="#">Messages</a></li>
+		<li class="active"><a href="#">Export Story</a></li>
+		<li><a href="#">Delete Story</a></li>
 	</ul>
+
+	<p class="paneToggle"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
 </div>
 
+<div class="wrap">
 <div class="container">
 	<div class="passage">
 		<div class="passageEntrances">
@@ -84,19 +89,69 @@
 
 				<div class="tab-pane passageAppend" id="passageAppend">
 					<ul class="nav nav-pills nav-stacked">
-						<li><a href="#">Append new passage</a></li>
-						<li><a href="#">Append existing passage</a></li>
+						<li><a href="#">New passage</a></li>
+						<li><a href="#">Existing passage</a></li>
 					</ul>
 				</div><!-- .passageAppend -->
 
 				<div class="tab-pane active passageChoices" id="passageChoices">
+					<div class="choiceContainer">
+						<div class="col-xs-2 choiceUtil">
+							<a class="h3" href="#"><span class="glyphicon glyphicon-minus-sign"></span></a>
+							<span class="choiceNumber">1.</span>
+						</div>
+						<div class="col-xs-9">
+							<p><input type="text" class="form-control" placeholder="Write your choice content here." /></p>
+
+							<p class="choicePassageMenu"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+						</div>
+						<div class="col-xs-1 choiceLogic h3">
+							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
+						</div>
+					</div>
+
+					<div class="choiceContainer">
+						<div class="col-xs-2 choiceUtil">
+							<a class="h3" href="#"><span class="glyphicon glyphicon-minus-sign"></span></a>
+							<span class="choiceNumber">2.</span>
+						</div>
+						<div class="col-xs-9">
+							<p><input type="text" class="form-control" placeholder="Write your choice content here." /></p>
+
+							<p class="choicePassage"><a class="choicePassageUnlink" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
+						</div>
+						<div class="col-xs-1 choiceLogic h3">
+							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
+						</div>
+					</div>
+
+					<div class="choiceContainer">
+						<div class="col-xs-2 choiceUtil">
+							<a class="h3" href="#"><span class="glyphicon glyphicon-minus-sign"></span></a>
+							<span class="choiceNumber">3.</span>
+						</div>
+						<div class="col-xs-9">
+							<p><input type="text" class="form-control" placeholder="Write your choice content here." /></p>
+
+							<p class="choicePassage"><a class="choicePassageUnlink" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
+						</div>
+						<div class="col-xs-1 choiceLogic h3">
+							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
+						</div>
+					</div>
+
+
+<!--
 					<div class="row">
 						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-minus-sign"></span></a></div>
 						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-eye-open"></span></a></div>
 						<div class="col-xs-9">
 							<p>1. <input type="text" placeholder="Write your choice content here." /></p>
 
-							<p class="choicePassage"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+							<p class="choicePassageMenu"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 						</div>
 						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-book"></span></a></div>
 					</div>
@@ -113,13 +168,15 @@
 
 						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-book"></span></a></div>
 					</div>
+				-->
 
-					<p><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
+					<p class="h3 row-gutter-1x"><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
 				</div><!-- .passageChoices -->
 			</div>
 		</div><!-- .passageExits -->
 	</div><!-- .passage -->
 </div><!-- .container -->
+</div><!-- .wrap -->
 
 </body>
 </html>
