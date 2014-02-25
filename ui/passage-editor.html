@@ -4,14 +4,14 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- <script src="../js/jquery.min.js"></script>
-<script src="../js/angular.min.js"></script>
-<script src="../js/ui-bootstrap.min.js"></script>
+<script src="../js/jquery.min.js"></script>
+<!-- <script src="../js/angular.min.js"></script> -->
+<!-- <script src="../js/ui-bootstrap.min.js"></script> -->
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/file.js"></script>
-<script src="../js/storage.js"></script>
-<script src="../js/models.js"></script>
-<script src="../js/app.js"></script> -->
+<!-- <script src="../js/file.js"></script> -->
+<!-- <script src="../js/storage.js"></script> -->
+<!-- <script src="../js/models.js"></script> -->
+<!-- <script src="../js/app.js"></script> -->
 
 <link rel="stylesheet" href="../css/angular-csp.css">
 <link rel="stylesheet" href="../css/bootstrap.min.css">
@@ -29,9 +29,9 @@
 	<p>TODO</p>
 
 	<ul class="nav nav-pills nav-stacked">
-	  <li class="active"><a href="#">Home</a></li>
-	  <li><a href="#">Profile</a></li>
-	  <li><a href="#">Messages</a></li>
+		<li class="active"><a href="#">Home</a></li>
+		<li><a href="#">Profile</a></li>
+		<li><a href="#">Messages</a></li>
 	</ul>
 </div>
 
@@ -39,28 +39,85 @@
 	<div class="passage">
 		<div class="passageEntrances">
 			<ul class="list-unstyled">
+				<li>
+					<a href="#"><span class="passageBack">P7</span> 3. "Take the Crystal Skull."</a>
+					<p>"Text from passage 7 would go here&hellip;"</p>
+				</li>
 				<li class="lastActive">
-					<a href="#"><span class="passageBack">#7</span> 3. "Take the Crystal Skull."</a>
-					<p>Text from passage #7 would go here&hellip;</p>
+					<a href="#"><span class="passageBack">P14</span> 1. "Buy the mystery item from the shop keep."</a>
+					<p>"Text from passage 14 would go here&hellip;"</p>
 				</li>
 				<li>
-					<a href="#"><span class="passageBack">#14</span> 1. "Buy the mystery item from the shop keep."</a>
-					<p>Text from passage #14 would go here&hellip;</p>
-				</li>
-				<li>
-					<a href="#"><span class="passageBack">#36</span> 1. "Tell the Genie your first wish."</a>
-					<p>Text from passage #36 would go here&hellip;</p>
+					<a href="#"><span class="passageBack">P36</span> 1. "Tell the Genie your first wish."</a>
+					<p>"Text from passage 36 would go here&hellip;"</p>
 				</li>
 			</ul>
 		</div><!-- .passageEntrances -->
 
 		<div class="passageBody">
-			<button type="button" class="btn btn-default btn-sm pull-right"><span class="sr-only">Delete</span><span title="Delete" class="glyphicon glyphicon-trash"></span></button>
+			<button type="button" class="btn btn-default btn-sm pull-right"><span class="sr-only">Delete</span><span title="Delete Passage" class="glyphicon glyphicon-trash"></span></button>
 
-			<h2>Passage #27</h2>
+			<h2>Passage 27</h2>
 
 			<textarea class="form-control" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
+
+		<div class="passageExits">
+			<ul class="nav nav-tabs nav-justified">
+				<li><a href="#passageEnding" data-toggle="tab">Set as Ending</a></li>
+				<li><a href="#passageAppend" data-toggle="tab">Append a Passage</a></li>
+				<li class="active"><a href="#passageChoices" data-toggle="tab">Add Choices</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane passageEnding" id="passageEnding">
+					<label>Ending Value:
+						<select multiple class="form-control">
+							<option>Terrible</option>
+							<option>Bad</option>
+							<option selected>Neutral</option>
+							<option>Good</option>
+							<option>Great</option>
+						</select>
+					</label>
+				</div><!-- .passageEnding -->
+
+				<div class="tab-pane passageAppend" id="passageAppend">
+					<ul class="nav nav-pills nav-stacked">
+						<li><a href="#">Append new passage</a></li>
+						<li><a href="#">Append existing passage</a></li>
+					</ul>
+				</div><!-- .passageAppend -->
+
+				<div class="tab-pane active passageChoices" id="passageChoices">
+					<div class="row">
+						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-minus-sign"></span></a></div>
+						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-eye-open"></span></a></div>
+						<div class="col-xs-9">
+							<p>1. <input type="text" placeholder="Write your choice content here." /></p>
+
+							<p class="choicePassage"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+						</div>
+						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-book"></span></a></div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-minus-sign"></span></a></div>
+						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-eye-open"></span></a></div>
+
+						<div class="col-xs-9">
+							<p>2. <input type="text" placeholder="Write your choice content here." /></p>
+
+							<p class="choicePassage"><a href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
+						</div>
+
+						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-book"></span></a></div>
+					</div>
+
+					<p><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
+				</div><!-- .passageChoices -->
+			</div>
+		</div><!-- .passageExits -->
 	</div><!-- .passage -->
 </div><!-- .container -->
 

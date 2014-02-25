@@ -13,7 +13,8 @@ textarea {
 	max-width: 100%;
 }
 
-.passageBack {
+.passageBack,
+.passageLink {
 	display: inline-block;
 	position: relative;
 	background: #666;
@@ -23,10 +24,11 @@ textarea {
 	border: none;
 	height: 2em;
 	margin: 0 1em;
-	padding: 0 0.25em;
+	padding: 0 5px;
 }
 
-	.passageBack:before {
+	.passageBack:before,
+	.passageLink:before {
 		content: " ";
 		position: absolute;
 		left: -0.95em;
@@ -35,6 +37,17 @@ textarea {
 		border-top: 1em solid transparent;
 		border-bottom: 1em solid transparent;
 	}
+
+	.passageLink {
+		text-align: left;
+	}
+
+		.passageLink:before {
+			left: auto;
+			right: -0.95em;
+			border-right: none;
+			border-left: 1em solid #666;
+		}
 
 .pane {
 	height: 100%;
@@ -66,6 +79,14 @@ textarea {
 	padding: 20px;
 }
 
+	.passage > div {
+		margin-top: 40px;
+	}
+
+		.passage > div:first-child {
+			margin-top: 0;
+		}
+
 	.passageEntrances > ul > li {
 		padding: 5px;
 		font-size: 90%;
@@ -89,3 +110,18 @@ textarea {
 			.passageEntrances > ul > li:hover > p {
 				height: auto;
 			}
+
+	.passageExits {
+	}
+
+.tab-pane {
+	margin-top: 20px;
+}
+
+.passageChoices input {
+	width: 90%;
+}
+
+.choicePassage {
+	text-align: right;
+}
