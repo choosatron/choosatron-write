@@ -21,6 +21,14 @@ textarea {
 	width: 100%;
 }
 
+.input-group-extra {
+	display: table-cell;
+	line-height: 1;
+	font-size: 20px;
+	vertical-align: middle;
+	padding: 0 6px;
+}
+
 .editable-text {
 	position: relative;
 }
@@ -60,23 +68,15 @@ textarea {
 	display: table;
 }
 
-.shiftable {
-/*	position: absolute;
-	top: 0;
-	left: -300px;
-	width: 200%;*/
+.wrapInner {
 	height: 100%;
 	background: #111;
 	display: table-row;
 }
 
 .scrollable {
-	/*overflow-y: auto;
-	height: 100%;*/
-	/*width: 50%;*/
-	display: table-cell;
+	overflow-y: auto;
 	height: 100%;
-	position: relative;
 }
 
 .row-gutter-1x {
@@ -106,7 +106,7 @@ a.icon-subtle {
 	}
 
 .theme-alt {
-	background: #666;
+	background: #aaa;
 }
 
 .list-icon-menu li {
@@ -137,16 +137,16 @@ a.icon-subtle {
 	-webkit-transition-duration: 1s;
 }
 
-	.pane:hover {
-		margin-top: 0;
-	}
-
 	.paneTop {
 		margin-top: -266px;
 		height: 270px;
 		padding: 20px 60px;
 		padding-top: 70px;
 	}
+
+		.paneTop:hover {
+			margin-top: 0;
+		}
 
 		.paneTop .paneToggle {
 			position: absolute;
@@ -156,26 +156,62 @@ a.icon-subtle {
 			padding: 20px 20px 0 20px;
 		}
 
-	.paneRight {
-		/*float: left;*/
-		/*width: 300px;*/
+	.paneSplit {
+		display: table-cell;
 		height: 100%;
-		width: 300px;
-		overflow: hidden;
-		position: absolute;
-		left: 0;
-		top: 0;
+		position: relative;
 	}
+
+	.paneRight {
+		width: 40px;
+		-webkit-transition-duration: 500ms;
+	}
+
+		#paneRightPinState:checked + .wrap .paneRight,
+		.paneRight:hover {
+			width: 400px;
+		}
+
+		.paneRight .pane {
+			height: 100%;
+			width: 400px;
+			overflow: hidden;
+			position: absolute;
+			left: 0;
+			top: 0;
+			padding: 40px;
+		}
+
+		.paneRight .paneToggle {
+			position: absolute;
+			left: 5px;
+			top: 60px;
+			font-size: 26px;
+		}
+
+		.paneRight .panePin {
+			position: absolute;
+			left: 5px;
+			top: 20px;
+			font-size: 26px;
+			color: #888;
+		}
+
+			.paneRight .panePin label {
+				cursor: pointer;
+			}
+
+			.paneRight .panePin:hover {
+				color: #666;
+			}
+
+			#paneRightPinState:checked + .wrap .panePin {
+				color: #111;
+			}
 
 .paneStoryEdit {
 
 }
-
-/*	.exitPassages {
-		position: absolute;
-		left: 60px;
-		bottom: 10px;
-	}*/
 
 .topBar {
 	position: absolute;
@@ -186,6 +222,20 @@ a.icon-subtle {
 	padding: 10px 60px;
 	background: #111;
 }
+
+.panePassages .list-passages {
+	margin-top: 2em;
+}
+
+	.panePassages .list-passages li {
+		margin: 1em 0;
+	}
+
+		.panePassages .list-passages li a .badge {
+			background: #428bca;
+			color: #eee;
+		}
+
 
 
 
@@ -205,7 +255,6 @@ a.icon-subtle {
 **/
 .scrollPassages {
 	background: #ccc;
-	/*float: left;*/
 }
 
 .passage {
@@ -223,6 +272,8 @@ a.icon-subtle {
 		.passage > div:first-child {
 			margin-top: 0;
 		}
+
+
 
 
 /**
@@ -347,7 +398,6 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 		}
 
 		.choiceLogic {
-			/*background: #ccc;*/
 			height: 100%;
 		}
 

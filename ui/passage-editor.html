@@ -71,12 +71,12 @@
 	<p class="paneToggle theme-inverse-exclude"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
 </div><!-- .paneTop -->
 
+<input class="sr-only" type="checkbox" id="paneRightPinState" />
 <div class="wrap">
-<div class="shiftable">
+<div class="wrapInner">
 
+<div class="paneSplit">
 <div class="scrollable scrollPassages">
-	<div style="overflow-y: auto; height: 100%;">
-<div class="xcontainer">
 	<div class="passage">
 		<div class="passageEntrances">
 			<ul class="list-unstyled">
@@ -185,24 +185,59 @@
 			</div>
 		</div><!-- .passageExits -->
 	</div><!-- .passage -->
-</div><!-- .container -->
-</div>
 </div><!-- .scrollable -->
+</div><!-- .paneSplit -->
 
-<div class="scrollable foo" style="width: 50px; -webkit-transition-duration: 1s;">
-<div class="pane paneRight theme-alt panePassages">
-	<p class="paneToggle"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
+<div class="paneSplit paneRight">
+	<div class="pane theme-alt panePassages">
+		<p class="paneToggle"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></p>
+		<p class="panePin"><label for="paneRightPinState"><span class="glyphicon glyphicon-pushpin"></span></label></p>
 
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-</div><!-- .panePassages -->
-</div>
+		<div class="scrollable">
+			<h2>Passages</h2>
 
-</div><!-- .shiftable -->
+			<div class="input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+				<input type="text" class="form-control" placeholder="Filter Passages">
+				<span class="input-group-extra"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></span>
+			</div>
+
+			<ul class="list-unstyled list-passages">
+				<li><a href="#"><span class="badge">1</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">2</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">3</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">4</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">5</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">6</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">7</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">8</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">9</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">10</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">11</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">12</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">13</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">14</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">15</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">16</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">17</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">18</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">19</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">20</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">21</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">22</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">23</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">24</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">25</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">26</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">27</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">28</span> "Snippet of the passage text&hellip;"</a></li>
+				<li><a href="#"><span class="badge">29</span> "Snippet of the passage text&hellip;"</a></li>
+			</ul>
+		</div><!-- .scrollable -->
+	</div><!-- .panePassages -->
+</div><!-- .paneSplit -->
+
+</div><!-- .wrapInner -->
 </div><!-- .wrap -->
 
 </body>
