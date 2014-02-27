@@ -148,9 +148,9 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.deleted = null;
 	};
 
-	$scope.json_story  =  function() {
+	$scope.json_story  =  function(pretty) {
 		if (!$scope.story) return '{}';
-		return $scope.story.serialize();
+		return $scope.story.serialize(pretty);
 	};
 
 	$scope.export_story  =  function(story) {
