@@ -109,6 +109,10 @@ a.icon-subtle {
 	background: #aaa;
 }
 
+	.theme-alt .quip {
+		color: #aaa;
+	}
+
 .list-icon-menu li {
 	margin: 0.5em 0;
 }
@@ -369,18 +373,30 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 
 .choiceContainer {
 	overflow: hidden;
-	padding: 20px 0;
+	padding-top: 20px;
 	border-bottom: 1px solid #ccc;
-	height: 100px;
 }
 
 	.choiceContainer:first-child {
 		border-top: 1px solid #ccc;
 	}
 
+	.choiceDisplayConditions {
+		position: relative;
+		padding: 20px;
+		margin-bottom: 20px;
+	}
+
+	.quip {
+		position: absolute;
+		right: 12px;
+		bottom: -40px;
+		font-size: 36px;
+	}
+
 	.choiceUtil {
 		color: #ddd;
-		line-height: 70px;
+		line-height: 60px;
 		text-align: right;
 	}
 
@@ -406,6 +422,10 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 				height: 35px;
 				line-height: 35px;
 			}
+
+				.choiceLogic a.active {
+					color: #111;
+				}
 
 .passageChoices input {
 	width: 100%;
