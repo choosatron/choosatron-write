@@ -75,7 +75,8 @@
 <div class="shiftable">
 
 <div class="scrollable scrollPassages">
-<div class="container">
+	<div style="overflow-y: auto; height: 100%;">
+<div class="xcontainer">
 	<div class="passage">
 		<div class="passageEntrances">
 			<ul class="list-unstyled">
@@ -137,7 +138,7 @@
 							<span class="choiceNumber">1.</span>
 						</div>
 						<div class="col-xs-9">
-							<p><input type="text" class="form-control" placeholder="Write your choice content here." /></p>
+							<p><input type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
 							<p class="choicePassageMenu"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 						</div>
@@ -153,7 +154,7 @@
 							<span class="choiceNumber">2.</span>
 						</div>
 						<div class="col-xs-9">
-							<p><input type="text" class="form-control" placeholder="Write your choice content here." /></p>
+							<p><input type="text" class="form-control" placeholder="Write your choice content here." value="Take the road to the left." /></p>
 
 							<p class="choicePassage"><a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
 						</div>
@@ -169,7 +170,7 @@
 							<span class="choiceNumber">3.</span>
 						</div>
 						<div class="col-xs-9">
-							<p><input type="text" class="form-control" placeholder="Write your choice content here." /></p>
+							<p><input type="text" class="form-control" placeholder="Write your choice content here." value="Place the skull onto the pedestal." /></p>
 
 							<p class="choicePassage"><a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
 						</div>
@@ -185,11 +186,21 @@
 		</div><!-- .passageExits -->
 	</div><!-- .passage -->
 </div><!-- .container -->
+</div>
 </div><!-- .scrollable -->
 
+<div class="scrollable foo" style="width: 50px; -webkit-transition-duration: 1s;">
 <div class="pane paneRight theme-alt panePassages">
 	<p class="paneToggle"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 </div><!-- .panePassages -->
+</div>
 
 </div><!-- .shiftable -->
 </div><!-- .wrap -->

@@ -55,22 +55,28 @@ textarea {
 .wrap {
 	position: relative;
 	height: 100%;
+	width: 100%;
 	clear: both;
+	display: table;
 }
 
 .shiftable {
-	position: absolute;
+/*	position: absolute;
 	top: 0;
 	left: -300px;
-	width: 200%;
+	width: 200%;*/
 	height: 100%;
 	background: #111;
+	display: table-row;
 }
 
 .scrollable {
-	overflow-y: auto;
+	/*overflow-y: auto;
+	height: 100%;*/
+	/*width: 50%;*/
+	display: table-cell;
 	height: 100%;
-	width: 50%;
+	position: relative;
 }
 
 .row-gutter-1x {
@@ -151,9 +157,14 @@ a.icon-subtle {
 		}
 
 	.paneRight {
-		float: left;
-		width: 300px;
+		/*float: left;*/
+		/*width: 300px;*/
 		height: 100%;
+		width: 300px;
+		overflow: hidden;
+		position: absolute;
+		left: 0;
+		top: 0;
 	}
 
 .paneStoryEdit {
@@ -194,7 +205,7 @@ a.icon-subtle {
 **/
 .scrollPassages {
 	background: #ccc;
-	float: left;
+	/*float: left;*/
 }
 
 .passage {
