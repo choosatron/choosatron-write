@@ -11,7 +11,6 @@ body {
 /* /// */
 
 body {
-	background: #ccc;
 }
 
 textarea {
@@ -54,9 +53,24 @@ textarea {
 			}
 
 .wrap {
-	overflow-y: auto;
+	position: relative;
 	height: 100%;
 	clear: both;
+}
+
+.shiftable {
+	position: absolute;
+	top: 0;
+	left: -300px;
+	width: 200%;
+	height: 100%;
+	background: #111;
+}
+
+.scrollable {
+	overflow-y: auto;
+	height: 100%;
+	width: 50%;
 }
 
 .row-gutter-1x {
@@ -76,14 +90,18 @@ a.icon-subtle {
 		color: #428bca;
 	}
 
-.inverse {
+.theme-inverse {
 	background: #333;
 	color: #bbb;
 }
 
-	.inverse :not(.inverse-exclude) a {
+	.theme-inverse :not(.theme-inverse-exclude) a {
 		color: #fff;
 	}
+
+.theme-alt {
+	background: #666;
+}
 
 .list-icon-menu li {
 	margin: 0.5em 0;
@@ -108,8 +126,8 @@ a.icon-subtle {
 888       "Y888888888  888 "Y8888  88888P' 
 **/
 .pane {
-	padding: 20px 60px;
 	position: relative;
+	z-index: 2;
 	-webkit-transition-duration: 1s;
 }
 
@@ -119,19 +137,24 @@ a.icon-subtle {
 
 	.paneTop {
 		margin-top: -266px;
-		padding-top: 70px;
 		height: 270px;
-
+		padding: 20px 60px;
+		padding-top: 70px;
 	}
 
-	.paneToggle {
-		position: absolute;
-		left: 40px;
-		bottom: -70px;
-		font-size: 36px;
-		padding: 20px 20px 0 20px;
-	}
+		.paneTop .paneToggle {
+			position: absolute;
+			left: 40px;
+			bottom: -70px;
+			font-size: 36px;
+			padding: 20px 20px 0 20px;
+		}
 
+	.paneRight {
+		float: left;
+		width: 300px;
+		height: 100%;
+	}
 
 .paneStoryEdit {
 
@@ -169,6 +192,11 @@ a.icon-subtle {
                                           Y8b d88P         
                                            "Y88P"          
 **/
+.scrollPassages {
+	background: #ccc;
+	float: left;
+}
+
 .passage {
 	background: #eee;
 	width: 80%;

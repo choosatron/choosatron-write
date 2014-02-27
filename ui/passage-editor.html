@@ -23,7 +23,7 @@
 </head>
 <body ng-controller="StoryCtrl">
 
-<div class="pane paneTop inverse paneStoryEdit">
+<div class="pane paneTop theme-inverse paneStoryEdit">
 	<div class="topBar">
 		<p class="h5 pull-left"><a href="#"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 
@@ -68,10 +68,13 @@
 		</div>
 	</div>
 
-	<p class="paneToggle inverse-exclude"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
-</div>
+	<p class="paneToggle theme-inverse-exclude"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
+</div><!-- .paneTop -->
 
 <div class="wrap">
+<div class="shiftable">
+
+<div class="scrollable scrollPassages">
 <div class="container">
 	<div class="passage">
 		<div class="passageEntrances">
@@ -138,7 +141,7 @@
 
 							<p class="choicePassageMenu"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 						</div>
-						<div class="col-xs-1 choiceLogic h3">
+						<div class="col-xs-1 choiceLogic h4">
 							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
 							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
 						</div>
@@ -154,8 +157,8 @@
 
 							<p class="choicePassage"><a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
 						</div>
-						<div class="col-xs-1 choiceLogic h3">
-							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
+						<div class="col-xs-1 choiceLogic h4">
+							<a href="#" class=""><span class="glyphicon glyphicon-eye-open"></span></a>
 							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
 						</div>
 					</div>
@@ -170,38 +173,11 @@
 
 							<p class="choicePassage"><a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
 						</div>
-						<div class="col-xs-1 choiceLogic h3">
+						<div class="col-xs-1 choiceLogic h4">
 							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
 							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
 						</div>
 					</div>
-
-
-<!--
-					<div class="row">
-						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-minus-sign"></span></a></div>
-						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-eye-open"></span></a></div>
-						<div class="col-xs-9">
-							<p>1. <input type="text" placeholder="Write your choice content here." /></p>
-
-							<p class="choicePassageMenu"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
-						</div>
-						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-book"></span></a></div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-minus-sign"></span></a></div>
-						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-eye-open"></span></a></div>
-
-						<div class="col-xs-9">
-							<p>2. <input type="text" placeholder="Write your choice content here." /></p>
-
-							<p class="choicePassage"><a href="#"><span class="glyphicon glyphicon-remove-circle"></span></a> <a href="#">"Lorem ipsum this is the text of passage 45&hellip;" <span class="passageLink">P45</span></a></p>
-						</div>
-
-						<div class="col-xs-1"><a href="#"><span class="glyphicon glyphicon-book"></span></a></div>
-					</div>
-				-->
 
 					<p class="h3 row-gutter-1x"><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
 				</div><!-- .passageChoices -->
@@ -209,6 +185,13 @@
 		</div><!-- .passageExits -->
 	</div><!-- .passage -->
 </div><!-- .container -->
+</div><!-- .scrollable -->
+
+<div class="pane paneRight theme-alt panePassages">
+	<p class="paneToggle"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
+</div><!-- .panePassages -->
+
+</div><!-- .shiftable -->
 </div><!-- .wrap -->
 
 </body>
