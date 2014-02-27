@@ -18,14 +18,81 @@ textarea {
 	max-width: 100%;
 }
 
+.fill-width {
+	width: 100%;
+}
+
+.editable-text {
+	position: relative;
+}
+
+	.editable-text label {
+		display: block;
+		margin: 0;
+	}
+
+	.editable-text span.glyphicon {
+		position: absolute;
+		left: 0;
+		top: 0.5em;
+	}
+
+	.editable-text p {
+		padding-left: 1.25em;
+		margin: 0;
+	}
+
+		.editable-text input {
+			border: none;
+			background: transparent;
+		}
+
+			.editable-text input:focus {
+				background: #fff;
+				color: #666;
+				outline: 0;
+			}
+
 .wrap {
 	overflow-y: auto;
 	height: 100%;
+	clear: both;
 }
 
 .row-gutter-1x {
 	margin-top: 20px;
 }
+
+a.icon-inline {
+	display: inline-block;
+	margin-left: 1em;
+}
+
+a.icon-subtle {
+	color: #999;
+}
+
+	a.icon-subtle:hover {
+		color: #428bca;
+	}
+
+.inverse {
+	background: #333;
+	color: #bbb;
+}
+
+	.inverse :not(.inverse-exclude) a {
+		color: #fff;
+	}
+
+.list-icon-menu li {
+	margin: 0.5em 0;
+}
+
+	.list-icon-menu.list-inline li {
+		margin-right: 0.5em;
+	}
+
 
 
 
@@ -41,12 +108,7 @@ textarea {
 888       "Y888888888  888 "Y8888  88888P' 
 **/
 .pane {
-	/*height: 100%;*/
-	background: #333;
-	color: #eee;
-	padding: 20px;
-	/*padding-top: 100px;*/
-	height: 250px;
+	padding: 20px 60px;
 	position: relative;
 	-webkit-transition-duration: 1s;
 }
@@ -56,30 +118,40 @@ textarea {
 	}
 
 	.paneTop {
-/*		position: absolute;
-		left: -280px;
-		left: 0;
-		top: 0;
-		width: 300px;*/
+		margin-top: -266px;
+		padding-top: 70px;
+		height: 270px;
 
-		margin-top: -246px;
 	}
-
-/*	.paneTitle {
-		background: red;
-		position: absolute;
-		left: 20px;
-		right: 20px;
-		top: 20px;
-		margin: 0;
-	}*/
 
 	.paneToggle {
 		position: absolute;
-		left: 20px;
-		bottom: -60px;
+		left: 40px;
+		bottom: -70px;
 		font-size: 36px;
+		padding: 20px 20px 0 20px;
 	}
+
+
+.paneStoryEdit {
+
+}
+
+/*	.exitPassages {
+		position: absolute;
+		left: 60px;
+		bottom: 10px;
+	}*/
+
+.topBar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 40px;
+	padding: 10px 60px;
+	background: #111;
+}
 
 
 
@@ -101,7 +173,7 @@ textarea {
 	background: #eee;
 	width: 80%;
 	max-width: 700px;
-	margin: 40px auto;
+	margin: 60px auto;
 	padding: 20px;
 }
 
@@ -129,7 +201,7 @@ textarea {
 .passageLink {
 	display: inline-block;
 	position: relative;
-	background: #777;
+	background: #428bca;
 	color: #eee;
 	text-align: right;
 	min-width: 3em;
@@ -145,7 +217,7 @@ textarea {
 		position: absolute;
 		left: -0.95em;
 		top: 0;
-		border-right: 1em solid #777;
+		border-right: 1em solid #428bca;
 		border-top: 1em solid transparent;
 		border-bottom: 1em solid transparent;
 	}
@@ -158,7 +230,7 @@ textarea {
 			left: auto;
 			right: -0.95em;
 			border-right: none;
-			border-left: 1em solid #777;
+			border-left: 1em solid #428bca;
 		}
 
 .passageEntrances > ul > li {
