@@ -121,6 +121,10 @@ a.icon-subtle {
 		margin-right: 0.5em;
 	}
 
+var,
+.var {
+	font-family: monospace;
+}
 
 
 
@@ -390,9 +394,24 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 	.quip {
 		position: absolute;
 		right: 12px;
-		bottom: -40px;
+		bottom: -30px;
 		font-size: 36px;
+		margin: 0;
 	}
+
+		.choiceDisplayConditions.dcCollapsedSet {
+			background: #ddd;
+			color: #aaa;
+			padding: 5px 20px;
+		}
+
+			.choiceDisplayConditions.dcCollapsedSet p {
+				margin: 0;
+			}
+
+			.choiceDisplayConditions.dcCollapsedSet .quip {
+				color: #ddd;
+			}
 
 	.choiceUtil {
 		color: #ddd;
