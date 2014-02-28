@@ -140,6 +140,7 @@ var,
 
 
 
+
 /**
  * Panes
 8888888b.                                  
@@ -261,6 +262,57 @@ var,
 		}
 
 
+
+
+/**
+ * Stories
+ .d8888b. 888                  d8b                 
+d88P  Y88b888                  Y8P                 
+Y88b.     888                                      
+ "Y888b.  888888 .d88b. 888d888888 .d88b. .d8888b  
+    "Y88b.888   d88""88b888P"  888d8P  Y8b88K      
+      "888888   888  888888    88888888888"Y8888b. 
+Y88b  d88PY88b. Y88..88P888    888Y8b.         X88 
+ "Y8888P"  "Y888 "Y88P" 888    888 "Y8888  88888P' 
+**/
+.menuTop {
+	padding-top: 40px;
+}
+
+	.menuTop ul {
+		margin: 0;
+		padding: 20px 60px;
+	}
+
+.storiesListMenu {
+	padding-top: 20px;
+}
+
+.storiesList {
+	padding-bottom: 200px;
+}
+
+	.storiesList li > div {
+		position: relative;
+		background: #ccc;
+		padding: 10px;
+		height: 325px;
+		margin-top: 40px;
+	}
+
+	.storiesList h3 {
+		margin-top: 0;
+	}
+
+	.storiesList p {
+		margin-top: 1em;
+	}
+
+	.storiesList .list-icon-menu {
+		position: absolute;
+		left: 10px;
+		bottom: 0;
+	}
 
 
 
@@ -426,6 +478,7 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 		}
 
 			.choiceLogic a {
+				position: relative;
 				display: block;
 				height: 35px;
 				line-height: 35px;
@@ -434,6 +487,13 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 				.choiceLogic a.active {
 					color: #111;
 				}
+
+			.choiceLogic .badge {
+				position: absolute;
+				right: -10px;
+				top: 0;
+				background: #a3866b;
+			}
 
 .passageChoices input {
 	width: 100%;
