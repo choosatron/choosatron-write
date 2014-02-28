@@ -113,22 +113,20 @@
 
 			<div class="tab-content">
 				<div class="tab-pane passageEnding" id="passageEnding">
-					<label>Ending Value:
-						<select multiple class="form-control">
-							<option>Terrible</option>
-							<option>Bad</option>
-							<option selected>Neutral</option>
-							<option>Good</option>
-							<option>Great</option>
-						</select>
-					</label>
+					<div class="btn-toolbar" role="toolbar">
+						<div class="btn-group h4">Ending Value:</div>
+						<div class="btn-group btn-group-lg">
+							<button type="button" class="btn btn-default btn-primary">Great</button>
+							<button type="button" class="btn btn-default btn-success">Good</button>
+							<button type="button" class="btn btn-default">Neutral</button>
+							<button type="button" class="btn btn-default btn-warning">Bad</button>
+							<button type="button" class="btn btn-default btn-danger">Terrible</button>
+						</div>
+					</div>
 				</div><!-- .passageEnding -->
 
 				<div class="tab-pane passageAppend" id="passageAppend">
-					<ul class="nav nav-pills nav-stacked">
-						<li><a href="#">New passage</a></li>
-						<li><a href="#">Existing passage</a></li>
-					</ul>
+					<p class="h3 text-center"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 				</div><!-- .passageAppend -->
 
 				<div class="tab-pane active passageChoices" id="passageChoices">
