@@ -88,11 +88,18 @@ a.icon-inline {
 	margin-left: 1em;
 }
 
-a.icon-subtle {
-	color: #999;
+.icon-subtle {
+	color: rgba(0, 0, 0, 0.2);
 }
 
-	a.icon-subtle:hover {
+.icon-subtler {
+	color: rgba(0, 0, 0, 0.1);
+}
+
+	.icon-subtle a:hover,
+	a.icon-subtle:hover,
+	.icon-subtler a:hover,
+	a.icon-subtler:hover {
 		color: #428bca;
 	}
 
@@ -124,6 +131,7 @@ a.icon-subtle {
 var,
 .var {
 	font-family: monospace;
+	font-style: normal;
 }
 
 
@@ -232,7 +240,6 @@ var,
 }
 
 .panePassages .list-passages {
-	margin-top: 2em;
 }
 
 	.panePassages .list-passages li {
@@ -243,6 +250,12 @@ var,
 			background: #428bca;
 			color: #eee;
 		}
+
+		.panePassages .scrollable {
+			margin-top: 2em;
+			height: calc(100% - 130px);
+		}
+
 
 
 
@@ -386,7 +399,7 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 	}
 
 	.choiceUtil {
-		color: #ddd;
+		/*color: #ddd;*/
 		line-height: 60px;
 		text-align: right;
 	}
@@ -457,7 +470,9 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 	position: relative;
 	padding: 20px;
 	margin-bottom: 20px;
+	margin-left: 40px;
 	background: #9a9;
+	color: rgba(0, 0, 0, 0.4);
 }
 
 	.choiceDisplayConditions .quip {
@@ -477,7 +492,6 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 
 	.choiceDisplayConditions.dcCollapsedSet {
 		background: #cdc;
-		color: #9a9;
 		padding: 5px 20px;
 	}
 
@@ -511,7 +525,9 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 	position: relative;
 	padding: 20px;
 	margin-bottom: 20px;
+	margin-left: 40px;
 	background: #d3c6bb;
+	color: rgba(0, 0, 0, 0.4);
 }
 
 	.choiceStoryUpdates .quip {
