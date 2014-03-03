@@ -21,8 +21,10 @@
 </head>
 <body ng-controller="StoryCtrl">
 
+<input class="sr-only paneToggleCheckbox" type="checkbox" id="paneTopToggle" />
 <div class="pane paneTop theme-inverse paneStoryEdit">
 	<div class="topBar">
+		<!-- TODO: what's the best Angular+Chrome App way of incorporating an entirely different screen of content... new html page? Angular routing? etc? -->
 		<p class="h5 pull-left"><a href="story-list.html"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 
 		<p class="h5 pull-right"><a href="#"><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
@@ -63,12 +65,12 @@
 		</div>
 	</div>
 
-	<p class="paneToggle theme-inverse-exclude"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
+	<p class="paneToggle theme-inverse-exclude"><label for="paneTopToggle"><span class="glyphicon glyphicon-chevron-down"></span></label></p>
 </div><!-- .paneTop -->
 
 
 
-<input class="sr-only" type="checkbox" id="paneRightPinState" />
+<input class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
 <div class="wrap">
 <div class="wrapInner">
 
@@ -331,8 +333,7 @@
 
 <div class="paneSplit paneRight">
 	<div class="pane theme-alt panePassages">
-		<p class="paneToggle"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></p>
-		<p class="panePin"><label for="paneRightPinState"><span class="glyphicon glyphicon-pushpin"></span></label></p>
+		<p class="paneToggle"><label for="paneRightToggle"><span class="glyphicon glyphicon-chevron-left"></span></label></p>
 
 		<h2>Passages</h2>
 

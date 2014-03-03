@@ -1,15 +1,3 @@
-$(function () {
-
-	// TODO:Is there a preferred Angular way to make an anchor's onClick directive preventDefault on the event?
-	// TODO: Also, for some reason this delegate doesn't actually catch all the anchors
-	$('body').on('click', 'a', function (e) {
-		e.preventDefault();
-	});
-
-});
-
-
-
 angular.module('storyApp', [])
 
 .value('storiesNamespace',     'choosatron/stories/')
