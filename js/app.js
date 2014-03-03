@@ -18,6 +18,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.stories        =  [];
 	$scope.story          =  null;
 	$scope.passage        =  null;
+	$scope.prev_passage    =  null;
 	$scope.picking        =  false;
 	$scope.deleted        =  null;
 
@@ -57,7 +58,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 			undo: function() {$scope.story = story;} 
 		};
 		$scope.story    =  null;
-		$scope.passage  =  null;
+		$scope.set_passage(null, true);
 		$stories.remove(story.id);
 
 		var stories = [];
@@ -69,7 +70,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
 	$scope.select_story  =  function(story) {
 		$scope.story    =  story;
-		$scope.passage  =  story ? story.get_opening() : null;
+		$scope.set_passage((story ? story.get_opening() : null), true);
 		$preferences.set('last_story_id', story ? story.id : null);
 	};
 
@@ -82,7 +83,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {
-		$scope.passage = new Passage();
+		$scope.set_passage(new Passage());
 		$scope.passage.number = $scope.story.get_next_passage_number();
 		$scope.story.add_passage($scope.passage);
 		if (entrance_choice) {
@@ -101,11 +102,22 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	};
 
 	$scope.edit_passage  =  function(id) {
-		$scope.passage = $scope.story.get_passage(id);
+		$scope.set_passage($scope.story.get_passage(id));
 		if ($scope.picking) {
 			$scope.picking.set_destination($scope.passage);
 			$scope.picking = null;
 		}
+	};
+
+	$scope.set_passage  =  function (passage, reset) {
+		if (reset) {
+			$scope.prev_passage = null;
+
+		} else {
+			$scope.prev_passage = $scope.passage;
+		}
+
+		$scope.passage = passage;
 	};
 
 	$scope.delete_passage  =  function(passage) {

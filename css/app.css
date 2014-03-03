@@ -386,7 +386,7 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 	background: #428bca;
 	color: #eee;
 	text-align: right;
-	min-width: 3em;
+	min-width: 4em;
 	border: none;
 	height: 2em;
 	margin: 0 1em;
@@ -457,11 +457,9 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		}
 
 .passageEntrances  {
-	width: 80%;
 	max-width: 700px;
 	margin: 40px auto;
 	margin-top: 80px;
-	overflow: hidden;
 }
 
 	.passageEntrances > ul > li {
@@ -471,8 +469,12 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 	}
 
 		.passageEntrances > ul > li.lastActive {
-			font-size: 125%;
+			margin-left: -4em;
 		}
+
+			.passageEntrances > ul > li.lastActive .passageBack {
+				min-width: 8em;
+			}
 
 		.passageEntrances > ul > li > a {
 			display: block;

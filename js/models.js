@@ -237,6 +237,21 @@ Passage.methods = {
 		return ids;
 	},
 
+	get_passage_choice: function (passage) {
+		var n = 1,
+			matching_choice;
+
+		this.each_choice(function (choice) {
+			if (choice.has_destination(passage)) {
+				matching_choice = n + '. ' + choice.content;
+			}
+
+			n++;
+		});
+
+		return matching_choice;
+	},
+
 	each_choice: function(callback) {
 		return this.each('choices', callback);
 	},

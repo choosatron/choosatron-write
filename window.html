@@ -81,13 +81,12 @@
 	<div class="passageEntrances">
 		<ul class="list-unstyled">
 			<!-- TODO: lastActive class on the li if we just CAME from one of those passages -->
-			<li ng-repeat="entrance in story.collect_entrances(passage)">
+			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
 				<a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)" class="truncated">
-					<!-- TODO: # of choices the entrance passage has -->
-					<span class="passageBack" data-choices="9">P{{ entrance.number }}</span>
+					<span class="passageBack" data-choices="{{ entrance.choices.length }}">P{{ entrance.number }}</span>
 					<div>
-						<p>"{{entrance.content}}"</p>
-						<p class="h4">9. TODO Choice's copy here</p>
+						<p>"{{ entrance.content }}"</p>
+						<p class="h4">{{ entrance.get_passage_choice(passage) }}</p>
 					</div>
 				</a>
 			</li>
@@ -149,7 +148,7 @@
 						<div class="col-xs-9">
 							<p><input ng-model="choice.content" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
-							<!-- TODO: fix pick_passage() -->
+							<!-- TODO: Potentially buggy scenario... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
 							<p ng-if="!choice.has_destination()" class="choicePassageMenu"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 
 							<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
@@ -337,7 +336,9 @@
 
 		<h2>Passages</h2>
 
+		<!-- TODO: pane needs to open for "picking" mode -->
 		<!-- TODO: need to differentiate "picking" mode -->
+		<!-- TODO: need to be able to cancel "picking" mode -->
 		<div class="input-group">
 			<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			<input ng-model="passage_search" type="text" class="form-control" placeholder="Filter Passages">
@@ -349,7 +350,7 @@
 				<!-- TODO: probably need to rethink truncation overall... and actually some passages could be quite long, so it would be wasteful to output all of it and have CSS truncate it. -->
 				<li ng-repeat="passage in story.passages | filter:passage_search" class="truncate">
 					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}">
-						<span class="badge" data-choices="9">P{{ passage.number }}</span>
+						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-show="passage.opening" class="label label-success">Opening</span>
 						"{{passage.content}}"
