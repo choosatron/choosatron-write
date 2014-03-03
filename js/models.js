@@ -200,6 +200,10 @@ function Passage(data) {
 }
 
 Passage.methods = {
+	get_content: function () {
+		return this.content || "Write your passage content here."
+	},
+
 	add_choice: function(choice) {
 		this.choices.push(choice);
 		return choice.id;

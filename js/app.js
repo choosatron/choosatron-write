@@ -110,6 +110,9 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	};
 
 	$scope.set_passage  =  function (passage, reset) {
+		// TODO: Is there an Angular way to access this element in the scope to do this?
+		$('.scrollPassages').scrollTop(0);
+
 		if (reset) {
 			$scope.prev_passage = null;
 

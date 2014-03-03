@@ -80,12 +80,11 @@
 	<!-- TODO: this div's ng-show should be determined by whether this passage even has entrances -->
 	<div class="passageEntrances">
 		<ul class="list-unstyled">
-			<!-- TODO: lastActive class on the li if we just CAME from one of those passages -->
 			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
 				<a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)" class="truncated">
 					<span class="passageBack" data-choices="{{ entrance.choices.length }}">P{{ entrance.number }}</span>
 					<div>
-						<p>"{{ entrance.content }}"</p>
+						<p>"{{ entrance.get_content() }}"</p>
 						<p class="h4">{{ entrance.get_passage_choice(passage) }}</p>
 					</div>
 				</a>
@@ -97,9 +96,10 @@
 		<div class="passageBody">
 			<!-- TODO: need confirmation on delete, and/or undo after delete -->
 			<!-- TODO: starting passage should NOT have a delete button... should probably be marked START instead -->
-			<!-- TODO: what happens when you delete a passage... what passage do you go to? -->
-			<!-- TODO: when you create a new story... it would default to the starting passage. -->
-			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at. -->
+			<!-- TODO: what happens when you delete a passage... what passage do you go to next? -->
+			<!-- TODO: there seem to be bugs with deleting passages and opening/closing the app... you get a lot of blank passages, some of which you can't seem to add choices to? maybe? -->
+			<!-- TODO: when you create a new story... it would default to the starting passage... probably already the case -->
+			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at... dunno if that's the case now -->
 			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" href="#" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
@@ -138,7 +138,7 @@
 
 				<div class="tab-pane active passageChoices" id="passageChoices">
 
-					<!-- TODO: choices need a drag+drop handle for sortable behavior -->
+					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer">
 						<div class="col-xs-2 choiceUtil icon-subtler">
 							<a class="h3" href="#" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-minus-sign"></span></a>
@@ -154,10 +154,9 @@
 							<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
 							<div ng-if="choice.has_destination()" ng-repeat="path in choice.paths">
 								<p ng-if="path.destination" class="choicePassage">
-									<!-- TODO: need to wire up this delete path/destination button -->
-									<a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a>
+									<a class="choicePassageUnlink icon-subtle" ng-click="choice.set_destination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
 									<!-- TODO: not exactly sure how to best handle truncation here when the button may be of variable width too? -->
-									<a ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">"{{ get_passage(path.destination).content }}" <span class="passageLink" data-choices="9">P{{ get_passage(path.destination).number }}</span></a>
+									<a ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">"{{ get_passage(path.destination).get_content() }}" <span class="passageLink" data-choices="9">P{{ get_passage(path.destination).number }}</span></a>
 								</p>
 							</div>
 						</div>
@@ -171,7 +170,8 @@
 
 
 
-					<!-- TODO: delete me... static example code -->
+					<!-- TODO: static example code just here for reference until I integrate all this -->
+					<div ng-show="false">
 					<hr />
 					<hr />
 					<div class="choiceContainer">
@@ -318,7 +318,8 @@
 					</div>
 					<hr />
 					<hr />
-					<!-- TODO: end of delete me... static example code -->
+					</div>
+					<!-- TODO: end of static example code -->
 
 
 					<p class="h3 row-gutter-1x"><a href="#" ng-click="new_choice(passage)"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
@@ -353,7 +354,7 @@
 						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-show="passage.opening" class="label label-success">Opening</span>
-						"{{passage.content}}"
+						"{{ passage.get_content() }}"
 					</a>
 				</li>
 			</ul>

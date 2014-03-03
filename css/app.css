@@ -31,6 +31,10 @@ textarea {
 	width: 100%;
 }
 
+a[ng-click] {
+	cursor: pointer;
+}
+
 .truncated {
 	white-space: nowrap;
 	overflow: hidden;
