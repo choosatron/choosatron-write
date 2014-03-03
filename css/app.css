@@ -20,6 +20,12 @@ textarea {
 	width: 100%;
 }
 
+.truncated {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .input-group-extra {
 	display: table-cell;
 	line-height: 1;

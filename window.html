@@ -66,38 +66,26 @@
 	<p class="paneToggle theme-inverse-exclude"><a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a></p>
 </div><!-- .paneTop -->
 
+
+
 <input class="sr-only" type="checkbox" id="paneRightPinState" />
 <div class="wrap">
 <div class="wrapInner">
 
+
 <div class="paneSplit">
 <div class="scrollable scrollPassages">
+	<!-- TODO: this div's ng-show should be determined by whether this passage even has entrances -->
 	<div class="passageEntrances">
 		<ul class="list-unstyled">
-			<li>
-				<a href="#">
-					<span class="passageBack" data-choices="5">P7</span>
+			<!-- TODO: lastActive class on the li if we just CAME from one of those passages -->
+			<li ng-repeat="entrance in story.collect_entrances(passage)">
+				<a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)" class="truncated">
+					<!-- TODO: # of choices the entrance passage has -->
+					<span class="passageBack" data-choices="9">P{{ entrance.id }}</span>
 					<div>
-						<p>"Text from passage 7 would go here&hellip;"</p>
-						<p class="h4">3. Take the Crystal Skull.</p>
-					</div>					
-				</a>
-			</li>
-			<li class="lastActive">
-				<a href="#">
-					<span class="passageBack" data-choices="1">P14</span>
-					<div>
-						<p>"Text from passage 14 would go here&hellip;"</p>
-						<p class="h4">1. Buy the mystery item from the shop keep.</p>
-					</div>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<span class="passageBack" data-choices="2">P36</span>
-					<div>
-						<p>"Text from passage 36 would go here&hellip;"</p>
-						<p class="h4">5. Tell the Genie your first wish.</p>
+						<p>"{{entrance.content}}"</p>
+						<p class="h4">9. TODO Choice's copy here</p>
 					</div>
 				</a>
 			</li>
@@ -106,16 +94,21 @@
 
 	<div class="passage">
 		<div class="passageBody">
-			<h2>Passage 27 <a class="h4 icon-inline icon-subtle" href="#"><span class="glyphicon glyphicon-trash"></span></a></h2>
+			<!-- TODO: need confirmation on delete, and/or undo after delete -->
+			<!-- TODO: starting passage should NOT have a delete button... should probably be marked START instead -->
+			<!-- TODO: what happens when you delete a passage... what passage do you go to? -->
+			<!-- TODO: when you create a new story... it would default to the starting passage. -->
+			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at. -->
+			<h2>Passage {{ passage.id }} <a class="h4 icon-inline icon-subtle" href="#" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
 
-			<!-- <button type="button" class="btn btn-default btn-sm pull-right"><span class="sr-only">Delete</span><span title="Delete Passage" class="glyphicon glyphicon-trash"></span></button> -->
-
-			<textarea class="form-control" rows="10" placeholder="Write your passage content here."></textarea>
+			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
 	</div><!-- .passage -->
 
 	<div class="passage">
 		<div class="passageExits">
+			<!-- TODO: support for ending/append needs to be worked out. -->
+			<!-- TODO: need confirmation dialog when switching between these types -->
 			<ul class="nav nav-tabs nav-justified">
 				<li><a href="#passageEnding" data-toggle="tab">Set as Ending</a></li>
 				<li><a href="#passageAppend" data-toggle="tab">Append a Passage</a></li>
@@ -136,27 +129,50 @@
 					</div>
 				</div><!-- .passageEnding -->
 
+
 				<div class="tab-pane passageAppend" id="passageAppend">
 					<p class="h4 text-center"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 				</div><!-- .passageAppend -->
 
-				<div class="tab-pane active passageChoices" id="passageChoices">
-					<div class="choiceContainer">
-						<div class="col-xs-2 choiceUtil icon-subtler">
-							<a class="h3" href="#"><span class="glyphicon glyphicon-minus-sign"></span></a>
-							<span class="choiceNumber">1</span>
-						</div>
-						<div class="col-xs-9">
-							<p><input type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
-							<p class="choicePassageMenu"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+				<div class="tab-pane active passageChoices" id="passageChoices">
+
+					<!-- TODO: choices need a drag+drop handle for sortable behavior -->
+					<div ng-repeat="choice in passage.choices" class="choiceContainer">
+						<div class="col-xs-2 choiceUtil icon-subtler">
+							<a class="h3" href="#" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-minus-sign"></span></a>
+							<span class="choiceNumber">{{ $index + 1 }}</span>
 						</div>
+
+						<div class="col-xs-9">
+							<p><input ng-model="choice.content" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
+
+							<!-- TODO: fix pick_passage() -->
+							<p ng-if="!choice.hasDestination()" class="choicePassageMenu"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+
+							<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
+							<div ng-if="choice.hasDestination()" ng-repeat="path in choice.paths">
+								<p ng-if="path.destination" class="choicePassage">
+									<!-- TODO: need to wire up this delete path/destination button -->
+									<a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a>
+									<!-- TODO: not exactly sure how to best handle truncation here when the button may be of variable width too? -->
+									<a ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">"{{ get_passage(path.destination).content }}" <span class="passageLink" data-choices="9">P{{ get_passage(path.destination).id }}</span></a>
+								</p>
+							</div>
+						</div>
+
+						<!-- TODO: need to add support for showing collapsed pre/post logic sections -->
 						<div class="col-xs-1 choiceLogic h4">
 							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
-							<a href="#"><span class="glyphicon glyphicon-book"></span></a>
+							<a href="#"><span class="glyphicon glyphicon-cog"></span></a>
 						</div>
 					</div>
 
+
+
+					<!-- TODO: delete me... static example code -->
+					<hr />
+					<hr />
 					<div class="choiceContainer">
 						<div class="col-xs-2 choiceUtil icon-subtler">
 							<a class="h3" href="#"><span class="glyphicon glyphicon-minus-sign"></span></a>
@@ -299,14 +315,19 @@
 							<a href="#"><span class="glyphicon glyphicon-book"></span> <span class="badge">2</span></a>
 						</div>
 					</div>
+					<hr />
+					<hr />
+					<!-- TODO: end of delete me... static example code -->
 
-					<p class="h3 row-gutter-1x"><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
+
+					<p class="h3 row-gutter-1x"><a href="#" ng-click="new_choice(passage)"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
 				</div><!-- .passageChoices -->
 			</div>
 		</div><!-- .passageExits -->
 	</div><!-- .passage -->
 </div><!-- .scrollable -->
 </div><!-- .paneSplit -->
+
 
 <div class="paneSplit paneRight">
 	<div class="pane theme-alt panePassages">
@@ -315,15 +336,26 @@
 
 		<h2>Passages</h2>
 
+		<!-- TODO: need to differentiate "picking" mode -->
 		<div class="input-group">
 			<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-			<input type="text" class="form-control" placeholder="Filter Passages">
-			<span class="input-group-extra"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></span>
+			<input ng-model="passage_search" type="text" class="form-control" placeholder="Filter Passages">
+			<span class="input-group-extra"><a href="#" ng-click="clear_passage_search()"><span class="glyphicon glyphicon-remove"></span></a></span>
 		</div>
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
-				<li><a href="#"><span class="badge" data-choices="3">P1</span> "Snippet of the passage text&hellip;"</a></li>
+				<!-- TODO: probably need to rethink truncation overall... and actually some passages could be quite long, so it would be wasteful to output all of it and have CSS truncate it. -->
+				<li ng-repeat="passage in story.passages | filter:passage_search" class="truncate">
+					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}">
+						<span class="badge" data-choices="9">P{{ passage.id }}</span>
+						<!-- TODO: may indicate this some other way? -->
+						<span ng-show="passage.opening" class="label label-success">Opening</span>
+						"{{passage.content}}"
+					</a>
+				</li>
+
+
 				<li><a href="#"><span class="badge" data-choices="1">P2</span> "Snippet of the passage text&hellip;"</a></li>
 				<li><a href="#"><span class="badge" data-choices="7">P3</span> "Snippet of the passage text&hellip;"</a></li>
 				<li><a href="#"><span class="badge" data-choices="2">P4</span> "Snippet of the passage text&hellip;"</a></li>
@@ -356,6 +388,7 @@
 		</div><!-- .scrollable -->
 	</div><!-- .panePassages -->
 </div><!-- .paneSplit -->
+
 
 </div><!-- .wrapInner -->
 </div><!-- .wrap -->
