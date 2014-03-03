@@ -5,9 +5,12 @@
  */
 chrome.app.runtime.onLaunched.addListener(function() {
   chrome.app.window.create('window.html', {
+  	'id': 'archimedes',
     'bounds': {
-      'width': 400,
-      'height': 500
-    }
+      'width': 960,
+      'height': 600
+    },
+    'minWidth': 900,
+    'minHeight': 400
   });
 });

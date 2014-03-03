@@ -1,3 +1,15 @@
+$(function () {
+
+	// TODO:Is there a preferred Angular way to make an anchor's onClick directive preventDefault on the event?
+	// TODO: Also, for some reason this delegate doesn't actually catch all the anchors
+	$('body').on('click', 'a', function (e) {
+		e.preventDefault();
+	});
+
+});
+
+
+
 angular.module('storyApp', [])
 
 .value('storiesNamespace',     'choosatron/stories/')
@@ -83,6 +95,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
 	$scope.new_passage  =  function(entrance_choice) {
 		$scope.passage = new Passage();
+		$scope.passage.number = $scope.story.get_next_passage_number();
 		$scope.story.add_passage($scope.passage);
 		if (entrance_choice) {
 			entrance_choice.set_destination($scope.passage);

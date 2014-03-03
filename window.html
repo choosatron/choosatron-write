@@ -82,7 +82,7 @@
 			<li ng-repeat="entrance in story.collect_entrances(passage)">
 				<a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)" class="truncated">
 					<!-- TODO: # of choices the entrance passage has -->
-					<span class="passageBack" data-choices="9">P{{ entrance.id }}</span>
+					<span class="passageBack" data-choices="9">P{{ entrance.number }}</span>
 					<div>
 						<p>"{{entrance.content}}"</p>
 						<p class="h4">9. TODO Choice's copy here</p>
@@ -99,7 +99,7 @@
 			<!-- TODO: what happens when you delete a passage... what passage do you go to? -->
 			<!-- TODO: when you create a new story... it would default to the starting passage. -->
 			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at. -->
-			<h2>Passage {{ passage.id }} <a class="h4 icon-inline icon-subtle" href="#" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
+			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" href="#" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
@@ -148,15 +148,15 @@
 							<p><input ng-model="choice.content" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
 							<!-- TODO: fix pick_passage() -->
-							<p ng-if="!choice.hasDestination()" class="choicePassageMenu"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+							<p ng-if="!choice.has_destination()" class="choicePassageMenu"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 
 							<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
-							<div ng-if="choice.hasDestination()" ng-repeat="path in choice.paths">
+							<div ng-if="choice.has_destination()" ng-repeat="path in choice.paths">
 								<p ng-if="path.destination" class="choicePassage">
 									<!-- TODO: need to wire up this delete path/destination button -->
 									<a class="choicePassageUnlink icon-subtle" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a>
 									<!-- TODO: not exactly sure how to best handle truncation here when the button may be of variable width too? -->
-									<a ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">"{{ get_passage(path.destination).content }}" <span class="passageLink" data-choices="9">P{{ get_passage(path.destination).id }}</span></a>
+									<a ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">"{{ get_passage(path.destination).content }}" <span class="passageLink" data-choices="9">P{{ get_passage(path.destination).number }}</span></a>
 								</p>
 							</div>
 						</div>
@@ -348,42 +348,12 @@
 				<!-- TODO: probably need to rethink truncation overall... and actually some passages could be quite long, so it would be wasteful to output all of it and have CSS truncate it. -->
 				<li ng-repeat="passage in story.passages | filter:passage_search" class="truncate">
 					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}">
-						<span class="badge" data-choices="9">P{{ passage.id }}</span>
+						<span class="badge" data-choices="9">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-show="passage.opening" class="label label-success">Opening</span>
 						"{{passage.content}}"
 					</a>
 				</li>
-
-
-				<li><a href="#"><span class="badge" data-choices="1">P2</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="7">P3</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="2">P4</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="3">P5</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="5">P6</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="4">P7</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="6">P8</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="7">P9</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="5">P10</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="7">P11</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="8">P12</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="2">P13</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="0">P14</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="1">P15</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="2">P16</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="6">P17</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="9">P18</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="10">P19</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="2">P20</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="3">P21</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="4">P22</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="7">P23</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="5">P24</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="4">P25</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="8">P26</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="0">P27</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="1">P28</span> "Snippet of the passage text&hellip;"</a></li>
-				<li><a href="#"><span class="badge" data-choices="0">P29</span> "Snippet of the passage text&hellip;"</a></li>
 			</ul>
 		</div><!-- .scrollable -->
 	</div><!-- .panePassages -->

@@ -101,6 +101,8 @@ Model.prototype = {
 };
 
 function Story(data) {
+	this.lastPassageNumber = 0;
+
 	this.title     =  '';
 	this.version   =  1.0;
 	this.passages  =  [];
@@ -108,6 +110,10 @@ function Story(data) {
 }
 
 Story.methods = {
+	get_next_passage_number: function () {
+		return ++this.lastPassageNumber;
+	},
+
 	get_opening: function() {
 		var opening = null;
 		this.each_passage(function(p) {
@@ -185,6 +191,8 @@ Story.methods = {
 Model.extend(Story, Story.methods);
 
 function Passage(data) {
+	this.number = null;
+
 	this.content    =  '';
 	this.choices    =  [];
 	this.opening    =  false;

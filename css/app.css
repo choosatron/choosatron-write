@@ -12,6 +12,17 @@ d88P     88888888P" 88888P"
             888     888      
             888     888      
 **/
+html,
+body {
+	height: 100%;
+	overflow: hidden;
+}
+
+/* TODO: testing */
+hr {
+	border: 2px solid red;
+}
+
 textarea {
 	max-width: 100%;
 }
