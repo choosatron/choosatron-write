@@ -285,7 +285,7 @@ Passage.methods = {
 
 		this.each_choice(function (choice) {
 			if (choice.has_destination(passage)) {
-				matching_choice = n + '. ' + choice.content;
+				matching_choice = n + '. ' + choice.get_content();
 			}
 
 			n++;
@@ -321,6 +321,10 @@ function Choice(data) {
 }
 
 Choice.methods = {
+	get_content: function () {
+		return this.content || "Write your choice content here."
+	},
+
 	has_destination: function(passage) {
 		var has = false;
 		angular.forEach(this.paths, function(path) {
