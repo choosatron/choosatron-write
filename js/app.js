@@ -1,4 +1,4 @@
-angular.module('storyApp', [])
+angular.module('storyApp', ['filters'])
 
 .value('storiesNamespace',     'choosatron/stories/')
 .value('preferencesNamespace', 'choosatron/preferences/')
@@ -194,3 +194,20 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 }
 
 ]);
+
+
+angular.module('filters', []).
+	filter('truncate', function () {
+		return function (text, length) {
+			if (isNaN(length)) {
+				length = 100;
+			}
+
+			if (text.length <= length) {
+				return text;
+
+			} else {
+				return String(text).slice(0, length);
+			}
+		};
+	});

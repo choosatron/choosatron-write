@@ -36,6 +36,7 @@ a[ng-click] {
 }
 
 .truncated {
+	display: block;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -519,6 +520,7 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 			display: block;
 			line-height: 2em;
 			text-decoration: none;
+			overflow: hidden;
 		}
 
 		.passageEntrances > ul > li p {
@@ -639,9 +641,22 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 		margin-left: 2em;
 	}
 
-.choicePassageUnlink {
-	margin-right: 1em;
+.choicePassage {
 }
+
+	.choicePassage a {
+		display: inline-block;
+	}
+
+		.choicePassage a.truncated {
+			max-width: 70%;
+			text-align: left;
+			line-height: 1em;
+		}
+
+	.choicePassageUnlink {
+		margin-right: 1em;
+	}
 
 
 
