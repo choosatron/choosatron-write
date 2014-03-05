@@ -1,3 +1,4 @@
+/// RandomId ///
 function RandomId(len) {
 	this.length = len ? len : 10;
 	this.id = '';
@@ -12,6 +13,10 @@ RandomId.addRange = function(a, start, end) {
 RandomId.candidates = [];
 RandomId.addRange(RandomId.candidates, 97, 122);
 RandomId.used = [];
+RandomId.create = function(len) {
+	var id = new RandomId(len);
+	return id.toString();
+}
 
 RandomId.prototype = {
 	pick_one: function() {
@@ -38,11 +43,18 @@ RandomId.prototype = {
 	}
 }
 
+
+/// Model base class ///
 function Model(data) {
-	var id = new RandomId();
-	this.id = id.toString();
+	this.id       = RandomId.create();
+	this.created  = Date.now();
+	this.modified = null;
+	this.opened   = null;
+
 	if (data) this.load(data);
 }
+
+Model.abbrs = [];
 
 Model.extend = function(cls, data) {
 	cls.prototype = new Model();
@@ -93,19 +105,26 @@ Model.prototype = {
 		return o;
 	},
 
-	serialize: function() {
+	serialize: function(pretty) {
 		var o = this.object();
-		var s = angular.toJson(o);
+		var s = angular.toJson(o, pretty);
 		return s;
 	}
 };
 
+
+/// Story ///
 function Story(data) {
 	this.lastPassageNumber = 0;
 
-	this.title     =  '';
-	this.version   =  1.0;
-	this.passages  =  [];
+	this.title        =  '';
+	this.version      =  1.0;
+	this.description  =  '';
+	this.cover_url    =  '';
+	this.genre        =  '';
+	this.author       =  '';
+	this.credit       =  '';
+	this.passages     =  [];
 	Model.call(this, data);
 }
 
@@ -190,18 +209,37 @@ Story.methods = {
 };
 Model.extend(Story, Story.methods);
 
+
+/// Passage ///
 function Passage(data) {
 	this.number = null;
-
-	this.content    =  '';
-	this.choices    =  [];
-	this.opening    =  false;
+	this.content     =  '';
+	this.choices     =  [];
+	this.opening     =  false;
+	this.value       =  0;
 	Model.call(this, data);
+
+	Object.defineProperty(this, "abbr", {
+		get: function abbr() {return this.abbreviate(10);}
+	});
 }
+
+Passage.abbrs = {};
 
 Passage.methods = {
 	get_content: function () {
 		return this.content || "Write your passage content here."
+	},
+
+	abbreviate: function(len) {
+		var starter = this.content.replace(/[^a-zA-Z0-1]/g, '').substr(0, len).toLowerCase();
+		var abbr = starter;
+		var i = 1;
+		while (Passage.abbrs[abbr] && Passage.abbrs[abbr] != this.id) {
+			abbr = starter + (i++).toString(); 
+		}
+		Passage.abbrs[abbr] = this.id;
+		return abbr;
 	},
 
 	add_choice: function(choice) {
@@ -268,9 +306,17 @@ Passage.methods = {
 };
 Model.extend(Passage, Passage.methods);
 
+
+/// Choice ///
 function Choice(data) {
-	this.content  =  '';
-	this.paths    =  [new Path()];
+	this.content     =  '';
+
+	// These are the conditions used to determine whether this choice is displayed
+	this.conditions  =  '';
+
+	// An array of possible paths for this choice.
+	this.paths       =  [new Path()];
+
 	Model.call(this, data);
 }
 
@@ -315,8 +361,17 @@ Choice.methods = {
 }
 Model.extend(Choice, Choice.methods);
 
+
+/// Path ///
 function Path(data) {
-	this.destination = null;
+	// The destination id of the passage this path takes you to.
+	this.destination  =  null;
+
+	// The conditions that need to be met in order for this path to display.
+	this.conditions   =  '';
+
+	// The updates that occur if this path is taken.
+	this.updates      =  '';
 	Model.call(this, data);
 }
-Path.prototype = new Model();
+Model.extend(Path, {});

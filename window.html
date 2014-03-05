@@ -139,6 +139,7 @@
 					</a></li>
 				</ul>
 				<div class="current_passage">
+					{{passage.abbr}}
 					<h4><button class="btn btn-danger" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></button> Passage</h4>
 					<textarea ng-model="passage.content" class="editable passage_{{passage.id}}" placeholder="Enter passage content"></textarea>
 
@@ -173,9 +174,10 @@
 						<span class="glyphicon glyphicon-plus"></span>
 						Add Choice
 					</button>
-				</div>
+				</div> <!-- /current_passage -->
 			</div>
 		</form>
-	</div>
+	</div><!-- /story -->
+	<pre>{{json_story(true)}}</pre>
 </body>
 </html>
