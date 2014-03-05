@@ -71,13 +71,12 @@
 
 
 <input class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
-<div class="wrap">
+<div class="wrap ng-class:{picking: picking}">
 <div class="wrapInner">
 
 
 <div class="paneSplit">
 <div class="scrollable scrollPassages">
-	<!-- TODO: this div's ng-show should be determined by whether this passage even has entrances -->
 	<div class="passageEntrances">
 		<ul class="list-unstyled">
 			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
@@ -148,7 +147,8 @@
 						<div class="col-xs-9">
 							<p><input ng-model="choice.content" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
-							<!-- TODO: Potentially buggy scenario... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
+							<!-- TODO: Potentially buggy scenario with picking mode... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
+							<!-- TODO: what happens if you click "Existing Passage" and then immediately pick "New Passage" ?? -->
 							<p ng-if="!choice.has_destination()" class="choicePassageMenu"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 
 							<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
@@ -335,11 +335,13 @@
 	<div class="pane theme-alt panePassages">
 		<p class="paneToggle"><label for="paneRightToggle"><span class="glyphicon glyphicon-chevron-left"></span></label></p>
 
+		<div class="pickingMessage">
+			<h3>Choose a passage to link <span class="glyphicon glyphicon-arrow-right"></span></h3>
+			<h3><a ng-click="pick_passage(null)"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</a></h3>
+		</div>
+
 		<h2>Passages</h2>
 
-		<!-- TODO: pane needs to open for "picking" mode -->
-		<!-- TODO: need to differentiate "picking" mode -->
-		<!-- TODO: need to be able to cancel "picking" mode -->
 		<div class="input-group">
 			<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			<input ng-model="passage_search" type="text" class="form-control" placeholder="Filter Passages">
