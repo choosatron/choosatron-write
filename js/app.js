@@ -21,6 +21,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.prev_passage    =  null;
 	$scope.picking        =  false;
 	$scope.deleted        =  null;
+	$scope.view = 'stories';
 
 	this.init  =  function() {
 		$scope.load_stories();
@@ -51,6 +52,10 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		});
 	};
 
+	$scope.show_stories_menu = function () {
+		$scope.view = 'stories';
+	};
+
 	$scope.delete_story  =  function(story) {
 		$scope.deleted  =  { 
 			type: "story",
@@ -72,6 +77,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.story    =  story;
 		$scope.set_passage((story ? story.get_opening() : null), true);
 		$preferences.set('last_story_id', story ? story.id : null);
+		$scope.view = 'passage';
 	};
 
 	$scope.new_story  =  function() {
@@ -80,6 +86,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.new_passage();
 		$scope.stories.push(story);
 		$preferences.set('last_story_id', story.id);
+		$scope.view = 'passage';
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {

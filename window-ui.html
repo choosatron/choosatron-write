@@ -21,7 +21,9 @@
 </head>
 <body ng-controller="StoryCtrl">
 
-<ng-include src="'templates/passage.html'"></ng-include>
+<ng-include src="'templates/stories.html'" ng-if="view == 'stories'"></ng-include>
+
+<ng-include src="'templates/passage.html'" ng-if="view == 'passage'"></ng-include>
 
 </body>
 </html>

@@ -1,0 +1,51 @@
+
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h4 pull-left">Archimedes</p>
+
+		<p class="h5 pull-right"><a><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<li><a ng-click="new_story()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
+		<!-- TODO: re-wire import -->
+		<li><a><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a></li>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="container storiesListMenu">
+		<!-- TODO: wire sort to orderBy filter on stories below -->
+		<ul class="list-inline">
+			<li><strong>Sort:</strong></li>
+			<li><a><span class="glyphicon glyphicon-font"></span></a></li>
+			<li><a><span class="glyphicon glyphicon-time"></span><span class="glyphicon glyphicon-arrow-down"></span></a></li>
+		</ul>
+	</div><!-- .container -->
+
+	<div class="scrollable">
+		<div class="container">
+			<div class="row storiesList">
+				<ul class="list-unstyled">
+					<li ng-repeat="s in stories | orderBy:'title'" class="col-md-4 col-sm-6"><div>
+						<h3><a ng-click="select_story(s)">{{ s.title }}</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> Author One</li>
+							<li><strong>Genre:</strong> Survival Horror</li>
+						</ul>
+
+						<p>Once upon a time there was a crystal skull hidden in a cave.  Some say there's a horrible curse and possibly some mummies.  Will you finally be the one who discovers where it is hidden?  Can you avoid the curse?  And mummies?</p>
+
+						<!-- TODO: wire these -->
+						<ul class="list-inline list-icon-menu">
+							<li><a class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+				</ul>
+			</div><!-- .storiesList -->
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->
