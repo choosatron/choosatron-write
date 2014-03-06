@@ -31,7 +31,8 @@ textarea {
 	width: 100%;
 }
 
-a[ng-click] {
+a[ng-click],
+a[data-target] {
 	cursor: pointer;
 }
 

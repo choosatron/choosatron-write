@@ -27,7 +27,7 @@
 		<!-- TODO: what's the best Angular+Chrome App way of incorporating an entirely different screen of content... new html page? Angular routing? etc? -->
 		<p class="h5 pull-left"><a href="#"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 
-		<p class="h5 pull-right"><a href="#"><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
+		<p class="h5 pull-right"><a><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
 	</div>
 
 	<div class="row">
@@ -37,7 +37,7 @@
 			<ul class="list-inline list-icon-menu">
 				<li><a href="#export-{{story.id}}" ng-click="export_story(story)"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
 				<!-- what if you can only delete from the stories list? -->
-				<!-- <li><a href="#"><span class="glyphicon glyphicon-trash"></span> Delete</a></li> -->
+				<!-- <li><a><span class="glyphicon glyphicon-trash"></span> Delete</a></li> -->
 			</ul>
 		</div>
 
@@ -61,7 +61,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-9 col-sm-offset-3"><p><a href="#"><span class="glyphicon glyphicon-pencil"></span> Edit More Story Info</a></p></div>
+			<div class="col-sm-9 col-sm-offset-3"><p><a><span class="glyphicon glyphicon-pencil"></span> Edit More Story Info</a></p></div>
 		</div>
 	</div>
 
@@ -80,7 +80,7 @@
 	<div class="passageEntrances">
 		<ul class="list-unstyled">
 			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
-				<a href="#edit-{{entrance.id}}" ng-click="edit_passage(entrance.id)">
+				<a ng-click="edit_passage(entrance.id)">
 					<span class="passageBack" data-choices="{{ entrance.choices.length }}">P{{ entrance.number }}</span>
 					<div>
 						<p class="truncated">"{{ entrance.get_content() | truncate }}"</p>
@@ -99,7 +99,7 @@
 			<!-- TODO: there seem to be bugs with deleting passages and opening/closing the app... you get a lot of blank passages, some of which you can't seem to add choices to? maybe? -->
 			<!-- TODO: when you create a new story... it would default to the starting passage... probably already the case -->
 			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at... dunno if that's the case now -->
-			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" href="#" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
+			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
@@ -110,9 +110,9 @@
 			<!-- TODO: support for ending/append needs to be worked out. -->
 			<!-- TODO: need confirmation dialog when switching between these types -->
 			<ul class="nav nav-tabs nav-justified">
-				<li><a href="#passageEnding" data-toggle="tab">Set as Ending</a></li>
-				<li><a href="#passageAppend" data-toggle="tab">Append a Passage</a></li>
-				<li class="active"><a href="#passageChoices" data-toggle="tab">Add Choices</a></li>
+				<li><a data-target="#passageEnding" data-toggle="tab">Set as Ending</a></li>
+				<li><a data-target="#passageAppend" data-toggle="tab">Append a Passage</a></li>
+				<li class="active"><a data-target="#passageChoices" data-toggle="tab">Add Choices</a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -131,7 +131,7 @@
 
 
 				<div class="tab-pane passageAppend" id="passageAppend">
-					<p class="h4 text-center"><a href="#"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+					<p class="h4 text-center"><a><span class="glyphicon glyphicon-link"></span> New passage</a> <a><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 				</div><!-- .passageAppend -->
 
 
@@ -140,7 +140,7 @@
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer">
 						<div class="col-xs-2 choiceUtil icon-subtler">
-							<a class="h3" href="#" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-minus-sign"></span></a>
+							<a class="h3" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-minus-sign"></span></a>
 							<span class="choiceNumber">{{ $index + 1 }}</span>
 						</div>
 
@@ -149,24 +149,24 @@
 
 							<!-- TODO: Potentially buggy scenario with picking mode... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
 							<!-- TODO: what happens if you click "Existing Passage" and then immediately pick "New Passage" ?? -->
-							<p ng-if="!choice.has_destination()" class="choicePassageMenu"><a href="#new" ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a href="#select" ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+							<p ng-if="!choice.has_destination()" class="choicePassageMenu"><a ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 
 							<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
 							<div ng-if="choice.has_destination()" ng-repeat="path in choice.paths">
 								<div ng-if="path.destination" class="choicePassage">
 									<a class="choicePassageUnlink icon-subtle" ng-click="choice.set_destination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
 
-									<a class="truncated" ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}">"{{ get_passage(path.destination).get_content() | truncate }}"</a>
+									<a class="truncated" ng-click="edit_passage(path.destination)">"{{ get_passage(path.destination).get_content() | truncate }}"</a>
 
-									<a ng-click="edit_passage(path.destination)" href="#edit-{{path.destination}}"><span class="passageLink" data-choices="9">P{{ get_passage(path.destination).number }}</span></a>
+									<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="9">P{{ get_passage(path.destination).number }}</span></a>
 								</div>
 							</div>
 						</div>
 
 						<!-- TODO: need to add support for showing collapsed pre/post logic sections -->
 						<div class="col-xs-1 choiceLogic h4">
-							<a href="#"><span class="glyphicon glyphicon-eye-open"></span></a>
-							<a href="#"><span class="glyphicon glyphicon-cog"></span></a>
+							<a><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a><span class="glyphicon glyphicon-cog"></span></a>
 						</div>
 					</div>
 
@@ -324,7 +324,7 @@
 					<!-- TODO: end of static example code -->
 
 
-					<p class="h3 row-gutter-1x"><a href="#" ng-click="new_choice(passage)"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
+					<p class="h3 row-gutter-1x"><a ng-click="new_choice(passage)"><span class="glyphicon glyphicon-plus-sign"></span> Add Choice</a></p>
 				</div><!-- .passageChoices -->
 			</div>
 		</div><!-- .passageExits -->
@@ -347,13 +347,13 @@
 		<div class="input-group">
 			<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			<input ng-model="passage_search" type="text" class="form-control" placeholder="Filter Passages">
-			<span class="input-group-extra"><a href="#" ng-click="clear_passage_search()"><span class="glyphicon glyphicon-remove"></span></a></span>
+			<span class="input-group-extra"><a ng-click="clear_passage_search()"><span class="glyphicon glyphicon-remove"></span></a></span>
 		</div>
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
 				<li ng-repeat="passage in story.passages | filter:passage_search">
-					<a ng-click="edit_passage(passage.id)" href="#edit-{{passage.id}}" class="truncated">
+					<a ng-click="edit_passage(passage.id)" class="truncated">
 						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-show="passage.opening" class="label label-success">Opening</span>
