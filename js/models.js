@@ -129,6 +129,10 @@ function Story(data) {
 }
 
 Story.methods = {
+	get_title: function () {
+		return this.title || "Untitled Story";
+	},
+
 	get_next_passage_number: function () {
 		return ++this.lastPassageNumber;
 	},

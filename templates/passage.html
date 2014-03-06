@@ -24,17 +24,17 @@
 				<div class="form-group">
 					<label for="input_author" class="col-sm-3 control-label">Author</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" id="input_author" placeholder="Author" value="Author One" />
+						<input ng-model="story.author" type="text" class="form-control" id="input_author" placeholder="Author" />
 					</div>
 					<label for="input_genre" class="col-sm-2 control-label">Genre</label>
 					<div class="col-sm-3">
-						<input type="text" class="form-control" id="input_genre" placeholder="Genre" value="Survival Horror" />
+						<input ng-model="story.genre" type="text" class="form-control" id="input_genre" placeholder="Genre" />
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="input_credits" class="col-sm-3 control-label">Description</label>
 					<div class="col-sm-9">
-						<textarea class="form-control" rows="3" placeholder="Story Description">Once upon a time there was a crystal skull hidden in a cave.  Some say there's a horrible curse and possibly some mummies.  Will you finally be the one who discovers where it is hidden?  Can you avoid the curse?  And mummies?</textarea>
+						<textarea ng-model="story.description" class="form-control" rows="3" placeholder="Story Description"></textarea>
 					</div>
 				</div>
 			</div>

@@ -7,6 +7,7 @@
 	</div>
 
 	<ul class="list-inline list-icon-menu h4">
+		<!-- TODO: why don't new stories get saved?! -->
 		<li><a ng-click="new_story()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
 		<!-- TODO: re-wire import -->
 		<li><a><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a></li>
@@ -18,8 +19,8 @@
 		<!-- TODO: wire sort to orderBy filter on stories below -->
 		<ul class="list-inline">
 			<li><strong>Sort:</strong></li>
-			<li><a><span class="glyphicon glyphicon-font"></span></a></li>
-			<li><a><span class="glyphicon glyphicon-time"></span><span class="glyphicon glyphicon-arrow-down"></span></a></li>
+			<li><a><span class="glyphicon glyphicon-font"></span><span class="glyphicon glyphicon-arrow-down"></span></a></li>
+			<li><a><span class="glyphicon glyphicon-time"></span></a></li>
 		</ul>
 	</div><!-- .container -->
 
@@ -28,20 +29,20 @@
 			<div class="row storiesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="s in stories | orderBy:'title'" class="col-md-4 col-sm-6"><div>
-						<h3><a ng-click="select_story(s)">{{ s.title }}</a></h3>
+						<h3><a ng-click="select_story(s)">{{ s.get_title() }}</a></h3>
 
 						<ul class="list-unstyled">
-							<li><strong>By:</strong> Author One</li>
-							<li><strong>Genre:</strong> Survival Horror</li>
+							<li><strong>By:</strong> {{ s.author }}</li>
+							<li><strong>Genre:</strong> {{ s.genre }}</li>
 						</ul>
 
-						<p>Once upon a time there was a crystal skull hidden in a cave.  Some say there's a horrible curse and possibly some mummies.  Will you finally be the one who discovers where it is hidden?  Can you avoid the curse?  And mummies?</p>
+						<p>{{ s.description }}</p>
 
-						<!-- TODO: wire these -->
 						<ul class="list-inline list-icon-menu">
-							<li><a class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#export-{{s.id}}" ng-click="export_story(s)" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<!-- TODO: create support for duplicate -->
 							<li><a class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
-							<li><a class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+							<li><a ng-click="delete_story(s)" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
 						</ul>
 					</div></li>
 				</ul>
