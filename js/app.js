@@ -1,4 +1,4 @@
-angular.module('storyApp', ['filters'])
+var app = angular.module('storyApp', ['filters'])
 
 .value('storiesNamespace',     'choosatron/stories/')
 .value('preferencesNamespace', 'choosatron/preferences/')
@@ -22,6 +22,11 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.picking        =  false;
 	$scope.deleted        =  null;
 	$scope.view = 'stories';
+	$scope.modal = {confirm_message: ''};
+
+	$scope.foobar = function foobar() {
+		console.log('foobar');
+	};
 
 	this.init  =  function() {
 		$scope.load_stories();

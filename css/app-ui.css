@@ -32,6 +32,7 @@ textarea {
 }
 
 a[ng-click],
+a[confirm-click],
 a[data-target] {
 	cursor: pointer;
 }
@@ -164,6 +165,41 @@ var,
 
 
 /**
+ * Modal
+888b     d888             888        888 
+8888b   d8888             888        888 
+88888b.d88888             888        888 
+888Y88888P888 .d88b.  .d88888 8888b. 888 
+888 Y888P 888d88""88bd88" 888    "88b888 
+888  Y8P  888888  888888  888.d888888888 
+888   "   888Y88..88PY88b 888888  888888 
+888       888 "Y88P"  "Y88888"Y888888888 
+**/
+
+.modal-dialog.modal-sm {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	width: 500px;
+	height: 300px;
+}
+
+.modal-content {
+	border-radius: 0;
+	padding: 20px;
+}
+
+#confirmModal {
+
+}
+
+
+
+
+/**
  * Panes
 8888888b.                                  
 888   Y88b                                 
@@ -242,7 +278,7 @@ var,
 		.paneRight .paneToggle {
 			position: absolute;
 			left: 5px;
-			top: 60px;
+			top: 55px;
 			font-size: 26px;
 		}
 

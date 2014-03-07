@@ -77,7 +77,7 @@
 			<!-- TODO: there seem to be bugs with deleting passages and opening/closing the app... you get a lot of blank passages, some of which you can't seem to add choices to? maybe? -->
 			<!-- TODO: when you create a new story... it would default to the starting passage... probably already the case -->
 			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at... dunno if that's the case now -->
-			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" ng-click="delete_passage(passage)"><span class="glyphicon glyphicon-trash"></span></a></h2>
+			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" confirm-click="delete_passage(passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a></h2>
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
