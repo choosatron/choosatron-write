@@ -210,7 +210,7 @@ angular.module('filters', []).
 				length = 100;
 			}
 
-			if (text.length <= length) {
+			if (text && text.length <= length) {
 				return text;
 
 			} else {
