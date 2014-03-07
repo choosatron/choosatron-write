@@ -32,17 +32,17 @@
 						<h3><a ng-click="select_story(s)">{{ s.get_title() }}</a></h3>
 
 						<ul class="list-unstyled">
-							<li><strong>By:</strong> {{ s.author }}</li>
-							<li><strong>Genre:</strong> {{ s.genre }}</li>
+							<li><strong>By:</strong> {{ s.author || 'Author' }}</li>
+							<li><strong>Genre:</strong> {{ s.genre || 'Genre' }}</li>
 						</ul>
 
-						<p>{{ s.description }}</p>
+						<p>{{ s.description || 'Description' }}</p>
 
 						<ul class="list-inline list-icon-menu">
 							<li><a href="#export-{{s.id}}" ng-click="export_story(s)" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
 							<!-- TODO: create support for duplicate -->
 							<li><a class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
-							<li><a ng-click="delete_story(s)" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+							<li><a confirm-click="delete_story(s)" confirm-message="Delete story?" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
 						</ul>
 					</div></li>
 				</ul>

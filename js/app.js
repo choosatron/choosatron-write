@@ -24,10 +24,6 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.view = 'stories';
 	$scope.modal = {confirm_message: ''};
 
-	$scope.foobar = function foobar() {
-		console.log('foobar');
-	};
-
 	this.init  =  function() {
 		$scope.load_stories();
 		$autosave.watch($scope, 'story', function(s) {return s ? s.id : null}, function(s) {return s ? s.object() : null});

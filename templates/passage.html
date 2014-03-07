@@ -118,7 +118,7 @@
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer">
 						<div class="col-xs-2 choiceUtil icon-subtler">
-							<a class="h3" ng-click="delete_choice(passage, choice)"><span class="glyphicon glyphicon-minus-sign"></span></a>
+							<a class="h3" confirm-click="delete_choice(passage, choice)" confirm-message="Delete choice?"><span class="glyphicon glyphicon-minus-sign"></span></a>
 							<span class="choiceNumber">{{ $index + 1 }}</span>
 						</div>
 
