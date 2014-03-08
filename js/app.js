@@ -23,6 +23,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.deleted        =  null;
 	$scope.view = 'stories';
 	$scope.modal = {confirm_message: ''};
+	$scope.show_story_details = false;
 
 	this.init  =  function() {
 		$scope.load_stories();
@@ -88,6 +89,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.stories.push(story);
 		$preferences.set('last_story_id', story.id);
 		$scope.view = 'passage';
+		$scope.show_story_details = true;
 	}
 
 	$scope.new_passage  =  function(entrance_choice) {
