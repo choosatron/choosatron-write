@@ -24,11 +24,23 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.view = 'stories';
 	$scope.modal = {confirm_message: ''};
 	$scope.show_story_details = false;
+	$scope.stories_sort = 'title';
+	$scope.stories_sort_desc = false;
 
 	this.init  =  function() {
 		$scope.load_stories();
 		$autosave.watch($scope, 'story', function(s) {return s ? s.id : null}, function(s) {return s ? s.object() : null});
 	}
+
+	$scope.sort_stories = function (sort) {
+		if ($scope.stories_sort == sort) {
+			$scope.stories_sort_desc = !$scope.stories_sort_desc;
+
+		} else {
+			$scope.stories_sort = sort;
+			$scope.stories_sort_desc = false;
+		}
+	};
 
 	$scope.get_story  =  function(id) {
 		if (!id) return null;

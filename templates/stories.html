@@ -18,8 +18,8 @@
 		<!-- TODO: wire sort to orderBy filter on stories below -->
 		<ul class="list-inline">
 			<li><strong>Sort:</strong></li>
-			<li><a><span class="glyphicon glyphicon-font"></span><span class="glyphicon glyphicon-arrow-down"></span></a></li>
-			<li><a><span class="glyphicon glyphicon-time"></span></a></li>
+			<li><a ng-click="sort_stories('title')"><span class="glyphicon glyphicon-font"></span><span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'title' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'title' && stories_sort_desc)}"></span></a></li>
+			<li><a ng-click="sort_stories('created')"><span class="glyphicon glyphicon-time"></span><span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'created' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'created' && stories_sort_desc)}"></span></a></li>
 		</ul>
 	</div><!-- .container -->
 
@@ -27,7 +27,7 @@
 		<div class="container">
 			<div class="row storiesList">
 				<ul class="list-unstyled">
-					<li ng-repeat="s in stories | orderBy:'title'" class="col-md-4 col-sm-6"><div>
+					<li ng-repeat="s in stories | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6"><div>
 						<h3><a ng-click="select_story(s)">{{ s.get_title() }}</a></h3>
 
 						<ul class="list-unstyled">

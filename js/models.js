@@ -117,6 +117,7 @@ Model.prototype = {
 function Story(data) {
 	this.lastPassageNumber = 0;
 
+	this.created = Date.now();
 	this.title        =  '';
 	this.version      =  1.0;
 	this.description  =  '';
