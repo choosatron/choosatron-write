@@ -142,6 +142,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 				$scope.passage = passage;
 			}
 		};
+		// The choice paths that link to this passage are not being deleted, but if they were that would require a change to "undo" ... for now I'm just checking when a choice is displaying its paths whether they are linking to a valid passage
 		$scope.story.delete_passage(passage.id);
 		$scope.passage = $scope.story.get_opening();
 	};
