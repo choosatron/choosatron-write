@@ -27,6 +27,8 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.stories_sort = 'title';
 	$scope.stories_sort_desc = false;
 
+	$scope.exit_change_modal = {};
+
 	this.init  =  function() {
 		$scope.load_stories();
 		$autosave.watch($scope, 'story', function(s) {return s ? s.id : null}, function(s) {return s ? s.object() : null});
@@ -158,6 +160,54 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		// The choice paths that link to this passage are not being deleted, but if they were that would require a change to "undo" ... for now I'm just checking when a choice is displaying its paths whether they are linking to a valid passage
 		$scope.story.delete_passage(passage.id);
 		$scope.passage = $scope.story.get_opening();
+	};
+
+	$scope.confirm_exit_type_change = function (passage, exit_type) {
+		var alert, message, onConfirm;
+
+		if (passage.exit_type == exit_type) {
+			return;
+		}
+
+		switch (passage.exit_type) {
+			case 'ending':
+				alert = 'This passage\'s ending value will be deleted.';
+				break;
+			case 'append':
+				alert = 'This passage\'s append will be deleted.';
+				break;
+			case 'choices':
+				alert = 'This passage\'s choices will be deleted.';
+				break;
+		}
+
+		message = 'A passage can only have one type of exit.  ';
+
+		switch (exit_type) {
+			case 'ending':
+				message += 'Are you sure you want to change this passage to an ending?';
+				break;
+			case 'append':
+				message += 'Are you sure you want to change this passage to have an append?';
+				break;
+			case 'choices':
+				message += 'Are you sure you want to change this passage to have choices?';
+				break;
+		}
+
+		$scope.exit_change_modal.alert = alert;
+		$scope.exit_change_modal.message = message;
+
+		onConfirm = function () {
+			$scope.$apply(function () {
+				passage.set_exit_type(exit_type);
+			});
+		};
+
+		$('#confirmExit').off('click.confirmed');
+		$('#confirmExit').one('click.confirmed', onConfirm);
+
+		$('#exitChangeConfirmModal').modal('show');
 	};
 
 	$scope.new_choice  =  function(passage) {

@@ -13,10 +13,11 @@ app.directive('confirmClick', ['$parse', function ($parse) {
 						});
 					});
 
+					scope.$apply(function () {
+						scope.modal.confirm_message = attr.confirmMessage;
+					});
+					
 					$('#confirmModal').modal('show');
-					window.foo = scope;
-					window.bar = attr;
-					scope.modal.confirm_message = attr.confirmMessage;
 				});
 			};
 		}

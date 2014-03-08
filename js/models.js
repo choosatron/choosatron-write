@@ -226,7 +226,18 @@ function Passage(data) {
 	this.value       =  0;
 	this.ending_value = false; // Not an ending when === false
 	this.trashed = false;
+
 	Model.call(this, data);
+
+	if (this.has_ending()) {
+		this.exit_type = 'ending';
+
+	} else if (this.has_append()) {
+		this.exit_type = 'append'
+
+	} else {
+		this.exit_type = 'choices';
+	}
 
 	Passage.passages[this.id] = this;
 
@@ -243,7 +254,15 @@ Passage.methods = {
 		return this.content || "Write your passage content here."
 	},
 
-	is_ending: function () {
+	set_exit_type: function (exit_type) {
+		this.ending_value = false;
+		this.choices = [];
+
+		this.exit_type = exit_type;
+		console.log(this.exit_type);///
+	},
+
+	has_ending: function () {
 		return (this.ending_value !== false);
 	},
 
@@ -260,7 +279,7 @@ Passage.methods = {
 	},
 
 	ending_type_name: function () {
-		if (!this.is_ending()) {
+		if (!this.has_ending()) {
 			return '';
 		}
 

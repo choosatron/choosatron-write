@@ -3,13 +3,13 @@
 			<!-- TODO: support for ending/append needs to be worked out. -->
 			<!-- TODO: need confirmation dialog when switching between these types -->
 			<ul class="nav nav-pills nav-justified">
-				<li ng-class="{active: passage.is_ending()}"><a data-target="#passageEnding" data-toggle="tab">Set as Ending</a></li>
-				<li ng-class="{active: passage.has_append()}"><a data-target="#passageAppend" data-toggle="tab">Append a Passage</a></li>
-				<li ng-class="{active: passage.has_choices() || (!passage.is_ending() && !passage.has_append())}"><a data-target="#passageChoices" data-toggle="tab">Add Choices</a></li>
+				<li ng-class="{active: passage.exit_type == 'ending'}"><a ng-click="confirm_exit_type_change(passage, 'ending')">Set as Ending</a></li>
+				<li ng-class="{active: passage.exit_type == 'append'}"><a ng-click="confirm_exit_type_change(passage, 'append')">Append a Passage</a></li>
+				<li ng-class="{active: passage.exit_type == 'choices'}"><a ng-click="confirm_exit_type_change(passage, 'choices')">Add Choices</a></li>
 			</ul>
 
 			<div class="tab-content">
-				<div class="tab-pane passageEnding ng-class:{active: passage.is_ending()}" id="passageEnding">
+				<div class="tab-pane passageEnding ng-class:{active: passage.exit_type == 'ending'}" id="passageEnding">
 					<div class="btn-toolbar">
 						<div class="btn-group btn-group-justified btn-group-lg">
 							<a ng-click="passage.set_ending(-2)" class="btn btn-default btn-terrible ng-class:{active: passage.ending_value === -2}">Terrible</a>
@@ -22,12 +22,13 @@
 				</div><!-- .passageEnding -->
 
 
-				<div class="tab-pane passageAppend ng-class:{active: passage.has_append()}" id="passageAppend">
-					<p class="h4 text-center"><a><span class="glyphicon glyphicon-link"></span> New passage</a> <a><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+				<div class="tab-pane passageAppend ng-class:{active: passage.exit_type == 'append'}" id="passageAppend">
+					<p class="h4 text-center"><a><span class="glyphicon glyphicon-link"></span> New passage</a></p>
+					<p class="h4 text-center"><a><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 				</div><!-- .passageAppend -->
 
 
-				<div class="tab-pane passageChoices ng-class:{active: passage.has_choices() || (!passage.is_ending() && !passage.has_append())}" id="passageChoices">
+				<div class="tab-pane passageChoices ng-class:{active: passage.exit_type == 'choices'}" id="passageChoices">
 
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer">
@@ -51,7 +52,7 @@
 
 									<a class="truncated" ng-click="edit_passage(path.destination)">"{{ get_passage(path.destination).get_content() | truncate }}"</a>
 
-									<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="9">P{{ get_passage(path.destination).number }}</span></a>
+									<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="{{ get_passage(path.destination).choices.length }}">P{{ get_passage(path.destination).number }}</span></a>
 								</div>
 							</div>
 						</div>
