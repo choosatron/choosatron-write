@@ -2,7 +2,6 @@
 <input ng-model="show_story_details" class="sr-only paneToggleCheckbox" type="checkbox" id="paneTopToggle" />
 <div class="pane paneTop theme-inverse paneStoryEdit">
 	<div class="topBar">
-		<!-- TODO: what's the best Angular+Chrome App way of incorporating an entirely different screen of content... new html page? Angular routing? etc? -->
 		<p class="h5 pull-left"><a ng-click="show_stories_menu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 
 		<p class="h5 pull-right"><a><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
@@ -14,7 +13,7 @@
 
 			<ul class="list-inline list-icon-menu">
 				<li><a href="#export-{{story.id}}" ng-click="export_story(story)"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
-				<!-- what if you can only delete from the stories list? -->
+				<!-- I think it is better if you can only delete from the stories list -->
 				<!-- <li><a><span class="glyphicon glyphicon-trash"></span> Delete</a></li> -->
 			</ul>
 		</div>
@@ -71,13 +70,14 @@
 
 	<div class="passage">
 		<div class="passageBody">
-			<!-- TODO: need confirmation on delete, and/or undo after delete -->
-			<!-- TODO: starting passage should NOT have a delete button... should probably be marked START instead -->
 			<!-- TODO: what happens when you delete a passage... what passage do you go to next? -->
-			<!-- TODO: there seem to be bugs with deleting passages and opening/closing the app... you get a lot of blank passages, some of which you can't seem to add choices to? maybe? -->
-			<!-- TODO: when you create a new story... it would default to the starting passage... probably already the case -->
 			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at... dunno if that's the case now -->
-			<h2>Passage {{ passage.number }} <a class="h4 icon-inline icon-subtle" confirm-click="delete_passage(passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a></h2>
+			<h2>
+				Passage {{ passage.number }}
+				<!-- TODO: may indicate this some other way? -->
+				<span ng-if="passage.opening" class="label label-success">Start</span>
+				<a ng-if="!passage.opening" class="h4 icon-inline icon-subtle" confirm-click="delete_passage(passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
+			</h2>
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
@@ -334,7 +334,7 @@
 					<a ng-click="edit_passage(passage.id)" class="truncated">
 						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
-						<span ng-show="passage.opening" class="label label-success">Opening</span>
+						<span ng-if="passage.opening" class="label label-success">Start</span>
 						"{{ passage.get_content() | truncate }}"
 					</a>
 				</li>
