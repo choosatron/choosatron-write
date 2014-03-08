@@ -138,6 +138,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 			type: "passage",
 			title: passage.content,
 			undo: function() {
+				passage.trashed = false;
 				$scope.story.add_passage(passage);
 				$scope.passage = passage;
 			}

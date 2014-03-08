@@ -175,6 +175,7 @@ Story.methods = {
 		for (var i=0; i<this.passages.length; i++) {
 			if (this.passages[i].id == id) {
 				// Delete entry from array
+				this.passages[i].trashed = true;
 				this.passages.splice(i, 1);
 				break;
 			}
@@ -222,6 +223,7 @@ function Passage(data) {
 	this.choices     =  [];
 	this.opening     =  false;
 	this.value       =  0;
+	this.trashed = false;
 	Model.call(this, data);
 
 	Passage.passages[this.id] = this;
@@ -341,7 +343,7 @@ Choice.methods = {
 				if (passage && passage.id == path.destination) {
 					has = true;
 				}
-				else if (!passage && Passage.passages[path.destination]) {
+				else if (!passage && Passage.passages[path.destination] && !Passage.passages[path.destination].trashed) {
 					has = true;
 				}
 			}
