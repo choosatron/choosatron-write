@@ -174,7 +174,8 @@ Story.methods = {
 		if (!this.passages) return;
 		for (var i=0; i<this.passages.length; i++) {
 			if (this.passages[i].id == id) {
-				delete this.passages[i];
+				// Delete entry from array
+				this.passages.splice(i, 1);
 				break;
 			}
 		}
