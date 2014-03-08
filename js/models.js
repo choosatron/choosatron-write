@@ -224,12 +224,15 @@ function Passage(data) {
 	this.value       =  0;
 	Model.call(this, data);
 
+	Passage.passages[this.id] = this;
+
 	Object.defineProperty(this, "abbr", {
 		get: function abbr() {return this.abbreviate(10);}
 	});
 }
 
 Passage.abbrs = {};
+Passage.passages = {};
 
 Passage.methods = {
 	get_content: function () {
@@ -338,7 +341,7 @@ Choice.methods = {
 				if (passage && passage.id == path.destination) {
 					has = true;
 				}
-				else if (!passage) {
+				else if (!passage && Passage.passages[path.destination]) {
 					has = true;
 				}
 			}
