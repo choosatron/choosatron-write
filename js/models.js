@@ -224,6 +224,7 @@ function Passage(data) {
 	this.choices     =  [];
 	this.opening     =  false;
 	this.value       =  0;
+	this.ending_value = false; // Not an ending when === false
 	this.trashed = false;
 	Model.call(this, data);
 
@@ -240,6 +241,43 @@ Passage.passages = {};
 Passage.methods = {
 	get_content: function () {
 		return this.content || "Write your passage content here."
+	},
+
+	is_ending: function () {
+		return (this.ending_value !== false);
+	},
+
+	has_append: function () {
+		return false;
+	},
+
+	has_choices: function () {
+		return (this.choices && this.choices.length);
+	},
+
+	set_ending: function (val) {
+		this.ending_value = val;
+	},
+
+	ending_type_name: function () {
+		if (!this.is_ending()) {
+			return '';
+		}
+
+		switch (this.ending_value) {
+			case -2:
+				return 'terrible';
+			case -1:
+				return 'bad';
+			case 0:
+				return 'neutral';
+			case 1:
+				return 'good';
+			case 2:
+				return 'great';
+		}
+
+		return '';
 	},
 
 	abbreviate: function(len) {

@@ -161,6 +161,20 @@ var,
 	font-style: normal;
 }
 
+.btn-terrible {background-color: #ff8484;}
+.btn-terrible:hover {background-color: #ff3a3a;}
+.btn-terrible.active {color: #fff; background-color: #cf1111; cursor: default;}
+.btn-bad {background-color: #ffce84;}
+.btn-bad:hover {background-color: #ffb03a;}
+.btn-bad.active {color: #fff; background-color: #cf8311; cursor: default;}
+.btn-neutral.active {color: #000; background-color: #fff; cursor: default;}
+.btn-good {background-color: #84e6ff;}
+.btn-good:hover {background-color: #00ccff;}
+.btn-good.active {color: #fff; background-color: #11a8cf; cursor: default;}
+.btn-great {background-color: #84e684;}
+.btn-great:hover {background-color: #3ad83a;}
+.btn-great.active {color: #fff; background-color: #0ea60e; cursor: default;}
+
 
 
 
@@ -591,7 +605,37 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 
 
 
+
+/**
+ * Exits
+8888888888        d8b888            
+888               Y8P888            
+888                  888            
+8888888   888  888888888888.d8888b  
+888       `Y8bd8P'888888   88K      
+888         X88K  888888   "Y8888b. 
+888       .d8""8b.888Y88b.      X88 
+8888888888888  888888 "Y888 88888P' 
+**/
+
 .passageExits {
+}
+
+	.passageExits .nav-pills .active {
+		font-size: 125%;
+	}
+
+.passage.ending-terrible {background-color: #f1dddd; outline: 2px solid #ff8484;}
+.passage.ending-bad {background-color: #f1e9dd; outline: 2px solid #ffce84;}
+.passage.ending-good {background-color: #ddedf1; outline: 2px solid #84e6ff;}
+.passage.ending-great {background-color: #ddf1dd; outline: 2px solid #84e684;}
+
+.passageEnding .btn {
+	font-size: 100%;
+}
+
+.passageEnding .btn.active {
+	font-size: 175%;
 }
 
 
