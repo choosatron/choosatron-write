@@ -117,6 +117,8 @@ Model.prototype = {
 function Story(data) {
 	this.lastPassageNumber = 0;
 
+	console.log(data);///
+
 	this.created = Date.now();
 	this.title        =  '';
 	this.version      =  1.0;
@@ -209,8 +211,15 @@ Story.methods = {
 	},
 
 	load_passages: function(passages) {
-		for (var i=0; i<passages.length; i++) {
+		var i;
+
+		for (i = 0; i < passages.length; i++) {
 			this.passages.push(new Passage(passages[i]));
+		}
+
+		// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()
+		for (i = 0; i < this.passages.length; i++) {
+			this.passages[i].reinit();
 		}
 	}
 };
@@ -226,19 +235,12 @@ function Passage(data) {
 	this.value        = 0;
 	this.ending_value = false; // Not an ending when === false
 	this.trashed      = false;
+	// Cheating and using a Choice for the append data struct so I can reuse a bunch of code
 	this.append_link  = new Choice();
 
 	Model.call(this, data);
 
-	if (this.has_ending()) {
-		this.exit_type = 'ending';
-
-	} else if (this.has_append()) {
-		this.exit_type = 'append'
-
-	} else {
-		this.exit_type = 'choices';
-	}
+	this.reinit();
 
 	Passage.passages[this.id] = this;
 
@@ -251,6 +253,21 @@ Passage.abbrs = {};
 Passage.passages = {};
 
 Passage.methods = {
+	// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()
+	reinit: function () {
+		console.log(100);///
+
+		if (this.has_ending()) {
+			this.exit_type = 'ending';
+
+		} else if (this.has_append()) {
+			this.exit_type = 'append'
+
+		} else {
+			this.exit_type = 'choices';
+		}
+	},
+
 	get_content: function () {
 		return this.content || "Write your passage content here."
 	},
@@ -258,9 +275,9 @@ Passage.methods = {
 	set_exit_type: function (exit_type) {
 		this.ending_value = false;
 		this.choices = [];
+		this.append_link = new Choice();
 
 		this.exit_type = exit_type;
-		console.log(this.exit_type);///
 	},
 
 	has_ending: function () {
@@ -268,7 +285,8 @@ Passage.methods = {
 	},
 
 	has_append: function () {
-		return false;
+		console.log('has_append', this.append_link.has_destination(), this.append_link);///
+		return (this.append_link && this.append_link.has_destination && this.append_link.has_destination());
 	},
 
 	has_choices: function () {
@@ -371,6 +389,14 @@ Passage.methods = {
 		for (var i=0; i<choices.length; i++) {
 			this.choices.push(new Choice(choices[i]));
 		}
+	},
+
+	load_append_link: function (append_link) {
+		// console.log('load_append_link', append_link);///
+
+		this.append_link = new Choice(append_link);
+
+		console.log('load_append_link', this.id, this.append_link);///
 	}
 };
 Model.extend(Passage, Passage.methods);
@@ -426,9 +452,16 @@ Choice.methods = {
 	},
 
 	load_paths: function(paths) {
+		console.log('load_paths', paths);///
 		this.paths = [];
 		for (var i=0; i<paths.length; i++) {
-			this.paths.push(new Path(paths[i]));
+			var path = new Path(paths[i]);
+
+			if (paths[i].destination) {
+				console.log('the_path', path);///
+			}
+
+			this.paths.push(path);
 		}
 	}
 }

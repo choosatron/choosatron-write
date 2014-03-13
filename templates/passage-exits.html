@@ -23,8 +23,19 @@
 
 
 				<div class="tab-pane passageAppend ng-class:{active: passage.exit_type == 'append'}" id="passageAppend">
-					<p class="h4 text-center"><a><span class="glyphicon glyphicon-link"></span> New passage</a></p>
-					<p class="h4 text-center"><a><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+					<p ng-if="!passage.has_append()" class="h4 text-center"><a ng-click="new_passage(passage.append_link)"><span class="glyphicon glyphicon-link"></span> New passage</a></p>
+					<p ng-if="!passage.has_append()" class="h4 text-center"><a ng-click="pick_passage(passage.append_link)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+
+					<!-- TODO: this multiple paths per choice thing might go away... it is not something we're supporting right now -->
+					<div ng-if="passage.has_append()" ng-repeat="path in passage.append_link.paths">
+						<div ng-if="path.destination" class="choicePassage">
+							<a class="choicePassageUnlink icon-subtle" ng-click="passage.append_link.set_destination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
+
+							<a class="truncated" ng-click="edit_passage(path.destination)">"{{ get_passage(path.destination).get_content() | truncate }}"</a>
+
+							<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="{{ get_passage(path.destination).choices.length }}">P{{ get_passage(path.destination).number }}</span></a>
+						</div>
+					</div>
 				</div><!-- .passageAppend -->
 
 
