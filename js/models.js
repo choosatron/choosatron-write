@@ -219,13 +219,14 @@ Model.extend(Story, Story.methods);
 
 /// Passage ///
 function Passage(data) {
-	this.number = null;
-	this.content     =  '';
-	this.choices     =  [];
-	this.opening     =  false;
-	this.value       =  0;
+	this.number       = null;
+	this.content      = '';
+	this.choices      = [];
+	this.opening      = false;
+	this.value        = 0;
 	this.ending_value = false; // Not an ending when === false
-	this.trashed = false;
+	this.trashed      = false;
+	this.append_link  = new Choice();
 
 	Model.call(this, data);
 

@@ -136,21 +136,56 @@ function Storage(engine, namespace) {
 	}
 }
 
-function AutoSave($storage) {
-	this.limit  =  1000;
-
+function AutoSave($storage, $timeout) {
 	/** 
 	 * Watches a particular model within the scope and saves to local storage
 	 * whenever the model has changed and the time limit has elapsed 
 	 * @todo: Enforce the time limit
 	**/
 	this.watch = function($scope, modelName, getKey, getValue) {
+
+		// Each change within the throttle time bumps the save action out slightly.
+		var throttle = 1000; //ms
+
+		// Keep track of the last save time for each key
+		var lastSave = {};
+
+		// Store a reference to the promise to save
+		var savePromise = {};
+
 		$scope.$watch(modelName, function(nv, ov, scope) {
-			if (!nv && !ov) return;
+
+			// No new value or old value, exit
+			if (!nv && !ov) {
+				return;
+			}
+
 			var key = getKey ? getKey(nv) : modelName;
-			if (!key) return;
+
+			// No key returned, exit
+			if (!key) {
+				return;
+			}
+
+			if (savePromise[key]) {
+				$timeout.cancel(savePromise[key]);
+			}
+
 			var val = getValue ? getValue(nv) : nv;
-			$storage.set(key, val);
+			var save = function() {
+				$storage.set(key, val);
+				lastSave[key] = Date.now();
+			};
+
+			var lastTimeSave = lastSave[key];
+			if (lastTimeSave && Date.now() - lastTimeSave < throttle) {
+				// If we're within the throttle time, bump out the final save call 
+				// a little to prevent excessive autosaving.
+				savePromise[key] = $timeout(save, throttle);
+				return;
+			}
+
+			save();
 		}, true);
 	}
 }

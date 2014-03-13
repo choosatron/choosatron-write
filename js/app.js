@@ -7,7 +7,7 @@ var app = angular.module('storyApp', ['filters'])
 .service('$storageEngine', ['$q', StorageEngine])
 
 .service('$stories', ['$storageEngine', 'storiesNamespace', Storage])
-.service('$autosave', ['$stories', AutoSave])
+.service('$autosave', ['$stories', '$timeout', AutoSave])
 .service('$preferences', ['$storageEngine', 'preferencesNamespace', Storage])
 
 .controller('StoryCtrl', ['$scope', '$autosave', '$stories', '$preferences', '$file',
