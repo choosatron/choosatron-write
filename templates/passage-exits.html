@@ -1,7 +1,5 @@
 	<div class="passage ng-class:'ending-'+passage.ending_type_name()">
 		<div class="passageExits">
-			<!-- TODO: support for ending/append needs to be worked out. -->
-			<!-- TODO: need confirmation dialog when switching between these types -->
 			<ul class="nav nav-pills nav-justified">
 				<li ng-class="{active: passage.exit_type == 'ending'}"><a ng-click="confirm_exit_type_change(passage, 'ending')">Set as Ending</a></li>
 				<li ng-class="{active: passage.exit_type == 'append'}"><a ng-click="confirm_exit_type_change(passage, 'append')">Append a Passage</a></li>
