@@ -14,24 +14,50 @@ var app = angular.module('storyApp', ['filters'])
 
 function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
-	$scope.alerts         =  [];
-	$scope.stories        =  [];
-	$scope.story          =  null;
-	$scope.passage        =  null;
-	$scope.prev_passage    =  null;
-	$scope.picking        =  false;
-	$scope.deleted        =  null;
-	$scope.view = 'stories';
-	$scope.modal = {confirm_message: ''};
+	$scope.alerts             = [];
+	$scope.stories            = [];
+	$scope.story              = null;
+	$scope.passage            = null;
+	$scope.prev_passage       = null;
+	$scope.picking            = false;
+	$scope.deleted            = null;
+	$scope.view               = 'stories';
+	$scope.modal              = {confirm_message: ''};
 	$scope.show_story_details = false;
-	$scope.stories_sort = 'title';
-	$scope.stories_sort_desc = false;
+	$scope.stories_sort       = 'title';
+	$scope.stories_sort_desc  = false;
+	$scope.save_state         = false;
 
 	$scope.exit_change_modal = {};
 
 	this.init  =  function() {
 		$scope.load_stories();
-		$autosave.watch($scope, 'story', function(s) {return s ? s.id : null}, function(s) {return s ? s.object() : null});
+		$autosave.watch(
+			$scope, 
+			'story', 
+			function(s) {return s ? s.id : null}, 
+			function(s) {return s ? s.object() : null}
+		);
+
+		$autosave.onSaving(function(key, value) {
+			$scope.save_state = 'saving';
+			console.info('Saving', key);
+		});
+
+		$autosave.onThrottling(function(key, time) {
+			$scope.save_state = 'throttling';
+			console.info('Delaying save', key, time, 'ms');
+		});
+
+		$autosave.onSaved(function(key, value) {
+			$scope.save_state = 'saved';
+			console.info('Saved', key);
+		});
+
+		$autosave.onError(function(e) {
+			$scope.save_sate = 'error';
+			console.error('Error autosaving story', e);
+		});
 	}
 
 	$scope.sort_stories = function (sort) {
