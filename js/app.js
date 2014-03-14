@@ -4,7 +4,9 @@ var app = angular.module('storyApp', ['filters'])
 .value('preferencesNamespace', 'choosatron/preferences/')
 
 .service('$file', ['$http', File])
-.service('$storageEngine', ['$q', StorageEngine])
+
+.provider('$storageEngine', ['$qProvider', StorageEngineProvider])
+//.config(function($storageEngineProvider) {$storageEngineProvider.preferSyncStorage(true);})
 
 .service('$stories', ['$storageEngine', 'storiesNamespace', Storage])
 .service('$autosave', ['$stories', '$timeout', AutoSave])

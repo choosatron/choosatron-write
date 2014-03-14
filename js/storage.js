@@ -1,7 +1,26 @@
-function StorageEngine($q) {
-	if (chrome && chrome.storage) return new ChromeStorageEngine($q);
-	if (window.localStorage) return new LocalStorageEngine($q);
-	return null;
+function StorageEngineProvider() {
+
+	var preferSync = false;
+
+	this.preferSyncStorage = function(value) {
+		if (value) {
+			console.info("Preferring sync storage");
+		}
+		preferSync = value;
+	};
+
+	this.$get = function($q) {
+		if (chrome && chrome.storage && preferSync) {
+			return new ChromeSyncStorageEngine($q);
+		}
+		else if (chrome && chrome.storage) {
+			return new ChromeStorageEngine($q);
+		}
+		else if (window.localStorage) {
+			return new LocalStorageEngine($q);
+		}
+		return new BaseStorageEngine($q);
+	}
 }
 
 function BaseStorageEngine($q) {
@@ -39,7 +58,7 @@ function BaseStorageEngine($q) {
 }
 
 function LocalStorageEngine($q) {
-	BaseStorageEngine.apply(this, $q);
+	BaseStorageEngine.call(this, $q);
 
 	this.area     =  window.localStorage;
 	this.getItem  =  function(key) {
@@ -61,9 +80,10 @@ function LocalStorageEngine($q) {
 }
 
 function ChromeStorageEngine($q) {
-	BaseStorageEngine.apply(this, $q);
+	BaseStorageEngine.call(this, $q);
 
-	this.area     =  chrome.storage.sync;
+	this.area = chrome.storage.local;
+
 	this.getItem  =  function(key) {
 		var deferred = $q.defer();
 		var cb = function(items) {
@@ -86,6 +106,11 @@ function ChromeStorageEngine($q) {
 			}
 		});
 	}
+}
+
+function ChromeSyncStorageEngine($q) {
+	ChromeStorageEngine.call(this, $q);
+	this.area = chrome.storage.sync;
 }
 
 function Storage(engine, namespace) {
