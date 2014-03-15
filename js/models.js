@@ -117,8 +117,6 @@ Model.prototype = {
 function Story(data) {
 	this.lastPassageNumber = 0;
 
-	console.log(data);///
-
 	this.created = Date.now();
 	this.title        =  '';
 	this.version      =  1.0;
@@ -255,8 +253,6 @@ Passage.passages = {};
 Passage.methods = {
 	// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()
 	reinit: function () {
-		console.log(100);///
-
 		if (this.has_ending()) {
 			this.exit_type = 'ending';
 
@@ -285,7 +281,6 @@ Passage.methods = {
 	},
 
 	has_append: function () {
-		console.log('has_append', this.append_link.has_destination(), this.append_link);///
 		return (this.append_link && this.append_link.has_destination && this.append_link.has_destination());
 	},
 
@@ -392,11 +387,7 @@ Passage.methods = {
 	},
 
 	load_append_link: function (append_link) {
-		// console.log('load_append_link', append_link);///
-
 		this.append_link = new Choice(append_link);
-
-		console.log('load_append_link', this.id, this.append_link);///
 	}
 };
 Model.extend(Passage, Passage.methods);
@@ -452,14 +443,9 @@ Choice.methods = {
 	},
 
 	load_paths: function(paths) {
-		console.log('load_paths', paths);///
 		this.paths = [];
 		for (var i=0; i<paths.length; i++) {
 			var path = new Path(paths[i]);
-
-			if (paths[i].destination) {
-				console.log('the_path', path);///
-			}
 
 			this.paths.push(path);
 		}
