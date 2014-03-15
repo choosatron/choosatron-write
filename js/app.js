@@ -170,12 +170,18 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		return $scope.story.get_passage(id);
 	};
 
-	$scope.edit_passage  =  function(id) {
-		$scope.set_passage($scope.story.get_passage(id));
+	$scope.select_passage = function (id) {
 		if ($scope.picking) {
-			$scope.picking.set_destination($scope.passage);
+			$scope.picking.set_destination($scope.story.get_passage(id));
 			$scope.picking = null;
+
+		} else {
+			$scope.edit_passage(id);
 		}
+	};
+
+	$scope.edit_passage = function (id) {
+		$scope.set_passage($scope.story.get_passage(id));
 	};
 
 	$scope.set_passage  =  function (passage, reset) {

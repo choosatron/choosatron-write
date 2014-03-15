@@ -28,7 +28,6 @@
 	<div class="passage">
 		<div class="passageBody">
 			<!-- TODO: when you delete a passage, you seem to always be sent to the starting passage of the story... might be nice if you went to your previous passage?? -->
-			<!-- TODO: when you subsequently open a story... it would default to the last passage you were looking at... dunno if that's the case now -->
 			<h2>
 				Passage {{ passage.number }}
 				<!-- TODO: may indicate this some other way? -->
@@ -65,7 +64,7 @@
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
 				<li ng-repeat="passage in story.passages | filter:passage_search">
-					<a ng-click="edit_passage(passage.id)" class="truncated">
+					<a ng-click="select_passage(passage.id)" class="truncated">
 						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-if="passage.opening" class="label label-success">Start</span>
