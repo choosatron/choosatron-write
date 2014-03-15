@@ -276,6 +276,14 @@ Passage.methods = {
 		this.exit_type = exit_type;
 	},
 
+	exit_is_empty: function () {
+		return (
+			(this.exit_type == 'ending' && !this.has_ending())
+			|| (this.exit_type == 'append' && !this.has_append())
+			|| (this.exit_type == 'choices' && !this.has_choices())
+		);
+	},
+
 	has_ending: function () {
 		return (this.ending_value !== false);
 	},

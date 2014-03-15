@@ -197,6 +197,11 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 			return;
 		}
 
+		if (passage.exit_is_empty()) {
+			passage.set_exit_type(exit_type);
+			return;
+		}
+
 		switch (passage.exit_type) {
 			case 'ending':
 				alert = 'This passage\'s ending value will be deleted.';

@@ -621,9 +621,17 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 .passageExits {
 }
 
-	.passageExits .nav-pills .active {
-		font-size: 125%;
+	.passageExits .nav-pills a:hover {
+		text-decoration: underline;
 	}
+
+		.passageExits .nav-pills .active a,
+		.passageExits .nav-pills .active a:hover {
+			font-size: 125%;
+			background-color: #999;
+			cursor: default;
+			text-decoration: none;
+		}
 
 .passage.ending-terrible {background-color: #f1dddd; outline: 2px solid #ff8484;}
 .passage.ending-bad {background-color: #f1e9dd; outline: 2px solid #ffce84;}
