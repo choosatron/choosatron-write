@@ -1,49 +1,5 @@
 
-<input ng-model="show_story_details" class="sr-only paneToggleCheckbox" type="checkbox" id="paneTopToggle" />
-<div class="pane paneTop theme-inverse paneStoryEdit">
-	<div class="topBar">
-		<p class="h5 pull-left"><a ng-click="show_stories_menu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
-
-		<p class="h5 pull-right"><a><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
-	</div>
-
-	<div class="row">
-		<div class="col-xs-6 h4">
-			<div class="editable-text"><label><span class="glyphicon glyphicon-pencil"></span> <p><input ng-model="story.title" type="text" class="h2 fill-width" placeholder="Story Title" value="The Story About the Crystal Skull" /></p></label></div>
-
-			<ul class="list-inline list-icon-menu">
-				<li><a href="#export-{{story.id}}" ng-click="export_story(story)"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
-				<!-- I think it is better if you can only delete from the stories list -->
-				<!-- <li><a><span class="glyphicon glyphicon-trash"></span> Delete</a></li> -->
-			</ul>
-		</div>
-
-		<div class="col-xs-6 h4">
-			<div class="form-horizontal">
-				<div class="form-group">
-					<label for="input_author" class="col-sm-3 control-label">Author</label>
-					<div class="col-sm-4">
-						<input ng-model="story.author" type="text" class="form-control" id="input_author" placeholder="Author" />
-					</div>
-					<label for="input_genre" class="col-sm-2 control-label">Genre</label>
-					<div class="col-sm-3">
-						<input ng-model="story.genre" type="text" class="form-control" id="input_genre" placeholder="Genre" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="input_credits" class="col-sm-3 control-label">Description</label>
-					<div class="col-sm-9">
-						<textarea ng-model="story.description" class="form-control" rows="3" placeholder="Story Description"></textarea>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-sm-9 col-sm-offset-3"><p><a><span class="glyphicon glyphicon-pencil"></span> Edit More Story Info</a></p></div>
-		</div>
-	</div>
-
-	<p class="paneToggle theme-inverse-exclude"><label for="paneTopToggle"><span class="glyphicon glyphicon-chevron-down"></span></label></p>
-</div><!-- .paneTop -->
+<ng-include src="'templates/story.html'"></ng-include>
 
 
 
