@@ -496,6 +496,17 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		border-bottom: 1em solid transparent;
 	}
 
+	.passageLink {
+		text-align: left;
+	}
+
+		.passageLink:before {
+			left: auto;
+			right: -0.95em;
+			border-right: none;
+			border-left: 1em solid #428bca;
+		}
+
 	.badge[data-choices] {
 		position: relative;
 		padding-right: 22px;
@@ -536,16 +547,21 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		.badge[data-choices="10"]:after, .passageBack[data-choices="10"]:after,
 		.passageLink[data-choices="10"]:after {background-position: -140px -14px;}
 
-	.passageLink {
-		text-align: left;
-	}
-
-		.passageLink:before {
-			left: auto;
-			right: -0.95em;
-			border-right: none;
-			border-left: 1em solid #428bca;
-		}
+		.badge[data-ending="-2"]:after,
+		.passageBack[data-ending="-2"]:after,
+		.passageLink[data-ending="-2"]:after {background-color: #ff3a3a;}
+		.badge[data-ending="-1"]:after,
+		.passageBack[data-ending="-1"]:after,
+		.passageLink[data-ending="-1"]:after {background-color: #ffb03a;}
+		.badge[data-ending="0"]:after,
+		.passageBack[data-ending="0"]:after,
+		.passageLink[data-ending="0"]:after {background-color: #ccc;}
+		.badge[data-ending="1"]:after,
+		.passageBack[data-ending="1"]:after,
+		.passageLink[data-ending="1"]:after {background-color: #00ccff;}
+		.badge[data-ending="2"]:after,
+		.passageBack[data-ending="2"]:after,
+		.passageLink[data-ending="2"]:after {background-color: #3ad83a;}
 
 .passageEntrances  {
 	max-width: 700px;

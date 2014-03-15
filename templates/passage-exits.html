@@ -31,7 +31,7 @@
 
 							<a class="truncated" ng-click="edit_passage(path.destination)">{{ get_passage(path.destination).get_content() | truncate | quote }}</a>
 
-							<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="{{ get_passage(path.destination).choices.length }}">P{{ get_passage(path.destination).number }}</span></a>
+							<a ng-click="edit_passage(path.destination)"><span class="passageLink" passage-icons="get_passage(path.destination)">P{{ get_passage(path.destination).number }}</span></a>
 						</div>
 					</div>
 				</div><!-- .passageAppend -->
@@ -61,7 +61,7 @@
 
 									<a class="truncated" ng-click="edit_passage(path.destination)">{{ get_passage(path.destination).get_content() | truncate | quote }}</a>
 
-									<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="{{ get_passage(path.destination).choices.length }}">P{{ get_passage(path.destination).number }}</span></a>
+									<a ng-click="edit_passage(path.destination)"><span class="passageLink" passage-icons="get_passage(path.destination)">P{{ get_passage(path.destination).number }}</span></a>
 								</div>
 							</div>
 						</div>

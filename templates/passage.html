@@ -14,7 +14,7 @@
 		<ul class="list-unstyled">
 			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
 				<a ng-click="edit_passage(entrance.id)">
-					<span class="passageBack" data-choices="{{ entrance.choices.length }}">P{{ entrance.number }}</span>
+					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
 					<div>
 						<p class="truncated">{{ entrance.get_content() | truncate | quote }}</p>
 						<p ng-if="entrance.get_passage_choice(passage)" class="h4 truncated">{{ entrance.get_passage_choice(passage) | truncate }}</p>
@@ -65,7 +65,7 @@
 			<ul class="list-unstyled list-passages">
 				<li ng-repeat="passage in story.passages | filter:passage_search">
 					<a ng-click="select_passage(passage.id)" class="truncated">
-						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
+						<span class="badge" passage-icons="passage">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-if="passage.opening" class="label label-success">Start</span>
 						{{ passage.get_content() | truncate | quote }}
