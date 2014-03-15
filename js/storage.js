@@ -27,6 +27,8 @@ function BaseStorageEngine($q) {
 	this.area = {};
 	this.listeners = {};
 
+	this.throttle = 750; // ms
+
 	this.on = function(event, callback) {
 		if (!this.listeners[event]) {
 			this.listeners[event] = [];
@@ -111,6 +113,10 @@ function ChromeStorageEngine($q) {
 function ChromeSyncStorageEngine($q) {
 	ChromeStorageEngine.call(this, $q);
 	this.area = chrome.storage.sync;
+
+	// Each change within the throttle time bumps the save action out slightly.
+	// Chrome.sync storage has a max sustained save operation of 10 writes/minute
+	this.throttle = 6000; // ms
 }
 
 function Storage(engine, namespace) {
@@ -272,7 +278,7 @@ function AutoSave($storage, $timeout) {
 
 		// Each change within the throttle time bumps the save action out slightly.
 		// Chrome.sync storage has a max sustained save operation of 10 writes/minute
-		var throttle = 6000; //ms
+		var throttle = $storage.engine.throttle || 6000; //ms
 
 		// Keep track of the last save time for each key
 		var lastSave = {};
