@@ -34,7 +34,13 @@ app.directive('passageIcons', ['$parse', function ($parse) {
 					return;
 				}
 
-				$element.attr('data-choices', passage.choices.length);
+				var choices = passage.choices.length;
+
+				if (passage.has_append()) {
+					choices = 'a';
+				}
+
+				$element.attr('data-choices', choices);
 
 				if (passage.has_ending()) {
 					$element.attr('data-ending', passage.ending_value);

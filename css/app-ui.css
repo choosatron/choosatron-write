@@ -526,6 +526,8 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		background: url(../../img/icon-choices-14x14.png) 0 -14px no-repeat;
 	}
 
+		.badge[data-choices="a"]:after, .passageBack[data-choices="a"]:after,
+		.passageLink[data-choices="a"]:after {background-position: 0 0;}
 		.badge[data-choices="1"]:after, .passageBack[data-choices="1"]:after,
 		.passageLink[data-choices="1"]:after {background-position: -14px -14px;}
 		.badge[data-choices="2"]:after, .passageBack[data-choices="2"]:after,
