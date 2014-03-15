@@ -17,7 +17,8 @@
 					<span class="passageBack" data-choices="{{ entrance.choices.length }}">P{{ entrance.number }}</span>
 					<div>
 						<p class="truncated">"{{ entrance.get_content() | truncate }}"</p>
-						<p class="h4 truncated">{{ entrance.get_passage_choice(passage) | truncate }}</p>
+						<p ng-if="entrance.get_passage_choice(passage)" class="h4 truncated">{{ entrance.get_passage_choice(passage) | truncate }}</p>
+						<p ng-if="entrance.has_append(passage)" class="h4 truncated">Via Append</p>
 					</div>
 				</a>
 			</li>

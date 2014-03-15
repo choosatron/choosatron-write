@@ -204,6 +204,10 @@ Story.methods = {
 			if (p.has_destination(passage)) {
 				entrances.push(p);
 			}
+
+			if (p.has_append(passage)) {
+				entrances.push(p);
+			}
 		});
 		return entrances;
 	},
@@ -288,7 +292,11 @@ Passage.methods = {
 		return (this.ending_value !== false);
 	},
 
-	has_append: function () {
+	has_append: function (passage) {
+		if (passage) {
+			return (this.append_link.has_destination(passage));
+		}
+
 		return (this.append_link && this.append_link.has_destination && this.append_link.has_destination());
 	},
 
