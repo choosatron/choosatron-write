@@ -269,7 +269,7 @@ Passage.methods = {
 	},
 
 	get_content: function () {
-		return this.content || "Write your passage content here."
+		return this.content || "Unwritten Passage";
 	},
 
 	set_exit_type: function (exit_type) {
@@ -424,7 +424,7 @@ function Choice(data) {
 
 Choice.methods = {
 	get_content: function () {
-		return this.content || "Write your choice content here."
+		return this.content || "Unwritten Choice";
 	},
 
 	has_destination: function(passage) {

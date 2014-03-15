@@ -29,7 +29,7 @@
 						<div ng-if="path.destination" class="choicePassage">
 							<a class="choicePassageUnlink icon-subtle" ng-click="passage.append_link.set_destination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
 
-							<a class="truncated" ng-click="edit_passage(path.destination)">"{{ get_passage(path.destination).get_content() | truncate }}"</a>
+							<a class="truncated" ng-click="edit_passage(path.destination)">{{ get_passage(path.destination).get_content() | truncate | quote }}</a>
 
 							<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="{{ get_passage(path.destination).choices.length }}">P{{ get_passage(path.destination).number }}</span></a>
 						</div>
@@ -59,7 +59,7 @@
 								<div ng-if="path.destination" class="choicePassage">
 									<a class="choicePassageUnlink icon-subtle" ng-click="choice.set_destination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
 
-									<a class="truncated" ng-click="edit_passage(path.destination)">"{{ get_passage(path.destination).get_content() | truncate }}"</a>
+									<a class="truncated" ng-click="edit_passage(path.destination)">{{ get_passage(path.destination).get_content() | truncate | quote }}</a>
 
 									<a ng-click="edit_passage(path.destination)"><span class="passageLink" data-choices="{{ get_passage(path.destination).choices.length }}">P{{ get_passage(path.destination).number }}</span></a>
 								</div>

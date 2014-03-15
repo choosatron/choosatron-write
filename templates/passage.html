@@ -16,7 +16,7 @@
 				<a ng-click="edit_passage(entrance.id)">
 					<span class="passageBack" data-choices="{{ entrance.choices.length }}">P{{ entrance.number }}</span>
 					<div>
-						<p class="truncated">"{{ entrance.get_content() | truncate }}"</p>
+						<p class="truncated">{{ entrance.get_content() | truncate | quote }}</p>
 						<p ng-if="entrance.get_passage_choice(passage)" class="h4 truncated">{{ entrance.get_passage_choice(passage) | truncate }}</p>
 						<p ng-if="entrance.has_append(passage)" class="h4 truncated">Via Append</p>
 					</div>
@@ -68,7 +68,7 @@
 						<span class="badge" data-choices="{{ passage.choices.length }}">P{{ passage.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-if="passage.opening" class="label label-success">Start</span>
-						"{{ passage.get_content() | truncate }}"
+						{{ passage.get_content() | truncate | quote }}
 					</a>
 				</li>
 			</ul>
