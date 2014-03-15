@@ -88,10 +88,23 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 				story = new Story(data);
 				$scope.stories.push(story);
 			}
-			$preferences.get('last_story_id').then(function(id) {
-				if (!id) return;
-				var story = $scope.get_story(id);
-				if (story) $scope.select_story(story);
+			$preferences.get('last_story').then(function (info) {
+				if (!info || !info.story_id) {
+					return;
+				}
+
+				var story = $scope.get_story(info.story_id);
+				if (story) {
+					$scope.select_story(story);
+
+					if (info.passage_id) {
+						var passage = $scope.get_passage(info.passage_id);
+
+						if (passage) {
+							$scope.set_passage(passage, true);
+						}
+					}
+				}
 			});
 		});
 	};
@@ -117,10 +130,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.stories = stories;
 	};
 
+	$scope.set_last_story = function () {
+		$preferences.set('last_story', ($scope.story && $scope.passage) ? {story_id: $scope.story.id, passage_id: $scope.passage.id} : null);
+	};
+
 	$scope.select_story  =  function(story) {
 		$scope.story    =  story;
 		$scope.set_passage((story ? story.get_opening() : null), true);
-		$preferences.set('last_story_id', story ? story.id : null);
+		$scope.set_last_story();
 		$scope.view = 'passage';
 	};
 
@@ -129,7 +146,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.story = story;
 		$scope.new_passage();
 		$scope.stories.push(story);
-		$preferences.set('last_story_id', story.id);
+		$scope.set_last_story();
 		$scope.view = 'passage';
 		$scope.show_story_details = true;
 	}
@@ -173,6 +190,8 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		}
 
 		$scope.passage = passage;
+
+		$scope.set_last_story();
 	};
 
 	$scope.delete_passage  =  function(passage) {
