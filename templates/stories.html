@@ -30,6 +30,7 @@
 						<h3><a ng-click="select_story(s)">{{ s.get_title() }}</a></h3>
 
 						<ul class="list-unstyled">
+							<li><span class="glyphicon glyphicon-time"></span> {{ s.created | date }}</li>
 							<li><strong>By:</strong> {{ s.author || 'Author' }}</li>
 							<li><strong>Genre:</strong> {{ s.genre || 'Genre' }}</li>
 						</ul>
