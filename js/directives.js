@@ -24,28 +24,33 @@ app.directive('confirmClick', ['$parse', function ($parse) {
 	};
 }]);
 
-app.directive('passageIcons', ['$parse', function ($parse) {
+app.directive('passageIcons', function () {
 	return {
 		compile: function($templateElement, $templateAttributes) {
 			return function ($scope, $element, attrs) {
-				var passage = ($parse(attrs.passageIcons)($scope));
+				$scope.$watch(attrs.passageIcons, function (value) {
+					var passage = $scope.$eval(attrs.passageIcons);
 
-				if (!passage) {
-					return;
-				}
+					if (!passage) {
+						return;
+					}
 
-				var choices = passage.choices.length;
+					var choices = passage.choices.length;
 
-				if (passage.has_append()) {
-					choices = 'a';
-				}
+					if (passage.has_append()) {
+						choices = 'a';
+					}
 
-				$element.attr('data-choices', choices);
+					$element.attr('data-choices', choices);
 
-				if (passage.has_ending()) {
-					$element.attr('data-ending', passage.ending_value);
-				}
+					if (passage.has_ending()) {
+						$element.attr('data-ending', passage.ending_value);
+
+					} else {
+						$element.removeAttr('data-ending');
+					}
+				}, true);
 			};
 		}
 	};
-}]);
+});
