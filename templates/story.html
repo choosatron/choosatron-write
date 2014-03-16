@@ -1,5 +1,5 @@
 
-<input ng-model="show_story_details" class="sr-only paneToggleCheckbox" type="checkbox" id="paneTopToggle" />
+<input ng-model="$parent.show_story_details" ng-change="$parent.$parent.show_passages = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneTopToggle" />
 <div class="pane paneTop theme-inverse paneStoryEdit">
 	<div class="topBar">
 		<p class="h5 pull-left"><a ng-click="show_stories_menu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>

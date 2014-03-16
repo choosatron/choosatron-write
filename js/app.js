@@ -26,6 +26,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.view               = 'stories';
 	$scope.modal              = {confirm_message: ''};
 	$scope.show_story_details = false;
+	$scope.show_passages      = false;
 	$scope.stories_sort       = 'title';
 	$scope.stories_sort_desc  = false;
 	$scope.save_state         = false;

@@ -3,8 +3,8 @@
 
 
 
-<input class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
-<div class="wrap ng-class:{picking: picking}">
+<input ng-model="$parent.show_passages" ng-change="show_story_details = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
+<div class="wrap ng-class:{picking: picking, top_open: show_story_details}">
 <div class="wrapInner">
 
 
@@ -40,6 +40,8 @@
 	</div><!-- .passage -->
 
 	<ng-include src="'templates/passage-exits.html'"></ng-include>
+
+	<div class="scroll_fix"></div>
 </div><!-- .scrollable -->
 </div><!-- .paneSplit -->
 
@@ -72,6 +74,8 @@
 					</a>
 				</li>
 			</ul>
+
+			<div class="scroll_fix"></div>
 		</div><!-- .scrollable -->
 	</div><!-- .panePassages -->
 </div><!-- .paneSplit -->

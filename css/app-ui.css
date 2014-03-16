@@ -95,6 +95,10 @@ a[data-target] {
 	display: table;
 }
 
+	.wrap.top_open .scroll_fix {
+		height: 300px;
+	}
+
 .wrapInner {
 	height: 100%;
 	background: #111;
