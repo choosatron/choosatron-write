@@ -171,6 +171,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		return $scope.story.get_passage(id);
 	};
 
+	$scope.valid_picking_option = function (item) {
+		return (
+			!$scope.picking
+			|| $scope.passage.exit_type != 'append'
+			|| $scope.passage != item
+		);
+	};
+
 	$scope.select_passage = function (id) {
 		if ($scope.picking) {
 			$scope.picking.set_destination($scope.story.get_passage(id));
