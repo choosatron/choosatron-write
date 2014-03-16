@@ -446,7 +446,7 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 
 .passage-container {
 	width: 80%;
-	max-width: 700px;
+	max-width: 750px;
 	margin: 40px auto;
 }
 
@@ -651,6 +651,7 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 
 	.exit-tabs .nav-tabs a {
 		background-color: #ddd;
+		margin: 0 2px;
 	}
 
 		.exit-tabs .nav-tabs a:hover {
@@ -815,14 +816,14 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 	position: relative;
 	padding: 20px;
 	margin-bottom: 20px;
-	margin-left: 40px;
+	margin-left: 60px;
 	background: #9a9;
 	color: rgba(0, 0, 0, 0.4);
 }
 
 	.choiceDisplayConditions .quip {
 		position: absolute;
-		right: 12px;
+		right: 18px;
 		bottom: -25px;
 		font-size: 36px;
 		margin: 0;
@@ -870,14 +871,14 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 	position: relative;
 	padding: 20px;
 	margin-bottom: 20px;
-	margin-left: 40px;
+	margin-left: 60px;
 	background: #d3c6bb;
 	color: rgba(0, 0, 0, 0.4);
 }
 
 	.choiceStoryUpdates .quip {
 		position: absolute;
-		right: 12px;
+		right: 18px;
 		top: -15px;
 		font-size: 36px;
 		margin: 0;

@@ -413,6 +413,10 @@ Model.extend(Passage, Passage.methods);
 function Choice(data) {
 	this.content     =  '';
 
+	// TODO: These two properties represent a very good reason that there should be a ChoiceController
+	this.showConditions = false;
+	this.showUpdates = false;
+
 	// These are the conditions used to determine whether this choice is displayed
 	this.conditions  =  '';
 

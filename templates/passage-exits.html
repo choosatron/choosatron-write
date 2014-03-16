@@ -39,10 +39,42 @@
 				</div><!-- .passageAppend -->
 
 
+				<!--
+				 .d8888b. 888             d8b                         
+				d88P  Y88b888             Y8P                         
+				888    888888                                         
+				888       88888b.  .d88b. 888 .d8888b .d88b. .d8888b  
+				888       888 "88bd88""88b888d88P"   d8P  Y8b88K      
+				888    888888  888888  888888888     88888888"Y8888b. 
+				Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88 
+				 "Y8888P" 888  888 "Y88P" 888 "Y8888P "Y8888  88888P' 
+				-->
 				<div class="tab-pane passageChoices ng-class:{active: passage.exit_type == 'choices'}" id="passageChoices">
 
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer">
+						<div class="choiceDisplayConditions" ng-show="choice.showConditions">
+							<p><strong>Display choice if:</strong></p>
+
+							<div class="row">
+								<div class="col-xs-1 h4"><a class="icon-subtle"><span class="glyphicon glyphicon-remove-circle"></span></a></div>
+								<div class="col-xs-4"><input type="text" class="form-control var" placeholder="Value" /></div>
+								<div class="col-xs-3">
+								<select class="form-control">
+									<option>equals</option>
+									<option>does not equal</option>
+									<option>greater than</option>
+									<option>less than</option>
+									<option>greater or equal to</option>
+									<option>less or equal to</option>
+								</select>
+								</div>
+								<div class="col-xs-4"><input type="text" class="form-control var" placeholder="Value" /></div>
+							</div>
+
+							<p class="quip"><span class="glyphicon glyphicon-arrow-down"></span></p>
+						</div><!-- .choiceDisplayConditions -->
+
 						<div class="col-xs-2 choiceUtil icon-subtler">
 							<a class="h3" confirm-click="delete_choice(passage, choice)" confirm-message="Delete choice?"><span class="glyphicon glyphicon-minus-sign"></span></a>
 							<span class="choiceNumber">{{ $index + 1 }}</span>
@@ -70,9 +102,33 @@
 
 						<!-- TODO: need to add support for showing collapsed pre/post logic sections -->
 						<div class="col-xs-1 choiceLogic h4">
-							<a><span class="glyphicon glyphicon-eye-open"></span></a>
-							<a><span class="glyphicon glyphicon-cog"></span></a>
+							<a ng-click="choice.showConditions = !choice.showConditions" ng-class="{active: choice.showConditions}"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a ng-click="choice.showUpdates = !choice.showUpdates" ng-class="{active: choice.showUpdates}"><span class="glyphicon glyphicon-cog"></span></a>
 						</div>
+
+						<div class="choiceStoryUpdates" ng-show="choice.showUpdates">
+							<p><strong>When choice selected, update story:</strong></p>
+
+							<div class="row row-gutter-1x">
+								<div class="col-xs-1 h4"><a class="icon-subtle"><span class="glyphicon glyphicon-remove-circle"></span></a></div>
+								<div class="col-xs-4"><input type="text" class="form-control var" placeholder="Variable" /></div>
+								<div class="col-xs-3">
+								<select class="form-control">
+									<option>set to</option>
+									<option>set to opposite</option>
+									<option>increase by</option>
+									<option>decrease by</option>
+									<option>multiply by</option>
+									<option>divide by</option>
+								</select>
+								</div>
+								<div class="col-xs-4"><input type="text" class="form-control var" placeholder="Value" /></div>
+							</div>
+
+							<div class="row-gutter-1x"><a><span class="glyphicon glyphicon-plus"></span> Add Another</a></div>
+
+							<p class="quip"><span class="glyphicon glyphicon-arrow-up"></span></p>
+						</div><!-- .choiceStoryUpdates -->
 					</div>
 
 
