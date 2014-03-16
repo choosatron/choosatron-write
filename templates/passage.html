@@ -10,7 +10,7 @@
 
 <div class="paneSplit">
 <div class="scrollable scrollPassages">
-	<div class="passageEntrances">
+	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
 			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
 				<a ng-click="edit_passage(entrance.id)">
@@ -25,7 +25,7 @@
 		</ul>
 	</div><!-- .passageEntrances -->
 
-	<div class="passage">
+	<div class="passage-container passage-box">
 		<div class="passageBody">
 			<!-- TODO: when you delete a passage, you seem to always be sent to the starting passage of the story... might be nice if you went to your previous passage?? -->
 			<h2>
@@ -37,7 +37,7 @@
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
-	</div><!-- .passage -->
+	</div><!-- .passage-box -->
 
 	<ng-include src="'templates/passage-exits.html'"></ng-include>
 

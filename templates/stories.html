@@ -38,7 +38,16 @@
 						<p>{{ s.description || 'Description' }}</p>
 
 						<ul class="list-inline list-icon-menu">
-							<li><a href="#export-{{s.id}}" ng-click="export_story(s)" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li>
+								<span class="dropdown">
+									<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
+
+									<ul class="dropdown-menu">
+										<li><a href="#export-{{s.id}}" ng-click="export_story(s)">Save To File</a></li>
+										<li><a href="#export-{{s.id}}" ng-click="export_story_choosatron(s)">Create Choosatron Binary</a></li>
+									</ul>
+								</span>
+							</li>
 							<!-- TODO: create support for duplicate -->
 							<li><a class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
 							<li><a confirm-click="delete_story(s)" confirm-message="Delete story?" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>

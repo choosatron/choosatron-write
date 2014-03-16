@@ -143,6 +143,10 @@ a.icon-inline {
 		color: #fff;
 	}
 
+	.theme-inverse .dropdown-menu {
+		background: #666;
+	}
+
 .theme-alt {
 	background: #aaa;
 }
@@ -440,23 +444,26 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		background: rgba(0, 0, 0, 0.75);
 	}
 
-.passage {
-	background: #eee;
+.passage-container {
 	width: 80%;
 	max-width: 700px;
 	margin: 40px auto;
+}
+
+.passage-box {
+	background: #eee;
 	padding: 20px;
 }
 
-	.passage > div {
+	.passage-box > div {
 		margin-top: 40px;
 	}
 
-		.passage > div:first-child {
+		.passage-box > div:first-child {
 			margin-top: 0;
 		}
 
-	.passage .passageBody h2 {
+	.passage-box .passageBody h2 {
 		margin-top: 0;
 	}
 
@@ -570,8 +577,6 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		.passageLink[data-ending="2"]:after {background-color: #3ad83a;}
 
 .passageEntrances  {
-	max-width: 700px;
-	margin: 40px auto;
 	margin-top: 80px;
 }
 
@@ -640,33 +645,53 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 8888888888888  888888 "Y888 88888P' 
 **/
 
+.exit-tabs {
+	margin-bottom: -40px;
+}
+
+	.exit-tabs .nav-tabs a {
+		background-color: #ddd;
+	}
+
+		.exit-tabs .nav-tabs a:hover {
+			text-decoration: underline;
+			background-color: #eee;
+		}
+
+		.exit-tabs .nav-tabs .active a,
+		.exit-tabs .nav-tabs .active a:hover {
+			font-size: 125%;
+			background-color: #eee;
+			cursor: default;
+			text-decoration: none;
+			border-bottom-color: #eee;
+		}
+
 .passageExits {
 }
 
-	.passageExits .nav-pills a:hover {
-		text-decoration: underline;
-	}
+.exit-tabs .nav-tabs.ending-terrible li.active a {background-color: #f1dddd; border-bottom-color: #f1dddd;}
+.exit-tabs .nav-tabs.ending-bad li.active a {background-color: #f1e9dd; border-bottom-color: #f1e9dd;}
+.exit-tabs .nav-tabs.ending-good li.active a {background-color: #ddedf1; border-bottom-color: #ddedf1;}
+.exit-tabs .nav-tabs.ending-great li.active a {background-color: #ddf1dd; border-bottom-color: #ddf1dd;}
 
-		.passageExits .nav-pills .active a,
-		.passageExits .nav-pills .active a:hover {
-			font-size: 125%;
-			background-color: #999;
-			cursor: default;
-			text-decoration: none;
-		}
+.passage-box.ending-terrible {background-color: #f1dddd;}
+.passage-box.ending-bad {background-color: #f1e9dd;}
+.passage-box.ending-good {background-color: #ddedf1;}
+.passage-box.ending-great {background-color: #ddf1dd;}
 
-.passage.ending-terrible {background-color: #f1dddd; outline: 2px solid #ff8484;}
-.passage.ending-bad {background-color: #f1e9dd; outline: 2px solid #ffce84;}
-.passage.ending-good {background-color: #ddedf1; outline: 2px solid #84e6ff;}
-.passage.ending-great {background-color: #ddf1dd; outline: 2px solid #84e684;}
+/*.passage-box.ending-terrible {background-color: #f1dddd; outline: 2px solid #ff8484;}
+.passage-box.ending-bad {background-color: #f1e9dd; outline: 2px solid #ffce84;}
+.passage-box.ending-good {background-color: #ddedf1; outline: 2px solid #84e6ff;}
+.passage-box.ending-great {background-color: #ddf1dd; outline: 2px solid #84e684;}*/
 
 .passageEnding .btn {
 	font-size: 100%;
 }
 
-.passageEnding .btn.active {
-	font-size: 175%;
-}
+	.passageEnding .btn.active {
+		font-size: 175%;
+	}
 
 
 

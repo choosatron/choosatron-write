@@ -1,11 +1,13 @@
-	<div class="passage ng-class:'ending-'+passage.ending_type_name()">
-		<div class="passageExits">
-			<ul class="nav nav-pills nav-justified">
-				<li ng-class="{active: passage.exit_type == 'ending'}"><a ng-click="confirm_exit_type_change(passage, 'ending')">Set as Ending</a></li>
-				<li ng-class="{active: passage.exit_type == 'append'}"><a ng-click="confirm_exit_type_change(passage, 'append')">Append a Passage</a></li>
-				<li ng-class="{active: passage.exit_type == 'choices'}"><a ng-click="confirm_exit_type_change(passage, 'choices')">Add Choices</a></li>
-			</ul>
+	<div class="passage-container exit-tabs">
+		<ul class="nav nav-tabs nav-justified ng-class:'ending-'+passage.ending_type_name()">
+			<li ng-class="{active: passage.exit_type == 'ending'}"><a ng-click="confirm_exit_type_change(passage, 'ending')">Set as Ending</a></li>
+			<li ng-class="{active: passage.exit_type == 'append'}"><a ng-click="confirm_exit_type_change(passage, 'append')">Append a Passage</a></li>
+			<li ng-class="{active: passage.exit_type == 'choices'}"><a ng-click="confirm_exit_type_change(passage, 'choices')">Add Choices</a></li>
+		</ul>
+	</div>
 
+	<div class="passage-container passage-box ng-class:'ending-'+passage.ending_type_name()">
+		<div class="passageExits">
 			<div class="tab-content">
 				<div class="tab-pane passageEnding ng-class:{active: passage.exit_type == 'ending'}" id="passageEnding">
 					<div class="btn-toolbar">
@@ -231,4 +233,4 @@
 				</div><!-- .passageChoices -->
 			</div>
 		</div><!-- .passageExits -->
-	</div><!-- .passage -->
+	</div><!-- .passage-box -->

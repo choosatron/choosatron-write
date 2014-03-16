@@ -302,9 +302,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		return $scope.story.serialize(pretty);
 	};
 
-	$scope.export_story  =  function(story) {
+	$scope.export_story  =  function (story) {
 		$file.export(story.title + '.json', story.serialize(), 'json');
-	}
+	};
+
+	$scope.export_story_choosatron  =  function (story) {
+		// Convert story to binary here either directly or via story.serialize()
+		// Probably want to feed through chrome.fileSystem to let user save file
+	};
 
 	$scope.upload_story  =  function() {
 		if ($scope.upload.text) {
