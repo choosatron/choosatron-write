@@ -14,5 +14,30 @@ File.prototype = {
 
 	read: function(url) {
 		return this.$http.get(url);
+	},
+
+	export_binary: function (filename, extension, byteData) {
+		function errorHandler(arguments) {
+			console.error(chrome.runtime.lastError, arguments);
+		}
+
+		chrome.fileSystem.chooseEntry(
+			{
+				type: 'saveFile',
+				suggestedName: filename,
+				accepts: [{extensions: [extension]}]
+			},
+			function (writableFileEntry) {
+				writableFileEntry.createWriter(function (writer) {
+					writer.onerror = errorHandler;
+					writer.onwriteend = function (e) {
+						console.info('file write complete');
+					};
+
+					// Write out binary data to the file
+					writer.write(new Blob([byteData], {type: 'application/octet-stream'}));  
+				}, errorHandler);
+			}
+		);
 	}
 };

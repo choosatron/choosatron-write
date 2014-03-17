@@ -19,7 +19,7 @@
 		"clipboardRead",
 		"clipboardWrite",
 		"fileBrowserHandler",
-		"fileSystem",
+		{"fileSystem": ["write"]},
 		"fullscreen",
 		"identity",
 		"storage",

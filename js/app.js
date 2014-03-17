@@ -315,8 +315,19 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	};
 
 	$scope.export_story_choosatron  =  function (story) {
-		// Convert story to binary here either directly or via story.serialize()
-		// Probably want to feed through chrome.fileSystem to let user save file
+		// TODO: Convert story to binary here either directly via story object or via story.serialize() JSON
+
+		// Create a binary unsigned byte view of 100 bytes.
+		var buffer = new ArrayBuffer(100),
+			byteView = new Uint8Array(buffer);
+
+		// Set a few example byte values
+		byteView[0] = 0;
+		byteView[1] = 255;
+		byteView[2] = 100;
+		byteView[3] = 74;
+
+		$file.export_binary(story.title, 'tron', byteView);
 	};
 
 	$scope.upload_story  =  function() {
