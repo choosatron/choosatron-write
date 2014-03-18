@@ -16,7 +16,7 @@ File.prototype = {
 		return this.$http.get(url);
 	},
 
-	export_binary: function (filename, extension, byteData) {
+	export_file: function (filename, extension, data, type) {
 		function errorHandler(arguments) {
 			console.error(chrome.runtime.lastError, arguments);
 		}
@@ -34,8 +34,7 @@ File.prototype = {
 						console.info('file write complete');
 					};
 
-					// Write out binary data to the file
-					writer.write(new Blob([byteData], {type: 'application/octet-stream'}));  
+					writer.write(new Blob([data], {type: type}));
 				}, errorHandler);
 			}
 		);

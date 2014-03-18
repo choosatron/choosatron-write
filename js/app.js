@@ -311,7 +311,9 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	};
 
 	$scope.export_story  =  function (story) {
-		$file.export(story.title + '.json', story.serialize(), 'json');
+		// $file.export(story.title + '.json', story.serialize(), 'json');
+
+		$file.export_file(story.title, 'json', story.serialize(), 'text/javascript');
 	};
 
 	$scope.export_story_choosatron  =  function (story) {
@@ -319,15 +321,21 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
 		// Create a binary unsigned byte view of 100 bytes.
 		var buffer = new ArrayBuffer(100),
-			byteView = new Uint8Array(buffer);
+			byteView = new Uint8Array(buffer),
+			uint32View = new Uint32Array(buffer);
 
 		// Set a few example byte values
 		byteView[0] = 0;
 		byteView[1] = 255;
-		byteView[2] = 100;
-		byteView[3] = 74;
+		byteView[2] = 0xff;
+		byteView[3] = 1;
+		byteView[4] = 0x01;
 
-		$file.export_binary(story.title, 'tron', byteView);
+		uint32View[2] = 0xffffffff;
+		uint32View[3] = 0x01010101;
+		uint32View[4] = 6000000;
+
+		$file.export_file(story.title, 'tron', buffer, 'application/octet-stream');
 	};
 
 	$scope.upload_story  =  function() {
