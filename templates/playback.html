@@ -41,7 +41,7 @@
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 
-	<div class="passage-container passage-box ng-class:'ending-'+passage.ending_type_name()">
+	<div ng-if="passage.exit_type != 'append'" class="passage-container passage-box ng-class:'ending-'+passage.ending_type_name()">
 		<div class="passageExits">
 			<div ng-if="passage.exit_type == 'ending'" class="tab-pane" id="passageEnding">
 				<h4>
@@ -59,7 +59,7 @@
 				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row">
 					<div class="col-xs-2">
 						<div ng-if="choice.has_destination()" ng-repeat="path in choice.paths">
-							<a class="btn btn-lg btn-default btn-block" ng-click="edit_passage(path.destination)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
+							<a class="btn btn-lg btn-primary btn-block" ng-click="edit_passage(path.destination)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
 						</div>
 						<div ng-if="!choice.has_destination()" ng-repeat="path in choice.paths">
 							<a class="btn btn-lg btn-default btn-block" disabled title="No destination set!"><span class="choiceNumber">{{ choiceNumber }}</span></a>
