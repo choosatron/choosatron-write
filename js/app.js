@@ -114,6 +114,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		$scope.view = 'stories';
 	};
 
+	$scope.playback_story = function() {
+		$scope.view = 'playback';
+	};
+
+	$scope.edit_story = function() {
+		$scope.view = 'passage';
+	};
+
 	$scope.delete_story  =  function(story) {
 		$scope.deleted  =  { 
 			type: "story",

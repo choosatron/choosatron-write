@@ -1,6 +1,5 @@
 <ng-include src="'templates/story.html'"></ng-include>
 
-
 <input ng-model="$parent.show_passages" ng-change="show_story_details = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
 <div class="wrap ng-class:{picking: picking, top_open: show_story_details}">
 <div class="wrapInner">
@@ -25,19 +24,55 @@
 
 	<div class="passage-container passage-box">
 		<div class="passageBody">
-			<!-- TODO: when you delete a passage, you seem to always be sent to the starting passage of the story... might be nice if you went to your previous passage?? -->
 			<h2>
 				Passage {{ passage.number }}
-				<!-- TODO: may indicate this some other way? -->
 				<span ng-if="passage.opening" class="label label-success">Start</span>
-				<a ng-if="!passage.opening" class="h4 icon-inline icon-subtle" confirm-click="delete_passage(passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
 			</h2>
 
-			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
+			<div>{{passage.content}}</div>
+
+			<div ng-if="passage.exit_type == 'append'" class="tab-pane" id="passageAppend">
+				<div ng-if="passage.has_append()" ng-repeat="path in passage.append_link.paths">
+					<div ng-if="path.destination" class="choicePassage">
+						<a ng-click="edit_passage(path.destination)"><span class="passageLink" passage-icons="get_passage(path.destination)">Continue...</a>
+					</div>
+				</div>
+			</div><!-- .passageAppend -->
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 
-	<ng-include src="'templates/passage-exits.html'"></ng-include>
+	<div class="passage-container passage-box ng-class:'ending-'+passage.ending_type_name()">
+		<div class="passageExits">
+			<div ng-if="passage.exit_type == 'ending'" class="tab-pane" id="passageEnding">
+				<h4>
+					The End
+					<span ng-if="passage.ending_value === -2" class="btn btn-default btn-terrible">Terrible</span>
+					<span ng-if="passage.ending_value === -1" class="btn btn-default btn-bad">Bad</span>
+					<span ng-if="passage.ending_value === 0" class="btn btn-default btn-neutral">Neutral</span>
+					<span ng-if="passage.ending_value === 1" class="btn btn-default btn-good">Good</span>
+					<span ng-if="passage.ending_value === 2" class="btn btn-default btn-great">Great</span>
+				</h4>
+			</div><!-- .passageEnding -->
+
+
+			<div ng-if="passage.exit_type == 'choices'" class="tab-pane passageChoices" id="passageChoices">
+				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row">
+					<div class="col-xs-2">
+						<div ng-if="choice.has_destination()" ng-repeat="path in choice.paths">
+							<a class="btn btn-lg btn-default btn-block" ng-click="edit_passage(path.destination)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
+						</div>
+						<div ng-if="!choice.has_destination()" ng-repeat="path in choice.paths">
+							<a class="btn btn-lg btn-default btn-block" disabled title="No destination set!"><span class="choiceNumber">{{ choiceNumber }}</span></a>
+						</div>
+					</div>
+					<div class="col-xs-10">
+						<p>{{choice.content}}</p>
+					</div>
+				</div><!-- .choiceContainer -->
+			</div><!-- .passageChoices -->
+
+		</div><!-- .passageExits -->
+	</div><!-- .passage-box -->
 
 	<div class="scroll_fix"></div>
 </div><!-- .scrollable -->
@@ -46,11 +81,6 @@
 <div class="paneSplit paneRight">
 	<div class="pane theme-alt panePassages">
 		<p class="paneToggle"><label for="paneRightToggle"><span class="glyphicon glyphicon-chevron-left"></span></label></p>
-
-		<div class="pickingMessage">
-			<h3>Choose a passage to link <span class="glyphicon glyphicon-arrow-right"></span></h3>
-			<h3><a ng-click="pick_passage(null)"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</a></h3>
-		</div>
 
 		<h2>Passages</h2>
 

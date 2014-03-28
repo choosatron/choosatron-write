@@ -6,7 +6,6 @@
 
 <script src="js/jquery.min.js"></script>
 <script src="js/angular.min.js"></script>
-<!-- <script src="js/ui-bootstrap.min.js"></script> -->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/file.js"></script>
 <script src="js/storage.js"></script>
@@ -16,7 +15,6 @@
 
 <link rel="stylesheet" href="css/angular-csp.css" />
 <link rel="stylesheet" href="css/bootstrap.min.css" />
-<!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css" /> -->
 <link rel="stylesheet" href="css/app-ui.css" />
 
 </head>
@@ -25,6 +23,8 @@
 <ng-include src="'templates/stories.html'" ng-if="view == 'stories'"></ng-include>
 
 <ng-include src="'templates/passage.html'" ng-if="view == 'passage'"></ng-include>
+
+<ng-include src="'templates/playback.html'" ng-if="view == 'playback'"></ng-include>
 
 <ng-include src="'templates/modals.html'"></ng-include>
 

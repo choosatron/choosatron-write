@@ -715,7 +715,8 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 
 .choiceContainer {
 	overflow: hidden;
-	padding-top: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	border-bottom: 1px solid #ccc;
 }
 
