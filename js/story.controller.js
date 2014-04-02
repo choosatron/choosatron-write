@@ -309,15 +309,17 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	};
 
 	$scope.export_story_choosatron  =  function (story) {
+
 		// TODO: Convert story to binary here either directly via story object or via story.serialize() JSON
 
 		// Create a binary unsigned byte view of 100 bytes.
 		var buffer = new ArrayBuffer(100),
 			byteView = new Uint8Array(buffer),
+			uint16View = new Uint16Array(buffer),
 			uint32View = new Uint32Array(buffer);
 
 		// Set a few example byte values
-		byteView[0] = 0;
+		/*byteView[0] = 0;
 		byteView[1] = 255;
 		byteView[2] = 0xff;
 		byteView[3] = 1;
@@ -325,20 +327,29 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
 		uint32View[2] = 0xffffffff;
 		uint32View[3] = 0x01010101;
-		uint32View[4] = 6000000;
+		uint32View[4] = 6000000;*/
 
-		$file.export_file(story.title, 'tron', buffer, 'application/octet-stream');
+		for (var i=0; i<uint32View.length; i++) {
+  			uint32View[i] = i*2;
+		}
+
+		for (var i=0; i<uint16View.length; i++) {
+  			console.log("Entry " + i + ": " + uint16View[i]);
+  			uint16View[i] = i;
+		}
+
+		$file.export_file(story.title, 'cdam', buffer, 'application/octet-stream');
 	};
 
-	$scope.upload_story  =  function() {
-		if ($scope.upload.text) {
-			var data = angular.fromJson($scope.upload.text);
+	$scope.import_story  =  function() {
+		if ($scope.import.text) {
+			var data = angular.fromJson($scope.import.text);
 			var story = new Story(data);
 			story.refresh_id();
 			$scope.select_story(story);
 		}
-		else if ($scope.upload.text) {
-			$file.read($scope.upload.text, function(text) {
+		else if ($scope.import.text) {
+			$file.read($scope.import.text, function(text) {
 				var data = angular.fromJson(text);
 				var story = new Story(data);
 				story.refresh_id();
