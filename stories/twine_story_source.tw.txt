@@ -1,0 +1,181 @@
+﻿:: StoryAuthor
+Jerry Belich
+
+
+:: StoryTitle
+Finding Your Shadow
+
+
+:: Start
+Yaaaaawn! You stretch your little furry arms for the first time in decades! It feels great to wriggle your toes again, and suddenly you feel a familiar tingle. You wonder if your shadow is waiting for you above the comforting ground. Oh yes, it would be good to see...but it is so comfy here, and despite decades of rest, a few more wouldn't hurt.
+
+[[Sleep a few decades longer.|1A]]
+[[Take a peek above ground.|1B]]
+
+
+
+:: 1A
+"My shadow can wait!", you think to yourself. You squirm a bit, settling back into your soft earthen nest. A few moments later your eyes settle back into their familiar state, and a black inkiness fills your mind. About four decades later you begin to stir again.
+
+[[Nope! Hitting 'snooze' again.|2A]]
+[[Oh fine...lets check out this 'shadow'.|2B]]
+
+
+
+:: 1B
+You can't help wanting to take just a quick glance at your shadow, and scurry up to the surface. After you poke your little head out, you feel a nice breeze, feel cool grass, but sadly no shadow in sight! Your eyes dart around and you notice a hot air balloon tethered nearby, blocking the warm sun that, apart from seeing your shadow, you are strangely compelled to bask under.
+
+[[Scurry over to the hot air balloon.|2C]]
+[[Scamper the opposite direction.|2D]]
+
+
+:: 2A
+They always say you should listen to your body! If you still feel a bit sleepy, then by all means right? Only this time you really show them how it's done. You don't just sleep for a few decades, or even a few thousand years! You sleep for billions of years, and only awaken long enough to witness the Earth get pulled into a black hole that used to be the sun. Although it is a bit disappointing, you've never felt more rested in your life! As a bonus, the closer you get to the event horizon, the longer it all seems to take.
+
+
+:: 2B
+You stretch a bit, do a full body shake to wake up a bit, and after briefly snacking on a nearby squirmy creature, you begin crawling upwards, digging through the dirt to the the surface. When you finally peak your little face through, instead of being greeted by a refreshing breeze and warm sunlight, there is sooty air and snow that for some reason isn't cold. You sniff it and even take a quick taste, and though it melts on your tongue, it tastes like ash. There is no shadow, or much of anything else for that matter! Back into your hole.
+
+
+:: 2C
+You bolt over to the balloon, only a few feet off the ground, held by rope. You bound into the air and onto the edge of the basket. There is a strange metal triangle on a rope hanging in the center.
+
+[[Chew through the ropes.|3A]]
+[[Grab the triangle.|3B]]
+
+
+:: 2D
+You run away from the large inflated beast just in time to see a smaller metal beast arrive. Strangly, it opens and two creatures than only walk on their back legs get out. You run around to the beasts back, round..leg? Paw? It's weird.
+
+[[Follow the creatures.|3C]]
+[[Climb into the creature while it's still open.|3D]]
+
+
+
+:: 3A
+One by one you knaw through the ropes with your strong teeth. With each rope gone there is a jolt as the basket tries to leap from the ground. With the last rope there is a final lurch sending you back into the basket, with you and the balloon soaring into the air!
+
+[[Crawl back to the basket ledge for a look.|4A]]
+[[Curl up and nap while you wait.|4B]]
+
+
+:: 3B
+You leap into the air and grab the triangle with your teeth. The rope pulls down a bit from the momentum of your tiny figure, sending a burst of flame into the balloon above. There is a lurch, but the ropes hold fast.
+
+[[Try chewing through instead.|3A]]
+[[Abandon the balloon.|4C]]
+
+
+:: 3C
+You decide to follow the creatures back the way you came. One has a furry head, the other is bare.
+
+[[Grab the furry ones foot.|4D]]
+[[Grab the bare faced ones foot.|4E]]
+
+
+:: 3D
+You slip into the beast before the creatures close it up tight. There is one remaining creature inside, and suddenly the beast lurches forward. You wait for a long while, until finally the beast stops. When the last creature opens the beast, you bound out, sad that the sun has gone down. The creature walks toward a large building with bright lights. He walks through large sets of openings in the front, but you also notice funny dressed creatures going in a small opening at the side of the building.
+
+[[Follow the creature in the front.|4F]]
+[[Run for the smaller opening.|4G]]
+
+
+:: 4A
+Crawling back up to the ledge and peering over, you perk up spotting a gigantic shadow! But wait...it isn't YOUR shadow...no, it's just the balloon! Crud, you think. You'll never see your shadow stuck in here.
+
+[[Jump back to the ground.|5A]]
+[[Jump and grab the triangle handle.|5B]]
+
+
+:: 4B
+You must be tired after all this excitment after all! Curling into a corner of the basket, you begin to doze off. You awaken a few hours later and find your surroundings have changed quite a bit!
+
+[[<append>|6A]]
+
+
+:: 4C
+You decide this balloon is full of hot air and not much else. You wiggle your little body over the basket edge, and suddenly notice a pair of strange tall, thin, creature heading straight for you! They don't seem to have much fur naturally, so cover themselves in funny colored skins.
+
+[[Run for it!!!|5C]]
+[[Play dead.|5D]]
+
+
+:: 4D
+You scamper to the foot and grab on, biting into a little stringy rope. The creature stops and looks down. After making eye contact you feel quite alarmed!
+
+[[Continue|5C]]
+
+
+:: 4E
+You bound up and grab ahold of the slender foot. The creature stops, and the outside edges of its mouth pull upward, and its eyes sparkle.
+
+[[Continue|5D]]
+
+
+:: 4F
+You wander through the big front openings, and suddenly there is a bustle of creatures everywhere! You zig-zag to keep from getting stepped on, heading through another set of doors where it is quite dark. Creatures are sitting all over, with a big flat space in the front. Just then a bright light shines on you! A creature shines blinding light from a tube it holds. Before you can react, it has you by the scruff, and tosses you outside.
+
+
+:: 4G
+You bolt for the opening with the strange looking creatures and quickly find yourself in a long space full of rope and huge pieces of cloth. A creature with lots of intersting wraps of cloth and colors on its face walks nearby, heading toward the center of the space where the cloth opens up.
+
+[[Chew some of the nearby rope.|5E]]
+[[Crawl under the many layers of the creatures cloth.|5F]]
+
+
+:: 5A
+You're nuts! You aren't a flying squirrel but a groundhog for goodness sake! *Sigh* It's your story...so you leap from the basket despite already being at least a hundred feet off the ground. You fly about as well as an uncooked ham, and plummet toward the ground. As your impending doom zooms up to greet you, you notice a pair of weird creatures only standing on two legs, while waving the other two in the air, looking right up at you and the balloon! One stops waving and manages to catch your fuzzy body before splatting on the ground. *Phew!*
+
+[[Continue|5D]]
+
+
+:: 5B
+You leap up and grab the triangle handle with your teeth. Your momentum manages to pull it down slightly, and a burst of flame send the balloon rocketing up into the sky. You fall back into the basket.
+
+[[Continue|6A]]
+
+
+:: 5C
+You try to run for it, but the furry faced creature snatches you right up! He puts you into a strange little box with criss-crossing bars that taste like the little silver, shiny discs these creatures leave randomly on their hard ground. Eventually he brings you into the deepest part of a nearby forest, near a fallen log and lets you go. Deciding you've had too much adventure for one day, you dig under the log and take a long nap.
+
+
+:: 5D
+Moments later you find yourself cradled in the arms of the creature without a furry face. The creature speaks softly to you and tickles your belly. You are taken back to its home and put into a large box of criss-crossing bars. There are a lot of fun wood shavings to burrow through, though the ground is too hard to dig through. You never get to see your shadow, but the good is good and napping is great!
+
+
+:: 5E
+You knaw on numerous nearby ropes. It is quite fun, and feels good to sharpen up your teeth on something. Suddely chaos erupts as one of the giant clothes falls from the sky, and bags of sand explode around you. Creatures are running all over the place, so you hide in the large bed of cloth, and quickly forgetting the madness unfolding, you take a nap.
+
+
+:: 5F [eq:5]
+You scurring under the layers of cloth, enjoying the complexity and warmth of the experience. Suddenly the creature lets out a yelp, seeming to notice your wiggling about. You dig in a bit deeper so it can relax, but instead it drops all the cloth in the middle of the stage, running back into where all the layers of giant hanging cloth are. You dig your way to the top of the cloth pile just in time for a bright spotlight to brighten up the center of the stage. An auditorium full of creatures all gasp, and you stand upright, adjusting to the brightness. Suddenly with a tingle in your brain, you realize what might be behind you! Slowly turning your furry little head you finally see it, a perfect inky outline of yourself. You found your shadow!
+
+
+:: 6A
+There is an eerie darkness all around you, and peering out of the basket again you can see the curvature of the ground, which looks more like a big ball!
+
+[[Pull the triangle again!|7A]]
+[[Wait and see...|7B]]
+
+
+
+:: 7A
+You pull it again and soon the Earth really is just a ball. Small points of white light prick the black velvet that has become your new sky. You notice a bright gray ball in the distance that maybe one more burst will get you towards.
+
+[[Give it a final push.|8A]]
+[[Just relax...|8B]]
+
+
+
+:: 7B
+Eventually, the balloon begins to descend. A few days later it finally comes to rest on an iceberg, surrounded by penguins. The sun is nowhere in sight, and it takes all of your remaining energy to squeeze into the huddled penguins to keep warm. You ask the penguins when it'll be light out again, but they just shake their heads...
+
+
+:: 8A [eq:5]
+With a final burst of fire before it pitters out, you and the balloon glide towards the moon that looms larger and large. Eventually you bump into it, and you leap out of the basket onto its dusty surface. As the balloon continues bumping along, dragging the basket behind, you finally notice the brilliant light it had been blocking from few. The sun! And wowee, it is brighter than ever! Suddenly it occurs to you, the moment you've been waiting for. You turn your tiny, fuzzy head away from the bright ball, looking at the ground behind you. You squeak with delight as your shadow stretches out across the gray dust, as if someone spilled ink perfectly mimicing your shape. You found your shadow! You feel at peace once again, and after burrowing into a crater, you fall into a deep, satisfied sleep that lasts thousands of years.
+
+
+:: 8B
+You continue to drift, past the moon, and other planets. Sadly, it only appears to get darker as you drift. After a long time, you are left in darkness and cold, and fall into a troubled sleep that lasts longer than you can count.
+
+

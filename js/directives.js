@@ -16,7 +16,7 @@ app.directive('confirmClick', ['$parse', function ($parse) {
 					$scope.$apply(function () {
 						$scope.modal.confirm_message = attrs.confirmMessage;
 					});
-					
+
 					$('#confirmModal').modal('show');
 				});
 			};
