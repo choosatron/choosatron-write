@@ -32,9 +32,9 @@
 			<div>{{passage.content}}</div>
 
 			<div ng-if="passage.exit_type == 'append'" class="tab-pane" id="passageAppend">
-				<div ng-if="passage.has_append()" ng-repeat="path in passage.append_link.paths">
-					<div ng-if="path.destination" class="choicePassage">
-						<a ng-click="edit_passage(path.destination)"><span class="passageLink" passage-icons="get_passage(path.destination)">Continue...</a>
+				<div ng-if="passage.has_append()">
+					<div ng-if="passage.append_link.destination" class="choicePassage">
+						<a ng-click="edit_passage(passage.append_link.destination)"><span class="passageLink" passage-icons="get_passage(passage.append_link.destination)">Continue...</a>
 					</div>
 				</div>
 			</div><!-- .passageAppend -->
@@ -58,10 +58,10 @@
 			<div ng-if="passage.exit_type == 'choices'" class="tab-pane passageChoices" id="passageChoices">
 				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row">
 					<div class="col-xs-2">
-						<div ng-if="choice.has_destination()" ng-repeat="path in choice.paths">
-							<a class="btn btn-lg btn-primary btn-block" ng-click="edit_passage(path.destination)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
+						<div ng-if="choice.has_destination()">
+							<a class="btn btn-lg btn-primary btn-block" ng-click="edit_passage(choice.destination)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
 						</div>
-						<div ng-if="!choice.has_destination()" ng-repeat="path in choice.paths">
+						<div ng-if="!choice.has_destination()">
 							<a class="btn btn-lg btn-default btn-block" disabled title="No destination set!"><span class="choiceNumber">{{ choiceNumber }}</span></a>
 						</div>
 					</div>

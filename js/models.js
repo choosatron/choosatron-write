@@ -44,6 +44,109 @@ RandomId.prototype = {
 }
 
 
+/// Playback ///
+
+var Operator = {
+	'==': {
+		name: 'equals',
+		type: 'condition',
+		action: function(a, b) {
+			return a == b;
+		}
+	},
+	'!=': {
+		name: 'not equals',
+		type: 'condition',
+		action: function(a, b) {
+			return a != b;
+		}
+	},
+	'>': {
+		name: 'greater than',
+		type: 'condition',
+		action: function(a, b) {
+			return a > b;
+		}
+	},
+	'>=': {
+		name: 'greater than or equal to',
+		type: 'condition',
+		action: function(a, b) {
+			return a >= b;
+		}
+	},
+	'<': {
+		name: 'less than',
+		type: 'condition',
+		action: function(a, b) {
+			return a < b;
+		}
+	},
+	'<=': {
+		name: 'less than or equal to',
+		type: 'condition',
+		action: function(a, b) {
+			return a <= b;
+		}
+	},
+	'=': {
+		name: 'set to',
+		type: 'update',
+		action: function(a, b) {
+			return b;
+		}
+	},
+	'+=': {
+		name: 'increase by',
+		type: 'update',
+		action: function(a, b) {
+			return a + b;
+		}
+	},
+	'-=': {
+		name: 'subtract by',
+		type: 'update',
+		action: function(a, b) {
+			return a - b;
+		}
+	},
+	'*=': {
+		name: 'multiply by',
+		type: 'update',
+		action: function(a, b) {
+			return a * b;
+		}
+	},
+	'/=': {
+		name: 'divide by',
+		type: 'update',
+		action: function(a, b) {
+			return a / b;
+		}
+	}
+};
+
+var Operators = [];
+Operator.keywords = Object.keys(Operator);
+Operator.keywords.forEach(function(key) {
+	var op = Operator[key];
+	op.keyword = key;
+	Operators.push(op);
+});
+
+Object.defineProperty(Operators, 'conditions', {
+	get: function() {
+		return this.filter(function(o) {return o.type == 'condition';});
+	}
+});
+
+Object.defineProperty(Operators, 'updates', {
+	get: function() {
+		return this.filter(function(o) {return o.type == 'update';});
+	}
+});
+
+
 /// Model base class ///
 function Model(data) {
 	this.id       = RandomId.create();
@@ -111,6 +214,46 @@ Model.prototype = {
 		return s;
 	}
 };
+
+
+function Command(data) {
+	this.object  = null;
+	this.verb    = null;
+	this.subject = null;
+	Object.defineProperty(this, 'raw', {
+		get: function() {
+			return this.object + ' ' + this.verb + ' ' + this.subject;
+		},
+		set: function(value) {
+			this.parse(value);
+		},
+	});
+
+	Model.call(this, data);
+};
+
+Command.methods = {
+	parse: function(str) {
+		var self = this;
+		this.raw = str;
+		return Operator.keywords.some(function(verb) {
+			var key = ' ' + key + ' ';
+			var ix = str.indexOf(key);
+			if (ix <= 0) {
+				return false;
+			}
+			var parts = str.split(key);
+			if (parts.length < 1) {
+				return false;
+			}
+			self.object  = parts[0];
+			self.verb    = verb;
+			self.subject = parts[1];
+			return true;
+		});
+	}
+};
+Model.extend(Command, Command.methods);
 
 
 /// Story ///
@@ -413,15 +556,14 @@ Model.extend(Passage, Passage.methods);
 function Choice(data) {
 	this.content     =  '';
 
-	// TODO: These two properties represent a very good reason that there should be a ChoiceController
-	this.showConditions = false;
-	this.showUpdates = false;
-
 	// These are the conditions used to determine whether this choice is displayed
-	this.conditions  =  '';
+	this.condition = new Command(); 
 
-	// An array of possible paths for this choice.
-	this.paths       =  [new Path()];
+	// The id of the passage that this choice links to
+	this.destination = null;
+
+	// The updates to perform when this choice is selected
+	this.updates = [];
 
 	Model.call(this, data);
 }
@@ -432,58 +574,48 @@ Choice.methods = {
 	},
 
 	has_destination: function(passage) {
-		var has = false;
-		angular.forEach(this.paths, function(path) {
-			if (has) return;
-			if (path.destination) {
-				if (passage && passage.id == path.destination) {
-					has = true;
-				}
-				else if (!passage && Passage.passages[path.destination] && !Passage.passages[path.destination].trashed) {
-					has = true;
-				}
-			}
-		});
-		return has;
+		if ('undefined' == typeof passage) {
+			return this.destination;
+		}
+		return passage && passage.id && passage.id == this.destination;
 	},
 
 	set_destination: function(passage) {
-		if (this.paths.length > 0) {
-			this.paths[0].destination = passage ? passage.id : null;
-		}
-		else {
-			var path = new Path();
-			path.destination = passgage ? passage.id : null;
-			this.paths.push(path);
+		this.destination = passage && passage.id;
+	},
+
+	add_update: function(update) {
+		this.updates.push(new Command(update));
+	},
+
+	load_updates: function(updates) {
+		this.updates = [];
+		for (var i=0; i<updates.length; i++) {
+			var update = new Command(updates[i]);
+			this.updates.push(update);
 		}
 	},
 
-	each_path: function(callback) {
-		return this.each('paths', callback);
-	},
-
-	load_paths: function(paths) {
-		this.paths = [];
-		for (var i=0; i<paths.length; i++) {
-			var path = new Path(paths[i]);
-
-			this.paths.push(path);
-		}
+	load_condition: function(condition) {
+		this.condition = new Command(condition);
 	}
 }
 Model.extend(Choice, Choice.methods);
 
 
-/// Path ///
-function Path(data) {
-	// The destination id of the passage this path takes you to.
-	this.destination  =  null;
+function Playback(data) {
+	// Holds all of the data being manipulated during playback
+	this.sandbox = {};
 
-	// The conditions that need to be met in order for this path to display.
-	this.conditions   =  '';
+	// Stores the path of choices and passages visited
+	this.trail = {};
+};
+Playback.prototype = {
+	test: function(conditions) {
 
-	// The updates that occur if this path is taken.
-	this.updates      =  '';
-	Model.call(this, data);
-}
-Model.extend(Path, {});
+	},
+
+	apply: function(updates) {
+
+	}
+};

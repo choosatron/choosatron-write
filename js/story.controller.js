@@ -1,5 +1,6 @@
 function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
+	$scope.operators          = Operators;
 	$scope.alerts             = [];
 	$scope.stories            = [];
 	$scope.story              = null;
@@ -286,6 +287,14 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		};
 		passage.remove_choice(choice);
 	}
+
+	$scope.delete_choice_update = function(choice, update) {
+		// @todo
+	};
+
+	$scope.add_choice_update = function(choice) {
+		choice.updates.push(new Command());
+	};
 
 	$scope.clear_passage_search  =  function() {
 		$scope.passage_search = '';
