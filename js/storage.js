@@ -142,13 +142,13 @@ function Storage(engine, namespace) {
 	};
 
 	/**
-*    *¬Passes through event handling to the StorageEngine.
-	**/
+	 ** Passes through event handling to the StorageEngine.
+	 **/
 	this.on = function(event, callback) {
 		this.engine.on(event, callback);
 	};
 
-	/** 
+	/**
 	 * Operates much like the jQuery.data method.
 	 * With no arguments, returns a promise that will resolve with all of the items in the namespace
 	 * With 1 argument, returns a promise that will resolve with value stored in that key
@@ -159,13 +159,13 @@ function Storage(engine, namespace) {
 		var promise = this.engine.getItem(this.namespace);
 		var decode  = this.decode;
 		switch (arguments.length) {
-			case 1: 
+			case 1:
 				var key = arguments[0];
 				return promise.then(function(items) {
 					var data = decode(items);
 					return data[key];
 				});
-			case 2: 
+			case 2:
 				var key = arguments[0];
 				var val = arguments[1];
 				if (!key) {
@@ -185,7 +185,7 @@ function Storage(engine, namespace) {
 					}
 					engine.setItem(namespace, encode(data));
 				});
-			default: 
+			default:
 				return promise.then(function(items) {
 					return decode(items);
 				});
@@ -269,9 +269,9 @@ function AutoSave($storage, $timeout) {
 		listeners.error.push(callback);
 	};
 
-	/** 
+	/**
 	 * Watches a particular model within the scope and saves to local storage
-	 * whenever the model has changed and the time limit has elapsed 
+	 * whenever the model has changed and the time limit has elapsed
 	 * @todo: Enforce the time limit
 	**/
 	this.watch = function($scope, modelName, getKey, getValue) {
@@ -314,7 +314,7 @@ function AutoSave($storage, $timeout) {
 
 			var lastTimeSave = lastSave[key];
 			if (lastTimeSave && Date.now() - lastTimeSave < throttle) {
-				// If we're within the throttle time, bump out the final save call 
+				// If we're within the throttle time, bump out the final save call
 				// a little to prevent excessive autosaving.
 				fire('throttling', key, throttle);
 				savePromise[key] = $timeout(save, throttle);
