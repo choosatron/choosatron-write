@@ -217,15 +217,16 @@ Model.prototype = {
 
 
 function Command(data) {
-	this.object  = null;
-	this.verb    = null;
-	this.subject = null;
+	this.variable = null;
+	this.verb     = null;
+	this.value    = null;
+
 	Object.defineProperty(this, 'raw', {
 		get: function() {
-			return this.object + ' ' + this.verb + ' ' + this.subject;
+			return this.variable + ' ' + this.verb + ' ' + this.value;
 		},
-		set: function(value) {
-			this.parse(value);
+		set: function(str) {
+			this.parse(str);
 		},
 	});
 
@@ -234,23 +235,16 @@ function Command(data) {
 
 Command.methods = {
 	parse: function(str) {
-		var self = this;
 		this.raw = str;
-		return Operator.keywords.some(function(verb) {
-			var key = ' ' + key + ' ';
-			var ix = str.indexOf(key);
-			if (ix <= 0) {
-				return false;
-			}
-			var parts = str.split(key);
-			if (parts.length < 1) {
-				return false;
-			}
-			self.object  = parts[0];
-			self.verb    = verb;
-			self.subject = parts[1];
-			return true;
-		});
+		var ptrn = /^(\S+)\s(\S+)\s(.+)$/;
+		var parts = ptn.exec(str);
+		if (parts.length < 4) {
+			return false;
+		}
+		this.variable = parts[1];
+		this.verb     = parts[2];
+		this.value    = parts[3];
+		return true;
 	}
 };
 Model.extend(Command, Command.methods);

@@ -28,6 +28,7 @@ File.prototype = {
 				accepts: [{extensions: [extension]}]
 			},
 			function (writableFileEntry) {
+				if (!writableFileEntry) return;
 				writableFileEntry.createWriter(function (writer) {
 					writer.onerror = errorHandler;
 					writer.onwriteend = function (e) {

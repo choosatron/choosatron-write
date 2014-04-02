@@ -289,7 +289,13 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	}
 
 	$scope.delete_choice_update = function(choice, update) {
-		// @todo
+		choice.updates = choice.updates.filter(function(u) {
+			return (u.raw != update.raw);
+		});
+	};
+
+	$scope.delete_choice_condition = function(choice) {
+		choice.condition = new Command();
 	};
 
 	$scope.add_choice_update = function(choice) {
