@@ -10,7 +10,7 @@
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
 			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
-				<a ng-click="edit_passage(entrance.id)">
+				<a ng-click="select_passage(entrance)">
 					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
 					<div>
 						<p class="truncated">{{ entrance.get_content() | truncate | quote }}</p>
@@ -34,7 +34,7 @@
 			<div ng-if="passage.exit_type == 'append'" class="tab-pane" id="passageAppend">
 				<div ng-if="passage.has_append()">
 					<div ng-if="passage.append_link.destination" class="choicePassage">
-						<a ng-click="edit_passage(passage.append_link.destination)"><span class="passageLink" passage-icons="get_passage(passage.append_link.destination)">Continue...</a>
+						<a ng-click="select_choice(passage.append_link)"><span class="passageLink" passage-icons="get_passage(passage.append_link.destination)">Continue...</a>
 					</div>
 				</div>
 			</div><!-- .passageAppend -->
@@ -59,7 +59,7 @@
 				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row">
 					<div class="col-xs-2">
 						<div ng-if="choice.has_destination()">
-							<a class="btn btn-lg btn-primary btn-block" ng-click="edit_passage(choice.destination)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
+							<a class="btn btn-lg btn-primary btn-block" ng-click="select_choice(choice)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
 						</div>
 						<div ng-if="!choice.has_destination()">
 							<a class="btn btn-lg btn-default btn-block" disabled title="No destination set!"><span class="choiceNumber">{{ choiceNumber }}</span></a>
@@ -93,7 +93,7 @@
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
 				<li ng-repeat="p in story.passages | filter:passage_search | filter:valid_picking_option">
-					<a ng-click="select_passage(p.id)" class="truncated">
+					<a ng-click="select_passage(p)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-if="p.opening" class="label label-success">Start</span>

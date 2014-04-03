@@ -1,4 +1,4 @@
-angular.module('filters', [])
+angular.module('storyApp.filters', [])
 .filter('truncate', function () {
 	return function (text, length) {
 		if (isNaN(length)) {

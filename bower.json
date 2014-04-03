@@ -1,0 +1,27 @@
+{
+  "name": "ChooseWright",
+  "version": "0.1.0",
+  "authors": [
+    "Barrett Alexander <spleendini@yahoo.com>",
+    "Zachary Johnson <zachary.johnson@gamil.com>",
+    "Jerry Belich <jerry@monkeytheater.com>"
+  ],
+  "description": "Write Interactive Fiction",
+  "main": "window-ui.html",
+  "license": "MIT",
+  "homepage": "chooseatron.com",
+  "dependencies": {
+    "jquery": "2.1.x",
+    "angular": "1.3.x",
+    "angular-route": "1.3.x",
+    "bootstrap": "3.0.x"
+  },
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -27,7 +27,7 @@
 			<div class="row storiesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="s in stories | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6"><div>
-						<h3><a ng-click="select_story(s)">{{ s.get_title() }}</a></h3>
+						<h3><a ng-click="edit_story(s)">{{ s.get_title() }}</a></h3>
 
 						<ul class="list-unstyled">
 							<li><span class="glyphicon glyphicon-time"></span> {{ s.created | date }}</li>

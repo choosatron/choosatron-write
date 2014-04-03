@@ -245,6 +245,29 @@ Command.methods = {
 		this.verb     = parts[2];
 		this.value    = parts[3];
 		return true;
+	},
+
+	empty: function() {
+		return !this.variable || !this.verb || !this.value;
+	},
+
+	apply: function(source) {
+		var data = source[this.variable];
+		var func = Operator[this.verb];
+		if (!func || !func.action) {
+			return;
+		}
+		if (!data) data = 0;
+		source[this.variable] = func.action(data, this.value);
+	},
+
+	test: function(source) {
+		var func = Operator[this.verb];
+		if (!func || !func.action) {
+			return false;
+		}
+		if (!data) data = 0;
+		return func.action(source[this.variable], this.value);
 	}
 };
 Model.extend(Command, Command.methods);
@@ -300,6 +323,19 @@ Story.methods = {
 		return p;
 	},
 
+	get_choice: function(id) {
+		var choice = null;
+		this.passages.some(function(p) {
+			var c = p.get_choice(id);
+			if (c) {
+				choice = c;
+				return true;
+			}
+			return false;
+		});
+		return choice;
+	},
+
 	add_passage: function(passage) {
 		if (this.passages.length == 0) {
 			passage.opening = true;
@@ -322,11 +358,12 @@ Story.methods = {
 
 	get_passage: function(id) {
 		var passage = null;
-		this.each_passage(function(p) {
+		this.passages.some(function(p) {
 			if (p.id == id) {
 				passage = p;
-				return false;
+				return true;
 			}
+			return false;
 		});
 		return passage;
 	},
@@ -491,6 +528,21 @@ Passage.methods = {
 		}
 	},
 
+	get_choice: function(id) {
+		var choice = null;
+		var found = this.choices.some(function(c) {
+			if (c.id == id) {
+				choice = c;
+				return true;
+			}
+			return false;
+		});
+		if (!found && this.has_append() && this.append_link.id == id) {
+			choice = this.append_link;
+		}
+		return choice;
+	},
+
 	has_destination: function(passage) {
 		var has  =  false;
 		this.each_choice( function( c ) {
@@ -598,18 +650,58 @@ Model.extend(Choice, Choice.methods);
 
 
 function Playback(data) {
+	this.story = null;
+
 	// Holds all of the data being manipulated during playback
 	this.sandbox = {};
 
-	// Stores the path of choices and passages visited
-	this.trail = {};
-};
-Playback.prototype = {
-	test: function(conditions) {
+	// Stores the array of choice ids selected, in order
+	this.choices = [];
 
+	Model.call(this, data);
+};
+
+Playback.methods = {
+	start: function(story) {
+		this.story = story;
+		return story && story.get_opening();
 	},
 
-	apply: function(updates) {
+	select: function(choice) {
+		var choice = choice && choice.id ? this.story.get_choice(choice.id) : choice;
+		if (!choice) {
+			return null;
+		}
 
+		var self = this;
+		this.choices.push(choice.id);
+		if (choice.updates.forEach) {
+			choice.updates.forEach(function(u) {
+				u.apply(self.sandbox);
+			});
+		}
+
+		if (!choice.has_destination()) {
+			return null;
+		}
+
+		var next = this.story.get_passage(choice.destination);
+		// Trim the unavailable choices
+		next.choices = next.choices.filter(function(c) {
+			return !c.condition || c.condition.empty() || c.condition.test(self.sandbox);
+		});
+
+		return next;
+	},
+
+	debug: function() {
+		var data = [];
+		var keys = Object.keys(this.sandbox);
+		var sb   = this.sandbox;
+		keys.forEach(function(key) {
+			data.push({name: key, value: sb[key]});
+		});
+		console.table(data);
 	}
 };
+Model.extend(Playback, Playback.methods);

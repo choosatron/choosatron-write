@@ -1,14 +1,12 @@
-function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
+function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, $story, $passage) {
 
 	$scope.operators          = Operators;
 	$scope.alerts             = [];
-	$scope.stories            = [];
 	$scope.story              = null;
 	$scope.passage            = null;
 	$scope.prev_passage       = null;
 	$scope.picking            = false;
 	$scope.deleted            = null;
-	$scope.view               = 'stories';
 	$scope.modal              = {confirm_message: ''};
 	$scope.show_story_details = false;
 	$scope.show_passages      = false;
@@ -19,7 +17,19 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 	$scope.exit_change_modal = {};
 
 	this.init  =  function() {
-		$scope.load_stories();
+
+		// Monitor changes to the shared story and update local scope
+		$story.change(function(story) {
+			$scope.story = story;
+		});
+		$scope.story = $story.get();
+
+		// Monitor changes to the shared passage and update local scope
+		$passage.change(function(passage) {
+			$scope.passage = passage;
+		});
+		$scope.passage = $passage.get() || $scope.story.get_opening();
+
 		$autosave.watch(
 			$scope,
 			'story',
@@ -48,102 +58,17 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		});
 	}
 
-	$scope.sort_stories = function (sort) {
-		if ($scope.stories_sort == sort) {
-			$scope.stories_sort_desc = !$scope.stories_sort_desc;
-
-		} else {
-			$scope.stories_sort = sort;
-			$scope.stories_sort_desc = false;
-		}
-	};
-
-	$scope.get_story  =  function(id) {
-		if (!id) return null;
-		for (var i=0, story; story = $scope.stories[i]; i++) {
-			if (story.id == id) return story;
-		}
-		return null;
-	};
-
-	$scope.load_stories  =  function() {
-		$stories.values().then(function(stories) {
-			$scope.stories = [];
-			var story = null;
-			for (var i=0, data; data = stories[i]; i++) {
-				story = new Story(data);
-				$scope.stories.push(story);
-			}
-			$preferences.get('last_story').then(function (info) {
-				if (!info || !info.story_id) {
-					return;
-				}
-
-				var story = $scope.get_story(info.story_id);
-				if (story) {
-					$scope.select_story(story);
-
-					if (info.passage_id) {
-						var passage = $scope.get_passage(info.passage_id);
-
-						if (passage) {
-							$scope.set_passage(passage, true);
-						}
-					}
-				}
-			});
-		});
+	$scope.playback_story = function(story) {
+		$story.set(story);
+		$passage.set(story.get_opening());
+		$location.path('playback');
 	};
 
 	$scope.show_stories_menu = function () {
-		$scope.view = 'stories';
+		$story.clear();
+		$passage.clear();
+		$location.path('stories');
 	};
-
-	$scope.playback_story = function() {
-		$scope.view = 'playback';
-	};
-
-	$scope.edit_story = function() {
-		$scope.view = 'passage';
-	};
-
-	$scope.delete_story  =  function(story) {
-		$scope.deleted  =  {
-			type: "story",
-			title: story.title,
-			undo: function() {$scope.story = story;}
-		};
-		$scope.story    =  null;
-		$scope.set_passage(null, true);
-		$stories.remove(story.id);
-
-		var stories = [];
-		angular.forEach($scope.stories, function(s, key) {
-			if (s.id != story.id) stories.push(s);
-		});
-		$scope.stories = stories;
-	};
-
-	$scope.set_last_story = function () {
-		$preferences.set('last_story', ($scope.story && $scope.passage) ? {story_id: $scope.story.id, passage_id: $scope.passage.id} : null);
-	};
-
-	$scope.select_story  =  function(story) {
-		$scope.story    =  story;
-		$scope.set_passage((story ? story.get_opening() : null), true);
-		$scope.set_last_story();
-		$scope.view = 'passage';
-	};
-
-	$scope.new_story  =  function() {
-		var story    = new Story();
-		$scope.story = story;
-		$scope.new_passage();
-		$scope.stories.push(story);
-		$scope.set_last_story();
-		$scope.view = 'passage';
-		$scope.show_story_details = true;
-	}
 
 	$scope.new_passage  =  function(entrance_choice) {
 		$scope.set_passage(new Passage());
@@ -192,14 +117,12 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 
 		if (reset) {
 			$scope.prev_passage = null;
-
-		} else {
+		} 
+		else {
 			$scope.prev_passage = $scope.passage;
 		}
 
-		$scope.passage = passage;
-
-		$scope.set_last_story();
+		$passage.set(passage);
 	};
 
 	$scope.delete_passage  =  function(passage) {
@@ -214,7 +137,7 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		};
 		// The choice paths that link to this passage are not being deleted, but if they were that would require a change to "undo" ... for now I'm just checking when a choice is displaying its paths whether they are linking to a valid passage
 		$scope.story.delete_passage(passage.id);
-		$scope.passage = $scope.story.get_opening();
+		$scope.set_passage($scope.story.get_opening());
 	};
 
 	$scope.confirm_exit_type_change = function (passage, exit_type) {
@@ -316,62 +239,6 @@ function StoryCtrl($scope, $autosave, $stories, $preferences, $file) {
 		if (!$scope.story) return '{}';
 		return $scope.story.serialize(pretty);
 	};
-
-	$scope.export_story  =  function (story) {
-		// $file.export(story.title + '.json', story.serialize(), 'json');
-
-		$file.export_file(story.title, 'json', story.serialize(), 'text/javascript');
-	};
-
-	$scope.export_story_choosatron  =  function (story) {
-
-		// TODO: Convert story to binary here either directly via story object or via story.serialize() JSON
-
-		// Create a binary unsigned byte view of 100 bytes.
-		var buffer = new ArrayBuffer(100),
-			byteView = new Uint8Array(buffer),
-			uint16View = new Uint16Array(buffer),
-			uint32View = new Uint32Array(buffer);
-
-		// Set a few example byte values
-		/*byteView[0] = 0;
-		byteView[1] = 255;
-		byteView[2] = 0xff;
-		byteView[3] = 1;
-		byteView[4] = 0x01;
-
-		uint32View[2] = 0xffffffff;
-		uint32View[3] = 0x01010101;
-		uint32View[4] = 6000000;*/
-
-		for (var i=0; i<uint32View.length; i++) {
-  			uint32View[i] = i*2;
-		}
-
-		for (var i=0; i<uint16View.length; i++) {
-  			console.log("Entry " + i + ": " + uint16View[i]);
-  			uint16View[i] = i;
-		}
-
-		$file.export_file(story.title, 'cdam', buffer, 'application/octet-stream');
-	};
-
-	$scope.import_story  =  function() {
-		if ($scope.import.text) {
-			var data = angular.fromJson($scope.import.text);
-			var story = new Story(data);
-			story.refresh_id();
-			$scope.select_story(story);
-		}
-		else if ($scope.import.text) {
-			$file.read($scope.import.text, function(text) {
-				var data = angular.fromJson(text);
-				var story = new Story(data);
-				story.refresh_id();
-				$scope.select_story(story);
-			});
-		}
-	}
 
 	this.init();
 }

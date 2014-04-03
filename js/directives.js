@@ -1,5 +1,5 @@
-
-app.directive('confirmClick', ['$parse', function ($parse) {
+angular.module('storyApp.directives', [])
+.directive('confirmClick', ['$parse', function ($parse) {
 	return {
 		compile: function($templateElement, $templateAttributes) {
 			var fn = $parse($templateAttributes.confirmClick);
@@ -22,9 +22,9 @@ app.directive('confirmClick', ['$parse', function ($parse) {
 			};
 		}
 	};
-}]);
+}])
 
-app.directive('passageIcons', function () {
+.directive('passageIcons', function () {
 	return {
 		compile: function($templateElement, $templateAttributes) {
 			return function ($scope, $element, attrs) {
