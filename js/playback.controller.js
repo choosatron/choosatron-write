@@ -1,26 +1,24 @@
-function PlaybackCtrl($scope, $location, $story, $passage) {
+function PlaybackCtrl($scope, $location, $selection) {
 	$scope.playback = null;
 	$scope.story    = null;
 	$scope.passage  = null;
 
 	this.init  =  function() {
-		$story.change(setStory);
-		setStory($story.get());
+		$selection.watchStory($scope, startPlayback);
+		$selection.watchPassage($scope);
 	}
 
-	function setStory(story) {
-		$scope.story = story;
+	function startPlayback(story) {
 		$scope.playback = new Playback();
 		$scope.passage  = $scope.playback.start(story);
 	};
 
 	$scope.show_stories_menu = function () {
-		$story.clear();
-		$passage.clear();
-		$location.path('stories');
+		$selection.clear()
+		.then(function() {$location.path('stories')});
 	};
 
-	$scope.clear_filter_search = function() {
+	$scope.clear_passage_search = function() {
 		$scope.passage_search = '';
 	};
 
@@ -30,12 +28,12 @@ function PlaybackCtrl($scope, $location, $story, $passage) {
 	};
 
 	$scope.select_passage = function(passage) {
-		$scope.passage = passage;
+		$selection.setPassage(passage);
 	};
 
 	$scope.edit_story = function(story) {
-		$passage.set($scope.passage);
-		$location.path('story');
+		$selection.setPassage($scope.passage)
+		.then(function() {$location.path('story');});
 	};
 
 	this.init();

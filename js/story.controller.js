@@ -1,4 +1,4 @@
-function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, $story, $passage) {
+function StoryCtrl($scope, $location, $selection, $autosave ) {
 
 	$scope.operators          = Operators;
 	$scope.alerts             = [];
@@ -16,19 +16,16 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 
 	$scope.exit_change_modal = {};
 
-	this.init  =  function() {
+	function ensurePassage(passage) {
+		if (!$scope.passage) {
+			$scope.passage = $scope.story && $scope.story.get_opening();
+		}
+	}
 
-		// Monitor changes to the shared story and update local scope
-		$story.change(function(story) {
-			$scope.story = story;
-		});
-		$scope.story = $story.get();
+	function init() {
 
-		// Monitor changes to the shared passage and update local scope
-		$passage.change(function(passage) {
-			$scope.passage = passage;
-		});
-		$scope.passage = $passage.get() || $scope.story.get_opening();
+		$selection.watchStory($scope);
+		$selection.watchPassage($scope, ensurePassage);
 
 		$autosave.watch(
 			$scope,
@@ -39,7 +36,6 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 
 		$autosave.onSaving(function(key, value) {
 			$scope.save_state = 'saving';
-			console.info('Saving', key);
 		});
 
 		$autosave.onThrottling(function(key, time) {
@@ -49,7 +45,6 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 
 		$autosave.onSaved(function(key, value) {
 			$scope.save_state = 'saved';
-			console.info('Saved', key);
 		});
 
 		$autosave.onError(function(e) {
@@ -59,19 +54,19 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 	}
 
 	$scope.playback_story = function(story) {
-		$story.set(story);
-		$passage.set(story.get_opening());
-		$location.path('playback');
+		$selection.set(story, story.get_opening()).then(function() {
+			$location.path('playback');
+		});
 	};
 
 	$scope.show_stories_menu = function () {
-		$story.clear();
-		$passage.clear();
-		$location.path('stories');
+		$selection.clear().then(function() {
+			$location.path('stories');
+		});
 	};
 
 	$scope.new_passage  =  function(entrance_choice) {
-		$scope.set_passage(new Passage());
+		$selection.setPassage(new Passage());
 		$scope.passage.number = $scope.story.get_next_passage_number();
 		$scope.story.add_passage($scope.passage);
 		if (entrance_choice) {
@@ -122,10 +117,11 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 			$scope.prev_passage = $scope.passage;
 		}
 
-		$passage.set(passage);
+		$selection.setPassage(passage);
 	};
 
-	$scope.delete_passage  =  function(passage) {
+	$scope.delete_passage = function(passage) {
+		console.info("deleting", passage);
 		$scope.deleted = {
 			type: "passage",
 			title: passage.content,
@@ -135,9 +131,13 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 				$scope.passage = passage;
 			}
 		};
-		// The choice paths that link to this passage are not being deleted, but if they were that would require a change to "undo" ... for now I'm just checking when a choice is displaying its paths whether they are linking to a valid passage
+		// The choice paths that link to this passage are not being deleted, 
+		// but if they were that would require a change to "undo" ... for now 
+		// I'm just checking when a choice is displaying its paths whether 
+		// they are linking to a valid passage
 		$scope.story.delete_passage(passage.id);
-		$scope.set_passage($scope.story.get_opening());
+		var previous = $scope.prev_passage || $scope.story.get_opening();
+		$scope.set_passage(previous, true);
 	};
 
 	$scope.confirm_exit_type_change = function (passage, exit_type) {
@@ -240,5 +240,5 @@ function StoryCtrl($scope, $location, $autosave, $stories, $preferences, $file, 
 		return $scope.story.serialize(pretty);
 	};
 
-	this.init();
+	init();
 }

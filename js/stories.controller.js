@@ -1,39 +1,42 @@
-function StoriesCtrl($scope, $location, $autosave, $stories, $preferences, $file, $story, $passage) {
+/**
+ *¬This is the controller responsible for listing all of the stories that are available in local storage
+**/
+function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) {
 
 	$scope.stories            = [];
+	$scope.story              = null;
+	$scope.passage            = null;
 	$scope.stories_sort       = 'title';
 	$scope.stories_sort_desc  = false;
 
-	this.init = function() {
-		$scope.load_stories();
-		$story.on('change', function(story) {
-			$preferences.set('last_story', story && story.id);
-		});
-		$passage.on('change', function(passage) {
-			$preferences.set('last_passage', passage && passage.id);
+	function init() {
+		loadStories().then(function() {
+			$selection.getLastStoryId().then(loadStory);
+			$selection.watchStory($scope);
+			$selection.watchPassage($scope);
 		});
 	};
 
-	$scope.load_stories = function() {
-		$stories.values().then(function(stories) {
+	function loadStory(storyId) {
+		if (!storyId) return;
+		var story = $scope.get_story(storyId);
+		$scope.story = story;
+		$selection.getLastPassageId().then(loadPassage);
+	};
+
+	function loadPassage(passageId) {
+		if (!$scope.story) return;
+		$scope.edit_story($scope.story, $scope.story.get_passage(passageId));
+	};
+
+	function loadStories() {
+		return $stories.values().then(function(stories) {
 			$scope.stories = [];
 			var story = null;
 			for (var i=0, data; data = stories[i]; i++) {
 				story = new Story(data);
 				$scope.stories.push(story);
 			}
-
-			$preferences.get('last_story')
-			.then(function(storyId) {
-				var story = $scope.get_story(storyId);
-				if (story) {
-					$preferences.get('last_passage')
-					.then(function(passageId) {
-						var passage = story.get_passage(passageId);
-						$scope.edit_story(story, passage);
-					});
-				}
-			});
 		});
 	};
 
@@ -56,15 +59,17 @@ function StoriesCtrl($scope, $location, $autosave, $stories, $preferences, $file
 	};
 
 	$scope.playback_story = function(story) {
-		$story.set(story);
-		$passage.set(story.get_opening());
-		$location.path('playback');
+		$selection.set(story, story.get_opening())
+		.then(function() {
+			$location.path('playback');
+		});
 	};
 
 	$scope.edit_story = function(story, passage) {
-		$story.set(story);
-		$passage.set(passage || story.get_opening());
-		$location.path('story');
+		$selection.set(story, story.get_opening())
+		.then(function() {
+			$location.path('story');
+		});
 	};
 
 	$scope.delete_story  =  function(story) {
@@ -78,9 +83,14 @@ function StoriesCtrl($scope, $location, $autosave, $stories, $preferences, $file
 		angular.forEach($scope.stories, function(s, key) {
 			if (s.id != story.id) stories.push(s);
 		});
-		$story.clear();
-		$passage.clear();
+		$selection.clear();
 		$scope.stories = stories;
+	};
+
+	$scope.undo_delete  =  function() {
+		if (!$scope.deleted) return;
+		$scope.deleted.undo();
+		$scope.deleted = null;
 	};
 
 	$scope.new_story = function() {
@@ -141,5 +151,5 @@ function StoriesCtrl($scope, $location, $autosave, $stories, $preferences, $file
 		}
 	}
 
-	this.init();
+	init();
 }

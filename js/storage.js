@@ -89,7 +89,13 @@ function ChromeStorageEngine($q) {
 	this.getItem  =  function(key) {
 		var deferred = $q.defer();
 		var cb = function(items) {
-			deferred.resolve(items[key]);
+			if (!chrome.runtime.lastError) {
+				deferred.resolve(items[key]);
+			}
+			else {
+				self.trigger('error', chrome.runtime.lastError);
+				deferred.fail();
+			}
 		};
 		this.area.get(key, cb);
 		return deferred.promise;
@@ -148,6 +154,10 @@ function Storage(engine, namespace) {
 		this.engine.on(event, callback);
 	};
 
+	this.error = function() {
+		this.engine.trigger('error', arguments);
+	};
+
 	/**
 	 * Operates much like the jQuery.data method.
 	 * With no arguments, returns a promise that will resolve with all of the items in the namespace
@@ -158,13 +168,14 @@ function Storage(engine, namespace) {
 		if (!this.engine) return null;
 		var promise = this.engine.getItem(this.namespace);
 		var decode  = this.decode;
+		var err     = this.error;
 		switch (arguments.length) {
 			case 1:
 				var key = arguments[0];
 				return promise.then(function(items) {
 					var data = decode(items);
 					return data[key];
-				});
+				}, err);
 			case 2:
 				var key = arguments[0];
 				var val = arguments[1];
@@ -184,11 +195,11 @@ function Storage(engine, namespace) {
 						delete data[key];
 					}
 					engine.setItem(namespace, encode(data));
-				});
+				}, err);
 			default:
 				return promise.then(function(items) {
 					return decode(items);
-				});
+				}, err);
 		}
 	};
 
@@ -215,7 +226,7 @@ function Storage(engine, namespace) {
 	};
 
 	this.set  =  function(key, data) {
-		this.data(key, data);
+		return this.data(key, data);
 	};
 
 	this.get  =  function(key) {
@@ -223,7 +234,7 @@ function Storage(engine, namespace) {
 	};
 
 	this.remove  =  function(key) {
-		this.data(key, null);
+		return this.data(key, null);
 	}
 }
 

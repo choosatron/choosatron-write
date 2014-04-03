@@ -19,17 +19,21 @@ function Shared() {
 				listener(data);
 			});
 		}
-		, get: function () {
+		, get: function (callback) {
+			if (callback) callback(data);
 			return data;
 		}
-		, set: function (value) {
+		, set: function (value, callback) {
 			data = value;
 			this.fire('change');
+			if (callback) callback(data);
+			return data;
 		}
-		, clear: function() {
+		, clear: function(callback) {
 			data = null;
 			this.fire('change');
 			this.fire('clear');
+			if (callback) callback(null);
 		}
 	}
 };
