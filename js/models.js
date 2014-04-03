@@ -251,23 +251,32 @@ Command.methods = {
 		return !this.variable || !this.verb || !this.value;
 	},
 
+	cast: function(v) {
+		var f = parseFloat(v);
+		if (!isNaN(f)) return f;
+		var i = parseInt(v);
+		if (!isNaN(i)) return i;
+		return v;
+	},
+
 	apply: function(source) {
-		var data = source[this.variable];
 		var func = Operator[this.verb];
-		if (!func || !func.action) {
-			return;
+		if (func && func.action) {
+			var data = this.cast(source[this.variable] || 0);
+			var value = this.cast(this.value);
+			source[this.variable] = func.action(data, value);
 		}
-		if (!data) data = 0;
-		source[this.variable] = func.action(data, this.value);
+		return source[this.variable];
 	},
 
 	test: function(source) {
 		var func = Operator[this.verb];
-		if (!func || !func.action) {
-			return false;
+		if (func && func.action) {
+			var data = this.cast(source[this.variable] || 0);
+			var value = this.cast(this.value);
+			return func.action(data, value);
 		}
-		if (!data) data = 0;
-		return func.action(source[this.variable], this.value);
+		return false;
 	}
 };
 Model.extend(Command, Command.methods);
@@ -306,6 +315,12 @@ Story.methods = {
 				return false;
 			}
 		});
+		// There should always be an opening. Make one if needed.
+		if (!opening) {
+			opening = new Passage();
+			opening.opening = true;
+			this.add_passage(opening);
+		}
 		return opening;
 	},
 

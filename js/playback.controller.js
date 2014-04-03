@@ -20,6 +20,10 @@ function PlaybackCtrl($scope, $location, $story, $passage) {
 		$location.path('stories');
 	};
 
+	$scope.clear_filter_search = function() {
+		$scope.passage_search = '';
+	};
+
 	$scope.select_choice = function(choice) {
 		$scope.passage = $scope.playback.select(choice);
 		$scope.playback.debug();

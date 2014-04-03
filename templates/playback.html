@@ -92,10 +92,9 @@
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
-				<li ng-repeat="p in story.passages | filter:passage_search | filter:valid_picking_option">
+				<li ng-repeat="p in story.passages | filter:passage_search">
 					<a ng-click="select_passage(p)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
-						<!-- TODO: may indicate this some other way? -->
 						<span ng-if="p.opening" class="label label-success">Start</span>
 						{{ p.get_content() | truncate | quote }}
 					</a>
