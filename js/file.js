@@ -1,43 +1,84 @@
 function File($http) {
+	this.listeners = {
+		'error'  : [],
+		'cancel' : [],
+		'open'   : [],
+		'read'   : [],
+		'write'  : []
+	};
 	this.$http = $http;
 }
 
 File.prototype = {
-	export: function(filename, data, type) {
-		var a      = document.createElement('a');
-		a.href     = 'data:attachment/' + type + ',' + encodeURI(data);
-		a.target   = '_blank';
-		a.download = filename;
-		document.body.appendChild(a);
-		a.click();
-	}, 
-
-	read: function(url) {
-		return this.$http.get(url);
+	on: function(event, callback) {
+		this.listeners[event].push(callback);
 	},
 
-	export_file: function (filename, extension, data, type) {
-		function errorHandler(arguments) {
-			console.error(chrome.runtime.lastError, arguments);
-		}
+	fire: function(event) {
+		var args = Array.prototype.splice.call(arguments, 1);
+		console.trace("file", event, args);
+		var ctx  = this;
+		this.listeners[event].forEach(function(callback) {
+			callback.apply(self, args);
+		});
+	},
 
-		chrome.fileSystem.chooseEntry(
-			{
-				type: 'saveFile',
-				suggestedName: filename,
-				accepts: [{extensions: [extension]}]
-			},
-			function (writableFileEntry) {
-				if (!writableFileEntry) return;
-				writableFileEntry.createWriter(function (writer) {
-					writer.onerror = errorHandler;
-					writer.onwriteend = function (e) {
-						console.info('file write complete');
-					};
-
-					writer.write(new Blob([data], {type: type}));
-				}, errorHandler);
+	open: function(extensions, callback) {
+		var self = this;
+		var onOpen = function(entry) {
+			if (!entry) {
+				self.fire('cancel');
+				if (callback) callback.apply(self, arguments);
+				return;
 			}
-		);
+			self.fire('open', entry);
+			var reader = new FileReader();
+
+			reader.onprogress = console.log;
+
+			reader.onerror = function(e) {
+				self.fire('error', e);
+			};
+			reader.onload = function(data) {
+				var result = data.target && data.target.result;
+				self.fire('read', result, data);
+				if (callback) callback.call(self, result, data);
+			};
+			entry.file(function(file) {
+				reader.readAsText(file);
+			}, function(e) {
+				self.fire('error', e);
+			});
+		};
+		var args = {type: 'openFile'};
+		if (extensions) args.accepts = [{extensions: extensions}];
+		chrome.fileSystem.chooseEntry(args, onOpen);
+	},
+
+	export: function (filename, extension, data, type) {
+		var self = this;
+		var write = function(entry) {
+			if (!entry) {
+				self.fire('cancel');
+				return;
+			}
+			var fe = function(e) {
+				self.fire('error', e);
+			};
+			var fw = function(w) {
+				self.fire('write', w);
+			};
+			entry.createWriter(function(writer) {
+				writer.onerror    = fe;
+				writer.onwriteend = fw;
+				writer.write(new Blob([data], {type: type}));
+			}, self.fireError);
+		};
+		var args = {
+			type: 'saveFile',
+			suggestedName: filename,
+			accepts: [{extensions: [extension]}]
+		};
+		chrome.fileSystem.chooseEntry(args, write);
 	}
 };

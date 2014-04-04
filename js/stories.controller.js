@@ -98,7 +98,7 @@ function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) 
 	};
 
 	$scope.export_story = function(story) {
-		$file.export_file(story.title, 'json', story.serialize(), 'text/javascript');
+		$file.export(story.title, 'json', story.serialize(), 'text/javascript');
 	};
 
 	$scope.export_story_choosatron  =  function (story) {
@@ -131,24 +131,17 @@ function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) 
   			uint16View[i] = i;
 		}
 
-		$file.export_file(story.title, 'cdam', buffer, 'application/octet-stream');
+		$file.export(story.title, 'cdam', buffer, 'application/octet-stream');
 	};
 
 	$scope.import_story  =  function() {
-		if ($scope.import.text) {
-			var data = angular.fromJson($scope.import.text);
+		var read = function(text) {
+			var data = angular.fromJson(text);
 			var story = new Story(data);
 			story.refresh_id();
 			$scope.edit_story(story);
-		}
-		else if ($scope.import.text) {
-			$file.read($scope.import.text, function(text) {
-				var data = angular.fromJson(text);
-				var story = new Story(data);
-				story.refresh_id();
-				$scope.edit_story(story);
-			});
-		}
+		};
+		$file.open(['json'], read);
 	}
 
 	init();
