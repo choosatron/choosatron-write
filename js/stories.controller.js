@@ -79,12 +79,14 @@ function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) 
 			undo: function() {$scope.story = story;}
 		};
 
-		var stories = [];
-		angular.forEach($scope.stories, function(s, key) {
-			if (s.id != story.id) stories.push(s);
+		$stories.remove(story.id).then(function() {
+			$selection.clear();
 		});
-		$selection.clear();
-		$scope.stories = stories;
+
+		var stories = [];
+		$scope.stories = $scope.stories.filter(function(s) {
+			return s.id != story.id;
+		});
 	};
 
 	$scope.undo_delete  =  function() {
@@ -94,7 +96,10 @@ function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) 
 	};
 
 	$scope.new_story = function() {
-		$scope.edit_story(new Story());
+		var story = new Story();
+		$stories.set(story.id, story).then(function() {
+			$scope.edit_story(story);
+		});
 	};
 
 	$scope.export_story = function(story) {
