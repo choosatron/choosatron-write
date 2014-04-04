@@ -13,9 +13,7 @@ angular.module('storyApp.directives', [])
 						});
 					});
 
-					$scope.$apply(function () {
-						$scope.modal.confirm_message = attrs.confirmMessage;
-					});
+					$('#confirmModal .confirm_message').html(attrs.confirmMessage);
 
 					$('#confirmModal').modal('show');
 				});

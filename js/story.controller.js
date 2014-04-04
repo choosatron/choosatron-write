@@ -66,13 +66,14 @@ function StoryCtrl($scope, $location, $selection, $autosave ) {
 	};
 
 	$scope.new_passage  =  function(entrance_choice) {
-		$selection.setPassage(new Passage());
-		$scope.passage.number = $scope.story.get_next_passage_number();
-		$scope.story.add_passage($scope.passage);
-		if (entrance_choice) {
-			entrance_choice.set_destination($scope.passage);
-		}
-		$scope.picking = null;
+		$selection.setPassage(new Passage()).then(function() {
+			$scope.passage.number = $scope.story.get_next_passage_number();
+			$scope.story.add_passage($scope.passage);
+			if (entrance_choice) {
+				entrance_choice.set_destination($scope.passage);
+			}
+			$scope.picking = null;
+		});
 	};
 
 	$scope.pick_passage  =  function(choice) {
