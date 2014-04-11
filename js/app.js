@@ -16,11 +16,13 @@ var app = angular.module('storyApp', ['storyApp.filters', 'storyApp.directives',
 	.service('$preferences', ['$storageEngine', 'preferencesNamespace', Storage])
 	.service('$autosave', ['$stories', '$timeout', AutoSave])
 
+	.factory('$translators', TranslatorFactory)
+
 	.service('$file', ['$http', File])
 	.service('$story', Shared)
 	.service('$passage', Shared)
 	.service('$selection', ['$story', '$passage', '$preferences', Selection])
 
-	.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$autosave', '$stories', '$file', StoriesCtrl])
+	.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$autosave', '$stories', '$file', '$translators', StoriesCtrl])
 	.controller('StoryCtrl',    ['$scope', '$location', '$selection', '$autosave', StoryCtrl])
 	.controller('PlaybackCtrl', ['$scope', '$location', '$selection', PlaybackCtrl]);

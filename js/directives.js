@@ -33,7 +33,7 @@ angular.module('storyApp.directives', [])
 						return;
 					}
 
-					var choices = passage.choices.length;
+					var choices = passage.choices ? passage.choices.length : 0;
 
 					if (passage.has_append()) {
 						choices = 'a';

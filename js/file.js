@@ -16,7 +16,6 @@ File.prototype = {
 
 	fire: function(event) {
 		var args = Array.prototype.splice.call(arguments, 1);
-		console.trace("file", event, args);
 		var ctx  = this;
 		this.listeners[event].forEach(function(callback) {
 			callback.apply(self, args);
@@ -41,8 +40,8 @@ File.prototype = {
 			};
 			reader.onload = function(data) {
 				var result = data.target && data.target.result;
-				self.fire('read', result, data);
-				if (callback) callback.call(self, result, data);
+				self.fire('read', result, entry, data);
+				if (callback) callback.call(self, result, entry, data);
 			};
 			entry.file(function(file) {
 				reader.readAsText(file);

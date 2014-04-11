@@ -182,6 +182,7 @@ Model.prototype = {
 
 	each: function(field, callback) {
 		var list = this[field];
+		if (!list) return this;
 		for (var i=0, item; item = list[i]; i++) {
 			var stop = callback(item);
 			if (stop === false) break;
@@ -702,8 +703,8 @@ Playback.methods = {
 
 		var next = this.story.get_passage(choice.destination);
 		// Trim the unavailable choices
-		next.choices = next.choices.filter(function(c) {
-			return !c.condition || c.condition.empty() || c.condition.test(self.sandbox);
+		next.choices = next.choices.forEach(function(c) {
+			c.hidden = c.condition && !c.condition.empty() && !c.condition.test(self.sandbox);
 		});
 
 		return next;

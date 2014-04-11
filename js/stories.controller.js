@@ -1,7 +1,7 @@
 /**
  *¬This is the controller responsible for listing all of the stories that are available in local storage
 **/
-function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) {
+function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file, $translators) {
 
 	$scope.stories            = [];
 	$scope.story              = null;
@@ -96,57 +96,30 @@ function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file) 
 	};
 
 	$scope.new_story = function() {
-		var story = new Story();
-		$stories.set(story.id, story).then(function() {
-			$scope.edit_story(story);
-		});
+		$scope.edit_story(new Story());
 	};
 
 	$scope.export_story = function(story) {
-		$file.export(story.title, 'json', story.serialize(), 'text/javascript');
+		var json = $translators.get('json');
+		var data = json.fromStory(story);
+		$file.export(story.title, 'json', data, 'text/javascript');
 	};
 
 	$scope.export_story_choosatron  =  function (story) {
-
-		// TODO: Convert story to binary here either directly via story object or via story.serialize() JSON
-
-		// Create a binary unsigned byte view of 100 bytes.
-		var buffer = new ArrayBuffer(100),
-			byteView = new Uint8Array(buffer),
-			uint16View = new Uint16Array(buffer),
-			uint32View = new Uint32Array(buffer);
-
-		// Set a few example byte values
-		/*byteView[0] = 0;
-		byteView[1] = 255;
-		byteView[2] = 0xff;
-		byteView[3] = 1;
-		byteView[4] = 0x01;
-
-		uint32View[2] = 0xffffffff;
-		uint32View[3] = 0x01010101;
-		uint32View[4] = 6000000;*/
-
-		for (var i=0; i<uint32View.length; i++) {
-  			uint32View[i] = i*2;
-		}
-
-		for (var i=0; i<uint16View.length; i++) {
-  			console.log("Entry " + i + ": " + uint16View[i]);
-  			uint16View[i] = i;
-		}
-
+		var bin = $translators.get('bin');
+		var buffer = bin.fromStory(story);
 		$file.export(story.title, 'cdam', buffer, 'application/octet-stream');
 	};
 
 	$scope.import_story  =  function() {
-		var read = function(text) {
-			var data = angular.fromJson(text);
-			var story = new Story(data);
+		var supported = $translators.extensions();
+		var read = function(text, entry, info) {
+			var translator = $translators.getForFile(text, entry.name);
+			var story = translator.toStory(text);
 			story.refresh_id();
 			$scope.edit_story(story);
 		};
-		$file.open(['json'], read);
+		$file.open(supported, read);
 	}
 
 	init();
