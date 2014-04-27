@@ -9,7 +9,7 @@ function(Model) {
 		this.sandbox = {};
 
 		// Stores the array of choice ids selected, in order
-		this.choices = [];
+		this.selected = [];
 
 		Model.call(this, data);
 	};
@@ -17,7 +17,19 @@ function(Model) {
 	Playback.methods = {
 		start: function(story) {
 			this.story = story;
-			return story && story.get_opening();
+			var opening = story && story.get_opening();
+			this.trim(opening);
+			return opening;
+		},
+
+		trim: function(passage) {
+			if (!passage.choices) {
+				return;
+			}
+			var self = this;
+			passage.choices.forEach(function(c) {
+				c.hidden = c.condition && !c.condition.empty() && !c.condition.test(self.sandbox);
+			});
 		},
 
 		select: function(choice) {
@@ -27,7 +39,7 @@ function(Model) {
 			}
 
 			var self = this;
-			this.choices.push(choice.id);
+			this.selected.push(choice.id);
 			if (choice.updates.forEach) {
 				choice.updates.forEach(function(u) {
 					u.apply(self.sandbox);
@@ -39,10 +51,7 @@ function(Model) {
 			}
 
 			var next = this.story.get_passage(choice.destination);
-			// Trim the unavailable choices
-			next.choices = next.choices.forEach(function(c) {
-				c.hidden = c.condition && !c.condition.empty() && !c.condition.test(self.sandbox);
-			});
+			this.trim(next);
 
 			return next;
 		},

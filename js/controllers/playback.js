@@ -1,7 +1,7 @@
 angular.module('storyApp.controllers')
-.controller('PlaybackCtrl', ['$scope', '$location', '$selection', 
+.controller('PlaybackCtrl', ['$scope', '$location', '$selection', 'Playback',
 
-function PlaybackCtrl($scope, $location, $selection) {
+function PlaybackCtrl($scope, $location, $selection, Playback) {
 	$scope.playback = null;
 	$scope.story    = null;
 	$scope.passage  = null;

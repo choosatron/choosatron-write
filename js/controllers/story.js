@@ -1,11 +1,12 @@
 angular.module('storyApp.controllers')
 .controller('StoryCtrl', ['$scope', '$location', '$selection', '$stories', 'AutoSave', 
-	'Passage', 'Choice', 'Command', 'Operators',
-function StoryCtrl($scope, $location, $selection, $stories, AutoSave, Passage, Choice, Command, Operators) {
+	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
+function StoryCtrl($scope, $location, $selection, $stories, AutoSave, Passage, Choice, Command, Operators, Genres) {
 
 	var autosave = new AutoSave($stories, $scope);
 
 	$scope.operators          = Operators;
+	$scope.genres             = Genres;
 	$scope.alerts             = [];
 	$scope.story              = null;
 	$scope.passage            = null;
@@ -223,6 +224,7 @@ function StoryCtrl($scope, $location, $selection, $stories, AutoSave, Passage, C
 
 	$scope.delete_choice_condition = function(choice) {
 		choice.condition = new Command();
+		choice.showCondition = false;
 	};
 
 	$scope.add_choice_update = function(choice) {

@@ -37,7 +37,7 @@
 					</div>
 					<label for="input_genre" class="col-sm-2 control-label">Genre</label>
 					<div class="col-sm-3">
-						<input ng-model="story.genre" type="text" class="form-control" id="input_genre" placeholder="Genre" />
+						<select ng-model="story.genre" class="form-control" id="input_genre" ng-options="genre for genre in genres" />
 					</div>
 				</div>
 				<div class="form-group">

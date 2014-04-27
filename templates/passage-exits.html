@@ -52,7 +52,7 @@
 
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer">
-						<div class="choiceDisplayConditions" ng-show="choice.showConditions">
+						<div class="choiceDisplayConditions" ng-show="choice.showCondition">
 							<p><strong>Display choice if:</strong></p>
 
 							<div class="row">
@@ -94,7 +94,7 @@
 						</div>
 
 						<div class="col-xs-1 choiceLogic h4">
-							<a ng-click="choice.showConditions = !choice.showConditions" ng-class="{active: choice.showConditions}"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a ng-click="choice.showCondition = !choice.showCondition" ng-class="{active: choice.showCondition}"><span class="glyphicon glyphicon-eye-open"></span></a>
 							<a ng-click="choice.showUpdates = !choice.showUpdates" ng-class="{active: choice.showUpdates}"><span class="glyphicon glyphicon-cog"></span></a>
 						</div>
 

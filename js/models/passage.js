@@ -115,6 +115,9 @@ function(Model, Choice) {
 		},
 
 		add_choice: function(choice) {
+			if (!this.choices.push) {
+				this.choices = [];
+			}
 			this.choices.push(choice);
 			return choice.id;
 		},
@@ -129,6 +132,9 @@ function(Model, Choice) {
 		},
 
 		get_choice: function(id) {
+			if (!this.choices) {
+				return null;
+			}
 			var choice = null;
 			var found = this.choices.some(function(c) {
 				if (c.id == id) {

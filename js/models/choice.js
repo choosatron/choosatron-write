@@ -5,6 +5,12 @@ function(Model, Command) {
 	function Choice(data) {
 		this.content     =  '';
 
+		// Used to determine whether conditions are shown in the UI
+		this.showCondition = false;
+
+		// Used to determine whether updates are shown in the UI
+		this.showUpdates = false;
+
 		// These are the conditions used to determine whether this choice is displayed
 		this.condition = new Command(); 
 
@@ -43,10 +49,12 @@ function(Model, Command) {
 				var update = new Command(updates[i]);
 				this.updates.push(update);
 			}
+			this.showUpdates = this.updates.length > 0;
 		},
 
 		load_condition: function(condition) {
 			this.condition = new Command(condition);
+			this.showCondition = condition && condition.length;
 		}
 	}
 	Model.extend(Choice, Choice.methods);
