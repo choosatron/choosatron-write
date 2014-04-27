@@ -1,3 +1,6 @@
+// Wrapped in an anonymous function to allow local namepsacing
+(function() {
+
 function StorageEngineProvider() {
 
 	var preferSync = false;
@@ -9,43 +12,31 @@ function StorageEngineProvider() {
 		preferSync = value;
 	};
 
-	this.$get = function($q) {
+	this.$get = function($q, EventHandler) {
 		if (chrome && chrome.storage && preferSync) {
-			return new ChromeSyncStorageEngine($q);
+			return new ChromeSyncStorageEngine($q, EventHandler);
 		}
 		else if (chrome && chrome.storage) {
-			return new ChromeStorageEngine($q);
+			return new ChromeStorageEngine($q, EventHandler);
 		}
 		else if (window.localStorage) {
-			return new LocalStorageEngine($q);
+			return new LocalStorageEngine($q, EventHandler);
 		}
-		return new BaseStorageEngine($q);
+		return new BaseStorageEngine($q, EventHandler);
 	}
-}
+};
 
-function BaseStorageEngine($q) {
+function BaseStorageEngine($q, EventHandler) {
 	this.area = {};
-	this.listeners = {};
+	this.events = EventHandler.create('set', 'error');
+	this.events.async = true;
+	this.events.context = this;
 
 	this.throttle = 750; // ms
 
 	this.on = function(event, callback) {
-		if (!this.listeners[event]) {
-			this.listeners[event] = [];
-		}
-		this.listeners[event].push(callback);
+		this.events.on(event, callback);
 		return this;
-	};
-
-	this.trigger = function(event) {
-		if (!this.listeners[event]) {
-			return;
-		}
-		var self = this;
-		var args = Array.prototype.slice.call(arguments, 1);
-		this.listeners[event].forEach(function(callback) {
-			callback.apply(self, args);
-		});
 	};
 
 	this.getItem = function(key) {
@@ -55,12 +46,13 @@ function BaseStorageEngine($q) {
 	};
 
 	this.setItem = function(key, value) {
+		this.events.fire('set', key, value);
 		this.area[key] = value;
 	};
 }
 
-function LocalStorageEngine($q) {
-	BaseStorageEngine.call(this, $q);
+function LocalStorageEngine($q, EventHandler) {
+	BaseStorageEngine.call(this, $q, EventHandler);
 
 	this.area     =  window.localStorage;
 	this.getItem  =  function(key) {
@@ -73,27 +65,28 @@ function LocalStorageEngine($q) {
 	this.setItem  =  function(key, value) {
 		try {
 			this.area.setItem(key, value);
-			this.trigger('set', key, value);
+			this.events.fire('set', key, value);
 		}
 		catch (e) {
-			this.trigger('error', e);
+			this.events.fire('error', e);
 		}
 	};
 }
 
-function ChromeStorageEngine($q) {
-	BaseStorageEngine.call(this, $q);
+function ChromeStorageEngine($q, EventHandler) {
+	BaseStorageEngine.call(this, $q, EventHandler);
 
 	this.area = chrome.storage.local;
 
 	this.getItem  =  function(key) {
 		var deferred = $q.defer();
+		var events = this.events;
 		var cb = function(items) {
 			if (!chrome.runtime.lastError) {
 				deferred.resolve(items[key]);
 			}
 			else {
-				self.trigger('error', chrome.runtime.lastError);
+				events.fire('error', chrome.runtime.lastError);
 				deferred.fail();
 			}
 		};
@@ -102,28 +95,33 @@ function ChromeStorageEngine($q) {
 	}
 
 	this.setItem  =  function(key, value) {
-		var self = this;
+		var events = this.events;
 		var obj = {};
 		obj[key] = value;
 		this.area.set(obj, function() {
 			if (!chrome.runtime.lastError) {
-				self.trigger('set', key, value);
+				events.fire('set', key, value);
 			}
 			else {
-				self.trigger('error', chrome.runtime.lastError);
+				events.fire('error', chrome.runtime.lastError);
 			}
 		});
 	}
 }
 
-function ChromeSyncStorageEngine($q) {
-	ChromeStorageEngine.call(this, $q);
+function ChromeSyncStorageEngine($q, EventHandler) {
+	ChromeStorageEngine.call(this, $q, EventHandler);
 	this.area = chrome.storage.sync;
 
 	// Each change within the throttle time bumps the save action out slightly.
 	// Chrome.sync storage has a max sustained save operation of 10 writes/minute
 	this.throttle = 6000; // ms
 }
+
+
+function StorageProvider() {
+	return Storage;
+};
 
 function Storage(engine, namespace) {
 	this.engine = engine;
@@ -155,7 +153,7 @@ function Storage(engine, namespace) {
 	};
 
 	this.error = function() {
-		this.engine.trigger('error', arguments);
+		this.engine.events.fire('error', arguments);
 	};
 
 	/**
@@ -238,101 +236,9 @@ function Storage(engine, namespace) {
 	}
 }
 
-function AutoSave($storage, $timeout) {
+// Register the storage module
+angular.module('storyApp.storage')
+	.provider('$storageEngine', ['$qProvider', 'EventHandlerProvider', StorageEngineProvider])
+	.factory('Storage', StorageProvider);
 
-	var listeners = {
-		'error': [],
-		'saving': [],
-		'saved': [],
-		'throttling': []
-	};
-
-	var fire = function(event) {
-		if (!listeners[event]) return;
-		var args = Array.prototype.slice.call(arguments, 1);
-		var self = this;
-		listeners[event].forEach(function(cb) {
-			cb.apply(self, args);
-		});
-	}
-
-	$storage.on('error', function(e) {
-		fire('error', e);
-	});
-
-	$storage.on('set', function(key, value) {
-		fire('saved', key, value);
-	});
-
-	this.onSaving = function(callback) {
-		listeners.saving.push(callback);
-	};
-
-	this.onThrottling = function(callback) {
-		listeners.throttling.push(callback);
-	}
-
-	this.onSaved = function(callback) {
-		listeners.saved.push(callback);
-	};
-
-	this.onError = function(callback) {
-		listeners.error.push(callback);
-	};
-
-	/**
-	 * Watches a particular model within the scope and saves to local storage
-	 * whenever the model has changed and the time limit has elapsed
-	 * @todo: Enforce the time limit
-	**/
-	this.watch = function($scope, modelName, getKey, getValue) {
-
-		// Each change within the throttle time bumps the save action out slightly.
-		// Chrome.sync storage has a max sustained save operation of 10 writes/minute
-		var throttle = $storage.engine.throttle || 6000; //ms
-
-		// Keep track of the last save time for each key
-		var lastSave = {};
-
-		// Store a reference to the promise to save
-		var savePromise = {};
-
-		$scope.$watch(modelName, function(nv, ov, scope) {
-
-			// No new value or old value, exit
-			if (!nv && !ov) {
-				return;
-			}
-
-			var key = getKey ? getKey(nv) : modelName;
-
-			// No key returned, exit
-			if (!key) {
-				return;
-			}
-
-			// Clear any previously queued saves
-			if (savePromise[key]) {
-				$timeout.cancel(savePromise[key]);
-			}
-
-			var val = getValue ? getValue(nv) : nv;
-			var save = function() {
-				fire('saving', key, val);
-				$storage.set(key, val);
-				lastSave[key] = Date.now();
-			};
-
-			var lastTimeSave = lastSave[key];
-			if (lastTimeSave && Date.now() - lastTimeSave < throttle) {
-				// If we're within the throttle time, bump out the final save call
-				// a little to prevent excessive autosaving.
-				fire('throttling', key, throttle);
-				savePromise[key] = $timeout(save, throttle);
-				return;
-			}
-
-			save();
-		}, true);
-	}
-}
+})(); // End anonymous function

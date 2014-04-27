@@ -1,3 +1,6 @@
+angular.module('storyApp.controllers')
+.controller('PlaybackCtrl', ['$scope', '$location', '$selection', 
+
 function PlaybackCtrl($scope, $location, $selection) {
 	$scope.playback = null;
 	$scope.story    = null;
@@ -37,4 +40,4 @@ function PlaybackCtrl($scope, $location, $selection) {
 	};
 
 	this.init();
-};
+}]);

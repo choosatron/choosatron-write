@@ -1,3 +1,69 @@
+(function() {
+
+angular.module('storyApp.databridge')
+.factory('$translators', function() {
+	var classes = [
+		{
+			type  : 'json',
+			class : JsonTranslator
+		},
+		{
+			type  : 'twee',
+			class : TwineTranslator
+		},
+		{
+			type  : 'bin',
+			class : BinaryTranslator
+		},
+		{
+			type  : 'inkle',
+			class : InkleTranslator
+		}
+	];
+
+	classes.findTranslator = function(test) {
+		var found = null;
+		this.some(function(o, i, a) {
+			if (test(o, i)) {
+				found = o;
+				return true;
+			}
+			return false;
+		});
+		return found.class;
+	};
+
+	var unique = function(value) {
+		if (this[value]) return false;
+		return this[value] = true;
+	};
+
+	return {
+		all: function() {
+			return classes;
+		},
+
+		extensions: function() {
+			var exts = classes.reduce(function(pv, cv, ix, a) {
+				return pv.concat(cv.class.extensions);
+			}, []);
+			return exts.filter(unique, {});
+		},
+
+		get: function(type) {
+			return classes.findTranslator(function(o) {
+				return o.type == type;
+			});
+		},
+
+		getForFile: function(text, filename) {
+			return classes.findTranslator(function(o) {
+				return o.class.handles(text, filename);
+			});
+		}
+	};
+});
+
 var JsonTranslator = {
 	handles: function(data) {
 		return true;
@@ -11,7 +77,7 @@ var JsonTranslator = {
 	},
 
 	fromStory: function(story) {
-		return story.serialize();
+		return story.serialize(true);
 	}
 };
 
@@ -152,65 +218,4 @@ var InkleTranslator = {
 	}
 };
 
-function TranslatorFactory() {
-	var classes = [
-		{
-			type  : 'json',
-			class : JsonTranslator
-		},
-		{
-			type  : 'twee',
-			class : TwineTranslator
-		},
-		{
-			type  : 'bin',
-			class : BinaryTranslator
-		},
-		{
-			type  : 'inkle',
-			class : InkleTranslator
-		}
-	];
-
-	classes.findTranslator = function(test) {
-		var found = null;
-		this.some(function(o, i, a) {
-			if (test(o, i)) {
-				found = o;
-				return true;
-			}
-			return false;
-		});
-		return found.class;
-	};
-
-	var unique = function(value) {
-		if (this[value]) return false;
-		return this[value] = true;
-	};
-
-	return {
-		all: function() {
-			return classes;
-		},
-
-		extensions: function() {
-			var exts = classes.reduce(function(pv, cv, ix, a) {
-				return pv.concat(cv.class.extensions);
-			}, []);
-			return exts.filter(unique, {});
-		},
-
-		get: function(type) {
-			return classes.findTranslator(function(o) {
-				return o.type == type;
-			});
-		},
-
-		getForFile: function(text, filename) {
-			return classes.findTranslator(function(o) {
-				return o.class.handles(text, filename);
-			});
-		}
-	};
-}
+})();

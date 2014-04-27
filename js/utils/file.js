@@ -1,69 +1,54 @@
-function File($http) {
-	this.listeners = {
-		'error'  : [],
-		'cancel' : [],
-		'open'   : [],
-		'read'   : [],
-		'write'  : []
+angular.module('storyApp.utils')
+.service('$file', ['EventHandler', function(EventHandler) {
+	this.events = EventHandler.create('error', 'cancel', 'open', 'read', 'write');
+	this.events.async = true;
+
+	this.on = function(event, callback) {
+		this.events.on(event, callback);
 	};
-	this.$http = $http;
-}
 
-File.prototype = {
-	on: function(event, callback) {
-		this.listeners[event].push(callback);
-	},
-
-	fire: function(event) {
-		var args = Array.prototype.splice.call(arguments, 1);
-		var ctx  = this;
-		this.listeners[event].forEach(function(callback) {
-			callback.apply(self, args);
-		});
-	},
-
-	open: function(extensions, callback) {
-		var self = this;
+	this.open = function(extensions, callback) {
+		var events = this.events;
 		var onOpen = function(entry) {
 			if (!entry) {
-				self.fire('cancel');
+				events.fire('cancel');
 				if (callback) callback.apply(self, arguments);
 				return;
 			}
-			self.fire('open', entry);
+			events.fire('open', entry);
 			var reader = new FileReader();
 
 			reader.onerror = function(e) {
-				self.fire('error', e);
+				events.fire('error', e);
 			};
 			reader.onload = function(data) {
 				var result = data.target && data.target.result;
-				self.fire('read', result, entry, data);
+				events.fire('read', result, entry, data);
 				if (callback) callback.call(self, result, entry, data);
 			};
 			entry.file(function(file) {
 				reader.readAsText(file);
 			}, function(e) {
-				self.fire('error', e);
+				events.fire('error', e);
 			});
 		};
 		var args = {type: 'openFile'};
 		if (extensions) args.accepts = [{extensions: extensions}];
 		chrome.fileSystem.chooseEntry(args, onOpen);
-	},
+	};
 
-	export: function (filename, extension, data, type) {
-		var self = this;
+	this.export = function (filename, extension, data, type) {
+		var events = this.events;
 		var write = function(entry) {
 			if (!entry) {
-				self.fire('cancel');
+				events.fire('cancel');
 				return;
 			}
 			var fe = function(e) {
-				self.fire('error', e);
+				events.fire('error', e);
 			};
 			var fw = function(w) {
-				self.fire('write', w);
+				events.fire('write', w);
 			};
 			entry.createWriter(function(writer) {
 				writer.onerror    = fe;
@@ -77,5 +62,5 @@ File.prototype = {
 			accepts: [{extensions: [extension]}]
 		};
 		chrome.fileSystem.chooseEntry(args, write);
-	}
-};
+	};
+}]);

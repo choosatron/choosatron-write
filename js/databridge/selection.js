@@ -1,3 +1,5 @@
+angular.module('storyApp.databridge')
+.service('$selection', ['$story', '$passage', '$preferences', 
 /**
  * Can be used to manage what is the current story and passage¬
  * Expects the $story and $passage to be Shared instances 
@@ -16,7 +18,7 @@ function Selection($story, $passage, $preferences) {
 				scope.story = story;
 				if (callback) callback(story);
 			};
-			$story.change(setStory);
+			$story.on('set', setStory);
 			$story.get(setStory);
 		},
 
@@ -25,7 +27,7 @@ function Selection($story, $passage, $preferences) {
 				scope.passage = passage;
 				if (callback) callback(passage);
 			};
-			$passage.change(setPassage);
+			$passage.on('set', setPassage);
 			$passage.get(setPassage);
 		},
 
@@ -72,4 +74,4 @@ function Selection($story, $passage, $preferences) {
 			});
 		}
 	}
-};
+}]);

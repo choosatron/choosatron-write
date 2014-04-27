@@ -1,7 +1,9 @@
+angular.module('storyApp.controllers')
+.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$stories', '$file', '$translators', 
 /**
  *¬This is the controller responsible for listing all of the stories that are available in local storage
 **/
-function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file, $translators) {
+function StoriesCtrl($scope, $location, $selection, $stories, $file, $translators) {
 
 	$scope.stories            = [];
 	$scope.story              = null;
@@ -123,4 +125,4 @@ function StoriesCtrl($scope, $location, $selection, $autosave, $stories, $file, 
 	}
 
 	init();
-}
+}]);

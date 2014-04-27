@@ -1,4 +1,9 @@
-function StoryCtrl($scope, $location, $selection, $autosave ) {
+angular.module('storyApp.controllers')
+.controller('StoryCtrl', ['$scope', '$location', '$selection', '$stories', 'AutoSave', 
+
+function StoryCtrl($scope, $location, $selection, $stories, AutoSave ) {
+
+	var autosave = new AutoSave($stories, $scope);
 
 	$scope.operators          = Operators;
 	$scope.alerts             = [];
@@ -27,27 +32,25 @@ function StoryCtrl($scope, $location, $selection, $autosave ) {
 		$selection.watchStory($scope);
 		$selection.watchPassage($scope, ensurePassage);
 
-		$autosave.watch(
-			$scope,
+		autosave.watch(
 			'story',
 			function(s) {return s ? s.id : null},
 			function(s) {return s ? s.object() : null}
 		);
 
-		$autosave.onSaving(function(key, value) {
+		autosave.onSaving(function(key, value) {
 			$scope.save_state = 'saving';
 		});
 
-		$autosave.onThrottling(function(key, time) {
+		autosave.onThrottling(function(key, time) {
 			$scope.save_state = 'throttling';
-			console.info('Delaying save', key, time, 'ms');
 		});
 
-		$autosave.onSaved(function(key, value) {
+		autosave.onSaved(function(key, value) {
 			$scope.save_state = 'saved';
 		});
 
-		$autosave.onError(function(e) {
+		autosave.onError(function(e) {
 			$scope.save_sate = 'error';
 			console.error('Error autosaving story', e);
 		});
@@ -242,4 +245,4 @@ function StoryCtrl($scope, $location, $selection, $autosave ) {
 	};
 
 	init();
-}
+}]);
