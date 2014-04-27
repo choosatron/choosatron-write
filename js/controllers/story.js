@@ -1,7 +1,7 @@
 angular.module('storyApp.controllers')
 .controller('StoryCtrl', ['$scope', '$location', '$selection', '$stories', 'AutoSave', 
-
-function StoryCtrl($scope, $location, $selection, $stories, AutoSave ) {
+	'Passage', 'Choice', 'Command', 'Operators',
+function StoryCtrl($scope, $location, $selection, $stories, AutoSave, Passage, Choice, Command, Operators) {
 
 	var autosave = new AutoSave($stories, $scope);
 

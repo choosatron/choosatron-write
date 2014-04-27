@@ -3,12 +3,12 @@ angular.module('storyApp.directives', []);
 angular.module('storyApp.utils', []);
 angular.module('storyApp.storage', ['storyApp.utils']);
 angular.module('storyApp.databridge', ['storyApp.storage']);
-angular.module('storyApp.controllers', ['storyApp.databridge']);
+angular.module('storyApp.models', ['storyApp.utils']);
+angular.module('storyApp.controllers', ['storyApp.models', 'storyApp.databridge']);
 
 angular.module('storyApp', [
 	'storyApp.filters', 
 	'storyApp.directives', 
-	'storyApp.databridge',
 	'storyApp.controllers',
 	'ngRoute'])
 .config(['$routeProvider', function($routeProvider) {
