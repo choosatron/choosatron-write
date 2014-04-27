@@ -1,3 +1,6 @@
+angular.module('storyApp.filters', []);
+angular.module('storyApp.directives', []);
+
 var app = angular.module('storyApp', ['storyApp.filters', 'storyApp.directives', 'ngRoute'])
 	.value('storiesNamespace',     'choosatron/stories/')
 	.value('preferencesNamespace', 'choosatron/preferences/')

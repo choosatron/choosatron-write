@@ -1,4 +1,4 @@
-angular.module('storyApp.directives', [])
+angular.module('storyApp.directives')
 .directive('confirmClick', ['$parse', function ($parse) {
 	return {
 		compile: function($templateElement, $templateAttributes) {
