@@ -9,8 +9,8 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
-				<a ng-click="select_passage(entrance)">
+			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}" class="unavailable">
+				<a disabled>
 					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
 					<div>
 						<p class="truncated">{{ entrance.get_content() | truncate | quote }}</p>
@@ -56,16 +56,13 @@
 
 
 			<div ng-if="passage.exit_type == 'choices'" class="tab-pane passageChoices" id="passageChoices">
-				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row">
-					<div class="col-xs-2" ng-class="{hidden: choice.hidden}">
-						<div ng-if="choice.has_destination()">
-							<a class="btn btn-lg btn-primary btn-block" ng-click="select_choice(choice)"><span class="choiceNumber">{{ choiceNumber }}</span></a>
-						</div>
-						<div ng-if="!choice.has_destination()">
-							<a class="btn btn-lg btn-default btn-block" disabled title="No destination set!"><span class="choiceNumber">{{ choiceNumber }}</span></a>
-						</div>
+				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row" ng-class="{unavailable: choice.hidden}">
+					<div class="col-xs-2">
+						<a class="btn btn-lg btn-primary btn-block" ng-disabled="!choice.has_destination() || choice.hidden" ng-click="select_choice(choice)">
+							<span class="choiceNumber">{{ choiceNumber }}</span>
+						</a>
 					</div>
-					<div class="col-xs-10" ng-class="{hidden: choice.hidden}">
+					<div class="col-xs-10">
 						<p>{{choice.content}}</p>
 					</div>
 				</div><!-- .choiceContainer -->
