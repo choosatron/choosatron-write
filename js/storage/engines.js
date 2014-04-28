@@ -27,6 +27,79 @@ function ($q, EventHandler) {
 	}
 }])
 
+.factory('FileStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine', '$file',
+function($q, EventHandler, BaseStorageEngine, $file) {
+	return function FileStorageEngine(extensions, type) {
+		BaseStorageEngine.call(this, $q, EventHandler);
+
+		this.extensions = extensions;
+		this.type = type;
+
+		// The "area" in this case is used to track references between internal ids and entry ids
+		this.area     =  {};
+
+		this.getEntry = function(key) {
+			var deferred = $q.defer();
+			var self = this;
+
+			if (this.area[key]) {
+				$file.restore(this.area[key])
+				.then(function(entry) {
+					deferred.resolve(entry);
+				}, function(e) {
+					delete self.area[key];
+					// Call again if there's an error restoring the id
+					self.getEntry(key).then(deferred.resolve, deferred.reject);
+				});
+			}
+			else {
+				$file.open(this.extensions)
+				.then(function(entry) {
+					self.area[key] = fs.retainEntry(entry);
+					deferred.resolve(entry);
+				}, deferred.reject);
+			}
+
+			return deferred.promise;
+		};
+
+		this.getItem = function(key) {
+			var deferred = $q.defer();
+			var self = this;
+
+			this.getEntry(key)
+			.then(function(entry) {
+				$file.read(entry)
+				.then(deferred.resolve, deferred.reject);
+			}, function(e) {
+				self.events.fire('error', e);
+				deferred.reject(e);
+			});
+
+			return deferred.promise;
+		};
+
+		this.setItem  =  function(key, value) {
+			var deferred = $q.defer();
+			var self = this;
+
+			this.getEntry(key)
+			.then(function(entry) {
+				$file.write(entry, value, self.type)
+				.then(function(w) {
+					deferred.resolve(w);
+					self.events.fire('set', key, value);
+				});
+			}, function(e) {
+				self.events.fire('error', e);
+				deferred.reject(e);
+			});
+
+			return deferred.promise;
+		};
+	}
+}])
+
 .factory('LocalStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine',
 function($q, EventHandler, BaseStorageEngine) {
 	return function LocalStorageEngine() {

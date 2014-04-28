@@ -16,7 +16,7 @@ function($file, EventHandler) {
 		return found;
 	};
 
-	var events = EventHandler.create('imported', 'exported');
+	var events = EventHandler.create('imported', 'exported', 'error');
 	events.async = true;
 
 	return {
@@ -34,16 +34,22 @@ function($file, EventHandler) {
 			});
 		},
 
-		import: function(type) {
+		import: function(type, callback) {
 			var translator = this.get(type);
 			var supported = translator.imports;
-			var self = this;
-			var read = function(text, entry, info) {
-				var story = translator.import(text);
+
+			$file.open(supported)
+			.then(function(result) {
+				if (!result.data) {
+					return;
+				}
+				var story = translator.import(result.data);
 				if (story) story.refresh_id();
-				self.fire('imported', story);
-			};
-			$file.open(supported, read);
+				if (callback) callback(story);
+				events.fire('imported', story);
+			}, function(e) {
+				events.fire('error', e);
+			});
 		},
 
 		export: function(type, story) {
@@ -51,9 +57,8 @@ function($file, EventHandler) {
 			var extension = translator.exports;
 			var datatype = translator.datatype;
 			var data = translator.export(story);
-			var self = this;
 			$file.export(story.title, extension, data, datatype, function(writer) {
-				self.fire('exported', writer);
+				events.fire('exported', writer);
 			});
 		}
 	};

@@ -46,8 +46,7 @@ function(Random) {
 		},
 
 		refresh_id: function() {
-			var id = new RandomId();
-			this.id = id.toString();
+			this.id = Random.id();
 		},
 
 		object: function() {
