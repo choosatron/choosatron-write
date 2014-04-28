@@ -12,9 +12,11 @@ angular.module('storyApp', [
 	'storyApp.directives', 
 	'storyApp.controllers',
 	'ngRoute'])
+
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/stories', {templateUrl: 'templates/stories.html', controller: 'StoriesCtrl'});
 	$routeProvider.when('/playback', {templateUrl: 'templates/playback.html', controller: 'PlaybackCtrl'});
 	$routeProvider.when('/story', {templateUrl: 'templates/passage.html', controller: 'StoryCtrl'});
+	$routeProvider.when('/profiles', {templateUrl: 'templates/profiles.html', controller: 'ProfilesCtrl'});
 	$routeProvider.otherwise({redirectTo: '/stories'});
 }]);
