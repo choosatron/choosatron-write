@@ -1,62 +1,92 @@
 angular.module('storyApp.storage')
-.factory('BaseStorageEngine', ['$q', 'EventHandler',
-function ($q, EventHandler) {
+.factory('BaseStorageEngine', ['$q',
+function ($q) {
 	return function BaseStorageEngine() {
 		this.area = {};
-		this.events = EventHandler.create('set', 'error');
-		this.events.async = true;
-		this.events.context = this;
+		this.throttle = 100; // ms
 
-		this.throttle = 750; // ms
-
-		this.on = function(event, callback) {
-			this.events.on(event, callback);
-			return this;
+		this.toJson = function(o) {
+			return angular.toJson(o);
 		};
 
-		this.getItem = function(key) {
+		this.fromJson = function(s) {
+			try {
+				return angular.fromJson(s);
+			}
+			catch (e) {
+				console.error("Error decoding data", e);
+				return null;
+			}
+		};
+
+		this.getItem = function(namespace, key) {
 			var deferred = $q.defer();
-			deferred.resolve(this.area[key]);
-			return deferred.promise();
+			var value = this.area[namespace];
+			if (key) {
+				value = value && value[key];
+			}
+			deferred.resolve(value);
+			return deferred.promise;
 		};
 
-		this.setItem = function(key, value) {
-			this.events.fire('set', key, value);
-			this.area[key] = value;
+		this.setItem = function(namespace, key, value) {
+			var deferred = $q.defer();
+			if (!this.area[namespace]) {
+				this.area[namespace] = {};
+			}
+			this.area[namespace][key] = value;
+			deferred.resolve(value);
+			return deferred.promise;
+		};
+
+		this.deleteItem = function(namespace, key) {
+			var deferred = $q.defer();
+			if (this.area[namespace]) {
+				delete this.area[namespace][key];
+			}
+			deferred.resolve();
+			return deferred.promise;
 		};
 	}
 }])
 
-.factory('FileSystemStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine', '$file',
-function($q, EventHandler, BaseStorageEngine, $file) {
+.factory('FileSystemStorageEngine', ['$q', 'BaseStorageEngine', '$file',
+function($q, BaseStorageEngine, $file) {
 	return function FileSystemStorageEngine(extensions, type) {
-		BaseStorageEngine.call(this, $q, EventHandler);
+		BaseStorageEngine.call(this, $q);
 
 		this.extensions = extensions;
 		this.type = type;
 
 		// The "area" in this case is used to track references between internal ids and entry ids
-		this.area     =  {};
+		this.area = {};
 
-		this.getEntry = function(key) {
+		this.getEntry = function(namespace, key) {
 			var deferred = $q.defer();
 			var self = this;
 
-			if (this.area[key]) {
-				$file.restore(this.area[key])
+			if (!this.area[namespace]) {
+				this.area[namespace] = {};
+			}
+
+			if (!key) {
+				deferred.resolve(this.area[namespace]);
+			}
+			else if (this.area[namespace][key]) {
+				$file.restore(this.area[namespace][key])
 				.then(function(entry) {
 					deferred.resolve(entry);
 				}, function(e) {
-					delete self.area[key];
+					delete self.area[namespace][key];
 					// Call again if there's an error restoring the id
-					self.getEntry(key).then(deferred.resolve, deferred.reject);
+					self.getEntry(namespace, key).then(deferred.resolve, deferred.reject);
 				});
 			}
 			else {
 				$file.open(this.extensions)
 				.then(function(entry) {
 					if (entry) {
-						self.area[key] = $file.getEntryId(entry);
+						self.area[namespace][key] = $file.getEntryId(entry);
 					}
 					deferred.resolve(entry);
 				}, deferred.reject);
@@ -65,112 +95,187 @@ function($q, EventHandler, BaseStorageEngine, $file) {
 			return deferred.promise;
 		};
 
-		this.getItem = function(key) {
+		this.getItem = function(namespace, key) {
 			var deferred = $q.defer();
 			var self = this;
 
-			this.getEntry(key)
+			this.getEntry(namespace, key)
 			.then(function(entry) {
-				$file.read(entry)
-				.then(deferred.resolve, deferred.reject);
-			}, function(e) {
-				self.events.fire('error', e);
-				deferred.reject(e);
-			});
+				if (typeof entry == 'FileEntry') {
+					$file.read(entry)
+					.then(function(text) {
+						deferred.resolve(self.fromJson(text));
+					}, deferred.reject);
+				}
+				else {
+					deferred.resolve(entry);
+				}
+			}, deferred.reject);
 
 			return deferred.promise;
 		};
 
-		this.setItem  =  function(key, value) {
+		this.setItem  =  function(namespace, key, value) {
 			var deferred = $q.defer();
 			var self = this;
 
-			this.getEntry(key)
+			value = this.toJson(value);
+
+			this.getEntry(namespace, key)
 			.then(function(entry) {
 				$file.write(entry, value, self.type)
-				.then(function(w) {
-					deferred.resolve(w);
-					self.events.fire('set', key, value);
-				});
-			}, function(e) {
-				self.events.fire('error', e);
-				deferred.reject(e);
-			});
+				.then(deferred.resolve, deferred.reject);
+			}, deferred.reject);
 
 			return deferred.promise;
+		};
+
+		this.deleteItem = function(namespace, key) {
+			throw new Error("Cannot delete items in the filesystem");
 		};
 	}
 }])
 
-.factory('LocalStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine',
-function($q, EventHandler, BaseStorageEngine) {
+.factory('LocalStorageEngine', ['$q', 'BaseStorageEngine',
+function($q, BaseStorageEngine) {
 	return function LocalStorageEngine() {
-		BaseStorageEngine.call(this, $q, EventHandler);
+		BaseStorageEngine.call(this, $q);
 
-		this.area     =  window.localStorage;
-		this.getItem  =  function(key) {
+		this.area = window.localStorage;
+
+		this.getItem = function(namespace, key) {
 			var deferred = $q.defer();
-			var result   = this.area.getItem(key);
-			deferred.resolve(result);
+			var self = this;
+			var result = this.area.getItem(namespace);
+			if (key) {
+				var value = result && result[key];
+				deferred.resolve(self.fromJson(value));
+			}
+			else {
+				deferred.resolve(self.fromJson(result));
+			}
 			return deferred.promise;
 		};
 
-		this.setItem  =  function(key, value) {
-			try {
-				this.area.setItem(key, value);
-				this.events.fire('set', key, value);
-			}
-			catch (e) {
-				this.events.fire('error', e);
-			}
+		this.setItem = function(namespace, key, value) {
+			var deferred = $q.defer();
+			var self = this;
+
+			this.getItem(namespace)
+			.then(function(data) {
+				data[key] = value;
+				self.area.setItem(namespace, self.toJson(data));
+				deferred.resolve(value);
+			}, deferred.reject);
+
+			return deferred.promise;
+		};
+
+		this.deleteItem = function(namespace, key) {
+			var deferred = $q.defer();
+			var self = this;
+
+			this.getItem(namespace)
+			.then(function(data) {
+				if (data) {
+					delete data[key];
+					self.area.setItem(namespace, self.toJson(data));
+				}
+				deferred.resolve();
+			}, deferred.reject);
+
+			return deferred.promise;
 		};
 	}
 }])
 
-.factory('ChromeStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine',
-function($q, EventHandler, BaseStorageEngine) {
+.factory('ChromeStorageEngine', ['$q', 'BaseStorageEngine',
+function($q, BaseStorageEngine) {
 	return function ChromeStorageEngine() {
-		BaseStorageEngine.call(this, $q, EventHandler);
+		BaseStorageEngine.call(this, $q);
 
 		this.area = chrome.storage.local;
 
-		this.getItem  =  function(key) {
+		this.getItem = function(namespace, key) {
 			var deferred = $q.defer();
-			var events = this.events;
+			var self = this;
 			var cb = function(items) {
-				if (!chrome.runtime.lastError) {
-					deferred.resolve(items[key]);
+				if (chrome.runtime.lastError) {
+					return deferred.reject(chrome.runtime.lastError);
+				}
+				var data = self.fromJson(items[namespace]);
+				if (key) {
+					deferred.resolve(data && data[key]);
 				}
 				else {
-					events.fire('error', chrome.runtime.lastError);
-					deferred.fail();
+					deferred.resolve(data);
 				}
 			};
-			this.area.get(key, cb);
+			this.area.get(namespace, cb);
 			return deferred.promise;
 		}
 
-		this.setItem  =  function(key, value) {
-			var events = this.events;
-			var obj = {};
-			obj[key] = value;
-			this.area.set(obj, function() {
-				if (!chrome.runtime.lastError) {
-					events.fire('set', key, value);
+		this.setItem = function(namespace, key, value) {
+			var deferred = $q.defer();
+			var self = this;
+
+			this.getItem(namespace)
+			.then(function(items) {
+				if (chrome.runtime.lastError) {
+					return deferred.reject(chrome.runtime.lastError);
 				}
-				else {
-					events.fire('error', chrome.runtime.lastError);
+				if (!items) {
+					items = {};
 				}
-			});
+				items[key] = value;
+				var data = {};
+				data[namespace] = self.toJson(items);
+
+				self.area.set(data, function() {
+					if (chrome.runtime.lastError) {
+						return deferred.reject(chrome.runtime.lastError);
+					}
+					deferred.resolve(value);
+				});
+			}, deferred.reject);
+
+			return deferred.promise;
 		}
+
+		this.deleteItem = function(namespace, key) {
+			var deferred = $q.defer();
+			var self = this;
+
+			this.getItem(namespace)
+			.then(function(items) {
+				if (chrome.runtime.lastError) {
+					return deferred.reject(chrome.runtime.lastError);
+				}
+				if (!items) {
+					return deferred.resolve();
+				}
+				delete items[key];
+				var data = {};
+				data[namespace] = self.toJson(data);
+				self.area.set(data, function() {
+					if (chrome.runtime.lastError) {
+						return deferred.reject(chrome.runtime.lastError);
+					}
+					deferred.resolve();
+				});
+			}, deferred.reject);
+
+			return deferred.promise;
+
+		};
 	}
 }])
 
 
-.factory('ChromeSyncStorageEngine', ['$q', 'EventHandler', 'ChromeStorageEngine',
-function($q, EventHandler, ChromeStorageEngine) {
+.factory('ChromeSyncStorageEngine', ['$q', 'ChromeStorageEngine',
+function($q, ChromeStorageEngine) {
 	return function ChromeSyncStorageEngine() {
-		ChromeStorageEngine.call(this, $q, EventHandler);
+		ChromeStorageEngine.call(this, $q);
 		this.area = chrome.storage.sync;
 
 		// Each change within the throttle time bumps the save action out slightly.
