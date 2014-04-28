@@ -17,12 +17,15 @@
 				</li>
 				<li>
 					<span class="dropdown">
-						<a href="" data-toggle="dropdown"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
+						<span class="dropdown">
+							<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
-						<ul class="dropdown-menu">
-							<li><a ng-click="export_story(story)">Save To File</a></li>
-							<li><a ng-click="export_story_choosatron(story)">Create Choosatron Binary</a></li>
-						</ul>
+							<ul class="dropdown-menu">
+								<li ng-repeat="exporter in translators | filter:exporter.exports">
+									<a ng-click="export_story(exporter.type)">{{exporter.exportMenuTitle}}</a>
+								</li>
+							</ul>
+						</span>
 					</span>
 				</li>
 			</ul>

@@ -2,14 +2,15 @@
  *¬This is the controller responsible for listing all of the stories that are available in local storage
 **/
 angular.module('storyApp.controllers')
-.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$stories', '$file', '$translators', 'Story',
-function StoriesCtrl($scope, $location, $selection, $stories, $file, $translators, Story) {
+.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$stories', '$translators', 'Story',
+function StoriesCtrl($scope, $location, $selection, $stories, $translators, Story) {
 
 	$scope.stories            = [];
 	$scope.story              = null;
 	$scope.passage            = null;
 	$scope.stories_sort       = 'title';
 	$scope.stories_sort_desc  = false;
+	$scope.translators        = $translators.all();
 
 	function init() {
 		loadStories().then(function() {
@@ -101,27 +102,12 @@ function StoriesCtrl($scope, $location, $selection, $stories, $file, $translator
 		$scope.edit_story(new Story());
 	};
 
-	$scope.export_story = function(story) {
-		var json = $translators.get('json');
-		var data = json.fromStory(story);
-		$file.export(story.title, 'json', data, 'text/javascript');
+	$scope.export_story = function(type, story) {
+		$translators.export(type, story);
 	};
 
-	$scope.export_story_choosatron  =  function (story) {
-		var bin = $translators.get('bin');
-		var buffer = bin.fromStory(story);
-		$file.export(story.title, 'cdam', buffer, 'application/octet-stream');
-	};
-
-	$scope.import_story  =  function() {
-		var supported = $translators.extensions();
-		var read = function(text, entry, info) {
-			var translator = $translators.getForFile(text, entry.name);
-			var story = translator.toStory(text);
-			story.refresh_id();
-			$scope.edit_story(story);
-		};
-		$file.open(supported, read);
+	$scope.import_story  =  function(type) {
+		$translators.import(type, $scope.edit_story);
 	}
 
 	init();

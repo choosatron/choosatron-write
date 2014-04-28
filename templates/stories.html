@@ -8,7 +8,14 @@
 	<ul class="list-inline list-icon-menu h4">
 		<li><a ng-click="new_story()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
 		<!-- TODO: import throws a JS error if you don't type valid values into the modal's form fields -->
-		<li><a ng-click="import_story()"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a></li>
+		<li class="dropdown" ng-show="translators">
+			<a data-toggle="dropdown"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a>
+			<ul class="dropdown-menu">
+				<li ng-repeat="importer in translators | filter:importer.imports">
+					<a ng-click="import_story(importer.type)">{{importer.importMenuTitle}}</a>
+				</li>
+			</ul>
+		</li>
 	</ul>
 </div>
 
@@ -42,8 +49,9 @@
 									<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
 									<ul class="dropdown-menu">
-										<li><a ng-click="export_story(s)">Save To File</a></li>
-										<li><a ng-click="export_story_choosatron(s)">Create Choosatron Binary</a></li>
+										<li ng-repeat="exporter in translators | filter:exporter.exports">
+											<a ng-click="export_story(exporter.type, s)">{{exporter.exportMenuTitle}}</a>
+										</li>
 									</ul>
 								</span>
 							</li>

@@ -386,7 +386,7 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 	padding-top: 40px;
 }
 
-	.menuTop ul {
+	.menuTop > ul {
 		margin: 0;
 		padding: 20px 60px;
 	}

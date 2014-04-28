@@ -1,12 +1,13 @@
 angular.module('storyApp.controllers')
-.controller('StoryCtrl', ['$scope', '$location', '$selection', '$stories', 'AutoSave', 
+.controller('StoryCtrl', ['$scope', '$location', '$selection', '$stories', '$translators', 'AutoSave',
 	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
-function StoryCtrl($scope, $location, $selection, $stories, AutoSave, Passage, Choice, Command, Operators, Genres) {
+function StoryCtrl($scope, $location, $selection, $stories, $translators, AutoSave, Passage, Choice, Command, Operators, Genres) {
 
 	var autosave = new AutoSave($stories, $scope);
 
 	$scope.operators          = Operators;
 	$scope.genres             = Genres;
+	$scope.translators        = $translators.all();
 	$scope.alerts             = [];
 	$scope.story              = null;
 	$scope.passage            = null;
@@ -244,6 +245,10 @@ function StoryCtrl($scope, $location, $selection, $stories, AutoSave, Passage, C
 	$scope.json_story  =  function(pretty) {
 		if (!$scope.story) return '{}';
 		return $scope.story.serialize(pretty);
+	};
+
+	$scope.export_story = function(type) {
+		$translators.export(type, $scope.story);
 	};
 
 	init();

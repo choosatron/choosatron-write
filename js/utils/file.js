@@ -37,7 +37,7 @@ angular.module('storyApp.utils')
 		chrome.fileSystem.chooseEntry(args, onOpen);
 	};
 
-	this.export = function (filename, extension, data, type) {
+	this.export = function (filename, extension, data, type, callback) {
 		var events = this.events;
 		var write = function(entry) {
 			if (!entry) {
@@ -49,6 +49,7 @@ angular.module('storyApp.utils')
 			};
 			var fw = function(w) {
 				events.fire('write', w);
+				if (callback) callback(w);
 			};
 			entry.createWriter(function(writer) {
 				writer.onerror    = fe;
