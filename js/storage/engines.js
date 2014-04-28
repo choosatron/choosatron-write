@@ -27,9 +27,9 @@ function ($q, EventHandler) {
 	}
 }])
 
-.factory('FileStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine', '$file',
+.factory('FileSystemStorageEngine', ['$q', 'EventHandler', 'BaseStorageEngine', '$file',
 function($q, EventHandler, BaseStorageEngine, $file) {
-	return function FileStorageEngine(extensions, type) {
+	return function FileSystemStorageEngine(extensions, type) {
 		BaseStorageEngine.call(this, $q, EventHandler);
 
 		this.extensions = extensions;
@@ -55,7 +55,9 @@ function($q, EventHandler, BaseStorageEngine, $file) {
 			else {
 				$file.open(this.extensions)
 				.then(function(entry) {
-					self.area[key] = fs.retainEntry(entry);
+					if (entry) {
+						self.area[key] = $file.getEntryId(entry);
+					}
 					deferred.resolve(entry);
 				}, deferred.reject);
 			}

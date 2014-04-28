@@ -37,19 +37,23 @@ function($file, EventHandler) {
 		import: function(type, callback) {
 			var translator = this.get(type);
 			var supported = translator.imports;
+			var onError = function(e) {
+				events.fire('error', e);
+			};
 
 			$file.open(supported)
-			.then(function(result) {
-				if (!result.data) {
+			.then(function(entry) {
+				if (!entry) {
 					return;
 				}
-				var story = translator.import(result.data);
-				if (story) story.refresh_id();
-				if (callback) callback(story);
-				events.fire('imported', story);
-			}, function(e) {
-				events.fire('error', e);
-			});
+				$file.read(entry)
+				.then(function(data) {
+					var story = translator.import(data);
+					if (story) story.refresh_id();
+					if (callback) callback(story);
+					events.fire('imported', story);
+				}, onError);
+			}, onError);
 		},
 
 		export: function(type, story) {
@@ -57,8 +61,11 @@ function($file, EventHandler) {
 			var extension = translator.exports;
 			var datatype = translator.datatype;
 			var data = translator.export(story);
-			$file.export(story.title, extension, data, datatype, function(writer) {
+			$file.export(story.title, extension, data, datatype)
+			.then(function(writer) {
 				events.fire('exported', writer);
+			}, function(e) {
+				events.fire('error', e)
 			});
 		}
 	};

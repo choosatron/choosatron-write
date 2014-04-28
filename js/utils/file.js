@@ -1,12 +1,10 @@
 angular.module('storyApp.utils')
-.service('$file', ['$q', 'EventHandler', function($q, EventHandler, fs) {
+.service('$file', ['$q', function($q, fs, runtime) {
 	fs = fs || chrome.fileSystem;
+	runtime = runtime || chrome.runtime;
 
-	this.events = EventHandler.create('error', 'cancel', 'open', 'read', 'write');
-	this.events.async = true;
-
-	this.on = function(event, callback) {
-		this.events.on(event, callback);
+	this.getEntryId = function(entry) {
+		return fs.retainEntry(entry);
 	};
 
 	this.restore = function(entryId) {
@@ -24,8 +22,13 @@ angular.module('storyApp.utils')
 		var deferred = $q.defer();
 		type = type || 'text/plain';
 
+		var done = function(writer) {
+			writer.truncate(this.position);
+			deferred.resolve(writer);
+		};
+
 		entry.createWriter(function(writer) {
-			writer.onwriteend = deferred.resolve;
+			writer.onwriteend = done;
 			writer.write(new Blob([data], {type: type}));
 		}, deferred.reject);
 
@@ -50,53 +53,32 @@ angular.module('storyApp.utils')
 	this.open = function(extensions, callback) {
 		var deferred = $q.defer();
 
-		var events = this.events;
-		var read   = this.read;
-
-		var onOpen = function(entry) {
-			if (!entry) {
-				events.fire('cancel');
-				if (callback) callback.apply(self, null);
-				return deferred.resolve(null);
-			}
-			events.fire('open', entry);
-			read(entry).then(function(data) {
-				events.fire('read', data, entry);
-				if (callback) callback.call(self, data, entry);
-				return deferred.resolve({data: data, entry: entry});
-			}, function(e) {
-				events.fire('error', e);
-			});
-		};
 		var args = {type: 'openFile'};
-
 		if (extensions) args.accepts = [{extensions: extensions}];
-		fs.chooseEntry(args, onOpen);
+
+		fs.chooseEntry(args, function(entry) {
+			if (!runtime.lastError) {
+				deferred.resolve(entry);
+			}
+			else {
+				deferred.reject(runtime.lastError);
+			}
+		});
 
 		return deferred.promise;
 	};
 
-	this.export = function (filename, extension, data, type, callback) {
+	this.export = function (filename, extension, data, type) {
 		var deferred = $q.defer();
-		var events = this.events;
 		var write = this.write;
 
 		var chosen = function(entry) {
 			if (!entry) {
-				events.fire('cancel');
 				return deferred.resolve(null);
 			}
 
 			write(entry, data, type)
-			.then(function(w) {
-				events.fire('write', w);
-				if (callback) callback(w);
-				return deferred.resolve(w);
-			},
-			function(e) {
-				events.fire('error', e);
-				return deferred.reject(e);
-			});
+			.then(deferred.resolve, deferred.reject);
 		};
 
 		var args = {
