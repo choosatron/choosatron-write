@@ -11,6 +11,7 @@ angular.module('storyApp', [
 	'storyApp.filters', 
 	'storyApp.directives', 
 	'storyApp.controllers',
+	'ngAnimate',
 	'ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {

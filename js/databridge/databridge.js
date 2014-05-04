@@ -10,7 +10,7 @@ angular.module('storyApp.databridge')
 .service('$preferences', ['ChromeStorageEngine', 'Storage',
 	function(StorageEngine, Storage) {
 		var engine = new StorageEngine();
-		return new Storage(engine, 'choosatron/preferences/');
+		return new Storage(engine, 'choosatron/preferences');
 	}
 ])
 .service('$story', ['Shared', 

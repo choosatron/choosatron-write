@@ -11,6 +11,8 @@ angular.module('storyApp.databridge')
 function Selection($story, $passage, $preferences) {
 	var storyKey = 'last_story_id';
 	var passageKey = 'last_passage_id';
+	var lastProfileKey = 'last_profile_id';
+	var allProfilesKey = 'profiles';
 
 	return {
 		watchStory: function(scope, callback) {
@@ -29,6 +31,20 @@ function Selection($story, $passage, $preferences) {
 			};
 			$passage.on('set', setPassage);
 			$passage.get(setPassage);
+		},
+
+		getProfiles: function() {
+			return $preferences.get(allProfilesKey);
+		},
+
+		setProfile: function(profile) {
+			return this.getProfiles()
+			.then(function(profiles) {
+				if (!profile) return;
+				if (!profiles) profiles = {};
+				profiles[profile.id] = profile;
+				profiles.activeId = profile.id;
+			});
 		},
 
 		getLastStoryId: function() {

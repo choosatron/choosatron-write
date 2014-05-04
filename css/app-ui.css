@@ -422,7 +422,6 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 	}
 
 
-
 /**
  * Passage
 8888888b.                                                  
@@ -892,3 +891,18 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 		margin: 0;
 		color: #d3c6bb;
 	}
+
+
+/**
+ * Animations
+ **/
+.slide-animation {
+	-webkit-transition: all linear 0.5s;
+	transition: all linear 0.5s;
+}
+.slide-animation-item.ng-enter { 
+	opacity: 0;
+}
+.storiesItem.ng-enter.ng-enter-active { 
+	opacity: 1;
+}

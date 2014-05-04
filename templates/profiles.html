@@ -1,1 +1,24 @@
-<h1>Profiles</h1>
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h5 pull-left"><a ng-click="show_stories_menu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
+		<p class="h5 pull-right" ng-include="'templates/profile-picker.html'"></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<li><a ng-click="new_profile()"><span class="glyphicon glyphicon-plus"></span> New Profile</a></li>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="scrollable">
+		<div class="container">
+			<div class="row profilesList">
+				<ul class="list-unstyled">
+					<li ng-repeat="p in profiles" class="col-md-4 col-sm-6"><div>
+						<h3><a ng-click="pick_profile(p)">{{ p.name }}</a></h3>
+					</div></li>
+				</ul>
+			</div><!-- .profilesList -->
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->

@@ -16,7 +16,7 @@
 		"clipboardRead",
 		"clipboardWrite",
 		"fileBrowserHandler",
-		{"fileSystem": ["write"]},
+		{"fileSystem": ["write", "retainEntries", "directory"]},
 		"geolocation",
 		"identity",
 		"storage",
