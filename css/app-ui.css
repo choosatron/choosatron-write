@@ -896,13 +896,30 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 /**
  * Animations
  **/
-.slide-animation {
+.fade-animation
+{
 	-webkit-transition: all linear 0.5s;
 	transition: all linear 0.5s;
 }
-.slide-animation-item.ng-enter { 
+.fade-animation.ng-move-stagger,
+.fade-animation.ng-enter-stagger,
+.fade-animation.ng-leave-stagger
+{
+	-webkit-transition-delay: 0.1s;
+	transition-delay: 0.1s;
+	-webkit-transition-duration: 0;
+	transition-duration: 0;
+}
+
+.fade-animation.ng-move,
+.fade-animation.ng-leave.ng-leave-active,
+.fade-animation.ng-enter
+{
 	opacity: 0;
 }
-.storiesItem.ng-enter.ng-enter-active { 
+.fade-animation.ng-move.ng-move-active,
+.fade-animation.ng-leave,
+.fade-animation.ng-enter.ng-enter-active
+{ 
 	opacity: 1;
 }

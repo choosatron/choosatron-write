@@ -30,8 +30,8 @@
 	<div class="scrollable">
 		<div class="container">
 			<div class="row storiesList">
-				<ul class="list-unstyled slide-animation">
-					<li ng-repeat="s in stories | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6 slide-animation-item"><div>
+				<ul class="list-unstyled">
+					<li ng-repeat="s in stories | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6 fade-animation"><div>
 						<h3><a ng-click="edit_story(s)">{{ s.get_title() }}</a></h3>
 
 						<ul class="list-unstyled">

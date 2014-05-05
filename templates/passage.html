@@ -62,7 +62,7 @@
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
-				<li ng-repeat="p in story.passages | filter:passage_search | filter:valid_picking_option">
+				<li ng-repeat="p in story.passages | filter:passage_search | filter:valid_picking_option" class="fade-animation">
 					<a ng-click="select_passage(p.id)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
