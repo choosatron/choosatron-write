@@ -80,11 +80,18 @@
 							<!-- Neither of these can happen right now because there is a UI overlay blocking the user from clicking this... but they are still a good theorhetical questions: -->
 									<!-- TODO: Potentially buggy scenario with picking mode... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
 									<!-- TODO: what happens if you click "Existing Passage" and then immediately pick "New Passage"?? -->
-							<p ng-if="!choice.has_destination()" class="choicePassageMenu"><a ng-click="new_passage(choice)"><span class="glyphicon glyphicon-link"></span> New passage</a> <a ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
+							<p ng-if="!choice.has_destination()" class="choicePassageMenu">
+								<a ng-click="new_passage(choice)"><span class="glyphicon glyphicon-plus"></span> New passage</a> 
+								<a ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Existing passage</a>
+							</p>
+
+							<p ng-if="choice.has_destination()" class="choicePassageMenu">
+								<a ng-click="new_passage(choice)"><span class="glyphicon glyphicon-plus"></span> New passage</a> 
+								<a ng-click="pick_passage(choice)"><span class="glyphicon glyphicon-link"></span> Change passage</a>
+							</p>
 
 							<div ng-if="choice.has_destination()">
 								<div ng-if="choice.destination" class="choicePassage">
-									<a class="choicePassageUnlink icon-subtle" ng-click="choice.set_destination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
 
 									<a class="truncated" ng-click="edit_passage(choice.destination)">{{ get_passage(choice.destination).get_content() | truncate | quote }}</a>
 
