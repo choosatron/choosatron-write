@@ -52,7 +52,7 @@
 
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 					<div ng-repeat="choice in passage.choices" class="choiceContainer fade-animation">
-						<div class="choiceDisplayConditions" ng-show="choice.showCondition">
+						<div class="choiceDisplayConditions" ng-class="{active: choice.showCondition}">
 							<p><strong>Display choice if:</strong></p>
 
 							<div class="row">
@@ -101,11 +101,11 @@
 						</div>
 
 						<div class="col-xs-1 choiceLogic h4">
-							<a ng-click="choice.showCondition = !choice.showCondition" ng-class="{active: choice.showCondition}"><span class="glyphicon glyphicon-eye-open"></span></a>
-							<a ng-click="choice.showUpdates = !choice.showUpdates" ng-class="{active: choice.showUpdates}"><span class="glyphicon glyphicon-cog"></span></a>
+							<a ng-click="choice.showCondition = !choice.showCondition" ng-class="{active: choice.showCondition}" class="choiceLogicCondition"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a ng-click="choice.showUpdates = !choice.showUpdates" ng-class="{active: choice.showUpdates}" class="choiceLogicUpdates"><span class="glyphicon glyphicon-cog"></span></a>
 						</div>
 
-						<div class="choiceStoryUpdates" ng-show="choice.showUpdates">
+						<div class="choiceStoryUpdates" ng-class="{active: choice.showUpdates}">
 							<p><strong>When choice selected, update story:</strong></p>
 
 							<div class="row row-gutter-1x fade-animation" ng-repeat="update in choice.updates">
@@ -119,7 +119,11 @@
 								<div class="col-xs-4"><input type="text" class="form-control var" ng-model="update.value" placeholder="Value" /></div>
 							</div>
 
-							<div class="row row-gutter-1x"><a ng-click="add_choice_update(choice)"><span class="glyphicon glyphicon-plus"></span> Add Another</a></div>
+							<div class="row row-gutter-1x">
+								<div class="col-xs-12">
+									<a ng-click="add_choice_update(choice)"><span class="glyphicon glyphicon-plus"></span> Add Another</a>
+								</div>
+							</div>
 
 							<p class="quip"><span class="glyphicon glyphicon-arrow-up"></span></p>
 						</div><!-- .choiceStoryUpdates -->

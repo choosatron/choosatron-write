@@ -820,13 +820,21 @@ Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
                      888                 "Y88P"                                               
 **/
 .choiceDisplayConditions {
+	-webkit-transition: all 0.5s linear;
 	position: relative;
+	margin-top: -105px;
+	opacity: 0;
 	padding: 20px;
 	margin-bottom: 20px;
 	margin-left: 60px;
 	background: #9a9;
 	color: rgba(0, 0, 0, 0.4);
 }
+
+	.choiceDisplayConditions.active {
+		margin-top: 0;
+		opacity: 1;
+	}
 
 	.choiceDisplayConditions .quip {
 		position: absolute;
@@ -874,14 +882,22 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
                                 "Y88P"               888                                            
 **/
 .choiceStoryUpdates {
+	-webkit-transition: all 0.5s linear;
+	opacity: 0;
 	clear: both;
 	position: relative;
 	padding: 20px;
-	margin-bottom: 20px;
+	margin-bottom: -220px;
 	margin-left: 60px;
+	top: 10px;
 	background: #d3c6bb;
 	color: rgba(0, 0, 0, 0.4);
 }
+
+	.choiceStoryUpdates.active {
+		opacity: 1;
+		margin-bottom: 20px;
+	}
 
 	.choiceStoryUpdates .quip {
 		position: absolute;
