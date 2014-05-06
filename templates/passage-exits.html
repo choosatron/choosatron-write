@@ -51,7 +51,7 @@
 				<div class="tab-pane passageChoices ng-class:{active: passage.exit_type == 'choices'}" id="passageChoices">
 
 					<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
-					<div ng-repeat="choice in passage.choices" class="choiceContainer">
+					<div ng-repeat="choice in passage.choices" class="choiceContainer fade-animation">
 						<div class="choiceDisplayConditions" ng-show="choice.showCondition">
 							<p><strong>Display choice if:</strong></p>
 
@@ -101,7 +101,7 @@
 						<div class="choiceStoryUpdates" ng-show="choice.showUpdates">
 							<p><strong>When choice selected, update story:</strong></p>
 
-							<div class="row row-gutter-1x" ng-repeat="update in choice.updates">
+							<div class="row row-gutter-1x fade-animation" ng-repeat="update in choice.updates">
 								<div class="col-xs-1 h4"><a ng-click="delete_choice_update(choice, update);" class="icon-subtle"><span class="glyphicon glyphicon-remove-circle"></span></a></div>
 								<div class="col-xs-4"><input type="text" class="form-control var" ng-model="update.variable" placeholder="Variable" /></div>
 								<div class="col-xs-3">
