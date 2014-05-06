@@ -23,7 +23,7 @@ function(Model) {
 		},
 
 		trim: function(passage) {
-			if (!passage.choices) {
+			if (!passage || !passage.choices) {
 				return;
 			}
 			var self = this;
