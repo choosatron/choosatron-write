@@ -50,7 +50,7 @@ angular.module('storyApp.utils')
 		return deferred.promise;
 	};
 
-	this.open = function(extensions, callback) {
+	this.open = function(extensions) {
 		var deferred = $q.defer();
 
 		var args = {type: 'openFile'};

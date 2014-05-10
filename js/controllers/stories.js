@@ -2,10 +2,10 @@
  *¬This is the controller responsible for listing all of the stories that are available in local storage
 **/
 angular.module('storyApp.controllers')
-.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$stories', '$translators', 'Story',
-function StoriesCtrl($scope, $location, $selection, $stories, $translators, Story) {
+.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$file', '$translators', 'Story',
+function StoriesCtrl($scope, $location, $selection, $file, $translators, Story) {
 
-	$scope.stories            = [];
+	$scope.profile            = null;
 	$scope.story              = null;
 	$scope.passage            = null;
 	$scope.stories_sort       = 'title';
@@ -13,7 +13,7 @@ function StoriesCtrl($scope, $location, $selection, $stories, $translators, Stor
 	$scope.translators        = $translators.all();
 
 	function init() {
-		loadStories().then(function() {
+		loadProfile().then(function() {
 			$selection.getLastStoryId().then(loadStory);
 			$selection.watchStory($scope);
 			$selection.watchPassage($scope);
@@ -22,24 +22,16 @@ function StoriesCtrl($scope, $location, $selection, $stories, $translators, Stor
 
 	function loadStory(storyId) {
 		if (!storyId) return;
-		var story = $scope.get_story(storyId);
-		$scope.story = story;
-		$selection.getLastPassageId().then(loadPassage);
+		$selection.getLastPassageId()
+		.then(function(passageId) {
+			$scope.edit_story(storyId, passageId);
+		});
 	};
 
-	function loadPassage(passageId) {
-		if (!$scope.story) return;
-		$scope.edit_story($scope.story, $scope.story.get_passage(passageId));
-	};
-
-	function loadStories() {
-		return $stories.values().then(function(stories) {
-			$scope.stories = [];
-			var story = null;
-			for (var i=0, data; data = stories[i]; i++) {
-				story = new Story(data);
-				$scope.stories.push(story);
-			}
+	function loadProfile() {
+		return $selection.getActiveProfile()
+		.then(function(profile) {
+			$scope.profile = profile;
 		});
 	};
 
@@ -53,14 +45,6 @@ function StoriesCtrl($scope, $location, $selection, $stories, $translators, Stor
 		}
 	};
 
-	$scope.get_story  =  function(id) {
-		if (!id) return null;
-		for (var i=0, story; story = $scope.stories[i]; i++) {
-			if (story.id == id) return story;
-		}
-		return null;
-	};
-
 	$scope.playback_story = function(story) {
 		$selection.set(story, story.get_opening())
 		.then(function() {
@@ -68,11 +52,32 @@ function StoriesCtrl($scope, $location, $selection, $stories, $translators, Stor
 		});
 	};
 
-	$scope.edit_story = function(story, passage) {
-		$selection.set(story, story.get_opening())
-		.then(function() {
-			$location.path('story');
+	$scope.restore_entry = function(entryId, passageId) {
+		$file.restore(entryId)
+		.then(function(file) {
+			$file.read(file)
+			.then(function(result) {
+				var data = angular.fromJson(result);
+				var story = new Story(data);
+				var passage = passageId ? story.get_passage(passageId) : story.get_opening();
+				$selection.set(story, passage)
+				.then(function() {
+					$location.path('story');
+				});
+			});
 		});
+	};
+
+	$scope.edit_story = function(storyId, passageId) {
+		// Find the story based on its id
+		var entry = $scope.profile.entries.find(function(entry) {
+			return entry.id == storyId;
+		});
+
+		if (!entry) {
+			return;
+		}
+		restore_entry(entryId, passageId);
 	};
 
 	$scope.delete_story  =  function(story) {

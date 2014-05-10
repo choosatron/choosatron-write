@@ -2,11 +2,9 @@ angular.module('storyApp.controllers')
 
 .controller('ProfileCtrl', ['$scope', '$location', '$selection',
 function($scope, $location, $selection) {
-	$selection.getProfiles()
-	.then(function(profiles) {
-		profiles = profiles || {};
-		$scope.profiles = profiles;
-		$scope.profile = profiles[profiles.activeId];
+	$selection.getActiveProfile()
+	.then(function(profile) {
+		$scope.profile = profile;
 	});
 
 	$scope.view = function() {

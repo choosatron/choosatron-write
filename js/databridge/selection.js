@@ -1,5 +1,5 @@
 angular.module('storyApp.databridge')
-.service('$selection', ['$story', '$passage', '$preferences', 
+.service('$selection', ['$story', '$passage', '$preferences', 'Profile', '$file', '$q', 
 /**
  * Can be used to manage what is the current story and passage¬
  * Expects the $story and $passage to be Shared instances 
@@ -8,11 +8,10 @@ angular.module('storyApp.databridge')
  * This service handles passing changes to the selected story and passage
  * between views, and saves the changes to the preferences storage.
 **/
-function Selection($story, $passage, $preferences) {
-	var storyKey = 'last_story_id';
-	var passageKey = 'last_passage_id';
+function Selection($story, $passage, $preferences, Profile, $file, $q) {
+	var lastStoryKey = 'last_story_id';
+	var lastPassageKey = 'last_passage_id';
 	var lastProfileKey = 'last_profile_id';
-	var allProfilesKey = 'profiles';
 
 	return {
 		watchStory: function(scope, callback) {
@@ -34,25 +33,61 @@ function Selection($story, $passage, $preferences) {
 		},
 
 		getProfiles: function() {
-			return $preferences.get(allProfilesKey);
+			return $preferences.get('profiles');
+		},
+
+		getActiveProfile: function() {
+			var deferred = $q.defer();
+			var self = this;
+
+			$preferences.get(lastProfileKey)
+			.then(function(activeId) {
+				$preferences.get('profiles')
+				.then(function(profiles) {
+					profiles = profiles || {};
+					var profile = new Profile();
+
+					if (activeId && profiles[activeId]) {
+						profile = profiles[activeId];
+					}
+					else if (profiles.length > 0) {
+						profile = profiles[0];
+					}
+
+					self.setProfile(profile)
+					.then(function() {
+						return deferred.resolve(profile);
+					});
+				});
+			});
+			return deferred.promise;
 		},
 
 		setProfile: function(profile) {
-			return this.getProfiles()
+			var deferred = $q.defer();
+
+			return $preferences.get('profiles')
 			.then(function(profiles) {
-				if (!profile) return;
+
 				if (!profiles) profiles = {};
 				profiles[profile.id] = profile;
-				profiles.activeId = profile.id;
+
+				$preferences.set('profiles', profiles)
+				.then(function() {
+					$preferences.set(lastProfileKey)
+					.then(deferred.resolve);
+				});
 			});
+
+			return deferred.promise;
 		},
 
 		getLastStoryId: function() {
-			return $preferences.get(storyKey);
+			return $preferences.get(lastStoryKey);
 		},
 
 		getLastPassageId: function() {
-			return $preferences.get(passageKey);
+			return $preferences.get(lastPassageKey);
 		},
 
 		set: function(story, passage) {
@@ -65,13 +100,13 @@ function Selection($story, $passage, $preferences) {
 
 		setStory: function(story) {
 			var id = story && story.id;
-			return $preferences.set(storyKey, id)
+			return $preferences.set(lastStoryKey, id)
 			.then(function() {$story.set(story)});
 		},
 
 		setPassage: function(passage) {
 			var id = passage && passage.id;
-			return $preferences.set(passageKey, id)
+			return $preferences.set(lastPassageKey, id)
 			.then(function() {$passage.set(passage);});
 		},
 
