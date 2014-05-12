@@ -13,10 +13,22 @@ function(Model) {
 
 	Profile.methods = {
 		// Add a new entry record
-		add_entry: function(entryId, story) {
+		save_entry: function(entryId, story) {
 			var entry = {
 				entry_id : entryId,
+				id: story.id
 			};
+
+			var index = this.find_entry_index(entry);
+
+			if (index >= 0) {
+				entry = this.entries[index];
+				this.entries.splice(index, 1);
+				console.debug("Updating existing entry", entryId, entry, story);
+			}
+			else {
+				console.debug("Adding new entry", entryId, entry, story);
+			}
 
 			// Very shallow copy of the story
 			var types = ['string', 'number', 'boolean'];

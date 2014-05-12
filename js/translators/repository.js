@@ -26,6 +26,8 @@ function($file, $q) {
 				return deferred.promise;
 			}
 
+			entry.id = $file.getEntryId(entry);
+
 			$file.read(entry)
 			.then(function(data) {
 				var story = translator.import(data);

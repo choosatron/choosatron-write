@@ -20,11 +20,29 @@
 
 <div class="theme-alt wrap">
 	<div class="container storiesListMenu">
-		<ul class="list-inline">
-			<li><strong>Sort:</strong></li>
-			<li><a ng-click="sort_stories('title')"><span class="glyphicon glyphicon-font"></span><span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'title' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'title' && stories_sort_desc)}"></span></a></li>
-			<li><a ng-click="sort_stories('created')"><span class="glyphicon glyphicon-time"></span><span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'created' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'created' && stories_sort_desc)}"></span></a></li>
-		</ul>
+		<div class="btn-group btn-group-justified">
+			<div class="btn-group">
+				<button class="btn btn-default" ng-click="sort_stories('title')">
+					<span class="glyphicon glyphicon-font"></span>
+					title
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'title' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'title' && stories_sort_desc)}"></span>
+				</button>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-default" ng-click="sort_stories('created')">
+					<span class="glyphicon glyphicon-time"></span> 
+					created 
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'created' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'created' && stories_sort_desc)}"></span>
+				</button>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-default" ng-click="sort_stories('modified')">
+					<span class="glyphicon glyphicon-dashboard"></span> 
+					modified 
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'modified' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'modified' && stories_sort_desc)}"></span>
+				</button>
+			</div>
+		</div>
 	</div><!-- .container -->
 
 	<div class="scrollable">
@@ -36,6 +54,7 @@
 
 						<ul class="list-unstyled">
 							<li><span class="glyphicon glyphicon-time"></span> {{ entry.created | date }}</li>
+							<li><span class="glyphicon glyphicon-dashboard"></span> {{ entry.modified | date }}</li>
 							<li><strong>By:</strong> {{ entry.author || 'Author' }}</li>
 							<li><strong>Genre:</strong> {{ entry.genre || 'Genre' }}</li>
 						</ul>

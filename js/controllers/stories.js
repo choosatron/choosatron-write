@@ -6,8 +6,8 @@ angular.module('storyApp.controllers')
 function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 
 	$scope.profile            = null;
-	$scope.stories_sort       = 'title';
-	$scope.stories_sort_desc  = false;
+	$scope.stories_sort       = 'modified';
+	$scope.stories_sort_desc  = true;
 	$scope.translators        = $translators.all();
 
 	$profiles.load().then(function() {
@@ -41,7 +41,7 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 			$file.write(entry, story.serialize())
 			.then(function(event) {
 				var entryId = $file.getEntryId(entry);
-				$scope.profile.add_entry(entryId, story);
+				$scope.profile.save_entry(entryId, story);
 				$profiles.save().then(function() {
 					$location.path('story');
 				}, err);
@@ -65,11 +65,21 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 		$translators.export(type, story);
 	};
 
-	$scope.import_story  =  function(type) {
+	$scope.import_story = function(type) {
 		$translators.import(type)
-		then(function(result) {
+		.then(function(result) {
 			if (!result || !result.entry) return;
-			$scope.edit_story(result.entry);
+			var story = result.story;
+
+			// Get a new file to save to
+			$file.create('json')
+			.then(function(entry) {
+				$file.write(entry, story.serialize())
+				.then(function() {
+					$profiles.current.save_entry($file.getEntryId(entry), story);
+					$scope.edit_story(entry);
+				});
+			});
 		});
 	}
 }]);

@@ -6,7 +6,8 @@ function(Model, Passage) {
 	function Story(data) {
 		this.lastPassageNumber = 0;
 
-		this.created = Date.now();
+		this.created      =  Date.now();
+		this.modified     =  Date.now();
 		this.title        =  '';
 		this.version      =  1.0;
 		this.description  =  '';

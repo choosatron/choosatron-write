@@ -1,7 +1,7 @@
 angular.module('storyApp.controllers')
-.controller('StoryCtrl', ['$scope', '$location', '$profiles', '$translators', 'FileEntryAutoSave',
+.controller('StoryCtrl', ['$scope', '$location', '$timeout', '$profiles', '$translators', 'FileEntryAutoSave',
 	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
-function StoryCtrl($scope, $location, $profiles, $translators, FileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
+function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
 
 	$scope.entry              = null;
 	$scope.story              = null;
@@ -15,10 +15,8 @@ function StoryCtrl($scope, $location, $profiles, $translators, FileEntryAutoSave
 	$scope.picking            = false;
 	$scope.deleted            = null;
 	$scope.modal              = {confirm_message: ''};
-	$scope.show_story_details = false;
+	$scope.show_story_details = true;
 	$scope.show_passages      = false;
-	$scope.stories_sort       = 'title';
-	$scope.stories_sort_desc  = false;
 	$scope.save_state         = false;
 
 	$scope.exit_change_modal = {};
@@ -39,21 +37,38 @@ function StoryCtrl($scope, $location, $profiles, $translators, FileEntryAutoSave
 			return $location.path('stories');
 		}
 
+		var entry = entries[0];
+		var entryId = entry.entry_id;
+
+		if (!entryId) {
+			console.error("No entry id found for entry. Redirecting to ./stories");
+			return $location.path('stories');
+		}
+
 		var onFail = function(e) {
 			console.error("Error restoring story", e);
 			return $location.path('stories');
 		};
 
-		$scope.entry = entries[0];
-		$translators.restore('json', entries[0].entry_id)
+		$scope.entry = entry;
+		$translators.restore('json', entryId)
 		.then(function(result) {
+
 			if (!result || !result.story) {
 				return $location.path('stories');
 			}
+
+			// Set the current story and passage
 			$scope.story = result.story;
 			$scope.passage = result.story.get_opening();
-			result.entry.id = entries[0].entry_id;
+
+			// Update the entry record
+			$profiles.current.save_entry(entryId, result.story);
+			$profiles.save();
+
+			// Start autosaving changes
 			autosave(result);
+
 		}, onFail);
 	});
 
@@ -66,11 +81,22 @@ function StoryCtrl($scope, $location, $profiles, $translators, FileEntryAutoSave
 	function autosave(result) {
 		var saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
 
-		saver.watch(
-			'story',
-			function(s) {return s ? s.id : null},
-			function(s) {return s ? s.object() : null}
-		);
+		var getStoryId = function(s) {
+			return s && s.id;
+		}
+
+		var getStoryForSave = function(s) {
+			if (!s) return null;
+
+			// set the date asynchronously so it doesn't fire a digest call
+			$timeout(function() {
+				s.modified = Date.now();
+			});
+
+			return s.object();
+		}
+
+		saver.watch('story', getStoryId, getStoryForSave);
 
 		saver.onSaving(function(key, value) {
 			$scope.save_state = 'saving';
