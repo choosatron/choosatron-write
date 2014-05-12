@@ -908,6 +908,35 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 		color: #d3c6bb;
 	}
 
+/**
+ *¬ Profiles
+**/
+.profilesList {
+	padding-bottom: 200px;
+}
+
+	.profilesList li > div {
+		position: relative;
+		background: #ccc;
+		padding: 10px;
+		height: 120px;
+		margin-top: 40px;
+	}
+
+	.profilesList h3 {
+		margin-top: 0;
+	}
+
+	.profilesList p {
+		margin-top: 1em;
+	}
+
+	.profilesList .list-icon-menu {
+		position: absolute;
+		left: 10px;
+		bottom: 0;
+	}
+
 
 /**
  * Animations

@@ -2,8 +2,8 @@ angular.module('storyApp.models')
 .factory('Profile', ['Model',
 function(Model) {
 	function Profile(data) {
-		// The name of the person
-		this.name = '';
+		this.name    = '';
+		this.created = Date.now();
 
 		// Saves file entry references to a profiles stories
 		this.entries = [];
