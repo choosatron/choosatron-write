@@ -56,9 +56,26 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 		});
 	};
 
-	$scope.delete_story  =  function(entry) {
+	$scope.delete_story = function(entry) {
 		$profiles.current.remove_entry(entry);
 		$profiles.save();
+	};
+
+	$scope.duplicate_story = function(entry) {
+		$file.create('json')
+		.then(function(copy) {
+			if (!copy) return;
+			var copyId = $file.getEntryId(copy);
+
+			$translators.restore('json', entry.id)
+			.then(function(result) {
+				$profiles.current.save_entry(copyId, result.story);
+				$file.write(copy, result.story.serialize())
+				.then(function() {
+					$profile.save();
+				});
+			});
+		});
 	};
 
 	$scope.export_story = function(type, story) {
@@ -76,7 +93,7 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 			.then(function(entry) {
 				$file.write(entry, story.serialize())
 				.then(function() {
-					$profiles.current.save_entry($file.getEntryId(entry), story);
+					var entry = $profiles.current.save_entry($file.getEntryId(entry), story);
 					$scope.edit_story(entry);
 				});
 			});

@@ -41,6 +41,8 @@ function(Model) {
 
 			// Add to the beginning of the list
 			this.entries.unshift(entry);
+
+			return entry;
 		},
 
 		find_entry_index: function(entry) {
