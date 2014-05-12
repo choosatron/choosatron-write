@@ -14,8 +14,13 @@ function($scope, $location, $profiles) {
 .controller('ProfilesCtrl', ['$scope', '$location', '$profiles', 'Profile',
 function($scope, $location, $profiles, Profile) {
 
+	$scope.saveState = 'disk';
+
 	$profiles.load().then(function() {
 		$scope.profiles = $profiles;
+		$scope.$watch('profiles.current.name', function(n, o) {
+			$scope.saveState = 'save';
+		});
 	});
 
 	$scope.show_stories_menu = function() {
@@ -33,10 +38,9 @@ function($scope, $location, $profiles, Profile) {
 	};
 
 	$scope.save_profile = function() {
-		$scope.saving = true;
 		$profiles.save()
 		.then(function() {
-			$scope.saving = false;
+			$scope.saveState = 'saved';
 		});
 	};
 
