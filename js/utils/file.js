@@ -22,14 +22,18 @@ angular.module('storyApp.utils')
 		var deferred = $q.defer();
 		type = type || 'text/plain';
 
-		var done = function(writer) {
-			writer.truncate(this.position);
-			deferred.resolve(writer);
-		};
-
 		entry.createWriter(function(writer) {
-			writer.onwriteend = done;
-			writer.write(new Blob([data], {type: type}));
+			var blob = new Blob([data]);
+			writer.onerror = deferred.reject;
+			writer.onwriteend = function(event) {
+				if (writer.length == blob.size) {
+					return deferred.resolve(event);
+				}
+				else {
+					writer.write(blob, {type: type});
+				}
+			};
+			writer.truncate(0);
 		}, deferred.reject);
 
 		return deferred.promise;
@@ -50,11 +54,8 @@ angular.module('storyApp.utils')
 		return deferred.promise;
 	};
 
-	this.open = function(extensions) {
+	this.choose = function(args) {
 		var deferred = $q.defer();
-
-		var args = {type: 'openFile'};
-		if (extensions) args.accepts = [{extensions: extensions}];
 
 		fs.chooseEntry(args, function(entry) {
 			if (!runtime.lastError) {
@@ -66,6 +67,22 @@ angular.module('storyApp.utils')
 		});
 
 		return deferred.promise;
+	};
+
+	this.create = function(extension) {
+		var args = {type: 'saveFile'};
+		if (extension) {
+			args.accepts = [{extensions: [extension]}];
+		}
+		return this.choose(args);
+	};
+
+	this.open = function(extensions) {
+		var args = {type: 'openFile'};
+		if (extensions) {
+			args.accepts = [{extensions: extensions}];
+		}
+		return this.choose(args);
 	};
 
 	this.export = function (filename, extension, data, type) {

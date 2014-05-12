@@ -1,1 +1,1 @@
-<span ng-controller="ProfileCtrl"><a ng-click="view()"><span class="glyphicon glyphicon-user"></span> {{profile.name || 'Self-untitled'}}</a></span>
+<span ng-controller="ProfileCtrl"><a ng-click="view()" ng-show="profile"><span class="glyphicon glyphicon-user"></span> {{profile.name}}</a></span>

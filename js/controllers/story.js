@@ -1,16 +1,16 @@
 angular.module('storyApp.controllers')
-.controller('StoryCtrl', ['$scope', '$location', '$selection', '$stories', '$translators', 'AutoSave',
+.controller('StoryCtrl', ['$scope', '$location', '$profiles', '$translators', 'AutoSave',
 	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
-function StoryCtrl($scope, $location, $selection, $stories, $translators, AutoSave, Passage, Choice, Command, Operators, Genres) {
+function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage, Choice, Command, Operators, Genres) {
 
-	var autosave = new AutoSave($stories, $scope);
+	$scope.entry              = null;
+	$scope.story              = null;
+	$scope.passage            = null;
 
 	$scope.operators          = Operators;
 	$scope.genres             = Genres;
 	$scope.translators        = $translators.all();
 	$scope.alerts             = [];
-	$scope.story              = null;
-	$scope.passage            = null;
 	$scope.prev_passage       = null;
 	$scope.picking            = false;
 	$scope.deleted            = null;
@@ -23,13 +23,45 @@ function StoryCtrl($scope, $location, $selection, $stories, $translators, AutoSa
 
 	$scope.exit_change_modal = {};
 
+	$profiles.load()
+	.then(function() {
+		var profile = $profiles.current;
+
+		if (!profile) {
+			console.error("No profiles selected. Redirecting to ./profiles");
+			return $location.path('profiles');
+		}
+
+		var entries = profile.entries;
+		if (!entries || entries.length == 0) {
+			console.error("Profile has no entries. Redirecting to ./stories");
+			return $location.path('stories');
+		}
+
+		$scope.entry = entries[0];
+		$translators.restore('json', entries[0].entry_id, function(story) {
+			console.info(story);
+			$scope.$apply(function() {
+				if (!story) {
+					story = new Story();
+				}
+				$scope.story = story;
+				$scope.passage = story.get_opening();
+			});
+		});
+	});
+
 	function ensurePassage(passage) {
 		if (!$scope.passage) {
 			$scope.passage = $scope.story && $scope.story.get_opening();
 		}
 	}
 
-	function init() {
+	function autosave() {
+
+		// @todo!
+		return;
+		var autosave = $selection.autosave();
 
 		$selection.watchStory($scope);
 		$selection.watchPassage($scope, ensurePassage);
@@ -58,27 +90,21 @@ function StoryCtrl($scope, $location, $selection, $stories, $translators, AutoSa
 		});
 	}
 
-	$scope.playback_story = function(story) {
-		$selection.set(story, story.get_opening()).then(function() {
-			$location.path('playback');
-		});
+	$scope.playback_story = function() {
+		$location.path('playback');
 	};
 
 	$scope.show_stories_menu = function () {
-		$selection.clear().then(function() {
-			$location.path('stories');
-		});
+		$location.path('stories');
 	};
 
 	$scope.new_passage  =  function(entrance_choice) {
-		$selection.setPassage(new Passage()).then(function() {
-			$scope.passage.number = $scope.story.get_next_passage_number();
-			$scope.story.add_passage($scope.passage);
-			if (entrance_choice) {
-				entrance_choice.set_destination($scope.passage);
-			}
-			$scope.picking = null;
-		});
+		$scope.passage.number = $scope.story.get_next_passage_number();
+		$scope.story.add_passage($scope.passage);
+		if (entrance_choice) {
+			entrance_choice.set_destination($scope.passage);
+		}
+		$scope.picking = null;
 	};
 
 	$scope.pick_passage  =  function(choice) {
@@ -123,7 +149,7 @@ function StoryCtrl($scope, $location, $selection, $stories, $translators, AutoSa
 			$scope.prev_passage = $scope.passage;
 		}
 
-		$selection.setPassage(passage);
+		$scope.passage = passage;
 	};
 
 	$scope.delete_passage = function(passage) {
@@ -250,6 +276,4 @@ function StoryCtrl($scope, $location, $selection, $stories, $translators, AutoSa
 	$scope.export_story = function(type) {
 		$translators.export(type, $scope.story);
 	};
-
-	init();
 }]);

@@ -2,38 +2,21 @@
  *¬This is the controller responsible for listing all of the stories that are available in local storage
 **/
 angular.module('storyApp.controllers')
-.controller('StoriesCtrl',  ['$scope', '$location', '$selection', '$file', '$translators', 'Story',
-function StoriesCtrl($scope, $location, $selection, $file, $translators, Story) {
+.controller('StoriesCtrl',  ['$scope', '$location', '$profiles', '$file', '$translators', 'Story',
+function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 
 	$scope.profile            = null;
-	$scope.story              = null;
-	$scope.passage            = null;
 	$scope.stories_sort       = 'title';
 	$scope.stories_sort_desc  = false;
 	$scope.translators        = $translators.all();
 
-	function init() {
-		loadProfile().then(function() {
-			$selection.getLastStoryId().then(loadStory);
-			$selection.watchStory($scope);
-			$selection.watchPassage($scope);
-		});
-	};
-
-	function loadStory(storyId) {
-		if (!storyId) return;
-		$selection.getLastPassageId()
-		.then(function(passageId) {
-			$scope.edit_story(storyId, passageId);
-		});
-	};
-
-	function loadProfile() {
-		return $selection.getActiveProfile()
-		.then(function(profile) {
-			$scope.profile = profile;
-		});
-	};
+	$profiles.load().then(function() {
+		if (!$profiles.current) {
+			return $location.path('profiles');
+		}
+		$scope.profile = $profiles.current;
+		console.debug($profiles);
+	});
 
 	$scope.sort_stories = function (sort) {
 		if ($scope.stories_sort == sort) {
@@ -45,66 +28,38 @@ function StoriesCtrl($scope, $location, $selection, $file, $translators, Story) 
 		}
 	};
 
-	$scope.playback_story = function(story) {
-		$selection.set(story, story.get_opening())
-		.then(function() {
-			$location.path('playback');
-		});
-	};
-
-	$scope.restore_entry = function(entryId, passageId) {
-		$file.restore(entryId)
-		.then(function(file) {
-			$file.read(file)
-			.then(function(result) {
-				var data = angular.fromJson(result);
-				var story = new Story(data);
-				var passage = passageId ? story.get_passage(passageId) : story.get_opening();
-				$selection.set(story, passage)
-				.then(function() {
-					$location.path('story');
-				});
-			});
-		});
-	};
-
-	$scope.edit_story = function(storyId, passageId) {
-		// Find the story based on its id
-		var entry = $scope.profile.entries.find(function(entry) {
-			return entry.id == storyId;
-		});
-
-		if (!entry) {
-			return;
-		}
-		restore_entry(entryId, passageId);
-	};
-
-	$scope.delete_story  =  function(story) {
-		$scope.deleted  =  {
-			type: "story",
-			title: story.title,
-			undo: function() {$scope.story = story;}
+	$scope.new_story = function() {
+		var story = new Story();
+		var err = function(e) {
+			console.error("Error creating story", e);
 		};
 
-		$stories.remove(story.id).then(function() {
-			$selection.clear();
-		});
+		$file.create('json')
+		.then(function(entry) {
+			story.title = entry.name.substr(0, entry.name.lastIndexOf('.'));
+			story.author = $profiles.current.name;
 
-		var stories = [];
-		$scope.stories = $scope.stories.filter(function(s) {
-			return s.id != story.id;
+			$file.write(entry, story.serialize())
+			.then(function(event) {
+				var entryId = $file.getEntryId(entry);
+				$scope.profile.add_entry(entryId, story);
+				$profiles.save().then(function() {
+					$location.path('story');
+				}, err);
+			}, err);
+		}, err);
+	};
+
+	$scope.edit_story = function(entry) {
+		$profiles.current.select_entry(entry);
+		$profiles.save().then(function() {
+			$location.path('story');
 		});
 	};
 
-	$scope.undo_delete  =  function() {
-		if (!$scope.deleted) return;
-		$scope.deleted.undo();
-		$scope.deleted = null;
-	};
-
-	$scope.new_story = function() {
-		$scope.edit_story(new Story());
+	$scope.delete_story  =  function(entry) {
+		$profiles.current.remove_entry(entry);
+		$profiles.save();
 	};
 
 	$scope.export_story = function(type, story) {
@@ -112,8 +67,9 @@ function StoriesCtrl($scope, $location, $selection, $file, $translators, Story) 
 	};
 
 	$scope.import_story  =  function(type) {
-		$translators.import(type, $scope.edit_story);
+		$translators.import(type, function(story, entry) {
+			if (!story || !entry) return;
+			$scope.edit_story(entry);
+		});
 	}
-
-	init();
 }]);

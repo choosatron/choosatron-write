@@ -27,15 +27,44 @@ function(Model) {
 				entry[key] = value;
 			}
 
-			// Add to the end of the list
-			this.entries.push(entry);
+			// Add to the beginning of the list
+			this.entries.unshift(entry);
 		},
 
-		remove_entry: function(entryId) {
-			if (!this.entries) return;
-			this.entries = this.entries.filter(function(entry) {
-				return entry.entry_id != entryId;
-			});
+		find_entry_index: function(entry) {
+			if (!entry) return -1;
+			if (!this.entries || !this.entries.length) return -1;
+
+			for (var i=0; i<this.entries.length; i++) {
+				var compared = this.entries[i];
+				if (compared.entry_id == entry.entry_id) {
+					return i;
+				}
+				if (compared.id == entry.id) {
+					return i;
+				}
+			}
+
+			return -1;
+		},
+
+		// Removes an entry from the list
+		remove_entry: function(entry) {
+			var i = this.find_entry_index(entry);
+			if (i < 0) return;
+			this.entries.splice(i, 1);
+		},
+
+		// Shifts an entry to the top of the queue for selection
+		select_entry: function(entry) {
+			var i = this.find_entry_index(entry);
+			if (i < 0) {
+				return null;
+			}
+			var selected = this.entries[i];
+			this.entries.splice(i, 1);
+			this.entries.unshift(selected);
+			return selected;
 		}
 	}
 	Model.extend(Profile, Profile.methods);

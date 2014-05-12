@@ -32,7 +32,7 @@
 			<div class="row storiesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="entry in profile.entries | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6 fade-animation"><div>
-						<h3><a ng-click="edit_story(entry.id)">{{ entry.title }}</a></h3>
+						<h3><a ng-click="edit_story(entry)">{{ entry.title }}</a></h3>
 
 						<ul class="list-unstyled">
 							<li><span class="glyphicon glyphicon-time"></span> {{ entry.created | date }}</li>
@@ -56,7 +56,7 @@
 							</li>
 							<!-- TODO: create support for duplicate -->
 							<li><a class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
-							<li><a confirm-click="delete_story(entry)" confirm-message="Delete story?" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+							<li><a confirm-click="delete_story(entry)" confirm-message="Are you sure you want to remove this story from your list?" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Remove</li>
 						</ul>
 					</div></li>
 				</ul>

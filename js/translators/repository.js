@@ -16,7 +16,7 @@ function($file, EventHandler) {
 		return found;
 	};
 
-	var events = EventHandler.create('imported', 'exported', 'error');
+	var events = EventHandler.create('imported', 'exported', 'restored', 'error');
 	events.async = true;
 
 	return {
@@ -34,25 +34,47 @@ function($file, EventHandler) {
 			});
 		},
 
+		read: function(type, entry, callback) {
+			var translator = this.get(type);
+			var onError = function(e) {
+				events.fire('error', e);
+			};
+			return $file.read(entry)
+			.then(function(data) {
+				var story = translator.import(data);
+				if (story) story.refresh_id();
+				if (callback) callback(story, entry);
+			}, onError);
+		},
+
+		restore: function(type, entryId, callback) {
+			var read = this.read.bind(this);
+			var restored = function(entry) {
+				read(type, entry, callback)
+				.then(function() {
+					events.fire('restored', entry);
+				});
+			};
+			return $file.restore(entryId)
+			.then(restored.bind(this));
+		},
+
 		import: function(type, callback) {
 			var translator = this.get(type);
 			var supported = translator.imports;
+			var read = this.read.bind(this);
 			var onError = function(e) {
 				events.fire('error', e);
 			};
 
-			$file.open(supported)
+			return $file.open(supported)
 			.then(function(entry) {
-				if (!entry) {
-					return;
-				}
-				$file.read(entry)
-				.then(function(data) {
-					var story = translator.import(data);
-					if (story) story.refresh_id();
-					if (callback) callback(story);
-					events.fire('imported', story);
-				}, onError);
+				if (entry) {
+					read(type, entry, callback)
+					.then(function() {
+						events.fire('imported', entry);
+					});
+				};
 			}, onError);
 		},
 
@@ -61,7 +83,8 @@ function($file, EventHandler) {
 			var extension = translator.exports;
 			var datatype = translator.datatype;
 			var data = translator.export(story);
-			$file.export(story.title, extension, data, datatype)
+
+			return $file.export(story.title, extension, data, datatype)
 			.then(function(writer) {
 				events.fire('exported', writer);
 			}, function(e) {

@@ -12,6 +12,16 @@
 <div class="theme-alt wrap">
 	<div class="scrollable">
 		<div class="container">
+			<div class="row" ng-show="profile">
+				<form class="well">
+					<div class="input-group">
+						<input class="form-control" ng-model="profile.name" placeholder="Enter your name" />
+						<span class="input-group-addon">
+							<button ng-click="save_profile()"><span class="glyphicon glyphicon-save"></span> Save Profile</button>
+						</span>
+					</div>
+				</form>
+			</div>
 			<div class="row profilesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="p in profiles" class="col-md-4 col-sm-6"><div>
