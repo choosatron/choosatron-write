@@ -1,81 +1,70 @@
 angular.module('storyApp.translators')
-.factory('$translators', ['$file', 'EventHandler', 
+.factory('$translators', ['$file', '$q', 
 'JsonTranslator', 'TwineTranslator', 'ChoosatronTranslator', 'InkleTranslator', 
-function($file, EventHandler) {
+function($file, $q) {
 	var classes = Array.prototype.splice.call(arguments, 2); 
 
-	var findTranslator = function(test) {
-		var found = null;
-		classes.some(function(o, i, a) {
-			if (test(o, i)) {
-				found = o;
-				return true;
-			}
-			return false;
-		});
-		return found;
-	};
-
-	var events = EventHandler.create('imported', 'exported', 'restored', 'error');
-	events.async = true;
-
 	return {
-		on: function(events, callback) {
-			events.on(events, callback);
-		},
-
 		all: function() {
 			return classes;
 		},
 
 		get: function(type) {
-			return findTranslator(function(o) {
-				return o.type == type;
+			return classes.find(function(c) {
+				if (c.type == type) {
+					return c;
+				}
 			});
 		},
 
-		read: function(type, entry, callback) {
+		read: function(type, entry) {
+			var deferred = $q.defer();
 			var translator = this.get(type);
-			var onError = function(e) {
-				events.fire('error', e);
-			};
-			return $file.read(entry)
+
+			if (!translator) {
+				deferred.reject(new Error("No translator for type: " + type));
+				return deferred.promise;
+			}
+
+			$file.read(entry)
 			.then(function(data) {
 				var story = translator.import(data);
 				if (story) story.refresh_id();
-				if (callback) callback(story, entry);
-			}, onError);
+				var result = {
+					story: story,
+					entry: entry
+				};
+				deferred.resolve(result);
+			}, deferred.reject);
+
+			return deferred.promise;
 		},
 
-		restore: function(type, entryId, callback) {
-			var read = this.read.bind(this);
-			var restored = function(entry) {
-				read(type, entry, callback)
-				.then(function() {
-					events.fire('restored', entry);
-				});
-			};
-			return $file.restore(entryId)
-			.then(restored.bind(this));
+		restore: function(type, entryId) {
+			var deferred = $q.defer();
+
+			var read = this.read.bind(this, type);
+			$file.restore(entryId)
+			.then(function(entry) {
+				read(entry).then(deferred.resolve, deferred.reject);
+			}, deferred.reject);
+
+			return deferred.promise;
 		},
 
 		import: function(type, callback) {
+			var deferred = $q.defer();
 			var translator = this.get(type);
 			var supported = translator.imports;
 			var read = this.read.bind(this);
-			var onError = function(e) {
-				events.fire('error', e);
-			};
 
-			return $file.open(supported)
+			$file.open(supported)
 			.then(function(entry) {
-				if (entry) {
-					read(type, entry, callback)
-					.then(function() {
-						events.fire('imported', entry);
-					});
-				};
-			}, onError);
+				if (!entry) return deferred.resolve(null);
+				read(type, entry).then(deferred.resolve, deferred.reject);
+			}, deferred.reject);
+
+			return deferred.promise;
 		},
 
 		export: function(type, story) {
@@ -84,12 +73,7 @@ function($file, EventHandler) {
 			var datatype = translator.datatype;
 			var data = translator.export(story);
 
-			return $file.export(story.title, extension, data, datatype)
-			.then(function(writer) {
-				events.fire('exported', writer);
-			}, function(e) {
-				events.fire('error', e)
-			});
+			return $file.export(story.title, extension, data, datatype);
 		}
 	};
 }]);

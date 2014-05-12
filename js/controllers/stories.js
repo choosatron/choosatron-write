@@ -67,9 +67,10 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 	};
 
 	$scope.import_story  =  function(type) {
-		$translators.import(type, function(story, entry) {
-			if (!story || !entry) return;
-			$scope.edit_story(entry);
+		$translators.import(type)
+		then(function(result) {
+			if (!result || !result.entry) return;
+			$scope.edit_story(result.entry);
 		});
 	}
 }]);

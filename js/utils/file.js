@@ -3,6 +3,15 @@ angular.module('storyApp.utils')
 	fs = fs || chrome.fileSystem;
 	runtime = runtime || chrome.runtime;
 
+	var tryResolve = function(deferred, data) {
+		if (!runtime.lastError) {
+			deferred.resolve(data);
+		}
+		else {
+			deferred.reject(runtime.lastError);
+		}
+	};
+
 	this.getEntryId = function(entry) {
 		return fs.retainEntry(entry);
 	};
@@ -13,7 +22,9 @@ angular.module('storyApp.utils')
 			if (!restorable) {
 				return deferred.reject("Invalid entry id");
 			}
-			fs.restoryEntry(entryId, deferred.resolve);
+			fs.restoreEntry(entryId, function(entry) {
+				tryResolve(deferred, entry);
+			});
 		});
 		return deferred.promise;
 	};
@@ -47,6 +58,10 @@ angular.module('storyApp.utils')
 			deferred.resolve(data.target && data.target.result);
 		};
 
+		reader.onerror = function(e) {
+			deferred.reject(e);
+		};
+
 		entry.file(function(file) {
 			reader.readAsText(file);
 		}, deferred.reject);
@@ -58,12 +73,7 @@ angular.module('storyApp.utils')
 		var deferred = $q.defer();
 
 		fs.chooseEntry(args, function(entry) {
-			if (!runtime.lastError) {
-				deferred.resolve(entry);
-			}
-			else {
-				deferred.reject(runtime.lastError);
-			}
+			tryResolve(deferred, entry);
 		});
 
 		return deferred.promise;
@@ -92,6 +102,9 @@ angular.module('storyApp.utils')
 		var chosen = function(entry) {
 			if (!entry) {
 				return deferred.resolve(null);
+			}
+			else if (runtime.lastError) {
+				return deferred.reject(runtime.lastError);
 			}
 
 			write(entry, data, type)

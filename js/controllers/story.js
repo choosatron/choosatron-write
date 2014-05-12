@@ -23,6 +23,7 @@ function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage
 
 	$scope.exit_change_modal = {};
 
+	// Load up the selected story
 	$profiles.load()
 	.then(function() {
 		var profile = $profiles.current;
@@ -38,17 +39,20 @@ function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage
 			return $location.path('stories');
 		}
 
+		var onFail = function(e) {
+			console.error("Error restoring story", e);
+			return $location.path('stories');
+		};
+
 		$scope.entry = entries[0];
-		$translators.restore('json', entries[0].entry_id, function(story) {
-			console.info(story);
-			$scope.$apply(function() {
-				if (!story) {
-					story = new Story();
-				}
-				$scope.story = story;
-				$scope.passage = story.get_opening();
-			});
-		});
+		$translators.restore('json', entries[0].entry_id)
+		.then(function(result) {
+			if (!result || !result.story) {
+				return $location.path('stories');
+			}
+			$scope.story = result.story;
+			$scope.passage = result.story.get_opening();
+		}, onFail);
 	});
 
 	function ensurePassage(passage) {
