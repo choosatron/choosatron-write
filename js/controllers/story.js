@@ -1,7 +1,7 @@
 angular.module('storyApp.controllers')
-.controller('StoryCtrl', ['$scope', '$location', '$profiles', '$translators', 'AutoSave',
+.controller('StoryCtrl', ['$scope', '$location', '$profiles', '$translators', 'FileEntryAutoSave',
 	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
-function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage, Choice, Command, Operators, Genres) {
+function StoryCtrl($scope, $location, $profiles, $translators, FileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
 
 	$scope.entry              = null;
 	$scope.story              = null;
@@ -52,6 +52,8 @@ function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage
 			}
 			$scope.story = result.story;
 			$scope.passage = result.story.get_opening();
+			result.entry.id = entries[0].entry_id;
+			autosave(result);
 		}, onFail);
 	});
 
@@ -59,36 +61,30 @@ function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage
 		if (!$scope.passage) {
 			$scope.passage = $scope.story && $scope.story.get_opening();
 		}
-	}
+	};
 
-	function autosave() {
+	function autosave(result) {
+		var saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
 
-		// @todo!
-		return;
-		var autosave = $selection.autosave();
-
-		$selection.watchStory($scope);
-		$selection.watchPassage($scope, ensurePassage);
-
-		autosave.watch(
+		saver.watch(
 			'story',
 			function(s) {return s ? s.id : null},
 			function(s) {return s ? s.object() : null}
 		);
 
-		autosave.onSaving(function(key, value) {
+		saver.onSaving(function(key, value) {
 			$scope.save_state = 'saving';
 		});
 
-		autosave.onThrottling(function(key, time) {
+		saver.onThrottling(function(key, time) {
 			$scope.save_state = 'throttling';
 		});
 
-		autosave.onSaved(function(key, value) {
+		saver.onSaved(function(key, value) {
 			$scope.save_state = 'saved';
 		});
 
-		autosave.onError(function(e) {
+		saver.onError(function(e) {
 			$scope.save_sate = 'error';
 			console.error('Error autosaving story', e);
 		});
@@ -103,6 +99,7 @@ function StoryCtrl($scope, $location, $profiles, $translators, AutoSave, Passage
 	};
 
 	$scope.new_passage  =  function(entrance_choice) {
+		$scope.passage = new Passage();
 		$scope.passage.number = $scope.story.get_next_passage_number();
 		$scope.story.add_passage($scope.passage);
 		if (entrance_choice) {

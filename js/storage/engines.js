@@ -57,8 +57,9 @@ function($q, BaseStorageEngine, $file) {
 
 		this.extensions = extensions;
 		this.type = type;
+		this.throttle = 1000; // 1 second between saves
 
-		// The "area" in this case is used to track references between internal ids and entry ids
+		// The "area" in this case is used to track references between internal ids and entry or the entries
 		this.area = {};
 
 		this.getEntry = function(namespace, key) {
@@ -71,10 +72,18 @@ function($q, BaseStorageEngine, $file) {
 
 			if (!key) {
 				deferred.resolve(this.area[namespace]);
+				return deferred.promise;
 			}
-			else if (this.area[namespace][key]) {
-				$file.restore(this.area[namespace][key])
+
+			var entry = key && this.area[namespace][key];
+
+			if (typeof(entry) == 'object') {
+				deferred.resolve(entry);
+			}
+			else if (entry) {
+				$file.restore(entry)
 				.then(function(entry) {
+					self.area[namespace][key] = entry;
 					deferred.resolve(entry);
 				}, function(e) {
 					delete self.area[namespace][key];
@@ -85,9 +94,7 @@ function($q, BaseStorageEngine, $file) {
 			else {
 				$file.open(this.extensions)
 				.then(function(entry) {
-					if (entry) {
-						self.area[namespace][key] = $file.getEntryId(entry);
-					}
+					self.area[namespace][key] = entry;
 					deferred.resolve(entry);
 				}, deferred.reject);
 			}

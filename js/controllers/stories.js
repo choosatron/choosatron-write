@@ -15,7 +15,6 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 			return $location.path('profiles');
 		}
 		$scope.profile = $profiles.current;
-		console.debug($profiles);
 	});
 
 	$scope.sort_stories = function (sort) {
