@@ -11,7 +11,8 @@
 
 			<ul class="list-inline list-icon-menu">
 				<li>
-					<a ng-click="playback_story()"><span class="glyphicon glyphicon-play"></span> Play Story</a>
+					<a ng-click="playback_story()" ng-hide="playback"><span class="glyphicon glyphicon-play"></span> Play Story</a>
+					<a ng-click="edit_story()" ng-show="playback"><span class="glyphicon glyphicon-stop"></span> Edit Story</a>
 				</li>
 				<li>
 					<span class="dropdown">

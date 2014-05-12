@@ -1,24 +1,25 @@
 angular.module('storyApp.controllers')
-.controller('PlaybackCtrl', ['$scope', '$location', '$selection', 'Playback',
+.controller('PlaybackCtrl', ['$scope', '$location', '$profiles', '$translators', 'Playback',
 
-function PlaybackCtrl($scope, $location, $selection, Playback) {
+function PlaybackCtrl($scope, $location, $profiles, $translators, Playback) {
 	$scope.playback = null;
 	$scope.story    = null;
 	$scope.passage  = null;
 
-	this.init  =  function() {
-		$selection.watchStory($scope, startPlayback);
-		$selection.watchPassage($scope);
-	}
-
-	function startPlayback(story) {
-		$scope.playback = new Playback();
-		$scope.passage  = $scope.playback.start(story);
-	};
+	$profiles.load()
+	.then(function() {
+		var profile = $profiles.current;
+		var entry = profile.entries[0];
+		$translators.restore('json', entry.entry_id)
+		.then(function(result) {
+			$scope.story = result.story;
+			$scope.playback = new Playback();
+			$scope.passage = $scope.playback.start(result.story);
+		});
+	});
 
 	$scope.show_stories_menu = function () {
-		$selection.clear()
-		.then(function() {$location.path('stories')});
+		$location.path('stories');
 	};
 
 	$scope.clear_passage_search = function() {
@@ -35,9 +36,7 @@ function PlaybackCtrl($scope, $location, $selection, Playback) {
 	};
 
 	$scope.edit_story = function(story) {
-		$selection.setPassage($scope.passage)
-		.then(function() {$location.path('story');});
+		// @todo: Select the passage being viewed
+		$location.path('story');
 	};
-
-	this.init();
 }]);
