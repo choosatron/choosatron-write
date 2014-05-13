@@ -79,11 +79,10 @@ angular.module('storyApp.utils')
 		return deferred.promise;
 	};
 
-	this.create = function(extension) {
+	this.create = function(extension, filename) {
 		var args = {type: 'saveFile'};
-		if (extension) {
-			args.accepts = [{extensions: [extension]}];
-		}
+		if (filename) args.suggestedName = filename;
+		if (extension) args.accepts = [{extensions: [extension]}];
 		return this.choose(args);
 	};
 

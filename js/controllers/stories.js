@@ -62,20 +62,25 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 	};
 
 	$scope.duplicate_story = function(entry) {
-		$file.create('json')
-		.then(function(copy) {
+		var title = 'Copy of ' + entry.title;
+
+		var copyOriginal = function(copy) {
 			if (!copy) return;
 			var copyId = $file.getEntryId(copy);
 
-			$translators.restore('json', entry.id)
+			$translators.restore('json', entry.entry_id)
 			.then(function(result) {
+				result.story.title = title;
 				$profiles.current.save_entry(copyId, result.story);
 				$file.write(copy, result.story.serialize())
 				.then(function() {
 					$profile.save();
 				});
 			});
-		});
+		}
+
+		$file.create('json', title)
+		.then(copyOriginal);
 	};
 
 	$scope.export_story = function(type, story) {
