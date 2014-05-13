@@ -15,7 +15,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	$scope.picking            = false;
 	$scope.deleted            = null;
 	$scope.modal              = {confirm_message: ''};
-	$scope.show_story_details = true;
+	$scope.show_story_details = false;
 	$scope.show_passages      = false;
 	$scope.save_state         = false;
 
@@ -61,6 +61,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 			// Set the current story and passage
 			$scope.story = result.story;
 			$scope.passage = result.story.get_opening();
+			$scope.show_story_details = result.story.passages.length < 2;
 
 			// Update the entry record
 			$profiles.current.save_entry(entryId, result.story);

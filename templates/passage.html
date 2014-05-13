@@ -62,6 +62,7 @@
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
+				<li><button class="btn btn-link" ng-click="new_passage()"><span class="glyphicon glyphicon-plus"></span> New Passage</button></li>
 				<li ng-repeat="p in story.passages | filter:passage_search | filter:valid_picking_option" class="fade-animation">
 					<a ng-click="select_passage(p.id)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
