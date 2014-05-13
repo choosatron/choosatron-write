@@ -2,8 +2,9 @@ angular.module('storyApp.models')
 .factory('Profile', ['Model',
 function(Model) {
 	function Profile(data) {
-		this.name    = '';
-		this.created = Date.now();
+		this.created  = Date.now();
+		this.name     = '';
+		this.autosave = true;
 
 		// Saves file entry references to a profiles stories
 		this.entries = [];

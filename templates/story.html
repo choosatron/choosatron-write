@@ -14,6 +14,9 @@
 					<a ng-click="playback_story()" ng-hide="playback"><span class="glyphicon glyphicon-play"></span> Play Story</a>
 					<a ng-click="edit_story()" ng-show="playback"><span class="glyphicon glyphicon-stop"></span> Edit Story</a>
 				</li>
+				<li ng-hide="profiles.current.autosave">
+					<a ng-disabled="save_state == 'transfer'" ng-click="saver.save(story.id, story)"><span class="glyphicon glyphicon-{{save_state}}"></span> Save Changes</a>
+				</li>
 				<li>
 					<span class="dropdown">
 						<span class="dropdown">

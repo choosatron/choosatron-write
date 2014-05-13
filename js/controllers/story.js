@@ -6,6 +6,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	$scope.entry              = null;
 	$scope.story              = null;
 	$scope.passage            = null;
+	$scope.profiles           = $profiles;
 
 	$scope.operators          = Operators;
 	$scope.genres             = Genres;
@@ -17,7 +18,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	$scope.modal              = {confirm_message: ''};
 	$scope.show_story_details = false;
 	$scope.show_passages      = false;
-	$scope.save_state         = false;
+	$scope.save_state         = 'floppy-disk';
 
 	$scope.exit_change_modal = {};
 
@@ -80,7 +81,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	};
 
 	function autosave(result) {
-		var saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
+		var saver = $scope.saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
 
 		var getStoryId = function(s) {
 			return s && s.id;
@@ -97,22 +98,35 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 			return s.object();
 		}
 
-		saver.watch('story', getStoryId, getStoryForSave);
+		if ($profiles.current.autosave) {
+			saver.watch('story', getStoryId, getStoryForSave);
+		}
+		else {
+			$scope.$watch('story', function(nv, ov) {
+				if (nv !== ov) {
+					$scope.save_state = 'floppy-save';
+				}
+			}, true);
+		}
 
 		saver.onSaving(function(key, value) {
-			$scope.save_state = 'saving';
+			$scope.save_state = 'transfer';
 		});
 
 		saver.onThrottling(function(key, time) {
-			$scope.save_state = 'throttling';
+			$scope.save_state = 'transfer';
 		});
 
 		saver.onSaved(function(key, value) {
-			$scope.save_state = 'saved';
+			$timeout(function() {
+				$scope.$apply(function() {
+					$scope.save_state = 'floppy-disk';
+				});
+			}, 250);
 		});
 
 		saver.onError(function(e) {
-			$scope.save_sate = 'error';
+			$scope.save_state = 'floppy-remove';
 			console.error('Error autosaving story', e);
 		});
 	}

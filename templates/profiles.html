@@ -16,7 +16,7 @@
 				<ul class="list-unstyled">
 					<li ng-repeat="p in profiles.all" class="col-md-4 col-sm-6 fade-animation"><div>
 						<h3 ng-show="profiles.current.id != p.id"><a ng-click="pick_profile(p)"><span class="glyphicon glyphicon-user"></span> {{ p.name }}</a></h3>
-						<h3 ng-show="profiles.current.id == p.id">
+						<div class="form form-vertical" ng-show="profiles.current.id == p.id">
 							<div class="input-group">
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-user"></span> 
@@ -28,7 +28,13 @@
 									</button>
 								</span>
 							</div>
-						</h3>
+							<div class="checkbox">
+								<label>
+									Autosave stories?
+									<input id="autosave" type="checkbox" ng-model="profiles.current.autosave">
+								</label>
+							</div>
+						</div>
 						<ul class="list-unstyled">
 							<li><span class="glyphicon glyphicon-time"></span> {{ p.created | date }}</li>
 							<li><span class="glyphicon glyphicon-book"></span> {{ p.entries.length }} {{ p.entries.length == 1 ? 'Story' : 'Stories' }}</li>

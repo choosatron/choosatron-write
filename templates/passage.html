@@ -31,6 +31,9 @@
 				<!-- TODO: may indicate this some other way? -->
 				<span ng-if="passage.opening" class="label label-success">Start</span>
 				<a ng-if="!passage.opening" class="h4 icon-inline icon-subtle" confirm-click="delete_passage(passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
+				<div class="savePassage fade-animation" ng-hide="profiles.current.autosave">
+					<button class="btn btn-primary" ng-disabled="save_state == 'transfer'" ng-click="saver.save(story.id, story)"><span class="glyphicon glyphicon-{{save_state}}"></span> Save Changes</button>
+				</div>
 			</h2>
 
 			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>

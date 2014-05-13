@@ -1,5 +1,5 @@
 angular.module('storyApp.utils')
-.service('EventHandler', function() {
+.service('EventHandler', ['$timeout', '$rootScope', function($timeout, $rootScope) {
 	function EventHandler() {
 		this.listeners = {};
 		this.async = false;
@@ -28,14 +28,15 @@ angular.module('storyApp.utils')
 			var args = Array.prototype.splice.call(arguments, 1);
 			var async = this.async;
 			var call = function(callback) {
-				var exec = function() {
-					callback.apply(ctx, args);
-				};
 				if (async) {
-					setTimeout(exec, 0);
+					$timeout(function() {
+						$rootScope.$apply(function() {
+							callback.apply(ctx, args);
+						});
+					});
 				}
 				else {
-					exec();
+					callback.apply(ctx, args);
 				}
 			};
 			this.listeners[event].forEach(call);
@@ -49,4 +50,4 @@ angular.module('storyApp.utils')
 		}
 		return eh;
 	};
-});
+}]);
