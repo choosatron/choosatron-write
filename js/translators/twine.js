@@ -6,24 +6,29 @@ function(Story, Passage, Choice) {
 		name: 'Twine',
 
 		importMenuTitle: 'Import from Twine',
-		imports: [ 'txt', 'twee' ],
+		imports: [ 'txt', 'twee', 'tw' ],
 		import: function(data) {
 			var lines = data.split('\n');
 			var line = '';
 
 			// reg ex identifiers
-			var reId = /:: (.+) (\[.+\])?$/;
-			var reChoice = /\[\[(.+)\|(.+)\]\]$/;
+			var reId = /:: (.+)/;
+			var reAttributes = /\s(\[([^\]\[]+)\])\s/;
+			var reChoice = /\[\[(.+)\|(.+)\]\]/;
 
 			// Looks through the content of the passage for choices
 			function fixPassage(passage) {
 				var contents = passage.content.split('\n');
 				var content = null;
 				passage.content = '';
-				while (content = contents.shift()) {
+				while (contents.length) {
+					content = contents.shift();
 					var match = reChoice.exec(content);
 					if (match) {
-						passage.add_choice(parseChoice(match));
+						var choice = new Choice();
+						choice.content = match[1];
+						choice.destination = match[2];
+						passage.add_choice(choice);
 					}
 					else {
 						passage.content += content;
@@ -31,44 +36,40 @@ function(Story, Passage, Choice) {
 				}
 			};
 
-			function parseChoice(match) {
-				var choice = new Choice();
-				choice.content = match[1];
-				choice.destination = match[2];
-				return choice;
-			};
-
 			var story = new Story();
 			var passage = null;
-			while (line = lines.shift()) {
-				line = line.trim();
+			while (lines.length) {
+				line = lines.shift().trim();
+				if (!line.length) continue;
 				var id = reId.exec(line);
-				if (id) {
-					switch (id[1]) {
-						case('StoryAuthor'):
-							story.author = lines.shift();
-							break;
-						case('StoryTitle'):
-							story.title = lines.shift();
-							break;
-						default: // Parse the text!
-							var passage = new Passage();
-							var content = '';
-							passage.id = id[1];
-							if (id[2]) passage.tags = ids[2];
-							while (content = lines.shift()) {
-								if (reId.test(content)) {
-									lines.unshift(content);
-									break;
-								}
-								passage.content += content;
+				if (!id) continue;
+				switch (id[1].trim()) {
+					case('StoryAuthor'):
+						story.author = lines.shift();
+						break;
+					case('StoryTitle'):
+						story.title = lines.shift();
+						break;
+					default: // Parse the text!
+						var passage = new Passage();
+						var content = '';
+						var attrs = reAttributes.exec(id);
+						passage.id = id[1].replace(reAttributes, '').trim();
+						if (attrs) passage.tags = attrs[1];
+						while (lines.length) {
+							content = lines.shift().trim();
+							if (reId.test(content)) {
+								lines.unshift(content);
+								break;
 							}
-							fixPassage(passage);
-							story.add_passage(passage);
-					}
-					continue;
+							passage.content += content + '\n';
+						}
+						fixPassage(passage);
+						story.add_passage(passage);
 				}
-			}
+			};
+
+			return story;
 		},
 
 		exportMenuTitle: 'Export to Twine Format',

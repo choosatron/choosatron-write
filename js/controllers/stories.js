@@ -90,15 +90,20 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 	$scope.import_story = function(type) {
 		$translators.import(type)
 		.then(function(result) {
-			if (!result || !result.entry) return;
+			console.debug("Imported result", result);
+			if (!result || !result.entry || !result.story) {
+				return;
+			}
 			var story = result.story;
 
 			// Get a new file to save to
 			$file.create('json')
-			.then(function(entry) {
-				$file.write(entry, story.serialize())
+			.then(function(newFile) {
+				if (!newFile) return;
+				$file.write(newFile, story.serialize())
 				.then(function() {
-					var entry = $profiles.current.save_entry($file.getEntryId(entry), story);
+					var newFileId = $file.getEntryId(newFile);
+					var entry = $profiles.current.save_entry(newFileId, story);
 					$scope.edit_story(entry);
 				});
 			});
