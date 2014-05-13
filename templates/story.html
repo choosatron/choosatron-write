@@ -20,7 +20,7 @@
 							<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
 							<ul class="dropdown-menu">
-								<li ng-repeat="exporter in translators | filter:exporter.exports">
+								<li ng-repeat="exporter in exporters">
 									<a ng-click="export_story(exporter.type)">{{exporter.exportMenuTitle}}</a>
 								</li>
 							</ul>

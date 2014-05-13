@@ -9,7 +9,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 
 	$scope.operators          = Operators;
 	$scope.genres             = Genres;
-	$scope.translators        = $translators.all();
+	$scope.exporters          = $translators.exporters();
 	$scope.alerts             = [];
 	$scope.prev_passage       = null;
 	$scope.picking            = false;

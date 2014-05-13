@@ -14,7 +14,7 @@
 		<div class="container">
 			<div class="row profilesList">
 				<ul class="list-unstyled">
-					<li ng-repeat="p in profiles.all" class="col-md-4 col-sm-6"><div>
+					<li ng-repeat="p in profiles.all" class="col-md-4 col-sm-6 fade-animation"><div>
 						<h3 ng-show="profiles.current.id != p.id"><a ng-click="pick_profile(p)"><span class="glyphicon glyphicon-user"></span> {{ p.name }}</a></h3>
 						<h3 ng-show="profiles.current.id == p.id">
 							<div class="input-group">
