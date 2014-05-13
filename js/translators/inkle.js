@@ -8,13 +8,13 @@ function(Story) {
 		datatype: 'text/javascript',
 
 		importMenuTitle: 'Import from Inkle File',
-		imports: [ 'json' ],
+		//imports: [ 'json' ],
 		import: function(data) {
 
 		},
 
 		exportMenuTitle: 'Export to Inkle',
-		exports: 'json',
+		//exports: 'json',
 		export: function(story) {
 
 		}

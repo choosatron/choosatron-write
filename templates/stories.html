@@ -6,10 +6,10 @@
 
 	<ul class="list-inline list-icon-menu h4">
 		<li><a ng-click="new_story()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
-		<li class="dropdown" ng-show="translators">
+		<li class="dropdown" ng-show="importers">
 			<a data-toggle="dropdown"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="importer in translators | filter:importer.imports">
+				<li ng-repeat="importer in importers">
 					<a ng-click="import_story(importer.type)">{{importer.importMenuTitle}}</a>
 				</li>
 			</ul>
@@ -66,7 +66,7 @@
 									<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
 									<ul class="dropdown-menu">
-										<li ng-repeat="exporter in translators | filter:exporter.exports">
+										<li ng-repeat="exporter in exporters">
 											<a ng-click="export_story(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
 										</li>
 									</ul>

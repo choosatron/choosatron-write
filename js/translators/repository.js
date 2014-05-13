@@ -9,6 +9,18 @@ function($file, $q) {
 			return classes;
 		},
 
+		exporters: function() {
+			return classes.filter(function(c) {
+				return c.exports && c.exports.length;
+			});
+		},
+
+		importers: function() {
+			return classes.filter(function(c) {
+				return c.imports && c.imports.length;
+			});
+		},
+
 		get: function(type) {
 			return classes.find(function(c) {
 				if (c.type == type) {

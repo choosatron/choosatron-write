@@ -8,7 +8,8 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 	$scope.profile            = null;
 	$scope.stories_sort       = 'modified';
 	$scope.stories_sort_desc  = true;
-	$scope.translators        = $translators.all();
+	$scope.exporters          = $translators.exporters();
+	$scope.importers          = $translators.importers();
 
 	$profiles.load().then(function() {
 		if (!$profiles.current) {

@@ -73,7 +73,7 @@ function(Story, Passage, Choice) {
 		},
 
 		exportMenuTitle: 'Export to Twine Format',
-		exports: 'twee',
+		//exports: 'twee',
 		export: function(story) {
 			throw new Error('not implemented');
 		}
