@@ -122,6 +122,25 @@ function(Model, Passage) {
 			return entrances;
 		},
 
+		// Gathers all of the commands used in the story
+		// and returns an array
+		collect_commands: function() {
+			var cmds = [];
+			function add(cmd) {
+				if (!cmd.empty()) {
+					cmds.push(cmd);
+				}
+			};
+			this.each_passage(function(p) {
+				p.each_choice(function(c) {
+					add(c.condition);
+					c.updates.forEach(add);
+				});
+			});
+			console.debug('FOUND', cmds);
+			return cmds;
+		},
+
 		load_passages: function(passages) {
 			var i;
 

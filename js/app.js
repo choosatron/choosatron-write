@@ -12,7 +12,9 @@ angular.module('storyApp', [
 	'storyApp.directives', 
 	'storyApp.controllers',
 	'ngAnimate',
-	'ngRoute'])
+	'ngRoute',
+	'ui.utils'
+])
 
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/stories', {templateUrl: 'templates/stories.html', controller: 'StoriesCtrl'});

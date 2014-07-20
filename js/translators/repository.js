@@ -1,6 +1,10 @@
 angular.module('storyApp.translators')
 .factory('$translators', ['$file', '$q', 
-'JsonTranslator', 'TwineTranslator', 'ChoosatronTranslator', 'InkleTranslator', 
+'JsonTranslator', 
+'TwineTranslator', 
+'ChoosatronTranslator', 
+'InkleTranslator',
+'HtmlTranslator',
 function($file, $q) {
 	var classes = Array.prototype.splice.call(arguments, 2); 
 
@@ -87,7 +91,14 @@ function($file, $q) {
 			var datatype = translator.datatype;
 			var data = translator.export(story);
 
-			return $file.export(story.title, extension, data, datatype);
+      if (data && data.then) {
+        data.then(function(rsp) {
+          $file.export(story.title, extension, rsp, datatype);
+        })
+      }
+      else {
+			  return $file.export(story.title, extension, data, datatype);
+      }
 		}
 	};
 }]);

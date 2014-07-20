@@ -7,6 +7,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	$scope.story              = null;
 	$scope.passage            = null;
 	$scope.profiles           = $profiles;
+	$scope.variables          = [];
 
 	$scope.operators          = Operators;
 	$scope.genres             = Genres;
@@ -63,6 +64,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 			$scope.story = result.story;
 			$scope.passage = result.story.get_opening();
 			$scope.show_story_details = result.story.passages.length < 2;
+			loadVariables();
 
 			// Update the entry record
 			$profiles.current.save_entry(entryId, result.story);
@@ -73,6 +75,15 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 
 		}, onFail);
 	});
+
+	function loadVariables() {
+		var cmds = $scope.story.collect_commands();
+		var vars = [];
+		cmds.forEach(function(cmd) {
+			vars.push(cmd.variable);
+		});
+		$scope.variables = angular.toJson(vars);
+	};
 
 	function ensurePassage(passage) {
 		if (!$scope.passage) {
