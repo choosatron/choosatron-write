@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="storyApp" ng-csp>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- 3rd party -->
+<script src="js/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/bower_components/angular/angular.min.js"></script>
+<script src="js/bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="js/bower_components/angular-route/angular-route.min.js"></script>
+<script src="js/bower_components/angular-ui-utils/ui-utils.min.js"></script>
+<script src="js/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Make some ECMAScript 6 functions available -->
+<script src="js/utils/polyfill.js"></script>
+
+<!-- The app! -->
+<script src="js/app/app.js"></script>
+
+<!-- custom angular -->
+<script src="js/app/directives.js"></script>
+<script src="js/app/filters.js"></script>
+
+<!-- utility -->
+<script src="js/utils/file.js"></script>
+<script src="js/utils/random.js"></script>
+<script src="js/utils/shared.js"></script>
+<script src="js/utils/eventhandler.js"></script>
+
+<!-- storage -->
+<script src="js/storage/engines.js"></script>
+<script src="js/storage/storage.js"></script>
+<script src="js/storage/autosave.js"></script>
+<script src="js/storage/fileentryautosave.js"></script>
+
+<!-- data models -->
+<script src="js/models/model.js"></script>
+<script src="js/models/profile.js"></script>
+<script src="js/models/genres.js"></script>
+<script src="js/models/command.js"></script>
+<script src="js/models/operators.js"></script>
+<script src="js/models/story.js"></script>
+<script src="js/models/passage.js"></script>
+<script src="js/models/choice.js"></script>
+<script src="js/models/playback.js"></script>
+
+<!-- databridge -->
+<script src="js/databridge/profiles.js"></script>
+
+<!-- translators -->
+<script src="js/translators/repository.js"></script>
+<script src="js/translators/json.js"></script>
+<script src="js/translators/twine.js"></script>
+<script src="js/translators/inkle.js"></script>
+<script src="js/translators/html.js"></script>
+<script src="js/translators/choosatron.js"></script>
+
+<!-- Controllers -->
+<script src="js/controllers/profiles.js"></script>
+<script src="js/controllers/stories.js"></script>
+<script src="js/controllers/story.js"></script>
+<script src="js/controllers/playback.js"></script>
+
+<link rel="stylesheet" href="js/bower_components/angular/angular-csp.css" />
+<link rel="stylesheet" href="js/bower_components/bootstrap/dist/css/bootstrap.min.css"></script>
+<link rel="stylesheet" href="css/app-ui.css" />
+
+</head>
+<body>
+
+<ng-view></ng-view>
+
+<ng-include src="'templates/modals.html'"></ng-include>
+
+</body>
+</html>

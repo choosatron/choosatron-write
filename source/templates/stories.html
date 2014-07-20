@@ -1,0 +1,84 @@
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h4 pull-left">ChoiceWright</p>
+		<p class="h5 pull-right" ng-include="'templates/profile-picker.html'"></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<li><a ng-click="new_story()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
+		<li class="dropdown" ng-show="importers">
+			<a data-toggle="dropdown"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a>
+			<ul class="dropdown-menu">
+				<li ng-repeat="importer in importers">
+					<a ng-click="import_story(importer.type)">{{importer.importMenuTitle}}</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="container storiesListMenu" ng-show="profile.entries">
+		<div class="btn-group btn-group-justified">
+			<div class="btn-group">
+				<button class="btn btn-default" ng-click="sort_stories('title')">
+					<span class="glyphicon glyphicon-font"></span>
+					title
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'title' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'title' && stories_sort_desc)}"></span>
+				</button>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-default" ng-click="sort_stories('created')">
+					<span class="glyphicon glyphicon-time"></span> 
+					created 
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'created' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'created' && stories_sort_desc)}"></span>
+				</button>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-default" ng-click="sort_stories('modified')">
+					<span class="glyphicon glyphicon-dashboard"></span> 
+					modified 
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'modified' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'modified' && stories_sort_desc)}"></span>
+				</button>
+			</div>
+		</div>
+	</div><!-- .container -->
+
+	<div class="scrollable">
+		<div class="container">
+			<div class="row storiesList">
+				<ul class="list-unstyled">
+					<li ng-repeat="entry in profile.entries | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6 fade-animation"><div>
+						<h3><a ng-click="edit_story(entry)">{{ entry.title }}</a></h3>
+
+						<ul class="list-unstyled">
+							<li><span class="glyphicon glyphicon-time"></span> {{ entry.created | date }}</li>
+							<li><span class="glyphicon glyphicon-dashboard"></span> {{ entry.modified | date }}</li>
+							<li><strong>By:</strong> {{ entry.author || 'Author' }}</li>
+							<li><strong>Genre:</strong> {{ entry.genre || 'Genre' }}</li>
+						</ul>
+
+						<p>{{ entry.description || 'Description' }}</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li>
+								<span class="dropdown">
+									<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
+
+									<ul class="dropdown-menu">
+										<li ng-repeat="exporter in exporters">
+											<a ng-click="export_story(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
+										</li>
+									</ul>
+								</span>
+							</li>
+							<!-- TODO: create support for duplicate -->
+							<li><a class="icon-subtle" ng-click="duplicate_story(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a confirm-click="delete_story(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Remove</li>
+						</ul>
+					</div></li>
+				</ul>
+			</div><!-- .storiesList -->
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->

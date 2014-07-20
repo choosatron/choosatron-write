@@ -1,0 +1,26 @@
+{
+	"manifest_version": 2,
+	"name": "ChoiceWright",
+	"description": "Interactive fiction writing platform originally designed for use with the Choosatron Deluxe Adventure Matrix hardware device. Find out more at http://choosatron.com",
+	"version": "0.1",
+	"app": {
+		"background": {
+			"scripts": [
+				"js/background.js"
+			]
+		}
+	},
+	"icons": { "16": "img/icon_16.png", "48": "img/icon_48.png", "128": "img/icon_128.png" },
+	"offline_enabled": true,
+	"permissions": [
+		"clipboardRead",
+		"clipboardWrite",
+		"fileBrowserHandler",
+		{"fileSystem": ["write", "retainEntries", "directory"]},
+		"geolocation",
+		"identity",
+		"storage",
+		"syncFileSystem",
+		"unlimitedStorage"
+	]
+}

@@ -1,0 +1,47 @@
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h5 pull-left"><a ng-click="show_stories_menu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
+		<p class="h5 pull-right" ng-include="'templates/profile-picker.html'"></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<li><a ng-click="new_profile()"><span class="glyphicon glyphicon-plus"></span> New Profile</a></li>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="scrollable">
+		<div class="container">
+			<div class="row profilesList">
+				<ul class="list-unstyled">
+					<li ng-repeat="p in profiles.all" class="col-md-4 col-sm-6 fade-animation"><div>
+						<h3 ng-show="profiles.current.id != p.id"><a ng-click="pick_profile(p)"><span class="glyphicon glyphicon-user"></span> {{ p.name }}</a></h3>
+						<div class="form form-vertical" ng-show="profiles.current.id == p.id">
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-user"></span> 
+								</span>
+								<input class="form-control" ng-model="profiles.current.name">
+								<span class="input-group-btn">
+									<button class="btn btn-default" ng-click="save_profile()">
+										<span class="glyphicon glyphicon-floppy-{{saveState}}"></span>
+									</button>
+								</span>
+							</div>
+							<div class="checkbox">
+								<label>
+									Autosave stories?
+									<input id="autosave" type="checkbox" ng-model="profiles.current.autosave">
+								</label>
+							</div>
+						</div>
+						<ul class="list-unstyled">
+							<li><span class="glyphicon glyphicon-time"></span> {{ p.created | date }}</li>
+							<li><span class="glyphicon glyphicon-book"></span> {{ p.entries.length }} {{ p.entries.length == 1 ? 'Story' : 'Stories' }}</li>
+						</ul>
+					</div></li>
+				</ul>
+			</div><!-- .profilesList -->
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html ng-app="storyApp" ng-csp>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script src="../js/jquery.min.js"></script>
+<!-- <script src="../js/angular.min.js"></script> -->
+<!-- <script src="../js/ui-bootstrap.min.js"></script> -->
+<script src="../js/bootstrap.min.js"></script>
+<!-- <script src="../js/file.js"></script> -->
+<!-- <script src="../js/storage.js"></script> -->
+<!-- <script src="../js/models.js"></script> -->
+<!-- <script src="../js/app.js"></script> -->
+
+<!-- <link rel="stylesheet" href="../css/angular-csp.css" /> -->
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
+<!-- <link rel="stylesheet" href="../css/bootstrap-theme.min.css" /> -->
+<!-- <link rel="stylesheet" href="../css/app.css" /> -->
+
+<link rel="stylesheet" href="../css/ui/base.css" />
+
+</head>
+<body ng-controller="StoryCtrl">
+
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h4 pull-left">Archimedes</p>
+
+		<p class="h5 pull-right"><a href="#"><span class="glyphicon glyphicon-user"></span> Heather Fields</a></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
+		<li><a href="#"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a></li>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="container storiesListMenu">
+		<ul class="list-inline">
+			<li><strong>Sort:</strong></li>
+			<li><a href="#"><span class="glyphicon glyphicon-font"></span></a></li>
+			<li><a href="#"><span class="glyphicon glyphicon-time"></span><span class="glyphicon glyphicon-arrow-down"></span></a></li>
+		</ul>
+	</div><!-- .container -->
+
+	<div class="scrollable">
+		<div class="container">
+			<div class="row storiesList">
+				<ul class="list-unstyled">
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">The Story About the Crystal Skull</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> Author One</li>
+							<li><strong>Genre:</strong> Survival Horror</li>
+						</ul>
+
+						<p>Once upon a time there was a crystal skull hidden in a cave.  Some say there's a horrible curse and possibly some mummies.  Will you finally be the one who discovers where it is hidden?  Can you avoid the curse?  And mummies?</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Orangutan Island</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> Cyril Figgis</li>
+							<li><strong>Genre:</strong> Childrens Lit</li>
+						</ul>
+
+						<p>It's an adventure about apes on islands. Make sure not to call them monkeys.  They really don't like that.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Some Other Story Title</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> A. Nother Author</li>
+							<li><strong>Genre:</strong> Erotic Cookbook</li>
+						</ul>
+
+						<p>This is an interesting and useful description of this story.  It might have a few sentences.  If it has too many they will probably get cut off with an ellipsis.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+					
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Some Other Story Title</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> A. Nother Author</li>
+							<li><strong>Genre:</strong> Erotic Cookbook</li>
+						</ul>
+
+						<p>This is an interesting and useful description of this story.  It might have a few sentences.  If it has too many they will probably get cut off with an ellipsis.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Some Other Story Title</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> A. Nother Author</li>
+							<li><strong>Genre:</strong> Erotic Cookbook</li>
+						</ul>
+
+						<p>This is an interesting and useful description of this story.  It might have a few sentences.  If it has too many they will probably get cut off with an ellipsis.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Some Other Story Title</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> A. Nother Author</li>
+							<li><strong>Genre:</strong> Erotic Cookbook</li>
+						</ul>
+
+						<p>This is an interesting and useful description of this story.  It might have a few sentences.  If it has too many they will probably get cut off with an ellipsis.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Some Other Story Title</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> A. Nother Author</li>
+							<li><strong>Genre:</strong> Erotic Cookbook</li>
+						</ul>
+
+						<p>This is an interesting and useful description of this story.  It might have a few sentences.  If it has too many they will probably get cut off with an ellipsis.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+
+					<li class="col-md-4 col-sm-6"><div>
+						<h3><a href="passage-editor.html">Some Other Story Title</a></h3>
+
+						<ul class="list-unstyled">
+							<li><strong>By:</strong> A. Nother Author</li>
+							<li><strong>Genre:</strong> Erotic Cookbook</li>
+						</ul>
+
+						<p>This is an interesting and useful description of this story.  It might have a few sentences.  If it has too many they will probably get cut off with an ellipsis.</p>
+
+						<ul class="list-inline list-icon-menu">
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a href="#" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Delete</li>
+						</ul>
+					</div></li>
+				</ul>
+			</div><!-- .storiesList -->
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->
+
+</body>
+</html>
