@@ -1,5 +1,6 @@
 *.vim
 *.sublime-project
 .DS_Store
-source/js/bower_components
+source/bower_components
+build/bower_components
 node_modules

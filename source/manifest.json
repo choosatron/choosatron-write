@@ -6,7 +6,7 @@
 	"app": {
 		"background": {
 			"scripts": [
-				"js/background.js"
+				"background.min.js"
 			]
 		}
 	},

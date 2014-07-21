@@ -1,7 +1,4 @@
 module.exports = function(grunt) {
-	var buildjs = 'build/js/*/*.js';
-	var buildcss = 'build/css/*.css';
-
 	grunt.initConfig({
 		copy: {
 			build: {
@@ -17,17 +14,17 @@ module.exports = function(grunt) {
 				src: [ 'build' ]
 			},
 			stylesheets: {
-				src: [ buildcss, '!build/application.css' ]
+				src: [ 'build/css', '!build/app.min.css' ]
 			},
 			scripts: {
-				src: [ buildjs, '!build/application.js', '!build/js/*.js' ]
+				src: [ 'build/js', '!build/app.min.js' ]
 			}
 		},
 
 		cssmin: {
 			build: {
 				files: {
-					'build/application.css': [ buildcss ]
+					'build/app.min.css': [ 'build/css/*.css' ]
 				}
 			}
 		},
@@ -38,7 +35,8 @@ module.exports = function(grunt) {
 					mangle: false
 				},
 				files: {
-					'build/application.js': [ buildjs ]
+					'build/app.min.js': 'build/js/*/*.js',
+					'build/background.min.js': 'build/js/background.js'
 				}
 			}
 		},
@@ -50,7 +48,7 @@ module.exports = function(grunt) {
 			},
 
 			scripts: {
-				files: 'source/js/*.js',
+				files: [ 'source/js/*.js', 'source/js/*/*.js' ],
 				tasks: [ 'scripts' ]
 			},
 
