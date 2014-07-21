@@ -9,6 +9,12 @@ module.exports = function(grunt) {
 			}
 		},
 
+		'bower-install-simple': {
+			options: {
+				directory: 'build/lib'
+			}
+		},
+
 		clean: {
 			build: {
 				src: [ 'build' ]
@@ -60,6 +66,7 @@ module.exports = function(grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-bower-install-simple');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -78,9 +85,15 @@ module.exports = function(grunt) {
 	);
 
 	grunt.registerTask(
+		'bower-install',
+		"Install 3rd-party dependencies",
+		[ 'bower-install-simple' ]
+	);
+
+	grunt.registerTask(
 		'build',
 		"Compiles all of the assets and copies the files to the build directory.",
-		[ "clean:build", "copy", "stylesheets", "scripts" ]
+		[ "clean:build", "bower-install", "copy", "stylesheets", "scripts" ]
 	);
 
 	grunt.registerTask(
