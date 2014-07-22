@@ -44,6 +44,17 @@ module.exports = function(grunt) {
 					'build/app.min.js': 'build/js/*/*.js',
 					'build/background.min.js': 'build/js/background.js'
 				}
+			},
+			debug: {
+				options: {
+					mangle: false,
+					beautify: true,
+					compress: false
+				},
+				files: {
+					'build/app.min.js': 'build/js/*/*.js',
+					'build/background.min.js': 'build/js/background.js'
+				}
 			}
 		},
 
@@ -55,7 +66,7 @@ module.exports = function(grunt) {
 
 			scripts: {
 				files: [ 'source/js/*.js', 'source/js/*/*.js' ],
-				tasks: [ 'scripts' ]
+				tasks: [ 'debug-scripts' ]
 			},
 
 			html: {
@@ -81,7 +92,13 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'scripts',
 		"Compiles the javascript files",
-		[ "uglify", "clean:scripts" ]
+		[ "uglify:build", "clean:scripts" ]
+	);
+
+	grunt.registerTask(
+		'debug-scripts',
+		"Beautifies the javascript files",
+		[ "uglify:debug", "clean:scripts" ]
 	);
 
 	grunt.registerTask(
@@ -97,8 +114,14 @@ module.exports = function(grunt) {
 	);
 
 	grunt.registerTask(
+		'debug',
+		"Creates a debug version all of the assets and copies the files to the build directory.",
+		[ "clean:build", "bower-install", "copy", "stylesheets", "debug-scripts" ]
+	);
+
+	grunt.registerTask(
 		'default',
 		"Watches the project for changes, automatically builds them.",
-		[ 'build', 'watch' ]
+		[ 'debug', 'watch' ]
 	);
 };

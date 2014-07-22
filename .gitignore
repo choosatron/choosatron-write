@@ -1,5 +1,5 @@
 *.vim
 *.sublime-project
 .DS_Store
-build/lib
+build/*
 node_modules
