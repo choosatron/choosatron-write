@@ -1,9 +1,30 @@
 # ChoiceWright #
 
 ## Dependencies ##
+ - [chrome](http://www.google.com/chrome/)
  - [bower](http://bower.io/)
  - [nodejs](http://nodejs.org/)
  - [grunt](http://gruntjs.com/)
+
+## Getting Started ##
+
+0. Install dependencies.
+   - Install [chrome](http://www.google.com/chrome/)
+   - Install [nodejs](http://nodejs.org/download/)
+   - `npm install -g bower`
+   - `npm install -g grunt`
+1. `git clone https://path.to/git ./choicewright`
+2. `cd ./choicewright`
+3. `grunt build`
+
+## Installing the App ##
+
+1. **ChoiceWright** is a Chrome Packaged App. You will need to use grunt to build the application before running it as an application.
+ - `grunt build` will create a minified version of the application.
+ - `grunt debug` will create a debuggable version of the application. This will also keep a watch for any changes you make to the files in `./source/` and re-build the application if any changes are detected.
+2. Open Chrome and go to your [Chrome extensions](chrome://extensions)
+3. Ensure that "Developer mode" is checked.
+4. Click "Load unpacked extension..." and select the `./choicewright/build/` directory.
 
 =======
 
