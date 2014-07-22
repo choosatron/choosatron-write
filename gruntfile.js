@@ -1,5 +1,17 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
+		clean: {
+			build: {
+				src: [ 'build' ]
+			},
+			stylesheets: {
+				src: [ 'build/css', '!build/app.min.css' ]
+			},
+			scripts: {
+				src: [ 'build/js', '!build/app.min.js' ]
+			}
+		},
+
 		copy: {
 			build: {
 				cwd: 'source',
@@ -15,15 +27,27 @@ module.exports = function(grunt) {
 			}
 		},
 
-		clean: {
-			build: {
-				src: [ 'build' ]
-			},
-			stylesheets: {
-				src: [ 'build/css', '!build/app.min.css' ]
-			},
-			scripts: {
-				src: [ 'build/js', '!build/app.min.js' ]
+		wiredep: {
+			target: {
+				src: [
+					'build/*.html'
+				],
+				cwd: '.',
+				directory: 'build/lib/'
+			}
+		},
+
+		useminPrepare: {
+			html: 'build/*.html',
+			options: {
+				dest: 'build'
+			}
+		},
+
+		usemin: {
+			html: 'build/*.html',
+			options: {
+				dest: 'build'
 			}
 		},
 
@@ -78,6 +102,9 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-bower-install-simple');
+	grunt.loadNpmTasks('grunt-wiredep');
+	grunt.loadNpmTasks('grunt-usemin');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -102,21 +129,27 @@ module.exports = function(grunt) {
 	);
 
 	grunt.registerTask(
-		'bower-install',
+		'bower',
 		"Install 3rd-party dependencies",
-		[ 'bower-install-simple' ]
+		[ 'bower-install-simple', 'wiredep' ]
+	);
+
+	grunt.registerTask(
+		'optimize',
+		"Replaces included files with the minified versions.",
+		[ "useminPrepare", "concat:generated", "cssmin:generated", "uglify:generated", "usemin" ]
 	);
 
 	grunt.registerTask(
 		'build',
 		"Compiles all of the assets and copies the files to the build directory.",
-		[ "clean:build", "bower-install", "copy", "stylesheets", "scripts" ]
+		[ "clean:build", "copy", "stylesheets", "scripts", "bower", "optimize" ]
 	);
 
 	grunt.registerTask(
 		'debug',
 		"Creates a debug version all of the assets and copies the files to the build directory.",
-		[ "clean:build", "bower-install", "copy", "stylesheets", "debug-scripts" ]
+		[ "clean:build", "copy", "stylesheets", "debug-scripts", "bower" ]
 	);
 
 	grunt.registerTask(
