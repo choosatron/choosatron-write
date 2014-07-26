@@ -15,7 +15,8 @@
    - `npm install -g grunt`
 1. `git clone https://path.to/git ./choicewright`
 2. `cd ./choicewright`
-3. `grunt build`
+3. `npm install`
+4. `grunt build`
 
 ## Installing the App ##
 
