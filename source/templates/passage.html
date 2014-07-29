@@ -10,7 +10,7 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}">
+			<li ng-repeat="entrance in passage.entrances" ng-class="{lastActive: (entrance == prev_passage)}">
 				<a ng-click="edit_passage(entrance.id)">
 					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
 					<div>

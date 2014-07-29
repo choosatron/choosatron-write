@@ -94,42 +94,24 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	function autosave(result) {
 		var saver = $scope.saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
 
-		var getStoryId = function(s) {
-			return s && s.id;
-		}
+		var handleStoryChange = function(nv, ov, scope) {
+			if ($profiles.current.autosave) {
+				saver.save(result.story.id, nv.object());
+			}
+			else {
+				$scope.save_state = 'floppy-save';
+			}
+		};
 
-		var getStoryForSave = function(s) {
-			if (!s) return null;
-
-			// set the date asynchronously so it doesn't fire a digest call
-			$timeout(function() {
-				s.modified = Date.now();
-			});
-
-			return s.object();
-		}
-
-		if ($profiles.current.autosave) {
-			saver.watch('story', getStoryId, getStoryForSave);
-		}
-		else {
-			$scope.$watch('story', function(nv, ov) {
-				if (nv !== ov) {
-					$scope.save_state = 'floppy-save';
-				}
-			}, true);
-		}
+		$scope.$watch('story', handleStoryChange, true);
 
 		saver.onSaving(function(key, value) {
 			$scope.save_state = 'transfer';
 		});
 
-		saver.onThrottling(function(key, time) {
-			$scope.save_state = 'transfer';
-		});
-
 		saver.onSaved(function(key, value) {
 			$timeout(function() {
+				var story = $scope.story;
 				$scope.$apply(function() {
 					$scope.save_state = 'floppy-disk';
 				});
@@ -201,6 +183,9 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 		else {
 			$scope.prev_passage = $scope.passage;
 		}
+
+		// Collect the entrances just once to improve performance
+		passage.entrances = $scope.story.collect_entrances(passage);
 
 		$scope.passage = passage;
 	};
