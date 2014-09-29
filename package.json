@@ -8,8 +8,8 @@
   ],
   "description": "Write Interactive Fiction",
   "main": "window-ui.html",
-  "license": "MIT",
-  "homepage": "chooseatron.com",
+  "license": "NOT DETERMINED YET",
+  "homepage": "choosatron.com",
   "dependencies": {
     "grunt": "0.x.x",
     "grunt-autoprefixer": "0.2.x",
