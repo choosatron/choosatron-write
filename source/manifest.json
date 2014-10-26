@@ -19,8 +19,9 @@
 		{"fileSystem": ["write", "retainEntries", "directory"]},
 		"geolocation",
 		"identity",
+		"serial",
 		"storage",
 		"syncFileSystem",
-		"unlimitedStorage"
+		"unlimitedStorage",
 	]
 }
