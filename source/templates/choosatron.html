@@ -1,0 +1,28 @@
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h5 pull-left"><a ng-click="location.path('stories')"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<h4>Choosatron</h4>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="scrollable">
+		<div class="container">
+			<div class="row">
+				<div ng-hide="devices && devices.length" class="col">
+					<a ng-click="connect()" class="btn btn-default">Connect to your Choosatron</a>
+					<div class="alert" ng-show="scanned">
+						<h3>No Choosatrons found</h3>
+					</div>
+				</div>
+				<div ng-show="devices && devices.length" class="col">
+					<h2>Connected!</h2>
+				</div>
+			</div>
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->
+</div>

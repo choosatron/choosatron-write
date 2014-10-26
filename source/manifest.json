@@ -16,12 +16,22 @@
 		"clipboardRead",
 		"clipboardWrite",
 		"fileBrowserHandler",
-		{"fileSystem": ["write", "retainEntries", "directory"]},
 		"geolocation",
 		"identity",
-		"serial",
 		"storage",
 		"syncFileSystem",
 		"unlimitedStorage",
+		"usb"
+	],
+	"optional_permissions": [
+		{
+			"fileSystem": ["write", "retainEntries", "directory"]
+		},
+		{
+			"usbDevices": [
+				{ "vendorId": 469, "productId": 24701 },
+				{ "vendorId": 469, "productId": 24703 }
+			]
+		}
 	]
 }
