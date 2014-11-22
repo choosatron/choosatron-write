@@ -1,5 +1,6 @@
 angular.module('storyApp.utils')
 .factory('Usb', ['$q', 'Convert', function($q, Convert) {
+
 	function Usb() {
 		this.connections = null;
 	}
@@ -19,7 +20,42 @@ angular.module('storyApp.utils')
 	};
 
 	Usb.prototype.connect = function() {
-		var deferred = $q.defer();
+		var SPARK_VID = 7504; // 0x1D50;
+		var SPARK_CORE_SERIAL_PID = 24701; // 0x607D;
+		var SPARK_CORE_DFU_PID = 24703; // 0x607F;
+		var DEVICE_INFO = { "vendorId": SPARK_VID, "productId": SPARK_CORE_SERIAL_PID };
+
+		var permissionObj = {permissions: [{'usbDevices': [DEVICE_INFO] }]};
+
+		chrome.permissions.contains(permissionObj, function(result) {
+			if (result) {
+				gotPermission();
+			} else {
+				console.log('App not currently granted the "usbDevices" permission, requesting...');
+				chrome.permissions.request(permissionObj, function(result) {
+					if (result) {
+						gotPermission();
+					} else {
+						console.log('App was not granted the "usbDevices" permission.');
+						console.log(chrome.runtime.lastError);
+					}
+				});
+			}
+		});
+
+		function gotPermission(result) {
+			console.log("Got permission!");
+			chrome.usb.findDevices(DEVICE_INFO, function(devices) {
+				if (!devices || !devices.length) {
+				  console.log('device not found');
+				  return;
+				}
+				console.log('Found device: ' + devices[0].handle);
+				console.log(devices[0]);
+			});
+		}
+
+		/*var deferred = $q.defer();
 
 		var allowed = this.getAllowedDevices();
 		var processed = 0;
@@ -41,9 +77,8 @@ angular.module('storyApp.utils')
 		this.connections = [];
 		allowed.forEach(find.bind(this));
 
-		return deferred.promise;
+		return deferred.promise;*/
 	};
-
 	Usb.prototype.write = function(str) {
 		var deferred = $q.defer();
 

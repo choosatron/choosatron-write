@@ -7,10 +7,11 @@ function ChoosatronCtrl($scope, $location, $translators, Usb, Story) {
 	$scope.location = $location;
 
 	$scope.connect = function() {
-		Usb.connect()
-		.then(function(list) {
+		console.log("Connect to USB");
+		Usb.connect();
+		/*.then(function(list) {
 			$scope.devices = list;
 			$scope.scanned = true;
-		});
+		});*/
 	};
 }]);
