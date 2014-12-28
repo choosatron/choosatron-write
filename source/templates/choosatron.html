@@ -12,17 +12,17 @@
 	<div class="scrollable">
 		<div class="container">
 			<div class="row">
-				<div ng-hide="devices && devices.length" class="col">
-					<a ng-click="connect()" class="btn btn-default">Connect to your Choosatron: {{msg}}</a>
-					<div class="alert" ng-show="hasPermission">
+				<div ng-hide="usb.serialDevices && usb.serialDevices.length" class="col">
+					<a ng-click="usb.connect()" class="btn btn-default">Connect to your Choosatron</a>
+					<div class="alert" ng-hide="usb.getHasPermissions()">
 						<h3>USB Permissions Required</h3>
 						<a ng-click="requestPermissions()" class="btn btn-default">Request Permissions</a>
 					</div>
-					<div class="alert" ng-hide="devices.length">
+					<div class="alert" ng-hide="usb.serialDevices.length">
 						<h3>No Choosatrons Detected</h3>
 					</div>
 				</div>
-				<div ng-show="serialDevices && serialDevices.length" class="col">
+				<div ng-show="usb.serialDevices && usb.serialDevices.length" class="col">
 					<h2>Connected!</h2>
 
 				</div>
@@ -35,7 +35,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr ng-repeat="device in serialDevices">
+					<tr ng-repeat="device in usb.serialDevices">
 					    <td>{{ device.device }}</td>
 					    <td>{{ device.productId }}</td>
 					    <td>{{ device.vendorId }}</td>

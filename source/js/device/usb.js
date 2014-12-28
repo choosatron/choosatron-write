@@ -3,10 +3,10 @@ angular.module('storyApp.utils')
 
 	function Usb() {
 		this.connections = null;
-		this.serialDevices = null;
-		this.dfuDevices = null;
+		this.serialDevices = [];
+		this.dfuDevices = [];
 		this.allowedDevices = this.getAllowedDevices();
-		this.hasPermissions = false;
+		this.setHasPermissions(false);
 		this.msg = "Starting Message";
 		/*this.getAllowedDevices().then(function(devices) {
 			this.allowedDevices = devices;
@@ -14,14 +14,11 @@ angular.module('storyApp.utils')
 		});*/
 		//this.checkPermissions();
 
-		Usb.prototype.permissions = function() {
-			console.log("Perm: " + this.hasPermissions);
-			return this.hasPermissions;
-		};
 
-		Usb.prototype.setHasPermissions = function(aHasPermissions) {
-			this.hasPermissions = aHasPermissions;
-		};
+
+		/*Usb.prototype.setHasPermissions = function(aHasPermissions) {
+			//this.hasPermissions = aHasPermissions;
+		};*/
 	}
 
 	/*function Device(device) {
@@ -36,8 +33,13 @@ angular.module('storyApp.utils')
 		return this.hasPermission;
 	};*/
 
+	Usb.prototype.getHasPermissions = function() {
+		console.log("Perm: " + this.hasPermissions);
+		return this.hasPermissions;
+	};
+
 	Usb.prototype.setHasPermissions = function(aHasPermissions) {
-		angular.extend(this, hasPermissions)
+		this.hasPermissions = aHasPermissions;
 	};
 
 	Usb.prototype.deviceList = function() {
@@ -54,14 +56,13 @@ angular.module('storyApp.utils')
 
 	Usb.prototype.checkPermissions = function() {
 		var deferred = $q.defer();
+		var scope = this;
 
 		console.log("Checking permissions...");
 		var permissionObj = {permissions: [{'usbDevices': this.allowedDevices }]};
 		chrome.permissions.contains(permissionObj, function(result) {
 			console.log("Permission: " + result);
-			if (result) {
-				Usb.setHasPermissions(true);
-			}
+			scope.setHasPermissions(result);
 			deferred.resolve(result);
 		});
 
@@ -70,13 +71,15 @@ angular.module('storyApp.utils')
 
 	Usb.prototype.requestPermissions = function() {
 		var deferred = $q.defer();
-		allowed = this.allowedDevices;
+		var scope = this;
+
 		this.checkPermissions().then(function(result) {
 			if (!result) {
 				console.log("Requesting permissions...");
-				var permissionObj = {permissions: [{'usbDevices': allowed }]};
+				var permissionObj = {permissions: [{'usbDevices': scope.allowedDevices }]};
 				chrome.permissions.request(permissionObj, function(result) {
 					console.log("Permission: " + result);
+					scope.setHasPermissions(result);
 					deferred.resolve(result);
 				});
 			}
@@ -87,6 +90,7 @@ angular.module('storyApp.utils')
 
 	Usb.prototype.removePermissions = function() {
 		var deferred = $q.defer();
+		var scope = this;
 
 		console.log("Removing permissions...");
 		var permissionObj = {permissions: [{'usbDevices': this.allowedDevices }]};
@@ -103,18 +107,20 @@ angular.module('storyApp.utils')
 	};
 
 	Usb.prototype.updateSerialDeviceList = function() {
-		if (this.hasPermission) {
+		if (this.hasPermissions) {
 			console.log("Has permissions");
+			var scope = this;
 			// Index 0 is the Spark Core in Serial Mode
 			chrome.usb.getDevices(this.allowedDevices[0], function(devices) {
 				if (!devices || !devices.length) {
 				  //console.log('device not found');
 				  return;
 				}
-				this.serialDevices = devices;
+				scope.serialDevices = [];
 				devices.forEach(function(element, index, array) {
 					console.log("Serial Device: ");
 					console.log(element);
+					scope.serialDevices.push(element);
 				});
 				//console.log('Found Serial Device: ' + devices[0]);
 			});
@@ -122,16 +128,18 @@ angular.module('storyApp.utils')
 	};
 
 	Usb.prototype.updateDfuDeviceList = function() {
-		if (this.hasPermission) {
+		if (this.hasPermissions) {
+			var scope = this;
 			// Index 1 is the Spark Core in DFU Mode
 			chrome.usb.getDevices(this.allowedDevices[1], function(devices) {
 				if (!devices || !devices.length) {
 				  return;
 				}
-				this.dfuDevices = devices;
+				scope.dfuDevices = [];
 				devices.forEach(function(element, index, array) {
 					console.log("DFU Device: ");
 					console.log(element);
+					scope.dfuDevices.push(element);
 				});
 				//console.log('Found DFU Device: ' + devices[0]);
 			});

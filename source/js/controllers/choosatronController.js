@@ -4,15 +4,15 @@
 angular.module('storyApp.controllers')
 .controller('ChoosatronCtrl',  ['$scope', '$interval', '$location', '$translators', 'Usb', 'Story',
 function ChoosatronCtrl($scope, $interval, $location, $translators, Usb, Story) {
-	var usb = new Usb();
+	$scope.usb = new Usb();
 
 	$scope.location = $location;
 
 	//$scope.devices = Usb.deviceList();
-	$scope.hasPermission = Usb.permissions;
-	$scope.msg = Usb.msg;
-	$scope.serialDevices = Usb.serialDevices;
-	$scope.dfuDevices = Usb.dfuDevices;
+	//$scope.hasPermission = Usb.permissions;
+	//$scope.msg = Usb.msg;
+	//$scope.serialDevices = Usb.serialDevices;
+	//$scope.dfuDevices = Usb.dfuDevices;
 
 	var intervalPromise;
 
@@ -22,12 +22,12 @@ function ChoosatronCtrl($scope, $interval, $location, $translators, Usb, Story) 
 		}
 
 		intervalPromise = $interval(function() {
-			if (Usb.connected()) {
+			if ($scope.usb.connected()) {
 				$scope.stopDeviceScan();
 			} else {
 				console.log("Update scan!");
-				Usb.updateSerialDeviceList();
-				Usb.updateDfuDeviceList();
+				$scope.usb.updateSerialDeviceList();
+				$scope.usb.updateDfuDeviceList();
 			}
 		}, 5000);
 	};
@@ -41,12 +41,12 @@ function ChoosatronCtrl($scope, $interval, $location, $translators, Usb, Story) 
 	};
 
 	$scope.requestPermissions = function() {
-		Usb.requestPermissions();
+		$scope.usb.requestPermissions();
 	};
 
 	$scope.connect = function() {
 		console.log("Connect to USB");
-		Usb.connect();
+		$scope.usb.connect();
 		/*.then(function(list) {
 			$scope.devices = list;
 			$scope.scanned = true;
@@ -57,12 +57,12 @@ function ChoosatronCtrl($scope, $interval, $location, $translators, Usb, Story) 
 		$scope.stopDeviceScan();
 	});
 
-	Usb.checkPermissions().then(function(result) {
+	$scope.usb.checkPermissions().then(function(result) {
 		console.log("Actual permission: " + result);
-		Usb.hasPermissions = result;
+		//$scope.usb.hasPermissions = result;
 		$scope.startDeviceScan();
-		Usb.updateSerialDeviceList();
-		Usb.updateDfuDeviceList();
+		$scope.usb.updateSerialDeviceList();
+		$scope.usb.updateDfuDeviceList();
 	});
 
 }]);
