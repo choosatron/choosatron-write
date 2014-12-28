@@ -7,7 +7,6 @@ angular.module('storyApp.utils')
 		this.dfuDevices = [];
 		this.allowedDevices = this.getAllowedDevices();
 		this.setHasPermissions(false);
-		this.msg = "Starting Message";
 		/*this.getAllowedDevices().then(function(devices) {
 			this.allowedDevices = devices;
 			console.log(this.allowedDevices);
@@ -108,15 +107,14 @@ angular.module('storyApp.utils')
 
 	Usb.prototype.updateSerialDeviceList = function() {
 		if (this.hasPermissions) {
-			console.log("Has permissions");
 			var scope = this;
 			// Index 0 is the Spark Core in Serial Mode
 			chrome.usb.getDevices(this.allowedDevices[0], function(devices) {
+				scope.serialDevices = [];
 				if (!devices || !devices.length) {
 				  //console.log('device not found');
 				  return;
 				}
-				scope.serialDevices = [];
 				devices.forEach(function(element, index, array) {
 					console.log("Serial Device: ");
 					console.log(element);
@@ -132,10 +130,10 @@ angular.module('storyApp.utils')
 			var scope = this;
 			// Index 1 is the Spark Core in DFU Mode
 			chrome.usb.getDevices(this.allowedDevices[1], function(devices) {
+				scope.dfuDevices = [];
 				if (!devices || !devices.length) {
 				  return;
 				}
-				scope.dfuDevices = [];
 				devices.forEach(function(element, index, array) {
 					console.log("DFU Device: ");
 					console.log(element);

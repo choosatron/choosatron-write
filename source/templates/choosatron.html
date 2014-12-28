@@ -28,20 +28,34 @@
 				</div>
 				<table>
 					<thead>
-					<tr>
-					    <th>Device</th>
-					    <th>Product Id</th>
-					    <th>Vendor Id</th>
-					</tr>
+						<tr>
+							<th>Serial Device</th>
+							<th>Product Id</th>
+							<th>Vendor Id</th>
+						</tr>
 					</thead>
 					<tbody>
-					<tr ng-repeat="device in usb.serialDevices">
-					    <td>{{ device.device }}</td>
-					    <td>{{ device.productId }}</td>
-					    <td>{{ device.vendorId }}</td>
-					 </tr>
+						<tr ng-repeat="device in usb.serialDevices">
+							<td>{{ device.device }}</td>
+							<td>{{ device.productId }}</td>
+							<td>{{ device.vendorId }}</td>
+						 </tr>
 					</tbody>
-					</table>
+					<thead>
+						<tr>
+							<th>DFU Device</th>
+							<th>Product Id</th>
+							<th>Vendor Id</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="device in usb.dfuDevices">
+							<td>{{ device.device }}</td>
+							<td>{{ device.productId }}</td>
+							<td>{{ device.vendorId }}</td>
+						 </tr>
+					</tbody>
+				</table>
 			</div>
 		</div><!-- .container -->
 	</div><!-- .scrollable -->

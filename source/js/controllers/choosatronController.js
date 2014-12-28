@@ -58,8 +58,6 @@ function ChoosatronCtrl($scope, $interval, $location, $translators, Usb, Story) 
 	});
 
 	$scope.usb.checkPermissions().then(function(result) {
-		console.log("Actual permission: " + result);
-		//$scope.usb.hasPermissions = result;
 		$scope.startDeviceScan();
 		$scope.usb.updateSerialDeviceList();
 		$scope.usb.updateDfuDeviceList();
