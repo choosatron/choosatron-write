@@ -13,14 +13,35 @@
 		<div class="container">
 			<div class="row">
 				<div ng-hide="devices && devices.length" class="col">
-					<a ng-click="connect()" class="btn btn-default">Connect to your Choosatron</a>
-					<div class="alert" ng-show="scanned">
-						<h3>No Choosatrons found</h3>
+					<a ng-click="connect()" class="btn btn-default">Connect to your Choosatron: {{msg}}</a>
+					<div class="alert" ng-show="hasPermission">
+						<h3>USB Permissions Required</h3>
+						<a ng-click="requestPermissions()" class="btn btn-default">Request Permissions</a>
+					</div>
+					<div class="alert" ng-hide="devices.length">
+						<h3>No Choosatrons Detected</h3>
 					</div>
 				</div>
-				<div ng-show="devices && devices.length" class="col">
+				<div ng-show="serialDevices && serialDevices.length" class="col">
 					<h2>Connected!</h2>
+
 				</div>
+				<table>
+					<thead>
+					<tr>
+					    <th>Device</th>
+					    <th>Product Id</th>
+					    <th>Vendor Id</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="device in serialDevices">
+					    <td>{{ device.device }}</td>
+					    <td>{{ device.productId }}</td>
+					    <td>{{ device.vendorId }}</td>
+					 </tr>
+					</tbody>
+					</table>
 			</div>
 		</div><!-- .container -->
 	</div><!-- .scrollable -->

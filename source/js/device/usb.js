@@ -3,49 +3,156 @@ angular.module('storyApp.utils')
 
 	function Usb() {
 		this.connections = null;
+		this.serialDevices = null;
+		this.dfuDevices = null;
+		this.allowedDevices = this.getAllowedDevices();
+		this.hasPermissions = false;
+		this.msg = "Starting Message";
+		/*this.getAllowedDevices().then(function(devices) {
+			this.allowedDevices = devices;
+			console.log(this.allowedDevices);
+		});*/
+		//this.checkPermissions();
+
+		Usb.prototype.permissions = function() {
+			console.log("Perm: " + this.hasPermissions);
+			return this.hasPermissions;
+		};
+
+		Usb.prototype.setHasPermissions = function(aHasPermissions) {
+			this.hasPermissions = aHasPermissions;
+		};
 	}
 
-	function Device(device) {
+	/*function Device(device) {
 		this.device = device;
-	}
+	}*/
 
-	Usb.Device = Device;
+	//Usb.Device = Device;
+
+	//Usb.devices = [];
+
+	/*Usb.prototype.permission = function() {
+		return this.hasPermission;
+	};*/
+
+	Usb.prototype.setHasPermissions = function(aHasPermissions) {
+		angular.extend(this, hasPermissions)
+	};
+
+	Usb.prototype.deviceList = function() {
+		return this.devices;
+	};
 
 	Usb.prototype.getAllowedDevices = function() {
 		var manifest = chrome.runtime.getManifest();
-		var perms = manifest.optional_permissions.find(function(perm) {
-			return perm.usbDevices;
+		var perms = manifest.optional_permissions.find(function(perms) {
+			return perms.usbDevices;
 		});
 		return perms && perms.usbDevices;
 	};
 
-	Usb.prototype.connect = function() {
-		var SPARK_VID = 7504; // 0x1D50;
-		var SPARK_CORE_SERIAL_PID = 24701; // 0x607D;
-		var SPARK_CORE_DFU_PID = 24703; // 0x607F;
-		var DEVICE_INFO = { "vendorId": SPARK_VID, "productId": SPARK_CORE_SERIAL_PID };
+	Usb.prototype.checkPermissions = function() {
+		var deferred = $q.defer();
 
-		var permissionObj = {permissions: [{'usbDevices': [DEVICE_INFO] }]};
-
+		console.log("Checking permissions...");
+		var permissionObj = {permissions: [{'usbDevices': this.allowedDevices }]};
 		chrome.permissions.contains(permissionObj, function(result) {
+			console.log("Permission: " + result);
 			if (result) {
-				gotPermission();
-			} else {
-				console.log('App not currently granted the "usbDevices" permission, requesting...');
+				Usb.setHasPermissions(true);
+			}
+			deferred.resolve(result);
+		});
+
+		return deferred.promise;
+	};
+
+	Usb.prototype.requestPermissions = function() {
+		var deferred = $q.defer();
+		allowed = this.allowedDevices;
+		this.checkPermissions().then(function(result) {
+			if (!result) {
+				console.log("Requesting permissions...");
+				var permissionObj = {permissions: [{'usbDevices': allowed }]};
 				chrome.permissions.request(permissionObj, function(result) {
-					if (result) {
-						gotPermission();
-					} else {
-						console.log('App was not granted the "usbDevices" permission.');
-						console.log(chrome.runtime.lastError);
-					}
+					console.log("Permission: " + result);
+					deferred.resolve(result);
 				});
 			}
 		});
 
-		function gotPermission(result) {
+		return deferred.promise;
+	};
+
+	Usb.prototype.removePermissions = function() {
+		var deferred = $q.defer();
+
+		console.log("Removing permissions...");
+		var permissionObj = {permissions: [{'usbDevices': this.allowedDevices }]};
+		chrome.permissions.remove(permissionObj, function(result) {
+			if (result) {
+				console.log("Permissions removed.");
+			} else {
+				console.log("Unable to remove permissions.");
+			}
+			deferred.resolve(result);
+		});
+
+		return deferred.promise;
+	};
+
+	Usb.prototype.updateSerialDeviceList = function() {
+		if (this.hasPermission) {
+			console.log("Has permissions");
+			// Index 0 is the Spark Core in Serial Mode
+			chrome.usb.getDevices(this.allowedDevices[0], function(devices) {
+				if (!devices || !devices.length) {
+				  //console.log('device not found');
+				  return;
+				}
+				this.serialDevices = devices;
+				devices.forEach(function(element, index, array) {
+					console.log("Serial Device: ");
+					console.log(element);
+				});
+				//console.log('Found Serial Device: ' + devices[0]);
+			});
+		}
+	};
+
+	Usb.prototype.updateDfuDeviceList = function() {
+		if (this.hasPermission) {
+			// Index 1 is the Spark Core in DFU Mode
+			chrome.usb.getDevices(this.allowedDevices[1], function(devices) {
+				if (!devices || !devices.length) {
+				  return;
+				}
+				this.dfuDevices = devices;
+				devices.forEach(function(element, index, array) {
+					console.log("DFU Device: ");
+					console.log(element);
+				});
+				//console.log('Found DFU Device: ' + devices[0]);
+			});
+		}
+	};
+
+	Usb.prototype.connected = function() {
+		return false;
+	};
+
+	Usb.prototype.connect = function() {
+		//var SPARK_VID = 7504; // 0x1D50;
+		//var SPARK_CORE_SERIAL_PID = 24701; // 0x607D;
+		//var SPARK_CORE_DFU_PID = 24703; // 0x607F;
+		//var DEVICE_INFO = { "vendorId": SPARK_VID, "productId": SPARK_CORE_SERIAL_PID };
+
+		//var permissionObj = {permissions: [{'usbDevices': this.getAllowedDevices() }]};
+
+		function gotPermission(allowed, result) {
 			console.log("Got permission!");
-			chrome.usb.findDevices(DEVICE_INFO, function(devices) {
+			chrome.usb.findDevices(allowed, function(devices) {
 				if (!devices || !devices.length) {
 				  console.log('device not found');
 				  return;
@@ -54,6 +161,23 @@ angular.module('storyApp.utils')
 				console.log(devices[0]);
 			});
 		}
+
+		chrome.permissions.contains(this.allowedDevices, function(result) {
+			if (result) {
+				gotPermission(this.allowedDevices);
+			} else {
+				console.log('App not currently granted the "usbDevices" permission, requesting...');
+				chrome.permissions.request(this.allowedDevices, function(result) {
+					if (result) {
+						gotPermission(this.allowedDevices);
+					} else {
+						console.log('App was not granted the "usbDevices" permission.');
+						console.log(chrome.runtime.lastError);
+					}
+				});
+			}
+		});
+
 
 		/*var deferred = $q.defer();
 
@@ -79,6 +203,7 @@ angular.module('storyApp.utils')
 
 		return deferred.promise;*/
 	};
+
 	Usb.prototype.write = function(str) {
 		var deferred = $q.defer();
 
@@ -93,5 +218,5 @@ angular.module('storyApp.utils')
 		return deferred.promise;
 	};
 
-	return new Usb();
+	return Usb;
 }]);

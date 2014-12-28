@@ -1,5 +1,5 @@
 angular.module('storyApp.databridge')
-.service('$profiles', ['ChromeStorageEngine', 'Storage', 'Profile', '$q', 
+.service('$profiles', ['ChromeStorageEngine', 'Storage', 'Profile', '$q',
 /**
  * Can be used to manage what is the current story and passage¬
  * and the $preferences to be a Storage instance
@@ -22,7 +22,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 
 	this.select = function(profile) {
 		// Look for the existing profile to update and shift
-		for (var i=0; i<this.all.length; i++) {
+		for (var i=0; i < this.all.length; i++) {
 			if (this.all[i].id != profile.id) {
 				continue;
 			}

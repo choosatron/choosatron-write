@@ -8,8 +8,8 @@ angular.module('storyApp.translators', ['storyApp.utils', 'storyApp.models']);
 angular.module('storyApp.controllers', ['storyApp.models', 'storyApp.databridge', 'storyApp.translators']);
 
 angular.module('storyApp', [
-	'storyApp.filters', 
-	'storyApp.directives', 
+	'storyApp.filters',
+	'storyApp.directives',
 	'storyApp.controllers',
 	'ngAnimate',
 	'ngRoute',
