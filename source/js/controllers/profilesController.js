@@ -13,38 +13,40 @@ function($scope, $location, $profiles) {
 
 .controller('ProfilesCtrl', ['$scope', '$location', '$profiles', 'Profile',
 function($scope, $location, $profiles, Profile) {
+	var vm = this;
+	vm.location = $location;
 
-	$scope.saveState = 'disk';
+	vm.saveState = 'disk';
 
 	$profiles.load().then(function() {
-		$scope.profiles = $profiles;
-		$scope.$watch('profiles.current.name', function(n, o) {
-			$scope.saveState = 'save';
+		vm.profiles = $profiles;
+		$scope.$watch('vm.profiles.current.name', function(n, o) {
+			vm.saveState = 'save';
 		});
 	});
 
-	$scope.show_stories_menu = function() {
-		$location.path('stories');
+	vm.show_stories_menu = function() {
+		vm.location.path('stories');
 	};
 
-	$scope.new_profile = function() {
+	vm.new_profile = function() {
 		var profile = new Profile();
-		$profiles.select(profile);
+		vm.profiles.select(profile);
 	};
 
-	$scope.pick_profile = function(profile) {
-		$profiles.select(profile);
-		$profiles.save();
+	vm.pick_profile = function(profile) {
+		vm.profiles.select(profile);
+		vm.profiles.save();
 	};
 
-	$scope.save_profile = function() {
-		$profiles.save()
+	vm.save_profile = function() {
+		vm.profiles.save()
 		.then(function() {
-			$scope.saveState = 'saved';
+			vm.saveState = 'saved';
 		});
 	};
 
-	$scope.set_home_path = function() {
+	vm.set_home_path = function() {
 		// TODO
 
 	};

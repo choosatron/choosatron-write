@@ -1,7 +1,7 @@
 <div class="menuTop theme-inverse storyMenu">
 	<div class="topBar">
 		<p class="h4 pull-left">ChoiceWright</p>
-		<p class="h5 pull-right" ng-include="'templates/profile-picker.html'"></p>
+		<p class="h5 pull-right" ng-include="'templates/profilePickerView.html'"></p>
 	</div>
 
 	<ul class="list-inline list-icon-menu h4">
@@ -30,15 +30,15 @@
 			</div>
 			<div class="btn-group">
 				<button class="btn btn-default" ng-click="sort_stories('created')">
-					<span class="glyphicon glyphicon-time"></span> 
-					created 
+					<span class="glyphicon glyphicon-time"></span>
+					created
 					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'created' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'created' && stories_sort_desc)}"></span>
 				</button>
 			</div>
 			<div class="btn-group">
 				<button class="btn btn-default" ng-click="sort_stories('modified')">
-					<span class="glyphicon glyphicon-dashboard"></span> 
-					modified 
+					<span class="glyphicon glyphicon-dashboard"></span>
+					modified
 					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'modified' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'modified' && stories_sort_desc)}"></span>
 				</button>
 			</div>
