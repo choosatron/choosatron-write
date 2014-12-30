@@ -8,8 +8,8 @@ angular.module('storyApp.translators', ['storyApp.utils', 'storyApp.models']);
 angular.module('storyApp.controllers', ['storyApp.models', 'storyApp.databridge', 'storyApp.translators']);
 
 angular.module('storyApp', [
-	'storyApp.filters', 
-	'storyApp.directives', 
+	'storyApp.filters',
+	'storyApp.directives',
 	'storyApp.controllers',
 	'ngAnimate',
 	'ngRoute',
@@ -18,6 +18,7 @@ angular.module('storyApp', [
 
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/stories', {templateUrl: 'templates/stories.html', controller: 'StoriesCtrl'});
+	$routeProvider.when('/choosatron', {templateUrl: 'templates/choosatronsView.html', controller: 'ChoosatronsCtrl', controllerAs: 'vm'});
 	$routeProvider.when('/playback', {templateUrl: 'templates/playback.html', controller: 'PlaybackCtrl'});
 	$routeProvider.when('/story', {templateUrl: 'templates/passage.html', controller: 'StoryCtrl'});
 	$routeProvider.when('/profiles', {templateUrl: 'templates/profiles.html', controller: 'ProfilesCtrl'});

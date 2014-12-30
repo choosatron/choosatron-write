@@ -8,13 +8,13 @@ function(Story, Passage, Choice) {
 		datatype: 'application/octet-stream',
 
 		importMenuTitle: 'Import from Choosatron File',
-		imports: [ 'cdam' ],
+		imports: [ 'dam' ],
 		import: function(data) {
 
 		},
 
 		exportMenuTitle: 'Create a Choosatron File',
-		exports: 'cdam',
+		exports: 'dam',
 		export: function(story) {
 			// TODO: Convert story to binary here either directly via story object or via story.serialize() JSON
 

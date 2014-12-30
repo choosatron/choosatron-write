@@ -1,4 +1,5 @@
 angular.module('storyApp.filters')
+
 .filter('truncate', function () {
 	return function (text, length) {
 		if (isNaN(length)) {
@@ -13,6 +14,7 @@ angular.module('storyApp.filters')
 		}
 	};
 })
+
 .filter('quote', function () {
 	return function (text) {
 		if (text && text.match(/Unwritten/)) {

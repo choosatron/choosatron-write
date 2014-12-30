@@ -1,0 +1,21 @@
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h5 pull-left"><a ng-click="vm.location.path('stories')"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<h4>Choosatron Management</h4>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="scrollable">
+		<ul class="list-unstyled list-choosatrons">
+			<li><button class="btn btn-link" ng-click="vm.newChoosatron()"><span class="glyphicon glyphicon-plus"></span> New Choosatron</button></li>
+			<li ng-repeat="choosatron in vm.profiles.current.choosatrons | filter:verifiedChoosatron" class="fade-animation">
+				<ng-include src="'templates/choosatronDeviceView.html'"></ng-include>
+			</li>
+		</ul>
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->
+</div>

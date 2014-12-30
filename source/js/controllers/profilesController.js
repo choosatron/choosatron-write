@@ -44,4 +44,9 @@ function($scope, $location, $profiles, Profile) {
 		});
 	};
 
+	$scope.set_home_path = function() {
+		// TODO
+
+	};
+
 }])

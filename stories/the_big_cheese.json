@@ -1,0 +1,2858 @@
+{
+  "lastPassageNumber": 8,
+  "created": 1412651847794,
+  "modified": null,
+  "title": "The Big Cheese",
+  "version": 1,
+  "description": "A mouse detective just trying to find his way in this crazy, cat filled world.",
+  "cover_url": "",
+  "genre": "Fantasy",
+  "author": "Jerry",
+  "credit": "",
+  "passages": [
+    {
+      "number": null,
+      "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+      "choices": [
+        {
+          "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+          "showUpdates": true,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "xqirtnwjsr",
+            "created": 1412652081366,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "sbeyafsozl",
+          "updates": [
+            {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "tkqiackpko",
+              "created": 1412889321653,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "id": "wfpvofrmsm",
+          "created": 1412652081366,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "Close up early, the streets are one big rain gutter.",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "weuboakjth",
+            "created": 1412652129162,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "cthodontcc",
+          "updates": [],
+          "id": "bgmwddlhxy",
+          "created": 1412652129162,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "tragolwngs",
+            "created": 1412889631397,
+            "modified": null,
+            "opened": null
+          },
+          "destination": null,
+          "updates": [],
+          "id": "kvsnebqnxw",
+          "created": 1412889631397,
+          "modified": null,
+          "opened": null
+        }
+      ],
+      "opening": true,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "vtafvadzah",
+          "created": 1412651857242,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "lywhytvmef",
+        "created": 1412651857242,
+        "modified": null,
+        "opened": null
+      },
+      "id": "rcfwaofouf",
+      "created": 1412651857242,
+      "modified": null,
+      "opened": null,
+      "exit_type": "choices",
+      "entrances": []
+    },
+    {
+      "number": 1,
+      "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+      "choices": [
+        {
+          "content": "Check to see if anyone is there.",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "flpnnibian",
+            "created": 1412652343459,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "zhtpwpsoqi",
+          "updates": [],
+          "id": "yuceethynj",
+          "created": 1412652343459,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "Toss back the last of your whiskey.",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "yoqvvmkpfc",
+            "created": 1412652359823,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "fhsfdxgtgf",
+          "updates": [],
+          "id": "vazpilxmox",
+          "created": 1412652359823,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "Load your revolver, you know, just in case.",
+          "showUpdates": true,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "nankvqzgul",
+            "created": 1412652383472,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "xlckzmlshp",
+          "updates": [
+            {
+              "variable": "Ammo",
+              "verb": "=",
+              "value": "6",
+              "id": "oldazpkmko",
+              "created": 1412653212125,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "id": "dazktkcfjb",
+          "created": 1412652383472,
+          "modified": null,
+          "opened": null
+        }
+      ],
+      "opening": false,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "fhasnxwgtt",
+          "created": 1412652186482,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "cfgmcpzfvl",
+        "created": 1412652186482,
+        "modified": null,
+        "opened": null
+      },
+      "id": "sbeyafsozl",
+      "created": 1412652186482,
+      "modified": null,
+      "opened": null,
+      "exit_type": "choices",
+      "entrances": [
+        {
+          "number": null,
+          "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+          "choices": [
+            {
+              "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "xqirtnwjsr",
+                "created": 1412652081366,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "sbeyafsozl",
+              "updates": [
+                {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "tkqiackpko",
+                  "created": 1412889321653,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "id": "wfpvofrmsm",
+              "created": 1412652081366,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Close up early, the streets are one big rain gutter.",
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "weuboakjth",
+                "created": 1412652129162,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "cthodontcc",
+              "updates": [],
+              "id": "bgmwddlhxy",
+              "created": 1412652129162,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "",
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "tragolwngs",
+                "created": 1412889631397,
+                "modified": null,
+                "opened": null
+              },
+              "destination": null,
+              "updates": [],
+              "id": "kvsnebqnxw",
+              "created": 1412889631397,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": true,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "vtafvadzah",
+              "created": 1412651857242,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "lywhytvmef",
+            "created": 1412651857242,
+            "modified": null,
+            "opened": null
+          },
+          "id": "rcfwaofouf",
+          "created": 1412651857242,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "content": "You take a peek out into the hall but it's empty. Feeling foolish you decide to close up anyway and head home.",
+      "choices": [],
+      "opening": false,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "ccwyfagwux",
+          "created": 1412652465716,
+          "modified": null,
+          "opened": null
+        },
+        "destination": "cthodontcc",
+        "updates": [],
+        "id": "bvcdgzimmc",
+        "created": 1412652465716,
+        "modified": null,
+        "opened": null
+      },
+      "id": "zhtpwpsoqi",
+      "created": 1412652418685,
+      "modified": null,
+      "opened": null,
+      "exit_type": "append",
+      "entrances": [
+        {
+          "number": 1,
+          "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+          "choices": [
+            {
+              "content": "Check to see if anyone is there.",
+              "showCondition": true,
+              "showUpdates": true,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "flpnnibian",
+                "created": 1412652343459,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "zhtpwpsoqi",
+              "updates": [],
+              "id": "yuceethynj",
+              "created": 1412652343459,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Toss back the last of your whiskey.",
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "yoqvvmkpfc",
+                "created": 1412652359823,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "fhsfdxgtgf",
+              "updates": [],
+              "id": "vazpilxmox",
+              "created": 1412652359823,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Load your revolver, you know, just in case.",
+              "showUpdates": true,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "nankvqzgul",
+                "created": 1412652383472,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "xlckzmlshp",
+              "updates": [
+                {
+                  "variable": "Ammo",
+                  "verb": "=",
+                  "value": "6",
+                  "id": "oldazpkmko",
+                  "created": 1412653212125,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "id": "dazktkcfjb",
+              "created": 1412652383472,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "fhasnxwgtt",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "cfgmcpzfvl",
+            "created": 1412652186482,
+            "modified": null,
+            "opened": null
+          },
+          "id": "sbeyafsozl",
+          "created": 1412652186482,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": [
+            {
+              "number": null,
+              "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+              "choices": [
+                {
+                  "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                  "showCondition": true,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "xqirtnwjsr",
+                    "created": 1412652081366,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "sbeyafsozl",
+                  "updates": [
+                    {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "tkqiackpko",
+                      "created": 1412889321653,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "id": "wfpvofrmsm",
+                  "created": 1412652081366,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Close up early, the streets are one big rain gutter.",
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "weuboakjth",
+                    "created": 1412652129162,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "cthodontcc",
+                  "updates": [],
+                  "id": "bgmwddlhxy",
+                  "created": 1412652129162,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "tragolwngs",
+                    "created": 1412889631397,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": null,
+                  "updates": [],
+                  "id": "kvsnebqnxw",
+                  "created": 1412889631397,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": true,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "vtafvadzah",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "lywhytvmef",
+                "created": 1412651857242,
+                "modified": null,
+                "opened": null
+              },
+              "id": "rcfwaofouf",
+              "created": 1412651857242,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "content": "By the time you get home you're soaked. You flop into bed and sleep into next afternoon.",
+      "choices": [],
+      "opening": false,
+      "value": 0,
+      "ending_value": -1,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "iyhbbavkhr",
+          "created": 1412653196564,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "karvxevfha",
+        "created": 1412653196564,
+        "modified": null,
+        "opened": null
+      },
+      "id": "cthodontcc",
+      "created": 1412652468254,
+      "modified": null,
+      "opened": null,
+      "exit_type": "ending",
+      "entrances": [
+        {
+          "number": null,
+          "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+          "choices": [
+            {
+              "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+              "showCondition": true,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "xqirtnwjsr",
+                "created": 1412652081366,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "sbeyafsozl",
+              "updates": [
+                {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "tkqiackpko",
+                  "created": 1412889321653,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "id": "wfpvofrmsm",
+              "created": 1412652081366,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Close up early, the streets are one big rain gutter.",
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "weuboakjth",
+                "created": 1412652129162,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "cthodontcc",
+              "updates": [],
+              "id": "bgmwddlhxy",
+              "created": 1412652129162,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "tragolwngs",
+                "created": 1412889631397,
+                "modified": null,
+                "opened": null
+              },
+              "destination": null,
+              "updates": [],
+              "id": "kvsnebqnxw",
+              "created": 1412889631397,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": true,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "vtafvadzah",
+              "created": 1412651857242,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "lywhytvmef",
+            "created": 1412651857242,
+            "modified": null,
+            "opened": null
+          },
+          "id": "rcfwaofouf",
+          "created": 1412651857242,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": []
+        },
+        {
+          "number": 2,
+          "content": "You take a peek out into the hall but it's empty. Feeling foolish you decide to close up anyway and head home.",
+          "choices": [],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "ccwyfagwux",
+              "created": 1412652465716,
+              "modified": null,
+              "opened": null
+            },
+            "destination": "cthodontcc",
+            "updates": [],
+            "id": "bvcdgzimmc",
+            "created": 1412652465716,
+            "modified": null,
+            "opened": null
+          },
+          "id": "zhtpwpsoqi",
+          "created": 1412652418685,
+          "modified": null,
+          "opened": null,
+          "exit_type": "append",
+          "entrances": [
+            {
+              "number": 1,
+              "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+              "choices": [
+                {
+                  "content": "Check to see if anyone is there.",
+                  "showCondition": true,
+                  "showUpdates": true,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "flpnnibian",
+                    "created": 1412652343459,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "zhtpwpsoqi",
+                  "updates": [],
+                  "id": "yuceethynj",
+                  "created": 1412652343459,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Toss back the last of your whiskey.",
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "yoqvvmkpfc",
+                    "created": 1412652359823,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "fhsfdxgtgf",
+                  "updates": [],
+                  "id": "vazpilxmox",
+                  "created": 1412652359823,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Load your revolver, you know, just in case.",
+                  "showUpdates": true,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "nankvqzgul",
+                    "created": 1412652383472,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "xlckzmlshp",
+                  "updates": [
+                    {
+                      "variable": "Ammo",
+                      "verb": "=",
+                      "value": "6",
+                      "id": "oldazpkmko",
+                      "created": 1412653212125,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "id": "dazktkcfjb",
+                  "created": 1412652383472,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": false,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "fhasnxwgtt",
+                  "created": 1412652186482,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "cfgmcpzfvl",
+                "created": 1412652186482,
+                "modified": null,
+                "opened": null
+              },
+              "id": "sbeyafsozl",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": [
+                {
+                  "number": null,
+                  "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+                  "choices": [
+                    {
+                      "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                      "showCondition": true,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "xqirtnwjsr",
+                        "created": 1412652081366,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "sbeyafsozl",
+                      "updates": [
+                        {
+                          "variable": null,
+                          "verb": null,
+                          "value": null,
+                          "id": "tkqiackpko",
+                          "created": 1412889321653,
+                          "modified": null,
+                          "opened": null
+                        }
+                      ],
+                      "id": "wfpvofrmsm",
+                      "created": 1412652081366,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Close up early, the streets are one big rain gutter.",
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "weuboakjth",
+                        "created": 1412652129162,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "cthodontcc",
+                      "updates": [],
+                      "id": "bgmwddlhxy",
+                      "created": 1412652129162,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "tragolwngs",
+                        "created": 1412889631397,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": null,
+                      "updates": [],
+                      "id": "kvsnebqnxw",
+                      "created": 1412889631397,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "opening": true,
+                  "value": 0,
+                  "ending_value": false,
+                  "trashed": false,
+                  "append_link": {
+                    "content": "",
+                    "showUpdates": false,
+                    "condition": {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "vtafvadzah",
+                      "created": 1412651857242,
+                      "modified": null,
+                      "opened": null
+                    },
+                    "destination": null,
+                    "updates": [],
+                    "id": "lywhytvmef",
+                    "created": 1412651857242,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "id": "rcfwaofouf",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null,
+                  "exit_type": "choices",
+                  "entrances": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "content": "You finish off the pinky of cheap bourbon and the sound of the storm helps you drift off to sleep in your chair, hat tipped down over your face, whiskers twitching as lightning strikes.\n\nCold...cold! Wet! You are shocked backed to consciousness, almost falling out of your chair in the process! Once you regain your composure you realize there are two figures standing on the other side of your desk with grim expressions.",
+      "choices": [
+        {
+          "content": "Pull off a warning shot.",
+          "showUpdates": false,
+          "condition": {
+            "variable": "Ammo",
+            "verb": ">",
+            "value": "0",
+            "id": "xnceiydeow",
+            "created": 1412653031804,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "uyvlsmexiu",
+          "updates": [],
+          "id": "joghadfupi",
+          "created": 1412653031805,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "Play it cooler than the water thrown on your face.",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "apevkfznhb",
+            "created": 1412653033964,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "ciovureefh",
+          "updates": [],
+          "id": "snzxpyfigx",
+          "created": 1412653033964,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "Stand up and give an even grimmer look.",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "kcefomitke",
+            "created": 1412653147383,
+            "modified": null,
+            "opened": null
+          },
+          "destination": "ezldjucxwt",
+          "updates": [],
+          "id": "xisppngwgj",
+          "created": 1412653147383,
+          "modified": null,
+          "opened": null
+        }
+      ],
+      "opening": false,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "kwxolrznei",
+          "created": 1412652691744,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "mevasmifkp",
+        "created": 1412652691744,
+        "modified": null,
+        "opened": null
+      },
+      "id": "fhsfdxgtgf",
+      "created": 1412652691744,
+      "modified": null,
+      "opened": null,
+      "exit_type": "choices",
+      "entrances": [
+        {
+          "number": 1,
+          "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+          "choices": [
+            {
+              "content": "Check to see if anyone is there.",
+              "showCondition": true,
+              "showUpdates": true,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "flpnnibian",
+                "created": 1412652343459,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "zhtpwpsoqi",
+              "updates": [],
+              "id": "yuceethynj",
+              "created": 1412652343459,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Toss back the last of your whiskey.",
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "yoqvvmkpfc",
+                "created": 1412652359823,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "fhsfdxgtgf",
+              "updates": [],
+              "id": "vazpilxmox",
+              "created": 1412652359823,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Load your revolver, you know, just in case.",
+              "showUpdates": true,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "nankvqzgul",
+                "created": 1412652383472,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "xlckzmlshp",
+              "updates": [
+                {
+                  "variable": "Ammo",
+                  "verb": "=",
+                  "value": "6",
+                  "id": "oldazpkmko",
+                  "created": 1412653212125,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "id": "dazktkcfjb",
+              "created": 1412652383472,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "fhasnxwgtt",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "cfgmcpzfvl",
+            "created": 1412652186482,
+            "modified": null,
+            "opened": null
+          },
+          "id": "sbeyafsozl",
+          "created": 1412652186482,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": [
+            {
+              "number": null,
+              "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+              "choices": [
+                {
+                  "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                  "showCondition": true,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "xqirtnwjsr",
+                    "created": 1412652081366,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "sbeyafsozl",
+                  "updates": [
+                    {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "tkqiackpko",
+                      "created": 1412889321653,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "id": "wfpvofrmsm",
+                  "created": 1412652081366,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Close up early, the streets are one big rain gutter.",
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "weuboakjth",
+                    "created": 1412652129162,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "cthodontcc",
+                  "updates": [],
+                  "id": "bgmwddlhxy",
+                  "created": 1412652129162,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "tragolwngs",
+                    "created": 1412889631397,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": null,
+                  "updates": [],
+                  "id": "kvsnebqnxw",
+                  "created": 1412889631397,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": true,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "vtafvadzah",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "lywhytvmef",
+                "created": 1412651857242,
+                "modified": null,
+                "opened": null
+              },
+              "id": "rcfwaofouf",
+              "created": 1412651857242,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": []
+            }
+          ]
+        },
+        {
+          "number": 5,
+          "content": "You carefully load your revolver with a few stray bullets rolling around your desk drawer, then feel a bit parched.",
+          "choices": [],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "znbwpbavfg",
+              "created": 1412653311921,
+              "modified": null,
+              "opened": null
+            },
+            "destination": "fhsfdxgtgf",
+            "updates": [],
+            "id": "mrkbuurxpo",
+            "created": 1412653311921,
+            "modified": null,
+            "opened": null
+          },
+          "id": "xlckzmlshp",
+          "created": 1412653247384,
+          "modified": null,
+          "opened": null,
+          "exit_type": "append",
+          "entrances": [
+            {
+              "number": 1,
+              "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+              "choices": [
+                {
+                  "content": "Check to see if anyone is there.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "flpnnibian",
+                    "created": 1412652343459,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "zhtpwpsoqi",
+                  "updates": [],
+                  "id": "yuceethynj",
+                  "created": 1412652343459,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Toss back the last of your whiskey.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "yoqvvmkpfc",
+                    "created": 1412652359823,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "fhsfdxgtgf",
+                  "updates": [],
+                  "id": "vazpilxmox",
+                  "created": 1412652359823,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Load your revolver, you know, just in case.",
+                  "showCondition": false,
+                  "showUpdates": true,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "nankvqzgul",
+                    "created": 1412652383472,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "xlckzmlshp",
+                  "updates": [
+                    {
+                      "variable": "Ammo",
+                      "verb": "=",
+                      "value": "6",
+                      "id": "oldazpkmko",
+                      "created": 1412653212125,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "id": "dazktkcfjb",
+                  "created": 1412652383472,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": false,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showCondition": false,
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "fhasnxwgtt",
+                  "created": 1412652186482,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "cfgmcpzfvl",
+                "created": 1412652186482,
+                "modified": null,
+                "opened": null
+              },
+              "id": "sbeyafsozl",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": [
+                {
+                  "number": null,
+                  "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+                  "choices": [
+                    {
+                      "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "xqirtnwjsr",
+                        "created": 1412652081366,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "sbeyafsozl",
+                      "updates": [],
+                      "id": "wfpvofrmsm",
+                      "created": 1412652081366,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Close up early, the streets are one big rain gutter.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "weuboakjth",
+                        "created": 1412652129162,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "cthodontcc",
+                      "updates": [],
+                      "id": "bgmwddlhxy",
+                      "created": 1412652129162,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "opening": true,
+                  "value": 0,
+                  "ending_value": false,
+                  "trashed": false,
+                  "append_link": {
+                    "content": "",
+                    "showUpdates": false,
+                    "condition": {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "vtafvadzah",
+                      "created": 1412651857242,
+                      "modified": null,
+                      "opened": null
+                    },
+                    "destination": null,
+                    "updates": [],
+                    "id": "lywhytvmef",
+                    "created": 1412651857242,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "id": "rcfwaofouf",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null,
+                  "exit_type": "choices",
+                  "entrances": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "content": "You carefully load your revolver with a few stray bullets rolling around your desk drawer, then feel a bit parched.",
+      "choices": [],
+      "opening": false,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "znbwpbavfg",
+          "created": 1412653311921,
+          "modified": null,
+          "opened": null
+        },
+        "destination": "fhsfdxgtgf",
+        "updates": [],
+        "id": "mrkbuurxpo",
+        "created": 1412653311921,
+        "modified": null,
+        "opened": null
+      },
+      "id": "xlckzmlshp",
+      "created": 1412653247384,
+      "modified": null,
+      "opened": null,
+      "exit_type": "append",
+      "entrances": [
+        {
+          "number": 1,
+          "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+          "choices": [
+            {
+              "content": "Check to see if anyone is there.",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "flpnnibian",
+                "created": 1412652343459,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "zhtpwpsoqi",
+              "updates": [],
+              "id": "yuceethynj",
+              "created": 1412652343459,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Toss back the last of your whiskey.",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "yoqvvmkpfc",
+                "created": 1412652359823,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "fhsfdxgtgf",
+              "updates": [],
+              "id": "vazpilxmox",
+              "created": 1412652359823,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Load your revolver, you know, just in case.",
+              "showCondition": false,
+              "showUpdates": true,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "nankvqzgul",
+                "created": 1412652383472,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "xlckzmlshp",
+              "updates": [
+                {
+                  "variable": "Ammo",
+                  "verb": "=",
+                  "value": "6",
+                  "id": "oldazpkmko",
+                  "created": 1412653212125,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "id": "dazktkcfjb",
+              "created": 1412652383472,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showCondition": false,
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "fhasnxwgtt",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "cfgmcpzfvl",
+            "created": 1412652186482,
+            "modified": null,
+            "opened": null
+          },
+          "id": "sbeyafsozl",
+          "created": 1412652186482,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": [
+            {
+              "number": null,
+              "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+              "choices": [
+                {
+                  "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "xqirtnwjsr",
+                    "created": 1412652081366,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "sbeyafsozl",
+                  "updates": [],
+                  "id": "wfpvofrmsm",
+                  "created": 1412652081366,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Close up early, the streets are one big rain gutter.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "weuboakjth",
+                    "created": 1412652129162,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "cthodontcc",
+                  "updates": [],
+                  "id": "bgmwddlhxy",
+                  "created": 1412652129162,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": true,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "vtafvadzah",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "lywhytvmef",
+                "created": 1412651857242,
+                "modified": null,
+                "opened": null
+              },
+              "id": "rcfwaofouf",
+              "created": 1412651857242,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "content": "The two figures hit the deck, which gives you enough time to move around the desk and make sure they don't try anything funny.",
+      "choices": [
+        {
+          "content": "\"So what's with trying to drown me?\"",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "hhibzvhbcn",
+            "created": 1412653394658,
+            "modified": null,
+            "opened": null
+          },
+          "destination": null,
+          "updates": [],
+          "id": "mrjwkxmzhd",
+          "created": 1412653394658,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "\"I don't remember putting in for a wakeup call.\"",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "yqgmkdcldl",
+            "created": 1412653406094,
+            "modified": null,
+            "opened": null
+          },
+          "destination": null,
+          "updates": [],
+          "id": "yixsktdikl",
+          "created": 1412653406094,
+          "modified": null,
+          "opened": null
+        }
+      ],
+      "opening": false,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "pzgtwefkym",
+          "created": 1412653359145,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "gfwyzhfjwp",
+        "created": 1412653359145,
+        "modified": null,
+        "opened": null
+      },
+      "id": "uyvlsmexiu",
+      "created": 1412653359145,
+      "modified": null,
+      "opened": null,
+      "exit_type": "choices",
+      "entrances": [
+        {
+          "number": 4,
+          "content": "You finish off the pinky of cheap bourbon and the sound of the storm helps you drift off to sleep in your chair, hat tipped down over your face, whiskers twitching as lightning strikes.\n\nCold...cold! Wet! You are shocked backed to consciousness, almost falling out of your chair in the process! Once you regain your composure you realize there are two figures standing on the other side of your desk with grim expressions.",
+          "choices": [
+            {
+              "content": "Pull off a warning shot.",
+              "showCondition": true,
+              "showUpdates": false,
+              "condition": {
+                "variable": "Ammo",
+                "verb": ">",
+                "value": "0",
+                "id": "xnceiydeow",
+                "created": 1412653031804,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "uyvlsmexiu",
+              "updates": [],
+              "id": "joghadfupi",
+              "created": 1412653031805,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Play it cooler than the water thrown on your face.",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "apevkfznhb",
+                "created": 1412653033964,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "ciovureefh",
+              "updates": [],
+              "id": "snzxpyfigx",
+              "created": 1412653033964,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Stand up and give an even grimmer look.",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "kcefomitke",
+                "created": 1412653147383,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "ezldjucxwt",
+              "updates": [],
+              "id": "xisppngwgj",
+              "created": 1412653147383,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showCondition": false,
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "kwxolrznei",
+              "created": 1412652691744,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "mevasmifkp",
+            "created": 1412652691744,
+            "modified": null,
+            "opened": null
+          },
+          "id": "fhsfdxgtgf",
+          "created": 1412652691744,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": [
+            {
+              "number": 1,
+              "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+              "choices": [
+                {
+                  "content": "Check to see if anyone is there.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "flpnnibian",
+                    "created": 1412652343459,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "zhtpwpsoqi",
+                  "updates": [],
+                  "id": "yuceethynj",
+                  "created": 1412652343459,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Toss back the last of your whiskey.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "yoqvvmkpfc",
+                    "created": 1412652359823,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "fhsfdxgtgf",
+                  "updates": [],
+                  "id": "vazpilxmox",
+                  "created": 1412652359823,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Load your revolver, you know, just in case.",
+                  "showCondition": false,
+                  "showUpdates": true,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "nankvqzgul",
+                    "created": 1412652383472,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "xlckzmlshp",
+                  "updates": [
+                    {
+                      "variable": "Ammo",
+                      "verb": "=",
+                      "value": "6",
+                      "id": "oldazpkmko",
+                      "created": 1412653212125,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "id": "dazktkcfjb",
+                  "created": 1412652383472,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": false,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showCondition": false,
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "fhasnxwgtt",
+                  "created": 1412652186482,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "cfgmcpzfvl",
+                "created": 1412652186482,
+                "modified": null,
+                "opened": null
+              },
+              "id": "sbeyafsozl",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": [
+                {
+                  "number": null,
+                  "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+                  "choices": [
+                    {
+                      "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "xqirtnwjsr",
+                        "created": 1412652081366,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "sbeyafsozl",
+                      "updates": [],
+                      "id": "wfpvofrmsm",
+                      "created": 1412652081366,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Close up early, the streets are one big rain gutter.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "weuboakjth",
+                        "created": 1412652129162,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "cthodontcc",
+                      "updates": [],
+                      "id": "bgmwddlhxy",
+                      "created": 1412652129162,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "opening": true,
+                  "value": 0,
+                  "ending_value": false,
+                  "trashed": false,
+                  "append_link": {
+                    "content": "",
+                    "showUpdates": false,
+                    "condition": {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "vtafvadzah",
+                      "created": 1412651857242,
+                      "modified": null,
+                      "opened": null
+                    },
+                    "destination": null,
+                    "updates": [],
+                    "id": "lywhytvmef",
+                    "created": 1412651857242,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "id": "rcfwaofouf",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null,
+                  "exit_type": "choices",
+                  "entrances": []
+                }
+              ]
+            },
+            {
+              "number": 5,
+              "content": "You carefully load your revolver with a few stray bullets rolling around your desk drawer, then feel a bit parched.",
+              "choices": [],
+              "opening": false,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showCondition": false,
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "znbwpbavfg",
+                  "created": 1412653311921,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": "fhsfdxgtgf",
+                "updates": [],
+                "id": "mrkbuurxpo",
+                "created": 1412653311921,
+                "modified": null,
+                "opened": null
+              },
+              "id": "xlckzmlshp",
+              "created": 1412653247384,
+              "modified": null,
+              "opened": null,
+              "exit_type": "append",
+              "entrances": [
+                {
+                  "number": 1,
+                  "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+                  "choices": [
+                    {
+                      "content": "Check to see if anyone is there.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "flpnnibian",
+                        "created": 1412652343459,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "zhtpwpsoqi",
+                      "updates": [],
+                      "id": "yuceethynj",
+                      "created": 1412652343459,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Toss back the last of your whiskey.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "yoqvvmkpfc",
+                        "created": 1412652359823,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "fhsfdxgtgf",
+                      "updates": [],
+                      "id": "vazpilxmox",
+                      "created": 1412652359823,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Load your revolver, you know, just in case.",
+                      "showCondition": false,
+                      "showUpdates": true,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "nankvqzgul",
+                        "created": 1412652383472,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "xlckzmlshp",
+                      "updates": [
+                        {
+                          "variable": "Ammo",
+                          "verb": "=",
+                          "value": "6",
+                          "id": "oldazpkmko",
+                          "created": 1412653212125,
+                          "modified": null,
+                          "opened": null
+                        }
+                      ],
+                      "id": "dazktkcfjb",
+                      "created": 1412652383472,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "opening": false,
+                  "value": 0,
+                  "ending_value": false,
+                  "trashed": false,
+                  "append_link": {
+                    "content": "",
+                    "showCondition": false,
+                    "showUpdates": false,
+                    "condition": {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "fhasnxwgtt",
+                      "created": 1412652186482,
+                      "modified": null,
+                      "opened": null
+                    },
+                    "destination": null,
+                    "updates": [],
+                    "id": "cfgmcpzfvl",
+                    "created": 1412652186482,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "id": "sbeyafsozl",
+                  "created": 1412652186482,
+                  "modified": null,
+                  "opened": null,
+                  "exit_type": "choices",
+                  "entrances": [
+                    {
+                      "number": null,
+                      "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+                      "choices": [
+                        {
+                          "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                          "showCondition": false,
+                          "showUpdates": false,
+                          "condition": {
+                            "variable": null,
+                            "verb": null,
+                            "value": null,
+                            "id": "xqirtnwjsr",
+                            "created": 1412652081366,
+                            "modified": null,
+                            "opened": null
+                          },
+                          "destination": "sbeyafsozl",
+                          "updates": [],
+                          "id": "wfpvofrmsm",
+                          "created": 1412652081366,
+                          "modified": null,
+                          "opened": null
+                        },
+                        {
+                          "content": "Close up early, the streets are one big rain gutter.",
+                          "showCondition": false,
+                          "showUpdates": false,
+                          "condition": {
+                            "variable": null,
+                            "verb": null,
+                            "value": null,
+                            "id": "weuboakjth",
+                            "created": 1412652129162,
+                            "modified": null,
+                            "opened": null
+                          },
+                          "destination": "cthodontcc",
+                          "updates": [],
+                          "id": "bgmwddlhxy",
+                          "created": 1412652129162,
+                          "modified": null,
+                          "opened": null
+                        }
+                      ],
+                      "opening": true,
+                      "value": 0,
+                      "ending_value": false,
+                      "trashed": false,
+                      "append_link": {
+                        "content": "",
+                        "showUpdates": false,
+                        "condition": {
+                          "variable": null,
+                          "verb": null,
+                          "value": null,
+                          "id": "vtafvadzah",
+                          "created": 1412651857242,
+                          "modified": null,
+                          "opened": null
+                        },
+                        "destination": null,
+                        "updates": [],
+                        "id": "lywhytvmef",
+                        "created": 1412651857242,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "id": "rcfwaofouf",
+                      "created": 1412651857242,
+                      "modified": null,
+                      "opened": null,
+                      "exit_type": "choices",
+                      "entrances": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "content": "You nonchalantly spit out some of the water and tip your hat back up out of your face.",
+      "choices": [
+        {
+          "content": "\"That wasn't very nice.\"",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "xgdtzacksv",
+            "created": 1412653461361,
+            "modified": null,
+            "opened": null
+          },
+          "destination": null,
+          "updates": [],
+          "id": "xhjfbofuhi",
+          "created": 1412653461361,
+          "modified": null,
+          "opened": null
+        },
+        {
+          "content": "\"Got anything harder to drink? I'm all out...\"",
+          "showUpdates": false,
+          "condition": {
+            "variable": null,
+            "verb": null,
+            "value": null,
+            "id": "estuszjsop",
+            "created": 1412653469670,
+            "modified": null,
+            "opened": null
+          },
+          "destination": null,
+          "updates": [],
+          "id": "igahemhgvb",
+          "created": 1412653469670,
+          "modified": null,
+          "opened": null
+        }
+      ],
+      "opening": false,
+      "value": 0,
+      "ending_value": false,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "hpweasxolt",
+          "created": 1412653429418,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "bsflzkggkg",
+        "created": 1412653429418,
+        "modified": null,
+        "opened": null
+      },
+      "id": "ciovureefh",
+      "created": 1412653429419,
+      "modified": null,
+      "opened": null,
+      "exit_type": "choices"
+    },
+    {
+      "number": 8,
+      "content": "You stand and give your most fearsome expression, but all that gets you is a blackjack across the snout, and a universe of stars.",
+      "choices": [],
+      "opening": false,
+      "value": 0,
+      "ending_value": -2,
+      "trashed": false,
+      "append_link": {
+        "content": "",
+        "showUpdates": false,
+        "condition": {
+          "variable": null,
+          "verb": null,
+          "value": null,
+          "id": "rbgcnjgsyc",
+          "created": 1412653547646,
+          "modified": null,
+          "opened": null
+        },
+        "destination": null,
+        "updates": [],
+        "id": "vcqupfdxcw",
+        "created": 1412653547646,
+        "modified": null,
+        "opened": null
+      },
+      "id": "ezldjucxwt",
+      "created": 1412653510774,
+      "modified": null,
+      "opened": null,
+      "exit_type": "ending",
+      "entrances": [
+        {
+          "number": 4,
+          "content": "You finish off the pinky of cheap bourbon and the sound of the storm helps you drift off to sleep in your chair, hat tipped down over your face, whiskers twitching as lightning strikes.\n\nCold...cold! Wet! You are shocked backed to consciousness, almost falling out of your chair in the process! Once you regain your composure you realize there are two figures standing on the other side of your desk with grim expressions.",
+          "choices": [
+            {
+              "content": "Pull off a warning shot.",
+              "showCondition": true,
+              "showUpdates": false,
+              "condition": {
+                "variable": "Ammo",
+                "verb": ">",
+                "value": "0",
+                "id": "xnceiydeow",
+                "created": 1412653031804,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "uyvlsmexiu",
+              "updates": [],
+              "id": "joghadfupi",
+              "created": 1412653031805,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Play it cooler than the water thrown on your face.",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "apevkfznhb",
+                "created": 1412653033964,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "ciovureefh",
+              "updates": [],
+              "id": "snzxpyfigx",
+              "created": 1412653033964,
+              "modified": null,
+              "opened": null
+            },
+            {
+              "content": "Stand up and give an even grimmer look.",
+              "showCondition": false,
+              "showUpdates": false,
+              "condition": {
+                "variable": null,
+                "verb": null,
+                "value": null,
+                "id": "kcefomitke",
+                "created": 1412653147383,
+                "modified": null,
+                "opened": null
+              },
+              "destination": "ezldjucxwt",
+              "updates": [],
+              "id": "xisppngwgj",
+              "created": 1412653147383,
+              "modified": null,
+              "opened": null
+            }
+          ],
+          "opening": false,
+          "value": 0,
+          "ending_value": false,
+          "trashed": false,
+          "append_link": {
+            "content": "",
+            "showCondition": false,
+            "showUpdates": false,
+            "condition": {
+              "variable": null,
+              "verb": null,
+              "value": null,
+              "id": "kwxolrznei",
+              "created": 1412652691744,
+              "modified": null,
+              "opened": null
+            },
+            "destination": null,
+            "updates": [],
+            "id": "mevasmifkp",
+            "created": 1412652691744,
+            "modified": null,
+            "opened": null
+          },
+          "id": "fhsfdxgtgf",
+          "created": 1412652691744,
+          "modified": null,
+          "opened": null,
+          "exit_type": "choices",
+          "entrances": [
+            {
+              "number": 1,
+              "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+              "choices": [
+                {
+                  "content": "Check to see if anyone is there.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "flpnnibian",
+                    "created": 1412652343459,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "zhtpwpsoqi",
+                  "updates": [],
+                  "id": "yuceethynj",
+                  "created": 1412652343459,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Toss back the last of your whiskey.",
+                  "showCondition": false,
+                  "showUpdates": false,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "yoqvvmkpfc",
+                    "created": 1412652359823,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "fhsfdxgtgf",
+                  "updates": [],
+                  "id": "vazpilxmox",
+                  "created": 1412652359823,
+                  "modified": null,
+                  "opened": null
+                },
+                {
+                  "content": "Load your revolver, you know, just in case.",
+                  "showCondition": false,
+                  "showUpdates": true,
+                  "condition": {
+                    "variable": null,
+                    "verb": null,
+                    "value": null,
+                    "id": "nankvqzgul",
+                    "created": 1412652383472,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "destination": "xlckzmlshp",
+                  "updates": [
+                    {
+                      "variable": "Ammo",
+                      "verb": "=",
+                      "value": "6",
+                      "id": "oldazpkmko",
+                      "created": 1412653212125,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "id": "dazktkcfjb",
+                  "created": 1412652383472,
+                  "modified": null,
+                  "opened": null
+                }
+              ],
+              "opening": false,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showCondition": false,
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "fhasnxwgtt",
+                  "created": 1412652186482,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": null,
+                "updates": [],
+                "id": "cfgmcpzfvl",
+                "created": 1412652186482,
+                "modified": null,
+                "opened": null
+              },
+              "id": "sbeyafsozl",
+              "created": 1412652186482,
+              "modified": null,
+              "opened": null,
+              "exit_type": "choices",
+              "entrances": [
+                {
+                  "number": null,
+                  "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+                  "choices": [
+                    {
+                      "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "xqirtnwjsr",
+                        "created": 1412652081366,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "sbeyafsozl",
+                      "updates": [],
+                      "id": "wfpvofrmsm",
+                      "created": 1412652081366,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Close up early, the streets are one big rain gutter.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "weuboakjth",
+                        "created": 1412652129162,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "cthodontcc",
+                      "updates": [],
+                      "id": "bgmwddlhxy",
+                      "created": 1412652129162,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "opening": true,
+                  "value": 0,
+                  "ending_value": false,
+                  "trashed": false,
+                  "append_link": {
+                    "content": "",
+                    "showUpdates": false,
+                    "condition": {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "vtafvadzah",
+                      "created": 1412651857242,
+                      "modified": null,
+                      "opened": null
+                    },
+                    "destination": null,
+                    "updates": [],
+                    "id": "lywhytvmef",
+                    "created": 1412651857242,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "id": "rcfwaofouf",
+                  "created": 1412651857242,
+                  "modified": null,
+                  "opened": null,
+                  "exit_type": "choices",
+                  "entrances": []
+                }
+              ]
+            },
+            {
+              "number": 5,
+              "content": "You carefully load your revolver with a few stray bullets rolling around your desk drawer, then feel a bit parched.",
+              "choices": [],
+              "opening": false,
+              "value": 0,
+              "ending_value": false,
+              "trashed": false,
+              "append_link": {
+                "content": "",
+                "showCondition": false,
+                "showUpdates": false,
+                "condition": {
+                  "variable": null,
+                  "verb": null,
+                  "value": null,
+                  "id": "znbwpbavfg",
+                  "created": 1412653311921,
+                  "modified": null,
+                  "opened": null
+                },
+                "destination": "fhsfdxgtgf",
+                "updates": [],
+                "id": "mrkbuurxpo",
+                "created": 1412653311921,
+                "modified": null,
+                "opened": null
+              },
+              "id": "xlckzmlshp",
+              "created": 1412653247384,
+              "modified": null,
+              "opened": null,
+              "exit_type": "append",
+              "entrances": [
+                {
+                  "number": 1,
+                  "content": "You tilt the bottle over your glass, but there's only a splash before droplets hang from the rim. \n\n\"Figures...\", you sigh.\n\nThe thunder outside rumbles loudly for a moment, and you think you also heard a knock at the door, but then again, this whole building tends to knock around in a storm.",
+                  "choices": [
+                    {
+                      "content": "Check to see if anyone is there.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "flpnnibian",
+                        "created": 1412652343459,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "zhtpwpsoqi",
+                      "updates": [],
+                      "id": "yuceethynj",
+                      "created": 1412652343459,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Toss back the last of your whiskey.",
+                      "showCondition": false,
+                      "showUpdates": false,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "yoqvvmkpfc",
+                        "created": 1412652359823,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "fhsfdxgtgf",
+                      "updates": [],
+                      "id": "vazpilxmox",
+                      "created": 1412652359823,
+                      "modified": null,
+                      "opened": null
+                    },
+                    {
+                      "content": "Load your revolver, you know, just in case.",
+                      "showCondition": false,
+                      "showUpdates": true,
+                      "condition": {
+                        "variable": null,
+                        "verb": null,
+                        "value": null,
+                        "id": "nankvqzgul",
+                        "created": 1412652383472,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "destination": "xlckzmlshp",
+                      "updates": [
+                        {
+                          "variable": "Ammo",
+                          "verb": "=",
+                          "value": "6",
+                          "id": "oldazpkmko",
+                          "created": 1412653212125,
+                          "modified": null,
+                          "opened": null
+                        }
+                      ],
+                      "id": "dazktkcfjb",
+                      "created": 1412652383472,
+                      "modified": null,
+                      "opened": null
+                    }
+                  ],
+                  "opening": false,
+                  "value": 0,
+                  "ending_value": false,
+                  "trashed": false,
+                  "append_link": {
+                    "content": "",
+                    "showCondition": false,
+                    "showUpdates": false,
+                    "condition": {
+                      "variable": null,
+                      "verb": null,
+                      "value": null,
+                      "id": "fhasnxwgtt",
+                      "created": 1412652186482,
+                      "modified": null,
+                      "opened": null
+                    },
+                    "destination": null,
+                    "updates": [],
+                    "id": "cfgmcpzfvl",
+                    "created": 1412652186482,
+                    "modified": null,
+                    "opened": null
+                  },
+                  "id": "sbeyafsozl",
+                  "created": 1412652186482,
+                  "modified": null,
+                  "opened": null,
+                  "exit_type": "choices",
+                  "entrances": [
+                    {
+                      "number": null,
+                      "content": "It was raining. Of course it was raining. I needed some scratch to pay the rent for this dump so old Murphy just had to make sure no one would want to come by with a job.",
+                      "choices": [
+                        {
+                          "content": "Pour another glass of mouse-whiskey and listen to the rain.",
+                          "showCondition": false,
+                          "showUpdates": false,
+                          "condition": {
+                            "variable": null,
+                            "verb": null,
+                            "value": null,
+                            "id": "xqirtnwjsr",
+                            "created": 1412652081366,
+                            "modified": null,
+                            "opened": null
+                          },
+                          "destination": "sbeyafsozl",
+                          "updates": [],
+                          "id": "wfpvofrmsm",
+                          "created": 1412652081366,
+                          "modified": null,
+                          "opened": null
+                        },
+                        {
+                          "content": "Close up early, the streets are one big rain gutter.",
+                          "showCondition": false,
+                          "showUpdates": false,
+                          "condition": {
+                            "variable": null,
+                            "verb": null,
+                            "value": null,
+                            "id": "weuboakjth",
+                            "created": 1412652129162,
+                            "modified": null,
+                            "opened": null
+                          },
+                          "destination": "cthodontcc",
+                          "updates": [],
+                          "id": "bgmwddlhxy",
+                          "created": 1412652129162,
+                          "modified": null,
+                          "opened": null
+                        }
+                      ],
+                      "opening": true,
+                      "value": 0,
+                      "ending_value": false,
+                      "trashed": false,
+                      "append_link": {
+                        "content": "",
+                        "showUpdates": false,
+                        "condition": {
+                          "variable": null,
+                          "verb": null,
+                          "value": null,
+                          "id": "vtafvadzah",
+                          "created": 1412651857242,
+                          "modified": null,
+                          "opened": null
+                        },
+                        "destination": null,
+                        "updates": [],
+                        "id": "lywhytvmef",
+                        "created": 1412651857242,
+                        "modified": null,
+                        "opened": null
+                      },
+                      "id": "rcfwaofouf",
+                      "created": 1412651857242,
+                      "modified": null,
+                      "opened": null,
+                      "exit_type": "choices",
+                      "entrances": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "id": "hgklwhyrjn",
+  "opened": null
+}

@@ -16,11 +16,23 @@
 		"clipboardRead",
 		"clipboardWrite",
 		"fileBrowserHandler",
-		{"fileSystem": ["write", "retainEntries", "directory"]},
 		"geolocation",
 		"identity",
 		"storage",
 		"syncFileSystem",
-		"unlimitedStorage"
+		"unlimitedStorage",
+		{
+			"fileSystem": ["write", "retainEntries", "directory"]
+		},
+		"usb"
+	],
+	"optional_permissions": [
+
+		{
+			"usbDevices": [
+				{ "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Spark w/ WiFi - Serial Mode)
+				{ "vendorId": 7504, "productId": 24703 } // VID: 0x1D50, PID: 0x607F (Spark w/ WiFi - CORE DFU)
+			]
+		}
 	]
 }

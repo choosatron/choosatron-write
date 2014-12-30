@@ -1,5 +1,8 @@
 # ChoiceWright #
 
+## APIs ##
+ - [USB raw access](https://developer.chrome.com/apps/usb)
+
 ## Dependencies ##
  - [chrome](http://www.google.com/chrome/)
  - [bower](http://bower.io/)
@@ -13,6 +16,7 @@
    - Install [nodejs](http://nodejs.org/download/)
    - `npm install -g bower`
    - `npm install -g grunt`
+   - `npm install -g grunt-cli` [optional - puts grunt in your path]
 1. `git clone https://path.to/git ./choicewright`
 2. `cd ./choicewright`
 3. `npm install`
@@ -53,7 +57,7 @@ When you get to a passage that is an ending, you can decide, on a scale of horri
 
 #### Conditions ####
 
-Conditions are tricky. When a reader selects a choice, you can manipulate one or more variables. This is called an "Update." Right now, you can set the variable or perform simple math: add, subtract, multiply or divide. 
+Conditions are tricky. When a reader selects a choice, you can manipulate one or more variables. This is called an "Update." Right now, you can set the variable or perform simple math: add, subtract, multiply or divide.
 
 You can use variables to decide whether a choice displays by adding in a condition to the choice. Conditions will compare a variable's current value and only display the choice if the test is met.
 

@@ -10,6 +10,7 @@ function StoriesCtrl($scope, $location, $profiles, $file, $translators, Story) {
 	$scope.stories_sort_desc  = true;
 	$scope.exporters          = $translators.exporters();
 	$scope.importers          = $translators.importers();
+	$scope.location           = $location;
 
 	$profiles.load().then(function() {
 		if (!$profiles.current) {
