@@ -1,0 +1,63 @@
+<div class="menuTop theme-inverse storyMenu">
+	<div class="topBar">
+		<p class="h5 pull-left"><a ng-click="location.path('stories')"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
+	</div>
+
+	<ul class="list-inline list-icon-menu h4">
+		<h4>Choosatron</h4>
+	</ul>
+</div>
+
+<div class="theme-alt wrap">
+	<div class="scrollable">
+		<div class="container">
+			<div class="row">
+				<div ng-hide="usb.serialDevices && usb.serialDevices.length" class="col">
+					<a ng-click="usb.connect()" class="btn btn-default">Connect to your Choosatron</a>
+					<div class="alert" ng-hide="usb.getHasPermissions()">
+						<h3>USB Permissions Required</h3>
+						<a ng-click="requestPermissions()" class="btn btn-default">Request Permissions</a>
+					</div>
+					<div class="alert" ng-hide="usb.serialDevices.length">
+						<h3>No Choosatrons Detected</h3>
+					</div>
+				</div>
+				<div ng-show="usb.serialDevices && usb.serialDevices.length" class="col">
+					<h2>Connected!</h2>
+
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>Serial Device</th>
+							<th>Product Id</th>
+							<th>Vendor Id</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="device in usb.serialDevices">
+							<td>{{ device.device }}</td>
+							<td>{{ device.productId }}</td>
+							<td>{{ device.vendorId }}</td>
+						 </tr>
+					</tbody>
+					<thead>
+						<tr>
+							<th>DFU Device</th>
+							<th>Product Id</th>
+							<th>Vendor Id</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="device in usb.dfuDevices">
+							<td>{{ device.device }}</td>
+							<td>{{ device.productId }}</td>
+							<td>{{ device.vendorId }}</td>
+						 </tr>
+					</tbody>
+				</table>
+			</div>
+		</div><!-- .container -->
+	</div><!-- .scrollable -->
+</div><!-- .wrap -->
+</div>

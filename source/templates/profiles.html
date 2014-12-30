@@ -19,12 +19,23 @@
 						<div class="form form-vertical" ng-show="profiles.current.id == p.id">
 							<div class="input-group">
 								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-user"></span> 
+									<span class="glyphicon glyphicon-user"></span>
 								</span>
 								<input class="form-control" ng-model="profiles.current.name">
 								<span class="input-group-btn">
 									<button class="btn btn-default" ng-click="save_profile()">
 										<span class="glyphicon glyphicon-floppy-{{saveState}}"></span>
+									</button>
+								</span>
+							</div>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-home"></span>
+								</span>
+								<input class="form-control" ng-model="profiles.current.homePath">
+								<span class="input-group-btn">
+									<button class="btn btn-default" ng-click="set_home_path()">
+										<span class="glyphicon glyphicon-cog}"></span>
 									</button>
 								</span>
 							</div>
@@ -36,7 +47,7 @@
 							</div>
 						</div>
 						<ul class="list-unstyled">
-							<li><span class="glyphicon glyphicon-time"></span> {{ p.created | date }}</li>
+							<li><span class="glyphicon glyphicon-time"></span> Created {{ p.created | date }}</li>
 							<li><span class="glyphicon glyphicon-book"></span> {{ p.entries.length }} {{ p.entries.length == 1 ? 'Story' : 'Stories' }}</li>
 						</ul>
 					</div></li>

@@ -106,6 +106,11 @@ angular.module('storyApp.utils')
 	};
 
 	Usb.prototype.updateSerialDeviceList = function() {
+		/*chrome.serial.getDevices(function(ports) {
+			for (var i=0; i<ports.length; i++) {
+				console.log(ports[i].path);
+			}
+		});*/
 		if (this.hasPermissions) {
 			var scope = this;
 			// Index 0 is the Spark Core in Serial Mode

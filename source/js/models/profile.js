@@ -6,6 +6,15 @@ function(Model) {
 		this.name     = '';
 		this.autosave = true;
 
+		// Spark Cloud access token.
+		this.sparkToken = '';
+
+		// Access tokens for guest Choosatron access.
+		this.guestTokens = {};
+
+		// Saves data to associate with Choosatrons
+		this.choosatrons = [];
+
 		// Saves file entry references to a profiles stories
 		this.entries = [];
 
