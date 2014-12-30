@@ -6,11 +6,11 @@ function(Model) {
 		this.created  = Date.now();
 		this.modified   =  Date.now();
 		// User friendly name of the Choosatron
-		this.name = '';
+		this.friendlyName = '';
 		// Profile username of the owner
 		this.ownerName = '';
 		// Spark Cloud username of the owner (if known)
-		this.ownerSparkName = '';
+		this.ownerSparkUser = '';
 		// Unique ID of the Spark Core in the Choosatron
 		this.coreId = '';
 		// Communicated with the device at least once, verify it exists
@@ -25,12 +25,22 @@ function(Model) {
 		this.isWired = false;
 		this.lastWired = null;
 
+		// Other local accounts can use this Choosatron.
+		this.shareLocally = false;
+		this.localAccessToken = '';
+
 		Model.call(this, data);
 	}
 
 	Choosatron.methods = {
+
 		getName: function () {
-			return this.name || "John Doetron (Give me a fun name!)";
+			return this.friendlyName || "John Doetron (Give me a fun name!)";
+		},
+
+		setName: function (item) {
+			console.log("Set name: " + item);
+			this.name = item;
 		},
 
 		getOwnerName: function () {
@@ -42,7 +52,7 @@ function(Model) {
 		},
 
 		getCoreId: function () {
-			return this.coreId;
+			return this.coreId || "Choosatron is not verified.";
 		},
 
 		isClaimed: function () {

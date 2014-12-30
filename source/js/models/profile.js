@@ -6,6 +6,12 @@ function(Model) {
 		this.name     = '';
 		this.autosave = true;
 
+		// Is this profile linked to a spark account?
+		this.linkedWithSpark = false;
+
+		// Spark Cloud username.
+		this.sparkUser = '';
+
 		// Spark Cloud access token.
 		this.sparkToken = '';
 
@@ -22,6 +28,14 @@ function(Model) {
 	}
 
 	Profile.methods = {
+		getChoosatron: function(id) {
+			for (i in this.choosatrons) {
+				if (this.choosatrons[i].id = id) {
+					return this.choosatrons[i];
+				}
+			}
+		},
+
 		// Add a new entry record
 		save_entry: function(entryId, story) {
 			var entry = {

@@ -4,20 +4,23 @@
 		<p><button class="btn label label-success" ng-click="verify_(choosatron)">Verify Over WiFi</button></p>
 
 	</div> -->
-	<div ng-if="choosatron.id == choosatrons.editing.id">
+	<div ng-if="choosatron.id == vm.editing.id">
 
-		<p><input ng-model="choosatron.name" type="text" class="form-control" value="" /></p>
+		<p><input ng-model="vm.editing.name" type="text" class="form-control" placeholder="Name your Choosatron!"/></p>
 		<div ng-if="choosatron.isClaimed">
 			<p><button class="btn label label-success" ng-click="releaseClaim(choosatron)">Release Claim</button></p>
 		</div>
 		<div ng-if="!choosatron.isClaimed">
-			<p><input ng-model="choosatron.coreId" type="text" class="form-control" value="" /></p>
+			<p><input ng-model="vm.editing.coreId" type="text" class="form-control"/></p>
 		</div>
+		<p><button class="btn label label-success" ng-click="vm.saveChoosatron(vm.editing)">Save</button></p>
 
 	</div>
-	<div ng-if="choosatron.id != choosatrons.editing.id">
+	<div ng-if="choosatron.id != vm.editing.id">
+		<p>ID: {{ choosatron.id }}</p>
 		<p>Name: {{ choosatron.name }}</p>
-		<p>ID: {{ choosatron.coreId }}</p>
+		<p>Core ID: {{ choosatron.coreId }}</p>
 		<p>Owner: {{ choosatron.ownerName }}</p>
+		<p><button class="btn label label-success" ng-click="vm.editChoosatron(choosatron)">Edit</button></p>
 	</div>
 </div>

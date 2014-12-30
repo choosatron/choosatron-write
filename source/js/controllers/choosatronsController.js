@@ -30,24 +30,33 @@ function($scope, $interval, $location, $profiles) {
 .controller('ChoosatronsCtrl',  ['$scope', '$location', '$profiles', 'Choosatron',
 function($scope, $location, $profiles, Choosatron) {
 	var vm = this;
+	vm.location = $location;
+	vm.profiles = $profiles;
 
 	vm.state = 'disk';
 
 	$profiles.load().then(function() {
-		vm.choosatrons = $profiles.current.choosatrons;
+		//vm.choosatrons = $profiles.current.choosatrons;
+
 		/*var test = new Choosatron();
 		test.name = "Pickles";
 		test.ownerName = $profiles.current.name;
 		test.coreId = '53ff6b065067544835331287';
-		vm.choosatrons.push(test);*/
-		$scope.$watchGroup(['vm.choosatrons.current.name', 'vm.choosatrons.current.coreId'],
+		$profiles.current.choosatrons.push(test);*/
+
+		// Watches are bad: http://www.benlesh.com/2013/10/title.html
+		/*$scope.$watchGroup(['vm.choosatrons.current.name', 'vm.choosatrons.current.coreId'],
 		                   function(newValues, oldValues, scope) {
 			vm.state = 'save';
-		});
+		});*/
 	});
 
 	vm.newChoosatron = function() {
 		console.log("Create new Choosatron profile.");
+		var choosatron = new Choosatron();
+		choosatron.ownerName = $profiles.current.name;
+		$profiles.current.choosatrons.push(choosatron);
+		//vm.choosatrons = $profiles.current.choosatrons;
 	};
 
 	vm.releaseClaim = function() {
@@ -55,15 +64,29 @@ function($scope, $location, $profiles, Choosatron) {
 	};
 
 	vm.saveChoosatron = function() {
-		$choosatrons.save()
+		/*$profiles.current.choosatrons.find(function(perms) {
+			return perms.usbDevices;
+		});*/
+		for (i in $profiles.current.choosatrons) {
+			if ($profiles.current.choosatrons[i].id == vm.editing.id) {
+				console.log("Matched: " + $profiles.current.choosatrons[i].id);
+				$profiles.current.choosatrons[i] = vm.editing;
+			}
+		}
+		vm.editing = null;
+		$profiles.save()
 		.then(function() {
 			vm.saveState = 'saved';
 		});
 	};
 
+	vm.editChoosatron = function(item) {
+		console.log("Edit Choosatron");
+		vm.editing = angular.copy(item);
+	};
 
 	// Filter for verified devices.
-	vm.verifiedChoosatron = function (item) {
+	vm.verifiedChoosatron = function(item) {
 		return (item.verified);
 	};
 

@@ -1,5 +1,5 @@
 angular.module('storyApp.models')
-.factory('Model', ['Random', 
+.factory('Model', ['Random',
 function(Random) {
 
 	/// Model base class ///
