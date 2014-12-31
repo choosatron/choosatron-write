@@ -72,8 +72,6 @@ angular.module('storyApp.utils')
 	this.choose = function(args) {
 		var deferred = $q.defer();
 
-		console.log("Meow");
-
 		fs.chooseEntry(args, function(entry) {
 			tryResolve(deferred, entry);
 		});

@@ -1,4 +1,4 @@
-<div ng-controller="SparkAuthModalCtrl as vm" class="animate-switch-container" ng-switch on="vm.authState">
+<div ng-controller="CloudAuthModalCtrl as vm" class="animate-switch-container" ng-switch on="vm.authState">
 	<div class="animate-switch" ng-switch-when="login">
 		<form>
 			<input ng-model="vm.username" name="login" placeholder="Username"><br>
@@ -9,7 +9,7 @@
 			<p ng-show="vm.error">{{ vm.error.message }}</p>
 		</form>
 		<div class="ngdialog-buttons">
-			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="vm.cancel()">Cancel</button>
+			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="cancel()">Cancel</button>
 			<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="vm.changeAuthState('register')">Sign Up</button>
 		</div>
 	</div>

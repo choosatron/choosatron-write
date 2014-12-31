@@ -7,13 +7,16 @@ function(Model) {
 		this.autosave = true;
 
 		// Is this profile linked to a spark account?
-		this.linkedWithSpark = false;
+		this.linkedWithCloud = false;
 
-		// Spark Cloud username.
-		this.sparkUser = '';
+		// Cloud username.
+		this.cloudUser = '';
 
-		// Spark Cloud access token.
-		this.sparkToken = '';
+		// Cloud access token. ('access_token', 'token_type', 'expires_in')
+		this.cloudToken = {};
+
+		// Datetime token was registered on.
+		this.tokenExpiration = null;
 
 		// Access tokens for guest Choosatron access.
 		this.guestTokens = {};

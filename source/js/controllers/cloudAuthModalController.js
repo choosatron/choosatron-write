@@ -2,21 +2,26 @@
 	'use strict';
 
 	angular.module('storyApp.controllers')
-		.controller('SparkAuthModalCtrl', SparkAuthModalCtrl);
+		.controller('CloudAuthModalCtrl', CloudAuthModalCtrl);
 
-	SparkAuthModalCtrl.$inject = ['ngDialog'];
+	CloudAuthModalCtrl.$inject = ['$scope', 'ngDialog'];
 
-	function SparkAuthModalCtrl(ngDialog) {
+	function CloudAuthModalCtrl($scope, ngDialog) {
 		var vm = this;
 
+		vm.profile = $scope.profile;
 		vm.authState = 'login';
 		vm.remoteState = 'idle';
 
 		vm.loginToCloud = loginToCloud;
+		vm.changeAuthState = changeAuthState;
 
 		function loginToCloud() {
 			console.log("Logging in to cloud");
-			var promise = spark.login({ username: vm.username, password: vm.password });
+			console.log($scope.ngDialogData.profile.name);
+			//var promise = spark.login({ username: vm.username, password: vm.password });
+
+			var promise = spark.login({ accessToken: '7e9034ed8f14bed6cb1a0a3bf7c3a0df3b795714' });
 
 			promise.then(
 				function(token){
@@ -29,6 +34,10 @@
 					console.log('API call completed on promise fail: ', err);
 				}
 			);
+		}
+
+		function changeAuthState(aNewState) {
+			vm.authState = aNewState;
 		}
 	}
 

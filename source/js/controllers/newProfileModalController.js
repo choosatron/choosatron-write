@@ -10,14 +10,20 @@
 		var vm = this;
 
 		vm.newProfile = new Profile();
-		vm.openSparkDialog = openSparkDialog;
+		vm.openCloudAuthModal = openCloudAuthModal;
 
-		function openSparkDialog() {
+		function openCloudAuthModal() {
 			console.log("Open spark");
-			ngDialog.open({
-				template: 'templates/sparkAuthModalView.html',
+			ngDialog.openConfirm({
+				template: 'templates/cloudAuthModalView.html',
 				closeByEscape: false,
-				controller: 'SparkAuthModalCtrl'
+				controller: 'CloudAuthModalCtrl',
+				data: { profile: vm.newProfile }
+			}).then(function (token) {
+				console.log('Modal promise resolved.');
+				console.log(token);
+			}, function (reason) {
+				console.log('Modal promise rejected. Reason: ', reason);
 			});
 		}
 	}
