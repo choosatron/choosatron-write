@@ -13,8 +13,20 @@ angular.module('storyApp', [
 	'storyApp.controllers',
 	'ngAnimate',
 	'ngRoute',
-	'ui.utils'
+	'ui.utils',
+	'ngDialog'
 ])
+
+angular.module('storyApp')
+.config(['ngDialogProvider', function(ngDialogProvider) {
+	ngDialogProvider.setDefaults({
+		className: 'ngdialog-theme-default',
+		plain: false,
+		showClose: true,
+		closeByDocument: true,
+		closeByEscape: true
+	});
+}])
 
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/stories', {templateUrl: 'templates/stories.html', controller: 'StoriesCtrl'});

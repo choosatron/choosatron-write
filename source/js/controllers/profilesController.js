@@ -11,8 +11,8 @@ function($scope, $location, $profiles) {
 	};
 }])
 
-.controller('ProfilesCtrl', ['$scope', '$location', '$profiles', 'Profile',
-function($scope, $location, $profiles, Profile) {
+.controller('ProfilesCtrl', ['$scope', '$location', '$profiles', 'Profile', 'ngDialog',
+function($scope, $location, $profiles, Profile, ngDialog) {
 	var vm = this;
 	vm.location = $location;
 
@@ -30,8 +30,24 @@ function($scope, $location, $profiles, Profile) {
 	};
 
 	vm.new_profile = function() {
-		var profile = new Profile();
-		vm.profiles.select(profile);
+		//var profile = new Profile();
+		//vm.profiles.select(profile);
+
+		//vm.newProfile = new Profile();
+		/*ngDialog.open({
+			template: 'templates/newProfileView.html',
+			controller: 'NewProfileCtrl'
+		});*/
+
+		ngDialog.openConfirm({
+			template: 'templates/newProfileModalView.html',
+			controller: 'NewProfileModalCtrl'
+		}).then(function (profile) {
+			console.log('Modal promise resolved. Value: ', profile);
+			vm.profiles.select(profile);
+		}, function (reason) {
+			console.log('Modal promise rejected. Reason: ', reason);
+		});
 	};
 
 	vm.pick_profile = function(profile) {

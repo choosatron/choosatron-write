@@ -8,7 +8,7 @@
 
 		<p><input ng-model="vm.editing.name" type="text" class="form-control" placeholder="Name your Choosatron!"/></p>
 		<div ng-if="choosatron.isClaimed">
-			<p><button class="btn label label-success" ng-click="releaseClaim(choosatron)">Release Claim</button></p>
+			<p><button class="btn label label-success" ng-click="vm.releaseClaim(choosatron)">Release Claim</button></p>
 		</div>
 		<div ng-if="!choosatron.isClaimed">
 			<p><input ng-model="vm.editing.coreId" type="text" class="form-control"/></p>

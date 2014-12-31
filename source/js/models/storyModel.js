@@ -1,5 +1,5 @@
 angular.module('storyApp.models')
-.factory('Story', ['Model', 'Passage', 
+.factory('Story', ['Model', 'Passage',
 function(Model, Passage) {
 
 	/// Story ///
