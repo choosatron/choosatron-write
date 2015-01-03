@@ -5,10 +5,10 @@ module.exports = function(grunt) {
 				src: [ 'build' ]
 			},
 			stylesheets: {
-				src: [ 'build/css', '!build/app.min.css' ]
+				src: [ 'build/assets/css', '!build/app.min.css' ]
 			},
 			scripts: {
-				src: [ 'build/js', '!build/app.min.js' ]
+				src: [ 'build/app', '!build/app.min.js' ]
 			}
 		},
 
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 
 		'bower-install-simple': {
 			options: {
-				directory: 'build/lib'
+				directory: 'build/assets/libs'
 			}
 		},
 
@@ -33,7 +33,16 @@ module.exports = function(grunt) {
 					'build/*.html'
 				],
 				cwd: '.',
-				directory: 'build/lib/'
+				directory: 'build/assets/libs/'
+			}
+		},
+
+		autoprefixer: {
+			build: {
+				expand: true,
+				cwd: 'build',
+				src: [ '**/*.css' ],
+				dest: 'build'
 			}
 		},
 
@@ -54,7 +63,7 @@ module.exports = function(grunt) {
 		cssmin: {
 			build: {
 				files: {
-					'build/app.min.css': [ 'build/css/*.css' ]
+					'build/app.min.css': [ 'build/assets/css/*.css' ]
 				}
 			}
 		},
@@ -65,8 +74,8 @@ module.exports = function(grunt) {
 					mangle: false
 				},
 				files: {
-					'build/app.min.js': 'build/js/*/*.js',
-					'build/background.min.js': 'build/js/background.js'
+					'build/app.min.js': 'build/app/*/*.js',
+					'build/background.min.js': 'build/assets/js/background.js'
 				}
 			},
 			debug: {
@@ -76,25 +85,25 @@ module.exports = function(grunt) {
 					compress: false
 				},
 				files: {
-					'build/app.min.js': 'build/js/*/*.js',
-					'build/background.min.js': 'build/js/background.js'
+					'build/app.min.js': 'build/app/*/*.js',
+					'build/background.min.js': 'build/assets/js/background.js'
 				}
 			}
 		},
 
 		watch: {
 			stylesheets: {
-				files: 'source/css/*.css',
+				files: 'source/assets/css/*.css',
 				tasks: [ 'stylesheets' ]
 			},
 
 			scripts: {
-				files: [ 'source/js/*.js', 'source/js/*/*.js' ],
+				files: [ 'source/app/*.js', 'source/app/*/*.js' ],
 				tasks: [ 'debug-scripts' ]
 			},
 
 			html: {
-				files: [ 'source/*.html', '!source/js/*.js', '!source/css/*.css' ],
+				files: [ 'source/*.html', '!source/app/*.js', '!source/assets/css/*.css' ],
 				tasks: [ 'copy' ]
 			}
 		}
@@ -104,6 +113,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-bower-install-simple');
 	grunt.loadNpmTasks('grunt-wiredep');
 	grunt.loadNpmTasks('grunt-usemin');
+	grunt.loadNpmTasks('grunt-autoprefixer');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');

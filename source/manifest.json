@@ -10,7 +10,7 @@
 			]
 		}
 	},
-	"icons": { "16": "img/icon_16.png", "48": "img/icon_48.png", "128": "img/icon_128.png" },
+	"icons": { "16": "assets/img/icon_16.png", "48": "assets/img/icon_48.png", "128": "assets/img/icon_128.png" },
 	"offline_enabled": true,
 	"permissions": [
 		"clipboardRead",
