@@ -1,5 +1,5 @@
 angular.module('storyApp.models')
-.factory('Choosatron', ['BAseModel',
+.factory('Choosatron', ['BaseModel',
 function(BaseModel) {
 
 	function Choosatron(data) {

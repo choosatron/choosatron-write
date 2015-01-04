@@ -8,22 +8,34 @@ module.exports = function(grunt) {
 				src: [ 'build/assets/css', '!build/app.min.css' ]
 			},
 			scripts: {
-				src: [ 'build/app', '!build/app.min.js' ]
+				src: [ 'build/header.min.js', 'build/body.min.js', 'build/background.js', 'build/app', 'build/assets/js', '!build/app.min.js' ]
+			},
+			libs: {
+				src: [ 'build/libs', '!build/lib.min.js' ]
 			}
 		},
 
 		copy: {
 			build: {
-				cwd: 'source',
-				src: [ '**' ],
-				dest: 'build',
-				expand: true
+				files: [
+					{cwd: 'source',
+					src: [ '**' ],
+					dest: 'build',
+					expand: true},
+
+					{cwd: 'source',
+					flatten: true,
+					src: ['app/**/*.html'],
+					dest: 'build/templates/',
+					expand: true,
+					filter: 'isFile'}
+				],
 			}
 		},
 
 		'bower-install-simple': {
 			options: {
-				directory: 'build/assets/libs'
+				directory: 'build/libs'
 			}
 		},
 
@@ -33,7 +45,7 @@ module.exports = function(grunt) {
 					'build/*.html'
 				],
 				cwd: '.',
-				directory: 'build/assets/libs/'
+				directory: 'build/libs/'
 			}
 		},
 
@@ -74,8 +86,10 @@ module.exports = function(grunt) {
 					mangle: false
 				},
 				files: {
-					'build/app.min.js': 'build/app/*/*.js',
-					'build/background.min.js': 'build/assets/js/background.js'
+					'build/header.min.js': ['build/app/app.modules.js', 'build/app/app.configs.js', 'build/app/app.routes.js', 'build/app/app.constants.js'],
+					'build/body.min.js': ['build/app/*/*.js', '!build/app/app.*.js'],
+					'build/assets.min.js': 'build/assets/js/*.js',
+					'build/background.min.js': 'build/background.js'
 				}
 			},
 			debug: {
@@ -85,8 +99,10 @@ module.exports = function(grunt) {
 					compress: false
 				},
 				files: {
-					'build/app.min.js': 'build/app/*/*.js',
-					'build/background.min.js': 'build/assets/js/background.js'
+					'build/header.min.js': ['build/app/app.modules.js', 'build/app/app.configs.js', 'build/app/app.routes.js', 'build/app/app.constants.js'],
+					'build/body.min.js': ['build/app/*/*.js', '!build/app/app.*.js'],
+					'build/assets.min.js': 'build/assets/js/*.js',
+					'build/background.min.js': 'build/background.js'
 				}
 			}
 		},
@@ -105,6 +121,19 @@ module.exports = function(grunt) {
 			html: {
 				files: [ 'source/*.html', '!source/app/*.js', '!source/assets/css/*.css' ],
 				tasks: [ 'copy' ]
+			}
+		},
+
+		concat: {
+			options: {
+				// define a string to put between each file in the concatenated output
+				separator: ';'
+			},
+			scripts: {
+				// the files to concatenate
+				src: ['build/header.min.js', 'build/body.min.js'],
+				// the location of the resulting JS file
+				dest: 'build/app.min.js'
 			}
 		}
 	});
@@ -129,13 +158,13 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'scripts',
 		"Compiles the javascript files",
-		[ "uglify:build", "clean:scripts" ]
+		[ "uglify:build", "concat:scripts", "clean:scripts" ]
 	);
 
 	grunt.registerTask(
 		'debug-scripts',
 		"Beautifies the javascript files",
-		[ "uglify:debug", "clean:scripts" ]
+		[ "uglify:debug", "concat:scripts", "clean:scripts" ]
 	);
 
 	grunt.registerTask(
@@ -147,7 +176,7 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'optimize',
 		"Replaces included files with the minified versions.",
-		[ "useminPrepare", "concat:generated", "cssmin:generated", "uglify:generated", "usemin" ]
+		[ "useminPrepare", "concat:generated", "cssmin:generated", "uglify:generated", "usemin", "clean:libs" ]
 	);
 
 	grunt.registerTask(
