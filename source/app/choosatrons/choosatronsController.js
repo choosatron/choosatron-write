@@ -55,21 +55,25 @@
 		vm.editChoosatron = editChoosatron;
 		vm.verifiedChoosatron = verifiedChoosatron;
 
-		profiles.load().then(function() {
-			//vm.choosatrons = $profiles.current.choosatrons;
+		activate();
 
-			/*var test = new Choosatron();
-			test.name = "Pickles";
-			test.ownerName = $profiles.current.name;
-			test.coreId = '53ff6b065067544835331287';
-			$profiles.current.choosatrons.push(test);*/
+		function activate() {
+			profiles.load().then(function() {
+				//vm.choosatrons = $profiles.current.choosatrons;
 
-			// Watches are bad: http://www.benlesh.com/2013/10/title.html
-			/*$scope.$watchGroup(['vm.choosatrons.current.name', 'vm.choosatrons.current.coreId'],
-			                   function(newValues, oldValues, scope) {
-				vm.state = 'save';
-			});*/
-		});
+				/*var test = new Choosatron();
+				test.name = "Pickles";
+				test.ownerName = $profiles.current.name;
+				test.coreId = '53ff6b065067544835331287';
+				$profiles.current.choosatrons.push(test);*/
+
+				// Watches are bad: http://www.benlesh.com/2013/10/title.html
+				/*$scope.$watchGroup(['vm.choosatrons.current.name', 'vm.choosatrons.current.coreId'],
+				                   function(newValues, oldValues, scope) {
+					vm.state = 'save';
+				});*/
+			});
+		}
 
 		function releaseClaim() {
 			console.log("Release claim on Choosatron.");

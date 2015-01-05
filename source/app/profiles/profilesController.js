@@ -37,12 +37,16 @@
 		vm.saveProfile = saveProfile;
 		vm.setHomePath = setHomePath;
 
-		profiles.load().then(function() {
-			vm.profiles = profiles;
-			$scope.$watch('vm.profiles.current.name', function(n, o) {
-				vm.saveState = 'save';
+		activate();
+
+		function activate() {
+			profiles.load().then(function() {
+				vm.profiles = profiles;
+				$scope.$watch('vm.profiles.current.name', function(n, o) {
+					vm.saveState = 'save';
+				});
 			});
-		});
+		}
 
 		function showStoriesMenu() {
 			vm.location.path('stories');
