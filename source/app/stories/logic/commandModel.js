@@ -1,6 +1,6 @@
 angular.module('storyApp.models')
-.factory('Command', ['Model', 'Operator',
-function(Model, Operator) {
+.factory('Command', ['BaseModel', 'Operator',
+function(BaseModel, Operator) {
 
 	function Command(data) {
 		this.variable = null;
@@ -16,7 +16,7 @@ function(Model, Operator) {
 			},
 		});
 
-		Model.call(this, data);
+		BaseModel.call(this, data);
 	};
 
 	Command.methods = {
@@ -65,7 +65,7 @@ function(Model, Operator) {
 			return false;
 		}
 	};
-	Model.extend(Command, Command.methods);
+	BaseModel.extend(Command, Command.methods);
 
 	return Command;
 }

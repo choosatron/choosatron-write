@@ -66,9 +66,9 @@ function(BaseModel, Choice) {
 			return (this.ending_value !== false);
 		},
 
-		has_append: function (passage) {
-			if (passage) {
-				return (this.append_link.has_destination(passage));
+		has_append: function (aPassage) {
+			if (aPassage) {
+				return (this.append_link.has_destination(aPassage));
 			}
 
 			return (this.append_link && this.append_link.has_destination && this.append_link.has_destination());

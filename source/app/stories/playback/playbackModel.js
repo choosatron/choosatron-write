@@ -1,6 +1,6 @@
 angular.module('storyApp.models')
-.factory('Playback', ['Model', 
-function(Model) {
+.factory('Playback', ['BaseModel',
+function(BaseModel) {
 
 	function Playback(data) {
 		this.story = null;
@@ -11,7 +11,7 @@ function(Model) {
 		// Stores the array of choice ids selected, in order
 		this.selected = [];
 
-		Model.call(this, data);
+		BaseModel.call(this, data);
 	};
 
 	Playback.methods = {
@@ -66,7 +66,7 @@ function(Model) {
 			console.table(data);
 		}
 	};
-	Model.extend(Playback, Playback.methods);
+	BaseModel.extend(Playback, Playback.methods);
 
 	return Playback;
 }

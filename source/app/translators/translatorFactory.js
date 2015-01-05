@@ -1,11 +1,11 @@
 angular.module('storyApp.translators')
-.factory('translators', ['$file', '$q',
+.factory('translators', ['file', '$q',
 'jsonTranslator',
 'twineTranslator',
 'choosatronTranslator',
 'inkleTranslator',
 'htmlTranslator',
-function($file, $q) {
+function(file, $q) {
 	var classes = Array.prototype.splice.call(arguments, 2);
 
 	return {
@@ -42,9 +42,9 @@ function($file, $q) {
 				return deferred.promise;
 			}
 
-			entry.id = $file.getEntryId(entry);
+			entry.id = file.getEntryId(entry);
 
-			$file.read(entry)
+			file.read(entry)
 			.then(function(data) {
 				var story = translator.import(data);
 				if (story) story.refresh_id();
@@ -62,7 +62,7 @@ function($file, $q) {
 			var deferred = $q.defer();
 
 			var read = this.read.bind(this, type);
-			$file.restore(entryId)
+			file.restore(entryId)
 			.then(function(entry) {
 				read(entry).then(deferred.resolve, deferred.reject);
 			}, deferred.reject);
@@ -76,7 +76,7 @@ function($file, $q) {
 			var supported = translator.imports;
 			var read = this.read.bind(this);
 
-			$file.open(supported)
+			file.open(supported)
 			.then(function(entry) {
 				if (!entry) return deferred.resolve(null);
 				read(type, entry).then(deferred.resolve, deferred.reject);
@@ -91,14 +91,13 @@ function($file, $q) {
 			var datatype = translator.datatype;
 			var data = translator.export(story);
 
-      if (data && data.then) {
-        data.then(function(rsp) {
-          $file.export(story.title, extension, rsp, datatype);
-        })
-      }
-      else {
-			  return $file.export(story.title, extension, data, datatype);
-      }
+			if (data && data.then) {
+				data.then(function(rsp) {
+					file.export(story.title, extension, rsp, datatype);
+				})
+			} else {
+				return file.export(story.title, extension, data, datatype);
+			}
 		}
 	};
 }]);

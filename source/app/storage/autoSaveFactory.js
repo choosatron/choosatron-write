@@ -1,8 +1,8 @@
 angular.module('storyApp.storage')
 .factory('autoSave', ['$timeout', function($timeout) {
 
-	function autoSave($storage, $scope) {
-		this.storage = $storage;
+	function autoSave(storage, $scope) {
+		this.storage = storage;
 		this.scope = $scope;
 
 		this.events = {
@@ -18,7 +18,7 @@ angular.module('storyApp.storage')
 		// Store a reference to the promise to save
 		this.queue = {};
 
-		$storage.on('error', (function(e) {
+		storage.on('error', (function(e) {
 			this._fire('error', e);
 		}).bind(this));
 	}

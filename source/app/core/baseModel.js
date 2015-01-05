@@ -12,17 +12,17 @@ function(Random) {
 		if (data) this.load(data);
 	}
 
-	Model.abbrs = [];
+	BaseModel.abbrs = [];
 
-	Model.extend = function(cls, data) {
-		cls.prototype = new Model();
+	BaseModel.extend = function(cls, data) {
+		cls.prototype = new BaseModel();
 		cls.constructor = cls;
 		angular.forEach(data, function(func, name) {
 			cls.prototype[name] = func;
 		});
 	};
 
-	Model.prototype = {
+	BaseModel.prototype = {
 		load: function(data) {
 			for (var key in data) {
 				var loader = 'load_' + key;
@@ -70,6 +70,6 @@ function(Random) {
 		}
 	};
 
-	return Model;
+	return BaseModel;
 }
 ]);

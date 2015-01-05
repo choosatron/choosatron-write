@@ -108,14 +108,14 @@ function(BaseModel, Passage) {
 			return this.each('passages', callback);
 		},
 
-		collect_entrances: function(passage) {
+		collect_entrances: function(aPassage) {
 			var entrances = [];
 			this.each_passage(function(p) {
-				if (p.has_destination(passage)) {
+				if (p.has_destination(aPassage)) {
 					entrances.push(p);
 				}
 
-				if (p.has_append(passage)) {
+				if (p.has_append(aPassage)) {
 					entrances.push(p);
 				}
 			});

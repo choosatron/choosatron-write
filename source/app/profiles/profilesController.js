@@ -1,9 +1,9 @@
 angular.module('storyApp.controllers')
 
-.controller('ProfileCtrl', ['$scope', '$location', '$profiles',
-function($scope, $location, $profiles) {
-	$profiles.load().then(function() {
-		$scope.profiles = $profiles;
+.controller('ProfileCtrl', ['$scope', '$location', 'profiles',
+function($scope, $location, profiles) {
+	profiles.load().then(function() {
+		$scope.profiles = profiles;
 	});
 
 	$scope.view = function() {
@@ -11,15 +11,15 @@ function($scope, $location, $profiles) {
 	};
 }])
 
-.controller('ProfilesCtrl', ['$scope', '$location', '$profiles', 'Profile', 'ngDialog',
-function($scope, $location, $profiles, Profile, ngDialog) {
+.controller('ProfilesCtrl', ['$scope', '$location', 'profiles', 'Profile', 'ngDialog',
+function($scope, $location, profiles, Profile, ngDialog) {
 	var vm = this;
 	vm.location = $location;
 
 	vm.saveState = 'disk';
 
-	$profiles.load().then(function() {
-		vm.profiles = $profiles;
+	profiles.load().then(function() {
+		vm.profiles = profiles;
 		$scope.$watch('vm.profiles.current.name', function(n, o) {
 			vm.saveState = 'save';
 		});

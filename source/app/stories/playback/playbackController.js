@@ -1,16 +1,16 @@
 angular.module('storyApp.controllers')
-.controller('PlaybackCtrl', ['$scope', '$location', '$profiles', '$translators', 'Playback',
+.controller('PlaybackCtrl', ['$scope', '$location', 'profiles', 'translators', 'Playback',
 
-function PlaybackCtrl($scope, $location, $profiles, $translators, Playback) {
+function PlaybackCtrl($scope, $location, profiles, translators, Playback) {
 	$scope.playback = null;
 	$scope.story    = null;
 	$scope.passage  = null;
 
-	$profiles.load()
+	profiles.load()
 	.then(function() {
-		var profile = $profiles.current;
+		var profile = profiles.current;
 		var entry = profile.entries[0];
-		$translators.restore('json', entry.entry_id)
+		translators.restore('json', entry.entry_id)
 		.then(function(result) {
 			$scope.story = result.story;
 			$scope.playback = new Playback();

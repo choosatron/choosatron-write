@@ -9,15 +9,15 @@ function(Story) {
 
 		importMenuTitle: 'Import from JSON',
 		imports: [ 'json' ],
-		import: function(data) {
-			var json = angular.fromJson(data);
+		import: function(aData) {
+			var json = angular.fromJson(aData);
 			return new Story(json);
 		},
 
 		exportMenuTitle: 'Export to JSON',
 		exports: 'json',
-		export: function(story) {
-			return story.serialize(true);
+		export: function(aStory) {
+			return aStory.serialize(true);
 		}
 	}
 }]);

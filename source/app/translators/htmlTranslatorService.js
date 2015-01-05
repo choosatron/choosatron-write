@@ -9,9 +9,9 @@ function(Story, $http) {
 
 		exportMenuTitle: 'Export to Web Page',
 		exports: 'html',
-		export: function(story) {
+		export: function(aStory) {
 			var placeholder = '{{STORY_JSON}}';
-			var json = angular.toJson(story);
+			var json = angular.toJson(aStory);
 			return $http
 			.get('/templates/htmlView.html')
 			.then(function(rsp) {

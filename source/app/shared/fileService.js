@@ -1,5 +1,5 @@
 angular.module('storyApp.utils')
-.service('$file', ['$q', function($q, fs, runtime) {
+.service('file', ['$q', function($q, fs, runtime) {
 	fs = fs || chrome.fileSystem;
 	runtime = runtime || chrome.runtime;
 

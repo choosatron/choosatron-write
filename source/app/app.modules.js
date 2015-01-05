@@ -7,7 +7,7 @@ angular.module('storyApp.models', ['storyApp.utils']);
 angular.module('storyApp.translators', ['storyApp.utils', 'storyApp.models']);
 angular.module('storyApp.controllers', ['storyApp.models', 'storyApp.databridge', 'storyApp.translators']);
 
-angular.module('storyApp.core', [
+angular.module('storyApp', [
 	'storyApp.filters',
 	'storyApp.directives',
 	'storyApp.controllers',

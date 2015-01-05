@@ -8,10 +8,10 @@ module.exports = function(grunt) {
 				src: [ 'build/assets/css', '!build/app.min.css' ]
 			},
 			scripts: {
-				src: [ 'build/header.min.js', 'build/body.min.js', 'build/background.js', 'build/app', 'build/assets/js', '!build/app.min.js' ]
+				src: [ 'build/header.min.js', 'build/body.min.js', 'build/background.js', 'build/app', 'build/assets', '!build/app.min.js' ]
 			},
 			libs: {
-				src: [ 'build/libs', '!build/lib.min.js' ]
+				src: [ 'build/lib', '!build/lib.min.js' ]
 			}
 		},
 
@@ -21,12 +21,25 @@ module.exports = function(grunt) {
 					{cwd: 'source',
 					src: [ '**' ],
 					dest: 'build',
+					flatten: false,
+					expand: true},
+
+					{cwd: './',
+					src: [ '**/*.ttf', '**/*.woff' ],
+					dest: 'build/fonts/',
+					flatten: true,
 					expand: true},
 
 					{cwd: 'source',
+					src: [ 'assets/img/*' ],
+					dest: 'build/img/',
 					flatten: true,
+					expand: true},
+
+					{cwd: 'source',
 					src: ['app/**/*.html'],
 					dest: 'build/templates/',
+					flatten: true,
 					expand: true,
 					filter: 'isFile'}
 				],
@@ -35,7 +48,7 @@ module.exports = function(grunt) {
 
 		'bower-install-simple': {
 			options: {
-				directory: 'build/libs'
+				directory: 'build/lib'
 			}
 		},
 
@@ -45,7 +58,7 @@ module.exports = function(grunt) {
 					'build/*.html'
 				],
 				cwd: '.',
-				directory: 'build/libs/'
+				directory: 'build/lib/'
 			}
 		},
 
@@ -87,7 +100,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'build/header.min.js': ['build/app/app.modules.js', 'build/app/app.configs.js', 'build/app/app.routes.js', 'build/app/app.constants.js'],
-					'build/body.min.js': ['build/app/*/*.js', '!build/app/app.*.js'],
+					'build/body.min.js': ['build/app/**/*.js', '!build/app/app.*.js'],
 					'build/assets.min.js': 'build/assets/js/*.js',
 					'build/background.min.js': 'build/background.js'
 				}
@@ -100,7 +113,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'build/header.min.js': ['build/app/app.modules.js', 'build/app/app.configs.js', 'build/app/app.routes.js', 'build/app/app.constants.js'],
-					'build/body.min.js': ['build/app/*/*.js', '!build/app/app.*.js'],
+					'build/body.min.js': ['build/app/**/*.js', '!build/app/app.*.js'],
 					'build/assets.min.js': 'build/assets/js/*.js',
 					'build/background.min.js': 'build/background.js'
 				}

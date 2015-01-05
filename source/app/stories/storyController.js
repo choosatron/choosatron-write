@@ -1,17 +1,17 @@
 angular.module('storyApp.controllers')
-.controller('StoryCtrl', ['$scope', '$location', '$timeout', '$profiles', '$translators', 'FileEntryAutoSave',
+.controller('StoryCtrl', ['$scope', '$location', '$timeout', 'profiles', 'translators', 'FileEntryAutoSave',
 	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
-function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
+function StoryCtrl($scope, $location, $timeout, profiles, translators, FileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
 
 	$scope.entry              = null;
 	$scope.story              = null;
 	$scope.passage            = null;
-	$scope.profiles           = $profiles;
+	$scope.profiles           = profiles;
 	$scope.variables          = [];
 
 	$scope.operators          = Operators;
 	$scope.genres             = Genres;
-	$scope.exporters          = $translators.exporters();
+	$scope.exporters          = translators.exporters();
 	$scope.alerts             = [];
 	$scope.prev_passage       = null;
 	$scope.picking            = false;
@@ -24,9 +24,9 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	$scope.exit_change_modal = {};
 
 	// Load up the selected story
-	$profiles.load()
+	profiles.load()
 	.then(function() {
-		var profile = $profiles.current;
+		var profile = profiles.current;
 
 		if (!profile) {
 			console.error("No profiles selected. Redirecting to ./profiles");
@@ -53,7 +53,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 		};
 
 		$scope.entry = entry;
-		$translators.restore('json', entryId)
+		translators.restore('json', entryId)
 		.then(function(result) {
 
 			if (!result || !result.story) {
@@ -67,8 +67,8 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 			loadVariables();
 
 			// Update the entry record
-			$profiles.current.save_entry(entryId, result.story);
-			$profiles.save();
+			profiles.current.save_entry(entryId, result.story);
+			profiles.save();
 
 			// Start autosaving changes
 			autosave(result);
@@ -95,7 +95,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 		var saver = $scope.saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
 
 		var handleStoryChange = function(nv, ov, scope) {
-			if ($profiles.current.autosave) {
+			if (profiles.current.autosave) {
 				saver.save(result.story.id, nv.object());
 			}
 			else {
@@ -179,7 +179,7 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 
 		if (reset) {
 			$scope.prev_passage = null;
-		} 
+		}
 		else {
 			$scope.prev_passage = $scope.passage;
 		}
@@ -201,9 +201,9 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 				$scope.passage = passage;
 			}
 		};
-		// The choice paths that link to this passage are not being deleted, 
-		// but if they were that would require a change to "undo" ... for now 
-		// I'm just checking when a choice is displaying its paths whether 
+		// The choice paths that link to this passage are not being deleted,
+		// but if they were that would require a change to "undo" ... for now
+		// I'm just checking when a choice is displaying its paths whether
 		// they are linking to a valid passage
 		$scope.story.delete_passage(passage.id);
 		var previous = $scope.prev_passage || $scope.story.get_opening();
@@ -312,6 +312,6 @@ function StoryCtrl($scope, $location, $timeout, $profiles, $translators, FileEnt
 	};
 
 	$scope.export_story = function(type) {
-		$translators.export(type, $scope.story);
+		translators.export(type, $scope.story);
 	};
 }]);

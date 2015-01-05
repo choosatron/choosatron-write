@@ -2,8 +2,8 @@
  *¬This is the controller responsible for talking with the Choosatron!
 **/
 angular.module('storyApp.controllers')
-.controller('ChoosatronCtrl',  ['$scope', '$interval', '$location', '$translators', 'Usb', 'Story',
-function ChoosatronCtrl($scope, $interval, $location, $translators, Usb, Story) {
+.controller('ChoosatronCtrl',  ['$scope', '$interval', '$location', 'translators', 'Usb', 'Story',
+function ChoosatronCtrl($scope, $interval, $location, translators, Usb, Story) {
 	$scope.usb = new Usb();
 
 	$scope.location = $location;
