@@ -1,8 +1,7 @@
 <ng-include src="'templates/storyView.html'"></ng-include>
 
-
-<input ng-model="$parent.show_passages" ng-change="show_story_details = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
-<div class="wrap ng-class:{picking: picking, top_open: show_story_details}">
+<input ng-model="$parent.vm.showPassages" ng-change="vm.showStoryDetails = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
+<div class="wrap ng-class:{picking: vm.picking, top_open: vm.showStoryDetails}">
 <div class="wrapInner">
 
 
@@ -10,13 +9,13 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="entrance in passage.entrances" ng-class="{lastActive: (entrance == prev_passage)}">
-				<a ng-click="edit_passage(entrance.id)">
+			<li ng-repeat="entrance in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.prevPassage)}">
+				<a ng-click="vm.editPassage(entrance.id)">
 					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
 					<div>
-						<p class="truncated">{{ entrance.get_content() | truncate | quote }}</p>
-						<p ng-if="entrance.get_passage_choice(passage)" class="h4 truncated">{{ entrance.get_passage_choice(passage) | truncate }}</p>
-						<p ng-if="entrance.has_append(passage)" class="h4 truncated">Via Append</p>
+						<p class="truncated">{{ entrance.getContent() | truncate | quote }}</p>
+						<p ng-if="entrance.getPassageChoice(vm.passage)" class="h4 truncated">{{ entrance.getPassageChoice(vm.passage) | truncate }}</p>
+						<p ng-if="entrance.hasAppend(vm.passage)" class="h4 truncated">Via Append</p>
 					</div>
 				</a>
 			</li>
@@ -27,16 +26,16 @@
 		<div class="passageBody">
 			<!-- TODO: when you delete a passage, you seem to always be sent to the starting passage of the story... might be nice if you went to your previous passage?? -->
 			<h2>
-				Passage {{ passage.number }}
+				Passage {{ vm.passage.number }}
 				<!-- TODO: may indicate this some other way? -->
-				<span ng-if="passage.opening" class="label label-success">Start</span>
-				<a ng-if="!passage.opening" class="h4 icon-inline icon-subtle" confirm-click="delete_passage(passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
-				<div class="savePassage fade-animation" ng-hide="profiles.current.autosave">
-					<button class="btn btn-primary" ng-disabled="save_state == 'transfer'" ng-click="saver.save(story.id, story)"><span class="glyphicon glyphicon-{{save_state}}"></span> Save Changes</button>
+				<span ng-if="vm.passage.opening" class="label label-success">Start</span>
+				<a ng-if="!vm.passage.opening" class="h4 icon-inline icon-subtle" confirm-click="vm.deletePassage(vm.passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
+				<div class="savePassage fade-animation" ng-hide="vm.profiles.current.autosave">
+					<button class="btn btn-primary" ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.id, vm.story)"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</button>
 				</div>
 			</h2>
 
-			<textarea ng-model="passage.content" class="form-control passage_{{passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
+			<textarea ng-model="vm.passage.content" class="form-control passage_{{vm.passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 
@@ -52,26 +51,26 @@
 
 		<div class="pickingMessage">
 			<h3>Choose a passage to link <span class="glyphicon glyphicon-arrow-right"></span></h3>
-			<h3><a ng-click="pick_passage(null)"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</a></h3>
+			<h3><a ng-click="vm.pickPassage(null)"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</a></h3>
 		</div>
 
 		<h2>Passages</h2>
 
 		<div class="input-group">
 			<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-			<input ng-model="passage_search" type="text" class="form-control" placeholder="Filter Passages">
-			<span class="input-group-extra"><a ng-click="clear_passage_search()"><span class="glyphicon glyphicon-remove"></span></a></span>
+			<input ng-model="vm.passageSearch" type="text" class="form-control" placeholder="Filter Passages">
+			<span class="input-group-extra"><a ng-click="vm.clearPassageSearch()"><span class="glyphicon glyphicon-remove"></span></a></span>
 		</div>
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
-				<li><button class="btn btn-link" ng-click="new_passage()"><span class="glyphicon glyphicon-plus"></span> New Passage</button></li>
-				<li ng-repeat="p in story.passages | filter:passage_search | filter:valid_picking_option" class="fade-animation">
-					<a ng-click="select_passage(p.id)" class="truncated">
+				<li><button class="btn btn-link" ng-click="vm.newPassage()"><span class="glyphicon glyphicon-plus"></span> New Passage</button></li>
+				<li ng-repeat="p in vm.story.passages | filter:vm.passageSearch | filter:vm.validPickingOption" class="fade-animation">
+					<a ng-click="vm.selectPassage(p.id)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
 						<span ng-if="p.opening" class="label label-success">Start</span>
-						{{ p.get_content() | truncate | quote }}
+						{{ p.getContent() | truncate | quote }}
 					</a>
 				</li>
 			</ul>

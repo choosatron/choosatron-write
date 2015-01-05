@@ -2,7 +2,7 @@
 	'use strict';
 
 	/**
-	 *¬This is the controller responsible for talking with the Choosatron!
+	 * This is the controller responsible for talking with the Choosatron!
 	**/
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronCtrl', ChoosatronCtrl)
@@ -43,10 +43,12 @@
 	function ChoosatronsCtrl($location, profiles, Choosatron) {
 		var vm = this;
 
+		// Variables
 		vm.location = $location;
-		vm.profiles = $profiles;
-
+		vm.profiles = profiles;
 		vm.state = 'disk';
+
+		// Functions
 		vm.releaseClaim = releaseClaim;
 		vm.newChoosatron = newChoosatron;
 		vm.saveChoosatron = saveChoosatron;
@@ -76,8 +78,8 @@
 		function newChoosatron() {
 			console.log("Create new Choosatron profile.");
 			var choosatron = new Choosatron();
-			choosatron.ownerName = $profiles.current.name;
-			$profiles.current.choosatrons.push(choosatron);
+			choosatron.ownerName = profiles.current.name;
+			profiles.current.choosatrons.push(choosatron);
 			//vm.choosatrons = $profiles.current.choosatrons;
 		}
 
@@ -85,15 +87,15 @@
 			/*$profiles.current.choosatrons.find(function(perms) {
 				return perms.usbDevices;
 			});*/
-			for (i in $profiles.current.choosatrons) {
-				if ($profiles.current.choosatrons[i].id == vm.editing.id) {
+			for (i in profiles.current.choosatrons) {
+				if (profiles.current.choosatrons[i].id == vm.editing.id) {
 					console.log("Matched: " + $profiles.current.choosatrons[i].id);
-					$profiles.current.choosatrons[i] = vm.editing;
+					profiles.current.choosatrons[i] = vm.editing;
 				}
 			}
 			vm.editing = null;
-			$profiles.save()
-			.then(function() {
+			profiles.save()
+				.then(function() {
 				vm.saveState = 'saved';
 			});
 		}

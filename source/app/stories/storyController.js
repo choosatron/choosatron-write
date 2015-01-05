@@ -1,317 +1,354 @@
-angular.module('storyApp.controllers')
-.controller('StoryCtrl', ['$scope', '$location', '$timeout', 'profiles', 'translators', 'FileEntryAutoSave',
-	'Passage', 'Choice', 'Command', 'Operators', 'Genres',
-function StoryCtrl($scope, $location, $timeout, profiles, translators, FileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
+(function() {
+	'use strict';
 
-	$scope.entry              = null;
-	$scope.story              = null;
-	$scope.passage            = null;
-	$scope.profiles           = profiles;
-	$scope.variables          = [];
+	angular.module('storyApp.controllers')
+		.controller('StoryCtrl', StoryCtrl);
 
-	$scope.operators          = Operators;
-	$scope.genres             = Genres;
-	$scope.exporters          = translators.exporters();
-	$scope.alerts             = [];
-	$scope.prev_passage       = null;
-	$scope.picking            = false;
-	$scope.deleted            = null;
-	$scope.modal              = {confirm_message: ''};
-	$scope.show_story_details = false;
-	$scope.show_passages      = false;
-	$scope.save_state         = 'floppy-disk';
+	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'profiles', 'translators', 'fileEntryAutoSave',
+		'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
 
-	$scope.exit_change_modal = {};
+	function StoryCtrl($scope, $location, $timeout, profiles, translators, fileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
+		var vm = this;
 
-	// Load up the selected story
-	profiles.load()
-	.then(function() {
-		var profile = profiles.current;
+		// Variables
+		vm.entry              = null;
+		vm.story              = null;
+		vm.passage            = null;
+		vm.profiles           = profiles;
+		vm.variables          = [];
 
-		if (!profile) {
-			console.error("No profiles selected. Redirecting to ./profiles");
-			return $location.path('profiles');
-		}
+		vm.operators          = Operators;
+		vm.genres             = Genres;
+		vm.exporters          = translators.exporters();
+		vm.alerts             = [];
+		vm.prevPassage        = null;
+		vm.picking            = false;
+		vm.deleted            = null;
+		vm.modal              = {confirm_message: ''};
+		vm.showStoryDetails   = false;
+		vm.showPassages       = false;
+		vm.saveState          = 'floppy-disk';
+		vm.exitChangeModal = {};
 
-		var entries = profile.entries;
-		if (!entries || entries.length == 0) {
-			console.error("Profile has no entries. Redirecting to ./stories");
-			return $location.path('stories');
-		}
+		// Functions
+		vm.loadVariables = loadVariables;
+		vm.ensurePassage = ensurePassage;
+		vm.autosave = autosave;
+		vm.playbackStory = playbackStory;
+		vm.showStoriesMenu = showStoriesMenu;
+		vm.newPassage = newPassage;
+		vm.pickPassage = pickPassage;
+		vm.getPassage = getPassage;
+		vm.validPickingOption = validPickingOption;
+		vm.selectPassage = selectPassage;
+		vm.editPassage = editPassage;
+		vm.setPassage = setPassage;
+		vm.deletePassage = deletePassage;
+		vm.confirmExitTypeChange = confirmExitTypeChange;
+		vm.newChoice = newChoice;
+		vm.hasDestination = hasDestination;
+		vm.deleteChoice = deleteChoice;
+		vm.deleteChoiceUpdate = deleteChoiceUpdate;
+		vm.deleteChoiceCondition = deleteChoiceCondition;
+		vm.addChoiceUpdate = addChoiceUpdate;
+		vm.clearPassageSearch = clearPassageSearch;
+		vm.undoDelete = undoDelete;
+		vm.jsonStory = jsonStory;
+		vm.exportStory = exportStory;
 
-		var entry = entries[0];
-		var entryId = entry.entry_id;
+		// Load up the selected story
+		profiles.load()
+		.then(function() {
+			var profile = profiles.current;
 
-		if (!entryId) {
-			console.error("No entry id found for entry. Redirecting to ./stories");
-			return $location.path('stories');
-		}
+			if (!profile) {
+				console.error("No profiles selected. Redirecting to ./profiles");
+				return $location.path('profiles');
+			}
 
-		var onFail = function(e) {
-			console.error("Error restoring story", e);
-			return $location.path('stories');
-		};
-
-		$scope.entry = entry;
-		translators.restore('json', entryId)
-		.then(function(result) {
-
-			if (!result || !result.story) {
+			var entries = profile.entries;
+			if (!entries || entries.length == 0) {
+				console.error("Profile has no entries. Redirecting to ./stories");
 				return $location.path('stories');
 			}
 
-			// Set the current story and passage
-			$scope.story = result.story;
-			$scope.passage = result.story.get_opening();
-			$scope.show_story_details = result.story.passages.length < 2;
-			loadVariables();
+			var entry = entries[0];
+			var entryId = entry.entryId;
 
-			// Update the entry record
-			profiles.current.save_entry(entryId, result.story);
-			profiles.save();
+			if (!entryId) {
+				console.error("No entry id found for entry. Redirecting to ./stories");
+				return $location.path('stories');
+			}
 
-			// Start autosaving changes
-			autosave(result);
+			var onFail = function(e) {
+				console.error("Error restoring story", e);
+				return $location.path('stories');
+			};
 
-		}, onFail);
-	});
+			vm.entry = entry;
+			translators.restore('json', entryId)
+			.then(function(result) {
 
-	function loadVariables() {
-		var cmds = $scope.story.collect_commands();
-		var vars = [];
-		cmds.forEach(function(cmd) {
-			vars.push(cmd.variable);
+				if (!result || !result.story) {
+					return $location.path('stories');
+				}
+
+				// Set the current story and passage
+				vm.story = result.story;
+				vm.passage = result.story.getOpening();
+				vm.showStoryDetails = result.story.passages.length < 2;
+				loadVariables();
+
+				// Update the entry record
+				profiles.current.saveEntry(entryId, result.story);
+				profiles.save();
+
+				// Start autosaving changes
+				autosave(result);
+
+			}, onFail);
 		});
-		$scope.variables = angular.toJson(vars);
-	};
 
-	function ensurePassage(passage) {
-		if (!$scope.passage) {
-			$scope.passage = $scope.story && $scope.story.get_opening();
+		function loadVariables() {
+			var cmds = vm.story.collectCommands();
+			var vars = [];
+			cmds.forEach(function(cmd) {
+				vars.push(cmd.variable);
+			});
+			vm.variables = angular.toJson(vars);
 		}
-	};
 
-	function autosave(result) {
-		var saver = $scope.saver = new FileEntryAutoSave(result.story.id, result.entry, $scope);
+		function ensurePassage(aPassage) {
+			if (!aPassage) {
+				vm.passage = vm.story && vm.story.getOpening();
+			}
+		}
 
-		var handleStoryChange = function(nv, ov, scope) {
-			if (profiles.current.autosave) {
-				saver.save(result.story.id, nv.object());
+		function autosave(aResult) {
+			var saver = vm.saver = new fileEntryAutoSave(aResult.story.id, aResult.entry, $scope);
+
+			var handleStoryChange = function(nv, ov, scope) {
+				if (profiles.current.autosave && angular.isDefined(nv)) {
+					saver.save(aResult.story.id, nv.object());
+				}
+				else {
+					vm.saveState = 'floppy-save';
+				}
+			};
+
+			$scope.$watch('story', handleStoryChange, true);
+
+			saver.onSaving(function(key, value) {
+				vm.saveState = 'transfer';
+			});
+
+			saver.onSaved(function(key, value) {
+				$timeout(function() {
+					var story = vm.story;
+					$scope.$apply(function() {
+						vm.saveState = 'floppy-disk';
+					});
+				}, 250);
+			});
+
+			saver.onError(function(e) {
+				vm.saveState = 'floppy-remove';
+				console.error('Error autosaving story', e);
+			});
+		}
+
+		function playbackStory() {
+			$location.path('playback');
+		}
+
+		function showStoriesMenu() {
+			$location.path('stories');
+		}
+
+		function newPassage(aEntranceChoice) {
+			vm.passage = new Passage();
+			vm.passage.number = vm.story.getNextPassageNumber();
+			vm.story.addPassage(vm.passage);
+			if (aEntranceChoice) {
+				aEntranceChoice.setDestination(vm.passage);
+			}
+			vm.picking = null;
+		}
+
+		function pickPassage(aChoice) {
+			vm.picking = aChoice;
+		}
+
+		function getPassage(aId) {
+			if (!vm.story) {
+				return null;
+			}
+			return vm.story.getPassage(aId);
+		}
+
+		function validPickingOption(aItem) {
+			return (
+				!vm.picking
+				|| vm.passage.exitType != 'append'
+				|| vm.passage != aItem
+			);
+		}
+
+		function selectPassage(aId) {
+			if (vm.picking) {
+				vm.picking.setDestination(vm.story.getPassage(aId));
+				vm.picking = null;
+
+			} else {
+				vm.editPassage(aId);
+			}
+		}
+
+		function editPassage(aId) {
+			vm.setPassage(vm.story.getPassage(aId));
+		}
+
+		function setPassage(aPassage, aReset) {
+			// TODO: Is there an Angular way to access this element in the scope to do this?
+			$('.scrollPassages').scrollTop(0);
+
+			if (aReset) {
+				vm.prevPassage = null;
 			}
 			else {
-				$scope.save_state = 'floppy-save';
+				vm.prevPassage = vm.passage;
 			}
-		};
 
-		$scope.$watch('story', handleStoryChange, true);
+			// Collect the entrances just once to improve performance
+			aPassage.entrances = vm.story.collect_entrances(aPassage);
 
-		saver.onSaving(function(key, value) {
-			$scope.save_state = 'transfer';
-		});
+			vm.passage = aPassage;
+		}
 
-		saver.onSaved(function(key, value) {
-			$timeout(function() {
-				var story = $scope.story;
-				$scope.$apply(function() {
-					$scope.save_state = 'floppy-disk';
+		function deletePassage(aPassage) {
+			console.info("deleting", aPassage);
+			vm.deleted = {
+				type: "passage",
+				title: aPassage.content,
+				undo: function() {
+					aPassage.trashed = false;
+					vm.story.addPassage(aPassage);
+					vm.passage = aPassage;
+				}
+			};
+			// The choice paths that link to this passage are not being deleted,
+			// but if they were that would require a change to "undo" ... for now
+			// I'm just checking when a choice is displaying its paths whether
+			// they are linking to a valid passage
+			vm.story.deletePassage(aPassage.id);
+			var previous = vm.prevPassage || vm.story.getOpening();
+			vm.setPassage(previous, true);
+		}
+
+		function confirmExitTypeChange(aPassage, aExitType) {
+			var alert, message, onConfirm;
+
+			if (aPassage.exitType == aExitType) {
+				return;
+			}
+
+			if (passage.exitIsEmpty()) {
+				passage.setExitType(aExitType);
+				return;
+			}
+
+			switch (passage.exitType) {
+				case 'ending':
+					alert = 'This passage\'s ending value will be deleted.';
+					break;
+				case 'append':
+					alert = 'This passage\'s append will be deleted.';
+					break;
+				case 'choices':
+					alert = 'This passage\'s choices will be deleted.';
+					break;
+			}
+
+			message = 'A passage can only have one type of exit.  ';
+
+			switch (aExitType) {
+				case 'ending':
+					message += 'Are you sure you want to change this passage to an ending?';
+					break;
+				case 'append':
+					message += 'Are you sure you want to change this passage to have an append?';
+					break;
+				case 'choices':
+					message += 'Are you sure you want to change this passage to have choices?';
+					break;
+			}
+
+			vm.exitChangeModal.alert = alert;
+			vm.exitChangeModal.message = message;
+
+			onConfirm = function () {
+				$scope.$apply(function () {
+					passage.setExitType(aExitType);
 				});
-			}, 250);
-		});
+			};
 
-		saver.onError(function(e) {
-			$scope.save_state = 'floppy-remove';
-			console.error('Error autosaving story', e);
-		});
-	}
+			$('#confirmExit').off('click.confirmed');
+			$('#confirmExit').one('click.confirmed', onConfirm);
 
-	$scope.playback_story = function() {
-		$location.path('playback');
-	};
-
-	$scope.show_stories_menu = function () {
-		$location.path('stories');
-	};
-
-	$scope.new_passage  =  function(entrance_choice) {
-		$scope.passage = new Passage();
-		$scope.passage.number = $scope.story.get_next_passage_number();
-		$scope.story.add_passage($scope.passage);
-		if (entrance_choice) {
-			entrance_choice.set_destination($scope.passage);
-		}
-		$scope.picking = null;
-	};
-
-	$scope.pick_passage  =  function(choice) {
-		$scope.picking = choice;
-	};
-
-	$scope.get_passage  =  function(id) {
-		if (!$scope.story) return null;
-		return $scope.story.get_passage(id);
-	};
-
-	$scope.valid_picking_option = function (item) {
-		return (
-			!$scope.picking
-			|| $scope.passage.exit_type != 'append'
-			|| $scope.passage != item
-		);
-	};
-
-	$scope.select_passage = function (id) {
-		if ($scope.picking) {
-			$scope.picking.set_destination($scope.story.get_passage(id));
-			$scope.picking = null;
-
-		} else {
-			$scope.edit_passage(id);
-		}
-	};
-
-	$scope.edit_passage = function (id) {
-		$scope.set_passage($scope.story.get_passage(id));
-	};
-
-	$scope.set_passage  =  function (passage, reset) {
-		// TODO: Is there an Angular way to access this element in the scope to do this?
-		$('.scrollPassages').scrollTop(0);
-
-		if (reset) {
-			$scope.prev_passage = null;
-		}
-		else {
-			$scope.prev_passage = $scope.passage;
+			$('#exitChangeConfirmModal').modal('show');
 		}
 
-		// Collect the entrances just once to improve performance
-		passage.entrances = $scope.story.collect_entrances(passage);
-
-		$scope.passage = passage;
-	};
-
-	$scope.delete_passage = function(passage) {
-		console.info("deleting", passage);
-		$scope.deleted = {
-			type: "passage",
-			title: passage.content,
-			undo: function() {
-				passage.trashed = false;
-				$scope.story.add_passage(passage);
-				$scope.passage = passage;
-			}
-		};
-		// The choice paths that link to this passage are not being deleted,
-		// but if they were that would require a change to "undo" ... for now
-		// I'm just checking when a choice is displaying its paths whether
-		// they are linking to a valid passage
-		$scope.story.delete_passage(passage.id);
-		var previous = $scope.prev_passage || $scope.story.get_opening();
-		$scope.set_passage(previous, true);
-	};
-
-	$scope.confirm_exit_type_change = function (passage, exit_type) {
-		var alert, message, onConfirm;
-
-		if (passage.exit_type == exit_type) {
-			return;
+		function newChoice(aPassage) {
+			var choice = new Choice();
+			aPassage.addChoice(choice);
 		}
 
-		if (passage.exit_is_empty()) {
-			passage.set_exit_type(exit_type);
-			return;
+		function hasDestination(aChoice) {
+			return aChoice.hasDestination();
 		}
 
-		switch (passage.exit_type) {
-			case 'ending':
-				alert = 'This passage\'s ending value will be deleted.';
-				break;
-			case 'append':
-				alert = 'This passage\'s append will be deleted.';
-				break;
-			case 'choices':
-				alert = 'This passage\'s choices will be deleted.';
-				break;
+		function deleteChoice(aPassage, aChoice) {
+			vm.deleted  =  {
+				type: "choice",
+				title: aChoice.content,
+				undo: function() {vm.passage.addChoice(aChoice);}
+			};
+			aPassage.removeChoice(aChoice);
 		}
 
-		message = 'A passage can only have one type of exit.  ';
-
-		switch (exit_type) {
-			case 'ending':
-				message += 'Are you sure you want to change this passage to an ending?';
-				break;
-			case 'append':
-				message += 'Are you sure you want to change this passage to have an append?';
-				break;
-			case 'choices':
-				message += 'Are you sure you want to change this passage to have choices?';
-				break;
-		}
-
-		$scope.exit_change_modal.alert = alert;
-		$scope.exit_change_modal.message = message;
-
-		onConfirm = function () {
-			$scope.$apply(function () {
-				passage.set_exit_type(exit_type);
+		function deleteChoiceUpdate(aChoice, aUpdate) {
+			aChoice.updates = aChoice.updates.filter(function(u) {
+				return (u.raw != aUpdate.raw);
 			});
-		};
+		}
 
-		$('#confirmExit').off('click.confirmed');
-		$('#confirmExit').one('click.confirmed', onConfirm);
+		function deleteChoiceCondition(aChoice) {
+			aChoice.condition = new Command();
+			aChoice.showCondition = false;
+		}
 
-		$('#exitChangeConfirmModal').modal('show');
-	};
+		function addChoiceUpdate(aChoice) {
+			aChoice.updates.push(new Command());
+		}
 
-	$scope.new_choice  =  function(passage) {
-		var choice  =  new Choice();
-		passage.add_choice(choice);
-	};
+		function clearPassageSearch() {
+			vm.passageSearch = '';
+		}
 
-	$scope.has_destination  =  function(choice) {
-		return choice.has_destination();
+		function undoDelete() {
+			if (!vm.deleted) return;
+			vm.deleted.undo();
+			vm.deleted = null;
+		}
+
+		function jsonStory(aPretty) {
+			if (!vm.story) return '{}';
+			return vm.story.serialize(aPretty);
+		}
+
+		function exportStory(aType) {
+			translators.export(aType, vm.story);
+		}
 	}
 
-	$scope.delete_choice  =  function(passage, choice) {
-		$scope.deleted  =  {
-			type: "choice",
-			title: choice.content,
-			undo: function() {$scope.passage.add_choice(choice);}
-		};
-		passage.remove_choice(choice);
-	}
-
-	$scope.delete_choice_update = function(choice, update) {
-		choice.updates = choice.updates.filter(function(u) {
-			return (u.raw != update.raw);
-		});
-	};
-
-	$scope.delete_choice_condition = function(choice) {
-		choice.condition = new Command();
-		choice.showCondition = false;
-	};
-
-	$scope.add_choice_update = function(choice) {
-		choice.updates.push(new Command());
-	};
-
-	$scope.clear_passage_search  =  function() {
-		$scope.passage_search = '';
-	};
-
-	$scope.undo_delete  =  function() {
-		if (!$scope.deleted) return;
-		$scope.deleted.undo();
-		$scope.deleted = null;
-	};
-
-	$scope.json_story  =  function(pretty) {
-		if (!$scope.story) return '{}';
-		return $scope.story.serialize(pretty);
-	};
-
-	$scope.export_story = function(type) {
-		translators.export(type, $scope.story);
-	};
-}]);
+})();

@@ -31,36 +31,36 @@ function(BaseModel) {
 	}
 
 	Profile.methods = {
-		getChoosatron: function(id) {
+		getChoosatron: function(aId) {
 			for (i in this.choosatrons) {
-				if (this.choosatrons[i].id = id) {
+				if (this.choosatrons[i].id = aId) {
 					return this.choosatrons[i];
 				}
 			}
 		},
 
 		// Add a new entry record
-		save_entry: function(entryId, story) {
+		saveEntry: function(aEntryId, aStory) {
 			var entry = {
-				entry_id : entryId,
-				id: story.id
+				entryId : aEntryId,
+				id: aStory.id
 			};
 
-			var index = this.find_entry_index(entry);
+			var index = this.findEntryIndex(entry);
 
 			if (index >= 0) {
 				entry = this.entries[index];
 				this.entries.splice(index, 1);
-				console.debug("Updating existing entry", entryId, entry, story);
+				console.debug("Updating existing entry", aEntryId, entry, aStory);
 			}
 			else {
-				console.debug("Adding new entry", entryId, entry, story);
+				console.debug("Adding new entry", aEntryId, entry, aStory);
 			}
 
 			// Very shallow copy of the story
 			var types = ['string', 'number', 'boolean'];
-			for (var key in story) {
-				var value = story[key];
+			for (var key in aStory) {
+				var value = aStory[key];
 				var type = typeof(value);
 				if (types.indexOf(type) < 0) continue;
 				entry[key] = value;
@@ -72,16 +72,16 @@ function(BaseModel) {
 			return entry;
 		},
 
-		find_entry_index: function(entry) {
-			if (!entry) return -1;
+		findEntryIndex: function(aEntry) {
+			if (!aEntry) return -1;
 			if (!this.entries || !this.entries.length) return -1;
 
-			for (var i=0; i<this.entries.length; i++) {
+			for (var i = 0; i < this.entries.length; i++) {
 				var compared = this.entries[i];
-				if (compared.entry_id == entry.entry_id) {
+				if (compared.entryId == aEntry.entryId) {
 					return i;
 				}
-				if (compared.id == entry.id) {
+				if (compared.id == aEntry.id) {
 					return i;
 				}
 			}
@@ -90,15 +90,17 @@ function(BaseModel) {
 		},
 
 		// Removes an entry from the list
-		remove_entry: function(entry) {
-			var i = this.find_entry_index(entry);
-			if (i < 0) return;
+		removeEntry: function(aEntry) {
+			var i = this.findEntryIndex(aEntry);
+			if (i < 0) {
+				return;
+			}
 			this.entries.splice(i, 1);
 		},
 
 		// Shifts an entry to the top of the queue for selection
-		select_entry: function(entry) {
-			var i = this.find_entry_index(entry);
+		selectEntry: function(aEntry) {
+			var i = this.findEntryIndex(aEntry);
 			if (i < 0) {
 				return null;
 			}

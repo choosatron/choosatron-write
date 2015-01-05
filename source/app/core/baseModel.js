@@ -45,7 +45,7 @@ function(Random) {
 			return this;
 		},
 
-		refresh_id: function() {
+		refreshId: function() {
 			this.id = Random.id();
 		},
 
@@ -53,7 +53,7 @@ function(Random) {
 			var o = {};
 			for (var key in this) {
 				var val = this[key];
-				if (val instanceof Model) {
+				if (val instanceof BaseModel) {
 					o[key] = val.serialize();
 				}
 				else {

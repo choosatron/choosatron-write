@@ -15,25 +15,25 @@ function(BaseModel) {
 	};
 
 	Playback.methods = {
-		start: function(story) {
-			this.story = story;
-			var opening = story && story.get_opening();
+		start: function(aStory) {
+			this.story = aStory;
+			var opening = aStory && aStory.getOpening();
 			this.trim(opening);
 			return opening;
 		},
 
-		trim: function(passage) {
-			if (!passage || !passage.choices) {
+		trim: function(aPassage) {
+			if (!aPassage || !aPassage.choices) {
 				return;
 			}
 			var self = this;
-			passage.choices.forEach(function(c) {
+			aPassage.choices.forEach(function(c) {
 				c.hidden = c.condition && !c.condition.empty() && !c.condition.test(self.sandbox);
 			});
 		},
 
-		select: function(choice) {
-			var choice = choice && choice.id ? this.story.get_choice(choice.id) : choice;
+		select: function(aChoice) {
+			var choice = aChoice && aChoice.id ? this.story.getChoice(aChoice.id) : aChoice;
 			if (!choice) {
 				return null;
 			}
@@ -46,11 +46,11 @@ function(BaseModel) {
 				});
 			}
 
-			if (!choice.has_destination()) {
+			if (!choice.hasDestination()) {
 				return null;
 			}
 
-			var next = this.story.get_passage(choice.destination);
+			var next = this.story.getPassage(choice.destination);
 			this.trim(next);
 
 			return next;

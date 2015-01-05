@@ -24,26 +24,26 @@ function(BaseModel, Command) {
 	}
 
 	Choice.methods = {
-		get_content: function () {
+		getContent: function () {
 			return this.content || "Unwritten Choice";
 		},
 
-		has_destination: function(passage) {
+		hasDestination: function(passage) {
 			if ('undefined' == typeof passage) {
 				return this.destination;
 			}
 			return passage && passage.id && passage.id == this.destination;
 		},
 
-		set_destination: function(passage) {
+		setDestination: function(passage) {
 			this.destination = passage && passage.id;
 		},
 
-		add_update: function(update) {
+		addUpdate: function(update) {
 			this.updates.push(new Command(update));
 		},
 
-		load_updates: function(updates) {
+		loadUpdates: function(updates) {
 			this.updates = [];
 			for (var i=0; i<updates.length; i++) {
 				var update = new Command(updates[i]);
@@ -52,7 +52,7 @@ function(BaseModel, Command) {
 			this.showUpdates = this.updates.length > 0;
 		},
 
-		load_condition: function(condition) {
+		loadCondition: function(condition) {
 			this.condition = new Command(condition);
 			this.showCondition = condition && condition.length;
 		}

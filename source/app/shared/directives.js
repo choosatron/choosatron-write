@@ -47,13 +47,13 @@ angular.module('storyApp.directives')
 						count = choices + ' choices';
 					}
 
-					if (passage.has_append()) {
+					if (passage.hasAppend()) {
 						subject = 'Appends to ';
 						choices = 'a';
 					}
 
-					if (passage.has_ending()) {
-						$element.attr('data-ending', passage.ending_value);
+					if (passage.hasEnding()) {
+						$element.attr('data-ending', passage.endingValue);
 						noun = 'an ending passage with ';
 					} else {
 						$element.removeAttr('data-ending');

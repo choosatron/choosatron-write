@@ -1,70 +1,90 @@
-angular.module('storyApp.controllers')
+(function() {
+	'use strict';
 
-.controller('ProfileCtrl', ['$scope', '$location', 'profiles',
-function($scope, $location, profiles) {
-	profiles.load().then(function() {
-		$scope.profiles = profiles;
-	});
+	angular.module('storyApp.controllers')
+		.controller('ProfileCtrl', ProfileCtrl)
+		.controller('ProfilesCtrl', ProfilesCtrl);
 
-	$scope.view = function() {
-		$location.path('profiles');
-	};
-}])
+	ProfileCtrl.$inject = ['$location', 'profiles'];
 
-.controller('ProfilesCtrl', ['$scope', '$location', 'profiles', 'Profile', 'ngDialog',
-function($scope, $location, profiles, Profile, ngDialog) {
-	var vm = this;
-	vm.location = $location;
+	function ProfileCtrl($location, profiles) {
+		var vm = this;
 
-	vm.saveState = 'disk';
+		vm.location = $location
 
-	profiles.load().then(function() {
-		vm.profiles = profiles;
-		$scope.$watch('vm.profiles.current.name', function(n, o) {
-			vm.saveState = 'save';
+		profiles.load().then(function() {
+			vm.profiles = profiles;
 		});
-	});
 
-	vm.show_stories_menu = function() {
-		vm.location.path('stories');
-	};
+		vm.view = function() {
+			$location.path('profiles');
+		};
+	}
 
-	vm.new_profile = function() {
-		//var profile = new Profile();
-		//vm.profiles.select(profile);
+	ProfilesCtrl.$inject = ['$scope', '$location', 'profiles', 'Profile', 'ngDialog'];
 
-		//vm.newProfile = new Profile();
-		/*ngDialog.open({
-			template: 'templates/newProfileView.html',
-			controller: 'NewProfileCtrl'
-		});*/
+	function ProfilesCtrl($scope, $location, profiles, Profile, ngDialog) {
+		var vm = this;
 
-		ngDialog.openConfirm({
-			template: 'templates/newProfileModalView.html',
-			controller: 'NewProfileModalCtrl'
-		}).then(function (profile) {
-			console.log('Modal promise resolved. Value: ', profile);
-			vm.profiles.select(profile);
-		}, function (reason) {
-			console.log('Modal promise rejected. Reason: ', reason);
+		// Variables
+		vm.location = $location;
+		vm.saveState = 'disk';
+
+		// Functions
+		vm.showStoriesMenu = showStoriesMenu;
+		vm.newProfile = newProfile;
+		vm.pickProfile = pickProfile;
+		vm.saveProfile = saveProfile;
+		vm.setHomePath = setHomePath;
+
+		profiles.load().then(function() {
+			vm.profiles = profiles;
+			$scope.$watch('vm.profiles.current.name', function(n, o) {
+				vm.saveState = 'save';
+			});
 		});
-	};
 
-	vm.pick_profile = function(profile) {
-		vm.profiles.select(profile);
-		vm.profiles.save();
-	};
+		function showStoriesMenu() {
+			vm.location.path('stories');
+		}
 
-	vm.save_profile = function() {
-		vm.profiles.save()
-		.then(function() {
-			vm.saveState = 'saved';
-		});
-	};
+		function newProfile() {
+			//var profile = new Profile();
+			//vm.profiles.select(profile);
 
-	vm.set_home_path = function() {
-		// TODO
+			//vm.newProfile = new Profile();
+			/*ngDialog.open({
+				template: 'templates/newProfileView.html',
+				controller: 'NewProfileCtrl'
+			});*/
 
-	};
+			ngDialog.openConfirm({
+				template: 'templates/newProfileModalView.html',
+				controller: 'NewProfileModalCtrl'
+			}).then(function (profile) {
+				console.log('Modal promise resolved. Value: ', profile);
+				vm.profiles.select(profile);
+			}, function (reason) {
+				console.log('Modal promise rejected. Reason: ', reason);
+			});
+		}
 
-}])
+		function pickProfile(aProfile) {
+			vm.profiles.select(aProfile);
+			vm.profiles.save();
+		}
+
+		function saveProfile() {
+			vm.profiles.save()
+			.then(function() {
+				vm.saveState = 'saved';
+			});
+		}
+
+		function setHomePath() {
+			// TODO
+
+		}
+	}
+
+})();

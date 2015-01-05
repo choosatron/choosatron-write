@@ -1,7 +1,7 @@
 <ng-include src="'templates/storyView.html'"></ng-include>
 
-<input ng-model="$parent.show_passages" ng-change="show_story_details = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
-<div class="wrap ng-class:{picking: picking, top_open: show_story_details}">
+<input ng-model="$parent.vm.showPassages" ng-change="vm.showStoryDetails = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
+<div class="wrap ng-class:{picking: vm.picking, top_open: vm.showStoryDetails}">
 <div class="wrapInner">
 
 
@@ -9,13 +9,13 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="entrance in story.collect_entrances(passage)" ng-class="{lastActive: (entrance == prev_passage)}" class="unavailable">
+			<li ng-repeat="entrance in vm.story.collectEntrances(vm.passage)" ng-class="{lastActive: (entrance == vm.prevPassage)}" class="unavailable">
 				<a disabled>
 					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
 					<div>
-						<p class="truncated">{{ entrance.get_content() | truncate | quote }}</p>
-						<p ng-if="entrance.get_passage_choice(passage)" class="h4 truncated">{{ entrance.get_passage_choice(passage) | truncate }}</p>
-						<p ng-if="entrance.has_append(passage)" class="h4 truncated">Via Append</p>
+						<p class="truncated">{{ entrance.getContent() | truncate | quote }}</p>
+						<p ng-if="entrance.getPassageChoice(vm.passage)" class="h4 truncated">{{ entrance.getPassageChoice(vm.passage) | truncate }}</p>
+						<p ng-if="entrance.hasAppend(vm.passage)" class="h4 truncated">Via Append</p>
 					</div>
 				</a>
 			</li>
@@ -25,40 +25,40 @@
 	<div class="passage-container passage-box">
 		<div class="passageBody">
 			<h2>
-				Passage {{ passage.number }}
-				<span ng-if="passage.opening" class="label label-success">Start</span>
+				Passage {{ vm.passage.number }}
+				<span ng-if="vm.passage.opening" class="label label-success">Start</span>
 			</h2>
 
-			<div>{{passage.content}}</div>
+			<div>{{vm.passage.content}}</div>
 
-			<div ng-if="passage.exit_type == 'append'" class="tab-pane" id="passageAppend">
-				<div ng-if="passage.has_append()">
-					<div ng-if="passage.append_link.destination" class="choicePassage">
-						<a ng-click="select_choice(passage.append_link)"><span class="passageLink" passage-icons="get_passage(passage.append_link.destination)">Continue...</a>
+			<div ng-if="vm.passage.exitType == 'append'" class="tab-pane" id="passageAppend">
+				<div ng-if="vm.passage.hasAppend()">
+					<div ng-if="vm.passage.appendLink.destination" class="choicePassage">
+						<a ng-click="vm.selectChoice(vm.passage.appendLink)"><span class="passageLink" passage-icons="vm.getPassage(vm.passage.appendLink.destination)">Continue...</a>
 					</div>
 				</div>
 			</div><!-- .passageAppend -->
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 
-	<div ng-if="passage.exit_type != 'append'" class="passage-container passage-box ng-class:'ending-'+passage.ending_type_name()">
+	<div ng-if="vm.passage.exitType != 'append'" class="passage-container passage-box ng-class:'ending-'+vm.passage.endingTypeName()">
 		<div class="passageExits">
-			<div ng-if="passage.exit_type == 'ending'" class="tab-pane" id="passageEnding">
+			<div ng-if="vm.passage.exitType == 'ending'" class="tab-pane" id="passageEnding">
 				<h4>
 					The End
-					<span ng-if="passage.ending_value === -2" class="btn btn-default btn-terrible">Terrible</span>
-					<span ng-if="passage.ending_value === -1" class="btn btn-default btn-bad">Bad</span>
-					<span ng-if="passage.ending_value === 0" class="btn btn-default btn-neutral">Neutral</span>
-					<span ng-if="passage.ending_value === 1" class="btn btn-default btn-good">Good</span>
-					<span ng-if="passage.ending_value === 2" class="btn btn-default btn-great">Great</span>
+					<span ng-if="vm.passage.endingValue === -2" class="btn btn-default btn-terrible">Terrible</span>
+					<span ng-if="vm.passage.endingValue === -1" class="btn btn-default btn-bad">Bad</span>
+					<span ng-if="vm.passage.endingValue === 0" class="btn btn-default btn-neutral">Neutral</span>
+					<span ng-if="vm.passage.endingValue === 1" class="btn btn-default btn-good">Good</span>
+					<span ng-if="vm.passage.endingValue === 2" class="btn btn-default btn-great">Great</span>
 				</h4>
 			</div><!-- .passageEnding -->
 
 
-			<div ng-if="passage.exit_type == 'choices'" class="tab-pane passageChoices" id="passageChoices">
-				<div ng-repeat="choice in passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row" ng-class="{unavailable: choice.hidden}">
+			<div ng-if="vm.passage.exitType == 'choices'" class="tab-pane passageChoices" id="passageChoices">
+				<div ng-repeat="choice in vm.passage.choices" ng-init="choiceNumber = $index + 1" class="choiceContainer row" ng-class="{unavailable: choice.hidden}">
 					<div class="col-xs-2">
-						<a class="btn btn-lg btn-primary btn-block" ng-disabled="!choice.has_destination() || choice.hidden" ng-click="select_choice(choice)">
+						<a class="btn btn-lg btn-primary btn-block" ng-disabled="!choice.hasDestination() || choice.hidden" ng-click="vm.selectChoice(choice)">
 							<span class="choiceNumber">{{ choiceNumber }}</span>
 						</a>
 					</div>
@@ -83,17 +83,17 @@
 
 		<div class="input-group">
 			<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-			<input ng-model="passage_search" type="text" class="form-control" placeholder="Filter Passages">
-			<span class="input-group-extra"><a ng-click="clear_passage_search()"><span class="glyphicon glyphicon-remove"></span></a></span>
+			<input ng-model="vm.passageSearch" type="text" class="form-control" placeholder="Filter Passages">
+			<span class="input-group-extra"><a ng-click="vm.clearPassageSearch()"><span class="glyphicon glyphicon-remove"></span></a></span>
 		</div>
 
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
-				<li ng-repeat="p in story.passages | filter:passage_search">
-					<a ng-click="select_passage(p)" class="truncated">
+				<li ng-repeat="p in vm.story.passages | filter:vm.passageSearch">
+					<a ng-click="vm.selectPassage(p)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
 						<span ng-if="p.opening" class="label label-success">Start</span>
-						{{ p.get_content() | truncate | quote }}
+						{{ p.getContent() | truncate | quote }}
 					</a>
 				</li>
 			</ul>

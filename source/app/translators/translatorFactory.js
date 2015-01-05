@@ -47,7 +47,7 @@ function(file, $q) {
 			file.read(entry)
 			.then(function(data) {
 				var story = translator.import(data);
-				if (story) story.refresh_id();
+				if (story) story.refreshId();
 				var result = {
 					story: story,
 					entry: entry

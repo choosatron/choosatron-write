@@ -5,41 +5,41 @@
 	</div>
 
 	<ul class="list-inline list-icon-menu h4">
-		<li><a ng-click="new_story()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
+		<li><a ng-click="vm.newStory()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
 		<li class="dropdown" ng-show="importers">
 			<a data-toggle="dropdown"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="importer in importers">
-					<a ng-click="import_story(importer.type)">{{importer.importMenuTitle}}</a>
+				<li ng-repeat="importer in vm.importers">
+					<a ng-click="vm.importStory(importer.type)">{{importer.importMenuTitle}}</a>
 				</li>
 			</ul>
 		</li>
-		<li class="pull-right"><a ng-click="location.path('choosatron')"><span class="fa fa-cogs"></span> Choosatron</a></li>
+		<li class="pull-right"><a ng-click="vm.location.path('choosatron')"><span class="fa fa-cogs"></span> Choosatron</a></li>
 	</ul>
 </div>
 
 <div class="theme-alt wrap">
-	<div class="container storiesListMenu" ng-show="profile.entries">
+	<div class="container storiesListMenu" ng-show="vm.profile.entries">
 		<div class="btn-group btn-group-justified">
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="sort_stories('title')">
+				<button class="btn btn-default" ng-click="vm.sortStories('title')">
 					<span class="glyphicon glyphicon-font"></span>
 					title
-					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'title' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'title' && stories_sort_desc)}"></span>
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'title' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'title' && vm.storiesSortDesc)}"></span>
 				</button>
 			</div>
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="sort_stories('created')">
+				<button class="btn btn-default" ng-click="vm.sortStories('created')">
 					<span class="glyphicon glyphicon-time"></span>
 					created
-					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'created' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'created' && stories_sort_desc)}"></span>
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'created' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'created' && vm.storiesSortDesc)}"></span>
 				</button>
 			</div>
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="sort_stories('modified')">
+				<button class="btn btn-default" ng-click="vm.sortStories('modified')">
 					<span class="glyphicon glyphicon-dashboard"></span>
 					modified
-					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (stories_sort == 'modified' && !stories_sort_desc), 'glyphicon-arrow-up': (stories_sort == 'modified' && stories_sort_desc)}"></span>
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'modified' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'modified' && vm.storiesSortDesc)}"></span>
 				</button>
 			</div>
 		</div>
@@ -49,8 +49,8 @@
 		<div class="container">
 			<div class="row storiesList">
 				<ul class="list-unstyled">
-					<li ng-repeat="entry in profile.entries | orderBy:stories_sort:stories_sort_desc" class="col-md-4 col-sm-6 fade-animation"><div>
-						<h3><a ng-click="edit_story(entry)">{{ entry.title }}</a></h3>
+					<li ng-repeat="entry in vm.profile.entries | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation"><div>
+						<h3><a ng-click="vm.editStory(entry)">{{ entry.title }}</a></h3>
 
 						<ul class="list-unstyled">
 							<li><span class="glyphicon glyphicon-time"></span> {{ entry.created | date }}</li>
@@ -67,15 +67,15 @@
 									<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
 									<ul class="dropdown-menu">
-										<li ng-repeat="exporter in exporters">
-											<a ng-click="export_story(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
+										<li ng-repeat="exporter in vm.exporters">
+											<a ng-click="vm.exportStory(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
 										</li>
 									</ul>
 								</span>
 							</li>
 							<!-- TODO: create support for duplicate -->
-							<li><a class="icon-subtle" ng-click="duplicate_story(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
-							<li><a confirm-click="delete_story(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Remove</li>
+							<li><a class="icon-subtle" ng-click="vm.duplicateStory(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
+							<li><a confirm-click="cm.deleteStory(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Remove</li>
 						</ul>
 					</div></li>
 				</ul>

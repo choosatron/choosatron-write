@@ -20,17 +20,17 @@ function(BaseModel, Passage) {
 	}
 
 	Story.methods = {
-		get_title: function () {
+		getTitle: function () {
 			return this.title || "Untitled Story";
 		},
 
-		get_next_passage_number: function () {
+		getNextPassageNumber: function () {
 			return ++this.lastPassageNumber;
 		},
 
-		get_opening: function() {
+		getOpening: function() {
 			var opening = null;
-			this.each_passage(function(p) {
+			this.eachPassage(function(p) {
 				if (p.opening) {
 					opening = p;
 					return false;
@@ -40,18 +40,18 @@ function(BaseModel, Passage) {
 			if (!opening) {
 				opening = new Passage();
 				opening.opening = true;
-				this.add_passage(opening);
+				this.addPassage(opening);
 			}
 			return opening;
 		},
 
-		get_orphans: function() {
+		getOrphans: function() {
 			var destinations = [];
-			this.each_passage(function(p) {
-				destinations.concat(p.get_destinations());
+			this.eachPassage(function(p) {
+				destinations.concat(p.getDestinations());
 			});
 			var ophans = [];
-			this.each_passage(function(p) {
+			this.eachPassage(function(p) {
 				if (destinations.indexOf(p.id) < 0) {
 					orphans.push(p);
 				}
@@ -59,10 +59,10 @@ function(BaseModel, Passage) {
 			return p;
 		},
 
-		get_choice: function(id) {
+		getChoice: function(aId) {
 			var choice = null;
 			this.passages.some(function(p) {
-				var c = p.get_choice(id);
+				var c = p.getChoice(aId);
 				if (c) {
 					choice = c;
 					return true;
@@ -72,18 +72,20 @@ function(BaseModel, Passage) {
 			return choice;
 		},
 
-		add_passage: function(passage) {
+		addPassage: function(aPassage) {
 			if (this.passages.length == 0) {
-				passage.opening = true;
+				aPassage.opening = true;
 			}
-			this.passages.push(passage);
-			return passage.id;
+			this.passages.push(aPassage);
+			return aPassage.id;
 		},
 
-		delete_passage: function(id) {
-			if (!this.passages) return;
-			for (var i=0; i<this.passages.length; i++) {
-				if (this.passages[i].id == id) {
+		deletePassage: function(aId) {
+			if (!this.passages) {
+				return;
+			}
+			for (var i = 0; i < this.passages.length; i++) {
+				if (this.passages[i].id == aId) {
 					// Delete entry from array
 					this.passages[i].trashed = true;
 					this.passages.splice(i, 1);
@@ -92,10 +94,10 @@ function(BaseModel, Passage) {
 			}
 		},
 
-		get_passage: function(id) {
+		getPassage: function(aId) {
 			var passage = null;
 			this.passages.some(function(p) {
-				if (p.id == id) {
+				if (p.id == aId) {
 					passage = p;
 					return true;
 				}
@@ -104,18 +106,18 @@ function(BaseModel, Passage) {
 			return passage;
 		},
 
-		each_passage: function(callback) {
-			return this.each('passages', callback);
+		eachPassage: function(aCallback) {
+			return this.each('passages', aCallback);
 		},
 
-		collect_entrances: function(aPassage) {
+		collectEntrances: function(aPassage) {
 			var entrances = [];
-			this.each_passage(function(p) {
-				if (p.has_destination(aPassage)) {
+			this.eachPassage(function(p) {
+				if (p.hasDestination(aPassage)) {
 					entrances.push(p);
 				}
 
-				if (p.has_append(aPassage)) {
+				if (p.hasAppend(aPassage)) {
 					entrances.push(p);
 				}
 			});
@@ -124,15 +126,15 @@ function(BaseModel, Passage) {
 
 		// Gathers all of the commands used in the story
 		// and returns an array
-		collect_commands: function() {
+		collectCommands: function() {
 			var cmds = [];
 			function add(cmd) {
 				if (!cmd.empty()) {
 					cmds.push(cmd);
 				}
 			};
-			this.each_passage(function(p) {
-				p.each_choice(function(c) {
+			this.eachPassage(function(p) {
+				p.eachChoice(function(c) {
 					add(c.condition);
 					c.updates.forEach(add);
 				});
@@ -141,11 +143,11 @@ function(BaseModel, Passage) {
 			return cmds;
 		},
 
-		load_passages: function(passages) {
+		loadPassages: function(aPassages) {
 			var i;
 
-			for (i = 0; i < passages.length; i++) {
-				this.passages.push(new Passage(passages[i]));
+			for (i = 0; i < aPassages.length; i++) {
+				this.passages.push(new Passage(aPassages[i]));
 			}
 
 			// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()

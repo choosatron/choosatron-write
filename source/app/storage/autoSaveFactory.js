@@ -13,7 +13,7 @@ angular.module('storyApp.storage')
 
 		// Each change within the throttle time bumps the save action out slightly.
 		// Chrome.sync storage has a max sustained save operation of 10 writes/minute
-		this.throttle = $storage.engine.throttle || 6000; //ms
+		this.throttle = storage.engine.throttle || 6000; //ms
 
 		// Store a reference to the promise to save
 		this.queue = {};
@@ -23,7 +23,7 @@ angular.module('storyApp.storage')
 		}).bind(this));
 	}
 
-	AutoSave.prototype._fire = function() {
+	autoSave.prototype._fire = function() {
 		var name = arguments[0];
 		if (this.events[name].length === 0) {
 			return;
@@ -36,19 +36,19 @@ angular.module('storyApp.storage')
 		}
 	};
 
-	AutoSave.prototype.onSaving = function(callback) {
+	autoSave.prototype.onSaving = function(callback) {
 		this.events['saving'].push(callback.bind(this));
 	};
 
-	AutoSave.prototype.onSaved = function(callback) {
+	autoSave.prototype.onSaved = function(callback) {
 		this.events['saved'].push(callback.bind(this));
 	};
 
-	AutoSave.prototype.onError = function(callback) {
+	autoSave.prototype.onError = function(callback) {
 		this.events['error'].push(callback.bind(this));
 	};
 
-	AutoSave.prototype.save = function(key, val) {
+	autoSave.prototype.save = function(key, val) {
 		// No key returned, exit
 		if (!key) {
 			return;
@@ -73,5 +73,5 @@ angular.module('storyApp.storage')
 		this.queue[key] = $timeout(doSave, this.throttle, false);
 	};
 
-	return AutoSave;
+	return autoSave;
 }]);

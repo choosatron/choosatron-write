@@ -1,42 +1,59 @@
-angular.module('storyApp.controllers')
-.controller('PlaybackCtrl', ['$scope', '$location', 'profiles', 'translators', 'Playback',
+(function() {
+	'use strict';
 
-function PlaybackCtrl($scope, $location, profiles, translators, Playback) {
-	$scope.playback = null;
-	$scope.story    = null;
-	$scope.passage  = null;
+	angular.module('storyApp.controllers')
+		.controller('PlaybackCtrl', PlaybackCtrl);
 
-	profiles.load()
-	.then(function() {
-		var profile = profiles.current;
-		var entry = profile.entries[0];
-		translators.restore('json', entry.entry_id)
-		.then(function(result) {
-			$scope.story = result.story;
-			$scope.playback = new Playback();
-			$scope.passage = $scope.playback.start(result.story);
+	PlaybackCtrl.$inject = ['$location', 'profiles', 'translators', 'Playback'];
+
+	function PlaybackCtrl($location, profiles, translators, Playback) {
+		var vm = this;
+
+		// Variables
+		vm.playback = null;
+		vm.story    = null;
+		vm.passage  = null;
+
+		// Functions
+		vm.showStoriesMenu = showStoriesMenu;
+		vm.clearPassageSearch = clearPassageSearch;
+		vm.selectChoice = selectChoice;
+		vm.selectPassage = selectPassage;
+		vm.editStory = editStory;
+
+		profiles.load()
+		.then(function() {
+			var profile = profiles.current;
+			var entry = profile.entries[0];
+			translators.restore('json', entry.entry_id)
+			.then(function(result) {
+				vm.story = result.story;
+				vm.playback = new Playback();
+				vm.passage = vm.playback.start(result.story);
+			});
 		});
-	});
 
-	$scope.show_stories_menu = function () {
-		$location.path('stories');
-	};
+		function showStoriesMenu() {
+			$location.path('stories');
+		}
 
-	$scope.clear_passage_search = function() {
-		$scope.passage_search = '';
-	};
+		function clearPassageSearch() {
+			vm.passage_search = '';
+		}
 
-	$scope.select_choice = function(choice) {
-		$scope.passage = $scope.playback.select(choice);
-		$scope.playback.debug();
-	};
+		function selectChoice(aChoice) {
+			vm.passage = vm.playback.select(aChoice);
+			vm.playback.debug();
+		}
 
-	$scope.select_passage = function(passage) {
-		$selection.setPassage(passage);
-	};
+		function selectPassage(aPassage) {
+			vm.selection.setPassage(aPassage);
+		}
 
-	$scope.edit_story = function(story) {
-		// @todo: Select the passage being viewed
-		$location.path('story');
-	};
-}]);
+		function editStory(aStory) {
+			// @todo: Select the passage being viewed
+			$location.path('story');
+		}
+	}
+
+})();

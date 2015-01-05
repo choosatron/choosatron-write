@@ -1,66 +1,74 @@
-/**
- *¬This is the controller responsible for talking with the Choosatron!
-**/
-angular.module('storyApp.controllers')
-.controller('ChoosatronCtrl',  ['$scope', '$interval', '$location', 'translators', 'Usb', 'Story',
-function ChoosatronCtrl($scope, $interval, $location, translators, Usb, Story) {
-	$scope.usb = new Usb();
+(function() {
+	'use strict';
 
-	$scope.location = $location;
+	/**
+	 * This is the controller responsible for talking with the Choosatron!
+	**/
+	angular.module('storyApp.controllers')
+		.controller('SerialCtrl', SerialCtrl);
 
-	//$scope.devices = Usb.deviceList();
-	//$scope.hasPermission = Usb.permissions;
-	//$scope.msg = Usb.msg;
-	//$scope.serialDevices = Usb.serialDevices;
-	//$scope.dfuDevices = Usb.dfuDevices;
+	SerialCtrl.$inject = ['$scope', '$interval', '$location', 'translators', 'Usb', 'Story'];
 
-	var intervalPromise;
+	function SerialCtrl($scope, $interval, $location, translators, Usb, Story) {
+		var vm = this;
 
-	$scope.startDeviceScan = function() {
-		if (angular.isDefined(intervalPromise)) {
-			return;
-		}
+		// Variables
+		vm.usb = new Usb();
+		vm.location = $location;
 
-		intervalPromise = $interval(function() {
-			if ($scope.usb.connected()) {
-				$scope.stopDeviceScan();
-			} else {
-				console.log("Update scan!");
-				$scope.usb.updateSerialDeviceList();
-				$scope.usb.updateDfuDeviceList();
+		// Functions
+		vm.startDeviceScan = startDeviceScan;
+		vm.stopDeviceScan = stopDeviceScan;
+		vm.requestPermissions = requestPermissions;
+		vm.connect = connect;
+
+		function startDeviceScan() {
+			if (angular.isDefined(vm.intervalPromise)) {
+				return;
 			}
-		}, 5000);
-	};
 
-	$scope.stopDeviceScan = function() {
-		if (angular.isDefined(intervalPromise)) {
-			console.log("Stopping device scan...");
-			$interval.cancel(intervalPromise)
-			intervalPromise = undefined;
+			vm.intervalPromise = $interval(function() {
+				if (vm.usb.connected()) {
+					vm.stopDeviceScan();
+				} else {
+					console.log("Update scan!");
+					vm.usb.updateSerialDeviceList();
+					vm.usb.updateDfuDeviceList();
+				}
+			}, 5000);
 		}
-	};
 
-	$scope.requestPermissions = function() {
-		$scope.usb.requestPermissions();
-	};
+		function stopDeviceScan() {
+			if (angular.isDefined(vm.intervalPromise)) {
+				console.log("Stopping device scan...");
+				$interval.cancel(vm.intervalPromise)
+				vm.intervalPromise = undefined;
+			}
+		}
 
-	$scope.connect = function() {
-		console.log("Connect to USB");
-		$scope.usb.connect();
-		/*.then(function(list) {
-			$scope.devices = list;
-			$scope.scanned = true;
-		});*/
-	};
+		function requestPermissions() {
+			vm.usb.requestPermissions();
+		}
 
-	$scope.$on('$destroy', function() {
-		$scope.stopDeviceScan();
-	});
+		function connect() {
+			console.log("Connect to USB");
+			vm.usb.connect();
+			/*.then(function(list) {
+				$scope.devices = list;
+				$scope.scanned = true;
+			});*/
+		}
 
-	$scope.usb.checkPermissions().then(function(result) {
-		$scope.startDeviceScan();
-		$scope.usb.updateSerialDeviceList();
-		$scope.usb.updateDfuDeviceList();
-	});
+		$scope.$on('$destroy', function() {
+			vm.stopDeviceScan();
+		});
 
-}]);
+		vm.usb.checkPermissions().then(function(result) {
+			vm.startDeviceScan();
+			vm.usb.updateSerialDeviceList();
+			vm.usb.updateDfuDeviceList();
+		});
+
+	}
+
+})();

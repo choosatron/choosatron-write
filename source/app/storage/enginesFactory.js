@@ -50,8 +50,8 @@ function ($q) {
 	}
 }])
 
-.factory('fileSystemStorageEngine', ['$q', 'baseStorageEngine', '$file',
-function($q, baseStorageEngine, $file) {
+.factory('fileSystemStorageEngine', ['$q', 'baseStorageEngine', 'file',
+function($q, baseStorageEngine, file) {
 	return function fileSystemStorageEngine(extensions, type) {
 		baseStorageEngine.call(this, $q);
 
@@ -81,7 +81,7 @@ function($q, baseStorageEngine, $file) {
 				deferred.resolve(entry);
 			}
 			else if (entry) {
-				$file.restore(entry)
+				file.restore(entry)
 				.then(function(entry) {
 					self.area[namespace][key] = entry;
 					deferred.resolve(entry);
@@ -92,7 +92,7 @@ function($q, baseStorageEngine, $file) {
 				});
 			}
 			else {
-				$file.open(this.extensions)
+				file.open(this.extensions)
 				.then(function(entry) {
 					self.area[namespace][key] = entry;
 					deferred.resolve(entry);
@@ -109,7 +109,7 @@ function($q, baseStorageEngine, $file) {
 			this.getEntry(namespace, key)
 			.then(function(entry) {
 				if (typeof entry == 'FileEntry') {
-					$file.read(entry)
+					file.read(entry)
 					.then(function(text) {
 						deferred.resolve(self.fromJson(text));
 					}, deferred.reject);
@@ -130,7 +130,7 @@ function($q, baseStorageEngine, $file) {
 
 			this.getEntry(namespace, key)
 			.then(function(entry) {
-				$file.write(entry, value, self.type)
+				file.write(entry, value, self.type)
 				.then(deferred.resolve, deferred.reject);
 			}, deferred.reject);
 
