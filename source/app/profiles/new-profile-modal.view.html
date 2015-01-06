@@ -1,5 +1,12 @@
 <div ng-controller="NewProfileModalCtrl as vm" class="dialog-contents">
 	<div class="form-group">
+		<div class="checkbox">
+			<label>
+				<input id="autosave" type="checkbox" ng-model="vm.newProfile.autosave">
+				Autosave Stories
+			</label>
+		</div>
+
 		<div class="input-group">
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-user"></span>
@@ -7,17 +14,13 @@
 			<p><input ng-model="vm.newProfile.name" type="text" class="form-control" placeholder="Your Profile Name"/></p>
 		</div>
 		<hr />
-		<div class="checkbox">
-			<label>
-				Autosave Stories: {{vm.newProfile.name}}
-				<input id="autosave" type="checkbox" ng-model="vm.newProfile.autosave">
-			</label>
+
+		<div class="ngdialog-buttons">
+			<button type="button" class="ngdialog-button" ng-click="vm.setStoryHome()">Set Story Home</button>
+			<button type="button" class="ngdialog-button" ng-click="vm.openCloudAuthModal()">Link with Cloud</button>
 		</div>
 		<hr />
-		<button type="button" class="ngdialog-button" ng-click="vm.setStoryHome()">Set Story Home</button>
-		<hr />
-		<button type="button" class="ngdialog-button" ng-click="vm.openCloudAuthModal()">Link with Cloud</button>
-		<hr />
+
 		<div class="ngdialog-buttons">
 			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">Cancel</button>
 			<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm(vm.newProfile)">Finish</button>

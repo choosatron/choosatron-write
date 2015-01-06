@@ -128,12 +128,12 @@ module.exports = function(grunt) {
 
 			scripts: {
 				files: [ 'source/app/*.js', 'source/app/*/*.js' ],
-				tasks: [ 'debug-scripts' ]
+				tasks: [ 'debug' ]
 			},
 
 			html: {
-				files: [ 'source/*.html', '!source/app/*.js', '!source/assets/css/*.css' ],
-				tasks: [ 'copy' ]
+				files: [ 'source/*.html', 'source/app/*/*.html' ],
+				tasks: [ 'debug' ]
 			}
 		},
 
