@@ -36,6 +36,38 @@
 			);
 		}
 
+		/*function loginToCloud() {
+			console.log("Logging in to cloud");
+			console.log($scope.ngDialogData.profile.name);
+			//var promise = spark.login({ username: vm.username, password: vm.password });
+
+			var promise = spark.login({ accessToken: '5544bede9c5cb8e55ee3ad49ca1731f2a8bbbf6d' });
+
+			// Snape: 53ff6b065067544835331287
+			//var promise = spark.getAttributes({ coreId: '', accessToken: '5544bede9c5cb8e55ee3ad49ca1731f2a8bbbf6d' });
+			promise.then(
+				function(token){
+					// If login is successful we get an accessToken
+					// that is stored in the Spark lib for future use.
+					console.log("Logged in: ", token);
+
+					var devicesPr = spark.getAttributes('53ff6b065067544835331287');
+
+					devicesPr.then(
+					  function(data){
+					    console.log('Core attrs retrieved successfully:', data);
+					  },
+					  function(err) {
+					    console.log('API call failed: ', err);
+					  }
+					);
+				},
+				function(err) {
+					console.log('API call completed on promise fail: ', err);
+				}
+			);
+		}*/
+
 		function changeAuthState(aNewState) {
 			vm.authState = aNewState;
 		}
