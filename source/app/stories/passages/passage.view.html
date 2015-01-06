@@ -1,4 +1,4 @@
-<ng-include src="'templates/storyView.html'"></ng-include>
+<ng-include src="'templates/story.view.html'"></ng-include>
 
 <input ng-model="$parent.vm.showPassages" ng-change="vm.showStoryDetails = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneRightToggle" />
 <div class="wrap ng-class:{picking: vm.picking, top_open: vm.showStoryDetails}">
@@ -39,7 +39,7 @@
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 
-	<ng-include src="'templates/passageExitsView.html'"></ng-include>
+	<ng-include src="'templates/passage-exits.view.html'"></ng-include>
 
 	<div class="scroll_fix"></div>
 </div><!-- .scrollable -->

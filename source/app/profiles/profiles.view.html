@@ -1,7 +1,7 @@
 <div class="menuTop theme-inverse storyMenu">
 	<div class="topBar">
 		<p class="h5 pull-left"><a ng-click="vm.showStoriesMenu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
-		<p class="h5 pull-right" ng-include="'templates/profilePickerView.html'"></p>
+		<p class="h5 pull-right" ng-include="'templates/profile-picker.view.html'"></p>
 	</div>
 
 	<ul class="list-inline list-icon-menu h4">
@@ -15,7 +15,7 @@
 			<div class="row profilesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="p in vm.profiles.all" class="col-md-4 col-sm-6 fade-animation">
-						<ng-include src="'templates/profileView.html'"></ng-include>
+						<ng-include src="'templates/profile.view.html'"></ng-include>
 					</li>
 				</ul>
 			</div><!-- .profilesList -->
