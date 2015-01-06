@@ -63,7 +63,7 @@
 			});*/
 
 			ngDialog.openConfirm({
-				template: 'templates/newProfileModalView.html',
+				template: 'templates/new-profile-modal.view.html',
 				controller: 'NewProfileModalCtrl'
 			}).then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);

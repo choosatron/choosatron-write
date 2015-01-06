@@ -15,7 +15,7 @@
 		function openCloudAuthModal() {
 			console.log("Open spark");
 			ngDialog.openConfirm({
-				template: 'templates/cloudAuthModalView.html',
+				template: 'templates/cloud-auth-modal.view.html',
 				closeByEscape: false,
 				controller: 'CloudAuthModalCtrl',
 				data: { profile: vm.newProfile }
