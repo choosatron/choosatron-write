@@ -123,7 +123,7 @@ module.exports = function(grunt) {
 		watch: {
 			stylesheets: {
 				files: 'source/assets/css/*.css',
-				tasks: [ 'stylesheets' ]
+				tasks: [ 'debug' ]
 			},
 
 			scripts: {

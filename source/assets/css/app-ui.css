@@ -225,6 +225,27 @@ var,
 
 }
 
+/**
+ * Panes
+8888888b.                          88        
+888   Y88b                        8888         
+888    888                        8888         
+888   d88P 8888b. 88888b.  .d88b. 8888 d8888b  
+8888888P"     "88b888 "88bd8P  Y8b8888 8K      
+888       .d888888888  888888888888888 Y8888b. 
+888       888  888888  888Y8b.    8888     X88 
+888       "Y888888888  888 "Y8888 "888bd8888P' 
+**/
+.panel {
+	-webkit-transition-duration: 700ms;
+	display: none;
+	padding: 10px;
+}
+	.panel.active {
+		display: block;
+	}
+
+
 
 
 

@@ -4,27 +4,62 @@
 	angular.module('storyApp.controllers')
 		.controller('NewProfileModalCtrl', NewProfileModalCtrl);
 
-	NewProfileModalCtrl.$inject = ['ngDialog', 'Profile'];
+	NewProfileModalCtrl.$inject = ['Profile'];
 
-	function NewProfileModalCtrl(ngDialog, Profile) {
+	function NewProfileModalCtrl(Profile) {
 		var vm = this;
 
-		vm.newProfile = new Profile();
-		vm.openCloudAuthModal = openCloudAuthModal;
+		vm.profile = new Profile();
+		vm.authState = 'login';
+		vm.remoteState = 'idle';
 
-		function openCloudAuthModal() {
-			console.log("Open spark");
-			ngDialog.openConfirm({
-				template: 'templates/cloud-auth-modal.view.html',
-				closeByEscape: false,
-				controller: 'CloudAuthModalCtrl',
-				data: { profile: vm.newProfile }
-			}).then(function (token) {
-				console.log('Modal promise resolved.');
-				console.log(token);
-			}, function (reason) {
-				console.log('Modal promise rejected. Reason: ', reason);
+		vm.loginToCloud = loginToCloud;
+		vm.registerInCloud = registerInCloud;
+		vm.changeAuthState = changeAuthState;
+
+		function loginToCloud() {
+			console.log("Logging in to cloud");
+
+			vm.remoteState = 'working';
+
+			var promise = spark.login({ 
+				username: vm.profile.cloudUser,
+				password: vm.password
 			});
+
+			promise.then(
+				function(token){
+					// If login is successful we get an accessToken
+					// that is stored in the Spark lib for future use.
+					console.log("Logged in.");
+					console.log(token);
+					vm.remoteState = 'idle';
+					vm.info = { message: "Logged in to the cloud!" };
+					vm.profile.cloudToken = token;
+				},
+				function(err) {
+					console.log('API call completed on promise fail: ', err);
+					vm.error = err;
+					vm.remoteState = 'idle';
+				}
+			);
+		}
+
+		function registerInCloud() {
+			console.log("Logging in to cloud");
+
+			vm.remoteState = 'working';
+
+			var promise = spark.createUser(
+				vm.profile.cloudUser,
+				vm.password
+			);
+
+			promise.then(loginToCloud);
+		}
+
+		function changeAuthState(aNewState) {
+			vm.authState = aNewState;
 		}
 	}
 
