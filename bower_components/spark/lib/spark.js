@@ -313,15 +313,16 @@ Spark.prototype.removeAccessToken = function (username, password, accessToken, c
  * Claims a core and adds it to the user currently logged in
  *
  * @param {string} coreId - The id of the Spark core you wish to claim
+ * @param {integer} productId - The product id to be associated with this Spark core
  * @param {function} callback
  * @returns {Promise}
  * @endpoint POST /v1/devices
  */
-Spark.prototype.claimCore = function (coreId, callback) {
+Spark.prototype.claimCore = function (coreId, productId, callback) {
   var defer = this.createDefer('claimCore', callback),
       handler = this.defaultHandler('claimCore', defer, callback).bind(this);
 
-  this.api.claimCore(coreId, this.accessToken, handler);
+  this.api.claimCore(coreId, productId, this.accessToken, handler);
 
   var promise = (!!defer) ? defer.promise : null;
   return promise;

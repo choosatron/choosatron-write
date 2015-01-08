@@ -155,18 +155,20 @@ SparkApi.prototype.removeAccessToken = function (username, password, accessToken
  * Claims a core and adds it to the user currently logged in
  *
  * @param {string} coreId - The id of the Spark core you wish to claim
+ * @param {integer} productId - The product id to be associated with this Spark core
  * @param {string} accessToken - current access token
  * @param {function} callback
  * @returns {Promise}
  * @endpoint POST /v1/devices
  */
-SparkApi.prototype.claimCore = function (coreId, accessToken, callback) {
+SparkApi.prototype.claimCore = function (coreId, productId, accessToken, callback) {
   this.request({
     uri: this.baseUrl + '/v1/devices',
     method: 'POST',
     form: {
       id: coreId,
-      access_token: accessToken
+      access_token: accessToken,
+      product_id: productId
     },
     json: true
   }, callback);
