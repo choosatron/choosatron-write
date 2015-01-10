@@ -252,12 +252,12 @@
 				return;
 			}
 
-			if (passage.exitIsEmpty()) {
-				passage.setExitType(aExitType);
+			if (aPassage.exitIsEmpty()) {
+				aPassage.setExitType(aExitType);
 				return;
 			}
 
-			switch (passage.exitType) {
+			switch (aPassage.exitType) {
 				case 'ending':
 					alert = 'This passage\'s ending value will be deleted.';
 					break;
@@ -288,7 +288,7 @@
 
 			onConfirm = function () {
 				$scope.$apply(function () {
-					passage.setExitType(aExitType);
+					aPassage.setExitType(aExitType);
 				});
 			};
 
