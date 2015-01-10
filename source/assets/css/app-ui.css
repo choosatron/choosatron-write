@@ -346,7 +346,7 @@ var,
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 40px;
+	height: 50px;
 	padding: 10px 60px;
 	background: #111;
 }
@@ -937,6 +937,7 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
  *¬ Profiles
 **/
 .profilesList {
+	padding-top: 50px
 	padding-bottom: 200px;
 }
 
@@ -955,6 +956,18 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 	.profilesList p {
 		margin-top: 1em;
 	}
+
+/*
+  _____                        
+ |  ___|__  _ __ _ __ ___  ___ 
+ | |_ / _ \| '__| '_ ` _ \/ __|
+ |  _| (_) | |  | | | | | \__ \
+ |_|  \___/|_|  |_| |_| |_|___/
+                               
+*/
+button[disabled] {
+	color: gray;
+}
 
 
 /**

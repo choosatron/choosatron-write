@@ -15,8 +15,8 @@
 
 		// Functions
 		vm.showStoriesMenu = showStoriesMenu;
-		vm.newProfile = newProfile;
 		vm.pickProfile = pickProfile;
+		vm.editProfile = editProfile;
 		vm.saveProfile = saveProfile;
 		vm.setHomePath = setHomePath;
 
@@ -35,19 +35,11 @@
 			vm.location.path('stories');
 		}
 
-		function newProfile() {
-			//var profile = new Profile();
-			//vm.profiles.select(profile);
-
-			//vm.newProfile = new Profile();
-			/*ngDialog.open({
-				template: 'templates/newProfileView.html',
-				controller: 'NewProfileCtrl'
-			});*/
-
+		function editProfile(aProfile) {
 			ngDialog.openConfirm({
 				template: 'templates/new-profile-modal.view.html',
-				controller: 'NewProfileModalCtrl'
+				controller: 'NewProfileModalCtrl',
+				data: aProfile
 			}).then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
 				vm.profiles.select(profile);

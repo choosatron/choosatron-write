@@ -4,12 +4,12 @@
 	angular.module('storyApp.controllers')
 		.controller('NewProfileModalCtrl', NewProfileModalCtrl);
 
-	NewProfileModalCtrl.$inject = ['Profile'];
+	NewProfileModalCtrl.$inject = ['$scope', 'Profile'];
 
-	function NewProfileModalCtrl(Profile) {
+	function NewProfileModalCtrl($scope, Profile) {
 		var vm = this;
 
-		vm.profile = new Profile();
+		vm.profile = $scope.ngDialogData || new Profile();
 		vm.authState = 'login';
 		vm.remoteState = 'idle';
 

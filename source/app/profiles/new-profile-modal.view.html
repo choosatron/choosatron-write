@@ -1,33 +1,34 @@
 <div ng-controller="NewProfileModalCtrl as vm" class="dialog-contents">
-	<div class="form-group">
-		<div class="checkbox">
-			<label>
-				<input id="autosave" type="checkbox" ng-model="vm.profile.autosave">
-				Autosave Stories
-			</label>
-		</div>
+	<form name="new_profile_form">
+		<div class="form-group">
+			<div class="checkbox">
+				<label>
+					<input id="autosave" type="checkbox" ng-model="vm.profile.autosave">
+					Autosave Stories
+				</label>
+			</div>
 
-		<div class="input-group">
-			<span class="input-group-addon">
-				<span class="glyphicon glyphicon-user"></span>
-			</span>
-			<p><input ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name"/></p>
-		</div>
-		<hr />
+			<div class="input-group">
+				<span class="input-group-addon">
+					<span class="glyphicon glyphicon-user"></span>
+				</span>
+				<p><input ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name" required/></p>
+			</div>
+			<hr />
 
-		<div class="ngdialog-buttons">
-			<button type="button" class="ngdialog-button" ng-click="vm.setStoryHome()">Set Story Home</button>
-			<button type="button" class="ngdialog-button" ng-click="vm.openCloudAuth = !vm.openCloudAuth">Link with Cloud</button>
-		</div>
-		<hr />
+			<div class="ngdialog-buttons">
+				<button type="button" class="ngdialog-button" ng-click="vm.openCloudAuth = !vm.openCloudAuth">Link with Cloud</button>
+			</div>
+			<hr />
 
-		<div class="panel" ng-class="{'active': vm.openCloudAuth}">
-			<ng-include src="'templates/cloud-auth-modal.view.html'"></ng-include>
-		</div>
+			<div class="panel" ng-class="{'active': vm.openCloudAuth}">
+				<ng-include src="'templates/cloud-auth-modal.view.html'"></ng-include>
+			</div>
 
-		<div class="ngdialog-buttons">
-			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">Cancel</button>
-			<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm(vm.profile)">Finish</button>
+			<div class="ngdialog-buttons">
+				<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">Cancel</button>
+				<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm(vm.profile)" ng-disabled="!new_profile_form.$valid">Finish</button>
+			</div>
 		</div>
-	</div>
+	</form>
 </div>
