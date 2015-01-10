@@ -2,7 +2,11 @@
 <div class="pane paneTop theme-inverse paneStoryEdit">
 	<div class="topBar">
 		<p class="h5 pull-left"><a ng-click="vm.showStoriesMenu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
-		<p class="h5 pull-right" ng-include="'templates/profile-picker.view.html'"></p>
+		<p class="h5 pull-right">
+			<a ng-click="vm.location.path('/profiles')">
+				<span class="glyphicon glyphicon-user"></span> {{vm.profiles.current.name}}
+			</a>
+		</p>
 	</div>
 
 	<div class="row">

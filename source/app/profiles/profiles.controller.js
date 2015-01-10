@@ -2,24 +2,7 @@
 	'use strict';
 
 	angular.module('storyApp.controllers')
-		.controller('ProfileCtrl', ProfileCtrl)
 		.controller('ProfilesCtrl', ProfilesCtrl);
-
-	ProfileCtrl.$inject = ['$location', 'profiles'];
-
-	function ProfileCtrl($location, profiles) {
-		var vm = this;
-
-		vm.location = $location
-
-		profiles.load().then(function() {
-			vm.profiles = profiles;
-		});
-
-		vm.view = function() {
-			$location.path('profiles');
-		};
-	}
 
 	ProfilesCtrl.$inject = ['$scope', '$location', 'profiles', 'Profile', 'ngDialog'];
 

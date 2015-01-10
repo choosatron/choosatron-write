@@ -128,7 +128,7 @@ module.exports = function(grunt) {
 
 			scripts: {
 				files: [ 'source/app/*.js', 'source/app/*/*.js' ],
-				tasks: [ 'debug' ]
+				tasks: [ 'debug-scripts' ]
 			},
 
 			html: {
