@@ -11,23 +11,17 @@
 
 		// Variables
 		vm.location = $location;
-		vm.saveState = 'disk';
 
 		// Functions
 		vm.showStoriesMenu = showStoriesMenu;
 		vm.pickProfile = pickProfile;
 		vm.editProfile = editProfile;
-		vm.saveProfile = saveProfile;
-		vm.setHomePath = setHomePath;
 
 		activate();
 
 		function activate() {
 			profiles.load().then(function() {
 				vm.profiles = profiles;
-				$scope.$watch('vm.profiles.current.name', function(n, o) {
-					vm.saveState = 'save';
-				});
 			});
 		}
 
@@ -51,18 +45,6 @@
 		function pickProfile(aProfile) {
 			vm.profiles.select(aProfile);
 			vm.profiles.save();
-		}
-
-		function saveProfile() {
-			vm.profiles.save()
-			.then(function() {
-				vm.saveState = 'saved';
-			});
-		}
-
-		function setHomePath() {
-			// TODO
-
 		}
 	}
 

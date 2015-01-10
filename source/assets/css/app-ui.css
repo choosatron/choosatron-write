@@ -931,8 +931,9 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 		position: relative;
 		background: #ccc;
 		padding: 10px;
-		height: 180px;
+		height: 280px;
 		margin-top: 40px;
+		cursor: pointer;
 	}
 
 	.profileCard.active {
