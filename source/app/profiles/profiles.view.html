@@ -19,13 +19,16 @@
 			<div class="row profilesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="p in vm.profiles.all" class="col-md-4 col-sm-6 fade-animation">
-						<div class="profileCard well well-lg">
+						<div class="profileCard well well-lg" ng-class="{'active': p.id === vm.profiles.current.id}">
 							<div class="btn-group btn-group-lg">
-								<button class="btn dropdown-toggle" data-toggle="dropdown">{{p.name}} <span class="caret"></span></button>
+								<button class="btn dropdown-toggle" data-toggle="dropdown">
+									<span class="glyphicon glyphicon-user"></span>
+									{{p.name}} <span class="caret"></span>
+								</button>
 								<ul class="dropdown-menu">
 									<li ng-show="p.id !== vm.profiles.current.id">
 										<a ng-click="vm.pickProfile(p)">
-											<span class="glyphicon glyphicon-user"></span> Pick profile
+											<span class="glyphicon glyphicon-hand-right"></span> Pick profile
 										</a>
 									</button>
 									<li>
@@ -35,6 +38,7 @@
 									</li>
 								</button>
 							</div>
+							<hr />
 							<ul class="list-unstyled">
 								<li><span class="glyphicon glyphicon-time"></span> Created {{ p.created | date }}</li>
 								<li><span class="glyphicon glyphicon-book"></span> {{ p.entries.length }} {{ p.entries.length == 1 ? 'Story' : 'Stories' }}</li>

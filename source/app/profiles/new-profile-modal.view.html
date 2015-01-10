@@ -1,34 +1,35 @@
 <div ng-controller="NewProfileModalCtrl as vm" class="dialog-contents">
 	<form name="new_profile_form">
-		<div class="form-group">
-			<div class="checkbox">
-				<label>
-					<input id="autosave" type="checkbox" ng-model="vm.profile.autosave">
-					Autosave Stories
-				</label>
+		<div class="profile-fields" ng-hide="vm.openCloudAuth">
+			<div class="form-group">
+				<div class="checkbox">
+					<label>
+						<input id="autosave" type="checkbox" ng-model="vm.profile.autosave">
+						Autosave Stories
+					</label>
+				</div>
 			</div>
 
-			<div class="input-group">
-				<span class="input-group-addon">
-					<span class="glyphicon glyphicon-user"></span>
-				</span>
-				<p><input ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name" required/></p>
-			</div>
-			<hr />
-
-			<div class="ngdialog-buttons">
-				<button type="button" class="ngdialog-button" ng-click="vm.openCloudAuth = !vm.openCloudAuth">Link with Cloud</button>
-			</div>
-			<hr />
-
-			<div class="panel" ng-class="{'active': vm.openCloudAuth}">
-				<ng-include src="'templates/cloud-auth-modal.view.html'"></ng-include>
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-user"></span>
+					</span>
+					<p><input ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name" required/></p>
+				</div>
 			</div>
 
-			<div class="ngdialog-buttons">
-				<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">Cancel</button>
-				<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm(vm.profile)" ng-disabled="!new_profile_form.$valid">Finish</button>
+			<div class="form-group">
+				<button type="button" class="btn" ng-click="vm.openCloudAuth = !vm.openCloudAuth">
+					<span class="fa fa-cloud"></span>
+					Link with Cloud
+				</button>
 			</div>
+
+			<button type="button" class="btn btn-primary" ng-click="confirm(vm.profile)" ng-disabled="!new_profile_form.$valid">Finish</button>
+			<button type="button" class="btn btn-link" ng-click="closeThisDialog(0)">Cancel</button>
 		</div>
+
+		<div ng-show="vm.openCloudAuth" ng-include="'templates/cloud-auth-modal.view.html'"></div>
 	</form>
 </div>

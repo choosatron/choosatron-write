@@ -1,15 +1,25 @@
+
 <p ng-show="vm.error">{{ vm.error.message }}</p>
 <p ng-show="vn.info">{{ vm.info.message }}</p>
 
-<form class="form" ng-show="vm.remoteState == 'idle'">
+<div class="form" ng-show="vm.remoteState == 'idle'">
+
 	<div class="form-group">
-		<input ng-model="vm.profile.cloudUser" placeholder="Email">
-	</div>
-	<div class="form-group">
-		<input ng-model="vm.password" placeholder="Password" type="password">
+		<div class="input-group">
+			<span class="input-group-addon"><span class="fa fa-envelope"></span></span>
+			<input class="form-control" ng-model="vm.profile.cloudUser" placeholder="Email">
+		</div>
 	</div>
 
-	<button type="submit" class="btn btn-primary" ng-click="vm.loginToCloud()">Login</button>
+	<div class="form-group">
+		<div class="input-group">
+			<span class="input-group-addon"><span class="fa fa-certificate"></span></span>
+			<input class="form-control" ng-model="vm.password" placeholder="Password" type="password">
+		</div>
+	</div>
 
-	<button type="submit" class="btn btn-secondary" ng-click="vm.registerInCloud()">Create account</button>
-</form>
+	<button class="btn btn-primary" ng-click="vm.loginToCloud()"><span class="fa fa-key"></span> Login</button>
+	<button class="btn btn-success" ng-click="vm.registerInCloud()"><span class="fa fa-plus"></span> Create account</button>
+	<button class="btn btn-link" ng-click="vm.openCloudAuth = false">Cancel</button>
+
+</div>

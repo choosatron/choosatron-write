@@ -225,27 +225,6 @@ var,
 
 }
 
-/**
- * Panes
-8888888b.                          88        
-888   Y88b                        8888         
-888    888                        8888         
-888   d88P 8888b. 88888b.  .d88b. 8888 d8888b  
-8888888P"     "88b888 "88bd8P  Y8b8888 8K      
-888       .d888888888  888888888888888 Y8888b. 
-888       888  888888  888Y8b.    8888     X88 
-888       "Y888888888  888 "Y8888 "888bd8888P' 
-**/
-.panel {
-	-webkit-transition-duration: 700ms;
-	display: none;
-	padding: 10px;
-}
-	.panel.active {
-		display: block;
-	}
-
-
 
 
 
@@ -934,28 +913,36 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 	}
 
 /**
- *¬ Profiles
+ _____    ______       ____     _________    _____   _____        _____    _____  
+(  __ \  (   __ \     / __ \   (_   _____)  (_   _) (_   _)      / ___/   / ____\ 
+ ) )_) )  ) (__) )   / /  \ \    ) (___       | |     | |       ( (__    ( (___   
+(  ___/  (    __/   ( ()  () )  (   ___)      | |     | |        ) __)    \___ \  
+ ) )      ) \ \  _  ( ()  () )   ) (          | |     | |   __  ( (           ) ) 
+( (      ( ( \ \_))  \ \__/ /   (   )        _| |__ __| |___) )  \ \___   ___/ /  
+/__\      )_) \__/    \____/     \_/        /_____( \________/    \____\ /____/   
+                                                                                  
 **/
 .profilesList {
 	padding-top: 50px
 	padding-bottom: 200px;
 }
 
-	.profilesList li > div {
+	.profileCard {
 		position: relative;
 		background: #ccc;
 		padding: 10px;
-		height: 120px;
+		height: 180px;
 		margin-top: 40px;
 	}
 
-	.profilesList h3 {
-		margin-top: 0;
+	.profileCard.active {
+		background: #5cb85c;
 	}
 
-	.profilesList p {
-		margin-top: 1em;
+	.profileCard:hover {
+		background: #2E9D2E;
 	}
+
 
 /*
   _____                        
