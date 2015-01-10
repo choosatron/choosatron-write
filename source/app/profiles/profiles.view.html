@@ -19,7 +19,7 @@
 			<div class="row profilesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="p in vm.profiles.all" class="col-md-4 col-sm-6 fade-animation">
-						<div class="profileCard well well-lg" ng-class="{'active': p.id === vm.profiles.current.id}" ng-click="p.pickProfile(p)">
+						<div class="profileCard well well-lg" ng-click="vm.pickProfile(p)" ng-class="{'active': p.id === vm.profiles.current.id}">
 							<h2><span class="glyphicon glyphicon-user"></span> {{p.name}}</h2>
 							<h3 ng-show="p.cloud.username"><span class="fa fa-cloud"></span> {{p.cloud.username}}</h3>
 

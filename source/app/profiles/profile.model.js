@@ -2,7 +2,6 @@ angular.module('storyApp.models')
 .factory('Profile', ['BaseModel', 'Auth',
 function(BaseModel, Auth) {
 	function Profile(data) {
-		console.info(data);
 		this.created   = Date.now();
 		this.name      = '';
 		this.autosave  = true;
