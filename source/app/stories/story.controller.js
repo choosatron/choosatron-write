@@ -220,7 +220,7 @@
 			}
 
 			// Collect the entrances just once to improve performance
-			aPassage.entrances = vm.story.collect_entrances(aPassage);
+			aPassage.entrances = vm.story.collectEntrances(aPassage);
 
 			vm.passage = aPassage;
 		}
