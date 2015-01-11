@@ -1,25 +1,16 @@
 angular.module('storyApp.models')
-.factory('Profile', ['BaseModel',
-function(BaseModel) {
+.factory('Profile', ['BaseModel', 'Auth',
+function(BaseModel, Auth) {
 	function Profile(data) {
-		this.created  = Date.now();
-		this.name     = '';
-		this.autosave = true;
+		this.created   = Date.now();
+		this.name      = '';
+		this.autosave  = true;
 
-		// Is this profile linked to a spark account?
-		this.linkedWithCloud = false;
-
-		// Cloud username.
-		this.cloudUser = '';
-
-		// Cloud access token. ('access_token', 'token_type', 'expires_in')
-		this.cloudToken = {};
-
-		// Datetime token was registered on.
-		this.tokenExpiration = null;
+		// Cloud auth
+		this.cloud     = new Auth(data && data.cloud);
 
 		// Access tokens for guest Choosatron access.
-		this.guestTokens = {};
+		this.guestAuth = {};
 
 		// Saves data to associate with Choosatrons
 		this.choosatrons = [];

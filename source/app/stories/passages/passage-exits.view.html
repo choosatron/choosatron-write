@@ -1,5 +1,5 @@
 <div class="passage-container exit-tabs">
-	<ul class="nav nav-tabs nav-justified ng-class:'ending-'+vm.passage.endingTypeName()">
+	<ul class="nav nav-tabs nav-justified" ng-class="'ending-'+vm.passage.endingTypeName()">
 		<li ng-class="{active: vm.passage.exitType == 'ending'}"><a ng-click="vm.confirmExitTypeChange(vm.passage, 'ending')">Set as Ending</a></li>
 		<li ng-class="{active: vm.passage.exitType == 'append'}"><a ng-click="vm.confirmExitTypeChange(vm.passage, 'append')">Append a Passage</a></li>
 		<li ng-class="{active: vm.passage.exitType == 'choices'}"><a ng-click="vm.confirmExitTypeChange(vm.passage, 'choices')">Add Choices</a></li>
@@ -7,23 +7,23 @@
 </div>
 
 
-<div class="passage-container passage-box ng-class:'ending-'+vm.passage.endingTypeName()">
+<div class="passage-container passage-box" ng-class="'ending-'+vm.passage.endingTypeName()">
 	<div class="passageExits">
 		<div class="tab-content">
-			<div class="tab-pane passageEnding ng-class:{active: vm.passage.exitType == 'ending'}" id="passageEnding">
+			<div class="tab-pane passageEnding" ng-class="{active: vm.passage.exitType == 'ending'}" id="passageEnding">
 				<div class="btn-toolbar">
 					<div class="btn-group btn-group-justified btn-group-lg">
-						<a ng-click="vm.passage.setEnding(-2)" class="btn btn-default btn-terrible ng-class:{active: vm.passage.endingValue === -2}">Terrible</a>
-						<a ng-click="vm.passage.setEnding(-1)" class="btn btn-default btn-bad ng-class:{active: vm.passage.endingValue === -1}">Bad</a>
-						<a ng-click="vm.passage.setEnding(0)" class="btn btn-default btn-neutral ng-class:{active: vm.passage.endingValue === 0}">Neutral</a>
-						<a ng-click="vm.passage.setEnding(1)" class="btn btn-default btn-good ng-class:{active: vm.passage.endingValue === 1}">Good</a>
-						<a ng-click="vm.passage.setEnding(2)" class="btn btn-default btn-great ng-class:{active: vm.passage.endingValue === 2}">Great</a>
+						<a ng-click="vm.passage.setEnding(-2)" class="btn btn-default btn-terrible" ng-class="{active: vm.passage.endingValue === -2}">Terrible</a>
+						<a ng-click="vm.passage.setEnding(-1)" class="btn btn-default btn-bad" ng-class="{active: vm.passage.endingValue === -1}">Bad</a>
+						<a ng-click="vm.passage.setEnding(0)" class="btn btn-default btn-neutral" ng-class="{active: vm.passage.endingValue === 0}">Neutral</a>
+						<a ng-click="vm.passage.setEnding(1)" class="btn btn-default btn-good" ng-class="{active: vm.passage.endingValue === 1}">Good</a>
+						<a ng-click="vm.passage.setEnding(2)" class="btn btn-default btn-great" ng-class="{active: vm.passage.endingValue === 2}">Great</a>
 					</div>
 				</div>
 			</div><!-- .passageEnding -->
 
 
-			<div class="tab-pane passageAppend ng-class:{active: vm.passage.exitType == 'append'}" id="passageAppend">
+			<div class="tab-pane passageAppend" ng-class="{active: vm.passage.exitType == 'append'}" id="passageAppend">
 				<p ng-if="!vm.passage.hasAppend()" class="h4 text-center"><a ng-click="vm.newPassage(vm.passage.appendLink)"><span class="glyphicon glyphicon-link"></span> New passage</a></p>
 				<p ng-if="!vm.passage.hasAppend()" class="h4 text-center"><a ng-click="vm.pickPassage(vm.passage.appendLink)"><span class="glyphicon glyphicon-link"></span> Existing passage</a></p>
 
@@ -49,7 +49,7 @@
 			Y88b  d88P888  888Y88..88P888Y88b.   Y8b.         X88
 			 "Y8888P" 888  888 "Y88P" 888 "Y8888P "Y8888  88888P'
 			-->
-			<div class="tab-pane passageChoices ng-class:{active: vm.passage.exitType == 'choices'}" id="passageChoices">
+			<div class="tab-pane passageChoices" ng-class="{active: vm.passage.exitType == 'choices'}" id="passageChoices">
 
 				<!-- TODO: choices probably need a drag+drop handle for sortable behavior -->
 				<div ng-repeat="choice in vm.passage.choices" class="choiceContainer fade-animation">

@@ -32,13 +32,13 @@ function(BaseModel, Choice) {
 		// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()
 		reinit: function () {
 			if (this.hasEnding()) {
-				this.exit_type = 'ending';
+				this.exitType = 'ending';
 
 			} else if (this.hasAppend()) {
-				this.exit_type = 'append'
+				this.exitType = 'append'
 
 			} else {
-				this.exit_type = 'choices';
+				this.exitType = 'choices';
 			}
 		},
 

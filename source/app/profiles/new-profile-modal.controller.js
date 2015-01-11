@@ -17,45 +17,49 @@
 		vm.registerInCloud = registerInCloud;
 		vm.changeAuthState = changeAuthState;
 
+
+		function onError(err) {
+			$scope.$apply(function() {
+				console.log('API call completed on promise fail: ', err);
+				vm.error = err;
+				vm.remoteState = 'idle';
+			});
+		}
+
 		function loginToCloud() {
 			console.log("Logging in to cloud");
 
 			vm.remoteState = 'working';
 
-			var promise = spark.login({ 
-				username: vm.profile.cloudUser,
-				password: vm.password
-			});
-
-			promise.then(
-				function(token){
-					// If login is successful we get an accessToken
-					// that is stored in the Spark lib for future use.
-					console.log("Logged in.");
-					console.log(token);
-					vm.remoteState = 'idle';
+			var onSuccess = function() {
+				$scope.$apply(function() {
+					console.log("Logged in.", vm.profile.cloud);
+					vm.remoteState = 'success';
 					vm.info = { message: "Logged in to the cloud!" };
-					vm.profile.cloudToken = token;
-				},
-				function(err) {
-					console.log('API call completed on promise fail: ', err);
-					vm.error = err;
-					vm.remoteState = 'idle';
-				}
-			);
+				});
+			};
+
+			vm.profile.cloud.login(vm.password)
+				.then(onSuccess)
+				.catch(onError);
 		}
 
 		function registerInCloud() {
-			console.log("Logging in to cloud");
+			console.log("Registering in cloud");
 
 			vm.remoteState = 'working';
 
-			var promise = spark.createUser(
-				vm.profile.cloudUser,
-				vm.password
-			);
+			var onSuccess = function() {
+				$scope.$apply(function() {
+					console.log("Registered", vm.profile.cloud);
+					vm.remoteState = 'idle';
+					vm.info = { message: "You've been registered in the cloud!" };
+				});
+			};
 
-			promise.then(loginToCloud);
+			vm.profile.cloud.register(vm.password)
+				.then(onSuccess)
+				.catch(onError);
 		}
 
 		function changeAuthState(aNewState) {

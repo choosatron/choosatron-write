@@ -19,25 +19,13 @@
 			<div class="row profilesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="p in vm.profiles.all" class="col-md-4 col-sm-6 fade-animation">
-						<div class="profileCard well well-lg" ng-class="{'active': p.id === vm.profiles.current.id}">
-							<div class="btn-group btn-group-lg">
-								<button class="btn dropdown-toggle" data-toggle="dropdown">
-									<span class="glyphicon glyphicon-user"></span>
-									{{p.name}} <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li ng-show="p.id !== vm.profiles.current.id">
-										<a ng-click="vm.pickProfile(p)">
-											<span class="glyphicon glyphicon-hand-right"></span> Pick profile
-										</a>
-									</button>
-									<li>
-										<a ng-click="vm.editProfile(p)">
-											<span class="glyphicon glyphicon-edit"></span> Edit profile
-										</a>
-									</li>
-								</button>
-							</div>
+						<div class="profileCard well well-lg" ng-click="vm.pickProfile(p)" ng-class="{'active': p.id === vm.profiles.current.id}">
+							<h2><span class="glyphicon glyphicon-user"></span> {{p.name}}</h2>
+							<h3 ng-show="p.cloud.username"><span class="fa fa-cloud"></span> {{p.cloud.username}}</h3>
+
+							<a ng-click="vm.editProfile(p)">
+								<span class="glyphicon glyphicon-edit"></span> Edit profile
+							</a>
 							<hr />
 							<ul class="list-unstyled">
 								<li><span class="glyphicon glyphicon-time"></span> Created {{ p.created | date }}</li>
