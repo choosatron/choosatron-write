@@ -38,9 +38,9 @@
 		}
 	}
 
-	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'Choosatron'];
+	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'Choosatron', 'ngDialog'];
 
-	function ChoosatronsCtrl($location, profiles, Choosatron) {
+	function ChoosatronsCtrl($location, profiles, Choosatron, ngDialog) {
 		var vm = this;
 
 		// Variables
@@ -80,10 +80,21 @@
 		}
 
 		function newChoosatron() {
-			console.log("Create new Choosatron profile.");
+			ngDialog.openConfirm({
+				template: 'templates/choosatron-add-modal.view.html',
+				controller: 'ChoosatronAddModalCtrl',
+				data: vm.profiles.current
+			}).then(function (device) {
+				console.log('Modal promise resolved. Value: ', device);
+
+			}, function (reason) {
+				console.log('Modal promise rejected. Reason: ', reason);
+			});
+
+			/*console.log("Create new Choosatron profile.");
 			var choosatron = new Choosatron();
 			choosatron.ownerName = profiles.current.name;
-			profiles.current.choosatrons.push(choosatron);
+			profiles.current.choosatrons.push(choosatron);*/
 			//vm.choosatrons = $profiles.current.choosatrons;
 		}
 

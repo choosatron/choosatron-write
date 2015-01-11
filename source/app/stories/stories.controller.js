@@ -29,7 +29,7 @@
 		vm.importStory = importStory;
 
 		profiles.load().then(function() {
-			if (!profiles.current) {
+			if (!profiles.current || (profiles.count > 1)) {
 				return $location.path('profiles');
 			}
 			vm.profile = profiles.current;

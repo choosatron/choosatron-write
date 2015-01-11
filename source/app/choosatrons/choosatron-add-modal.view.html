@@ -1,0 +1,38 @@
+<div ng-controller="ChoosatronAddModalCtrl as vm" class="dialog-contents">
+	<div class="animate-switch-container" ng-switch on="vm.state">
+		<!-- <div class="animate-switch" ng-switch-default>
+
+		</div> -->
+		<div class="animate-switch" ng-switch-when="state_no_cloud">
+			No Cloud
+			<button type="button" class="btn btn-primary" ng-click="vm.state = state_cloud_auth">Setup Cloud</button>
+			<button type="button" class="btn btn-default" ng-click="vm.state = state_new_or_add">Not Now</button>
+		</div>
+		<div class="animate-switch" ng-switch-when="state_cloud_auth">
+			Cloud Auth
+			<button type="button" class="btn btn-primary" ng-click="vm.state = state_new_or_add">Next</button>
+		</div>
+		<div class="animate-switch" ng-switch-when="state_new_or_add">
+			New device setup or adding an existing device?
+			<button type="button" class="btn btn-primary" ng-click="vm.state = state_new_step_one">New</button>
+			<button type="button" class="btn btn-primary" ng-click="vm.state = state_add_step_one">Add</button>
+		</div>
+		<div class="animate-switch" ng-switch-when="state_new_step_one">
+			New device setup step one.
+		</div>
+			<div class="animate-switch" ng-switch-when="state_add_step_one">
+			Add device setup step one.
+			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
+		</div>
+	</div>
+
+	<!-- <span class="label label-warning">Cloud Account Required for WiFi</span>
+
+	<div class="panel" ng-class="{'active': vm.openCloudAuth}">
+		<ng-include src="'templates/cloud-auth-modal.view.html'"></ng-include>
+	</div> -->
+
+</div>
+
+
+<!-- glyphicon glyphicon-cloud-upload glyphicon glyphicon-transfer glyphicon glyphicon-credit-card
