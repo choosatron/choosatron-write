@@ -26,7 +26,7 @@
 		}
 
 		function resetState() {
-			if (vm.profile.linkedWithCloud) {
+			if (vm.profile.cloud.username) {
 				vm.state = "state_new_or_add";
 			} else {
 				vm.state = "state_no_cloud";
