@@ -4,23 +4,25 @@
 
 		</div> -->
 		<div class="animate-switch" ng-switch-when="state_no_cloud">
-			No Cloud
-			<button type="button" class="btn btn-primary" ng-click="vm.state = state_cloud_auth">Setup Cloud</button>
-			<button type="button" class="btn btn-default" ng-click="vm.state = state_new_or_add">Not Now</button>
+			<div align="center"><h2><span class="label label-warning">No Cloud Account</span></h2></div><br>
+			<p>WiFi features are only available with a cloud account.</p>
+			<p><button type="button" class="btn btn-primary" ng-click="vm.state = 'state_cloud_auth'">Setup Cloud</button><button type="button" class="btn btn-default" ng-click="vm.state = 'state_new_or_add'">Not Now</button></p>
 		</div>
 		<div class="animate-switch" ng-switch-when="state_cloud_auth">
-			Cloud Auth
-			<button type="button" class="btn btn-primary" ng-click="vm.state = state_new_or_add">Next</button>
+			<h2>Cloud Auth</h2>
+			<div ng-include="'templates/cloud-auth-modal.view.html'"></div>
+			<!-- <button type="button" class="btn btn-primary" ng-click="vm.state = 'state_new_or_add'">Next</button> -->
 		</div>
 		<div class="animate-switch" ng-switch-when="state_new_or_add">
-			New device setup or adding an existing device?
-			<button type="button" class="btn btn-primary" ng-click="vm.state = state_new_step_one">New</button>
-			<button type="button" class="btn btn-primary" ng-click="vm.state = state_add_step_one">Add</button>
+			<h2>New device setup or adding an existing device?</h2>
+			<p><button type="button" class="btn btn-primary" ng-click="vm.state = 'state_new_step_one'">New</button>
+			<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_add_step_one'">Add</button></p>
 		</div>
 		<div class="animate-switch" ng-switch-when="state_new_step_one">
 			New device setup step one.
+			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
 		</div>
-			<div class="animate-switch" ng-switch-when="state_add_step_one">
+		<div class="animate-switch" ng-switch-when="state_add_step_one">
 			Add device setup step one.
 			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
 		</div>

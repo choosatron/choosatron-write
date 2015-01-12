@@ -1,4 +1,4 @@
-<div class="form" ng-show="vm.remoteState == 'idle'">
+<div ng-controller="CloudAuthModalCtrl as vm" class="form" ng-show="vm.remoteState == 'idle'">
 	<p ng-show="vm.error">{{ vm.error.message }}</p>
 
 	<div class="form-group">

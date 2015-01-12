@@ -12,3 +12,12 @@ angular.module('storyApp').constant('I18N.MESSAGES', {
   'login.error.invalidCredentials': "Login failed.  Please check your credentials and try again.",
   'login.error.serverError': "There was a problem with authenticating: {{exception}}."
 });
+
+angular.module('storyApp').constant('AUTH_EVENTS', {
+  loginSuccess: 'auth-login-success',
+  loginFailed: 'auth-login-failed',
+  logoutSuccess: 'auth-logout-success',
+  sessionTimeout: 'auth-session-timeout',
+  notAuthenticated: 'auth-not-authenticated',
+  notAuthorized: 'auth-not-authorized'
+});

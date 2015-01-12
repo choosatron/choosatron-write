@@ -9,14 +9,15 @@
 	function NewProfileModalCtrl($scope, Profile) {
 		var vm = this;
 
+		// Variables
 		vm.profile = $scope.ngDialogData || new Profile();
 		vm.authState = 'login';
 		vm.remoteState = 'idle';
 
+		// Functions
 		vm.loginToCloud = loginToCloud;
 		vm.registerInCloud = registerInCloud;
 		vm.changeAuthState = changeAuthState;
-
 
 		function onError(err) {
 			$scope.$apply(function() {
