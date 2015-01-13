@@ -18,6 +18,15 @@
 	<div class="scrollable">
 		<div class="container">
 			<div class="row profilesList">
+
+				<h1 ng-if="vm.profiles.all.length > 1">Select a Profile</h1>
+				<h1 ng-if="vm.profiles.all.length == 1">Your Profile</h1>
+
+				<div class="welcome well" ng-if="vm.profiles.all.length < 1">
+					<h1>Welcome!</h1>
+					<p>To get started <a ng-click="vm.editProfile()">Create a New Profile</a>.</p>
+				</div>
+
 				<ul class="list-unstyled">
 					<li ng-repeat="p in vm.profiles.all" class="col-md-4 col-sm-6 fade-animation">
 						<div class="profileCard well well-lg" ng-click="vm.pickProfile(p)" ng-class="{'active': p.id === vm.profiles.current.id}">
