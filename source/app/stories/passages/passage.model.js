@@ -11,12 +11,13 @@ function(BaseModel, Choice) {
 		this.value        = 0;
 		this.endingValue  = false; // Not an ending when === false
 		this.trashed      = false;
+		this.exitType     = 'choices';
 		// Cheating and using a Choice for the append data struct so I can reuse a bunch of code
 		this.appendLink  = new Choice();
 
 		BaseModel.call(this, data);
 
-		this.reinit();
+		this.calculateExitType();
 
 		Passage.passages[this.id] = this;
 
@@ -29,8 +30,7 @@ function(BaseModel, Choice) {
 	Passage.passages = {};
 
 	Passage.methods = {
-		// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()
-		reinit: function () {
+		calculateExitType: function () {
 			if (this.hasEnding()) {
 				this.exitType = 'ending';
 

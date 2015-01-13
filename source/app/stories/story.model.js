@@ -144,15 +144,12 @@ function(BaseModel, Passage) {
 		},
 
 		loadPassages: function(aPassages) {
-			var i;
-
-			for (i = 0; i < aPassages.length; i++) {
+			for (var i = 0; i < aPassages.length; i++) {
 				this.passages.push(new Passage(aPassages[i]));
 			}
 
-			// There is a problem where Choice/Append Paths may not be valid destinations until all Passages have been loaded because their IDs might not exist in Passage.passages until then.  This means that has_append() is returning false when Passages are loaded when the app first runs.  My solution for now was to call this method again for each Passage after all Passages have been loaded in Story.load_passages()
-			for (i = 0; i < this.passages.length; i++) {
-				this.passages[i].reinit();
+			this.eachPassage(function(p) {
+				p.calculateExitType();
 			}
 		}
 	};
