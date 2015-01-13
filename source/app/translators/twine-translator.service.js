@@ -34,7 +34,7 @@ function(Story, Passage, Choice) {
 						passage.content += content;
 					}
 				}
-			};
+			}
 
 			var story = new Story();
 			var passage = null;
@@ -51,7 +51,7 @@ function(Story, Passage, Choice) {
 						story.title = lines.shift();
 						break;
 					default: // Parse the text!
-						var passage = new Passage();
+						passage = new Passage();
 						var content = '';
 						var attrs = reAttributes.exec(id);
 						passage.id = id[1].replace(reAttributes, '').trim();
@@ -67,7 +67,7 @@ function(Story, Passage, Choice) {
 						fixPassage(passage);
 						story.add_passage(passage);
 				}
-			};
+			}
 
 			return story;
 		},

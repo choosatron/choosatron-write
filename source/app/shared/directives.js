@@ -37,7 +37,7 @@ angular.module('storyApp.directives')
 					var verb = 'Links to ';
 					var noun = 'a passage with ';
 					var count = '';
-					if (choices == 0) {
+					if (choices === 0) {
 						count = ' no choices.';
 					}
 					else if (choices == 1) {

@@ -97,7 +97,7 @@
 						profile.save();
 					});
 				});
-			}
+			};
 
 			file.create('json', title)
 			.then(copyOriginal);

@@ -1,7 +1,7 @@
 angular.module('storyApp.storage')
-.factory('storage', ['EventHandler',
+.factory('Storage', ['EventHandler',
 function(EventHandler) {
-	return function storage(engine, namespace) {
+	return function Storage(engine, namespace) {
 		this.engine = engine;
 		this.namespace = namespace;
 		this.events = EventHandler.create('set', 'get', 'delete', 'error');
@@ -22,32 +22,31 @@ function(EventHandler) {
 			var self  = this;
 			var err   = function(e) {
 				self.events.fire('error', e);
-			}
+			};
+			var key, val, saved, got;
 
 			switch (arguments.length) {
 				case 1:
-					var key = arguments[0];
-					var got = function(item) {
+					key = arguments[0];
+					got = function(item) {
 						self.events.fire('get', item);
 						return item;
 					};
 					return this.engine.getItem(ns, key).then(got, err);
 				case 2:
-					var key = arguments[0];
-					var val = arguments[1];
-					var saved = function() {
+					key = arguments[0];
+					val = arguments[1];
+					saved = function() {
 						self.events.fire('set', ns, key, val);
-					}
+					};
 					if (val !== null) {
 						return this.engine.setItem(ns, key, val)
 						.then(saved, err);
 					}
-					else {
-						return this.engine.deleteItem(ns, key)
-						.then(saved, err);
-					}
+					return this.engine.deleteItem(ns, key)
+					.then(saved, err);
 				default:
-					var got = function(item) {
+					got = function(item) {
 						self.events.fire('get', item);
 						return item;
 					};
@@ -87,6 +86,6 @@ function(EventHandler) {
 
 		this.remove = function(key) {
 			return this.data(key, null);
-		}
-	}
+		};
+	};
 }]);

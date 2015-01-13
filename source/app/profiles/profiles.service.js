@@ -1,5 +1,5 @@
 angular.module('storyApp.databridge')
-.service('profiles', ['chromeStorageEngine', 'storage', 'Profile', '$q',
+.service('profiles', ['ChromeStorageEngine', 'Storage', 'Profile', '$q',
 /**
  * Can be used to manage what is the current story and passage¬
  * and the $preferences to be a Storage instance
@@ -7,10 +7,10 @@ angular.module('storyApp.databridge')
  * This service handles passing changes to the selected story and passage
  * between views, and saves the changes to the preferences storage.
 **/
-function (localStorageEngine, storage, Profile, $q) {
+function (LocalStorageEngine, Storage, Profile, $q) {
 
-	var storageEngine = new localStorageEngine();
-	var profileStorage = new storage(storageEngine, 'choosatron');
+	var storageEngine = new LocalStorageEngine();
+	var profileStorage = new Storage(storageEngine, 'choosatron');
 
 	this.loaded = false;
 	this.all = [];
@@ -19,7 +19,7 @@ function (localStorageEngine, storage, Profile, $q) {
 
 	this.save = function() {
 		return profileStorage.set('profiles', this.all);
-	}
+	};
 
 	this.select = function(aProfile) {
 		this.add(aProfile);

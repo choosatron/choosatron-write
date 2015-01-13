@@ -105,4 +105,4 @@ angular.module('storyApp.models')
 
 	return Operators;
 }
-])
+]);

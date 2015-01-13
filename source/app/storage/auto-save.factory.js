@@ -6,9 +6,9 @@ angular.module('storyApp.storage')
 		this.scope = $scope;
 
 		this.events = {
-			'error':    []
-			, 'saving': []
-			, 'saved':  []
+			'error' : [],
+			'saving': [],
+			'saved' : []
 		};
 
 		// Each change within the throttle time bumps the save action out slightly.
@@ -37,15 +37,15 @@ angular.module('storyApp.storage')
 	};
 
 	autoSave.prototype.onSaving = function(callback) {
-		this.events['saving'].push(callback.bind(this));
+		this.events.saving.push(callback.bind(this));
 	};
 
 	autoSave.prototype.onSaved = function(callback) {
-		this.events['saved'].push(callback.bind(this));
+		this.events.saved.push(callback.bind(this));
 	};
 
 	autoSave.prototype.onError = function(callback) {
-		this.events['error'].push(callback.bind(this));
+		this.events.error.push(callback.bind(this));
 	};
 
 	autoSave.prototype.save = function(key, val) {

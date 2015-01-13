@@ -94,7 +94,7 @@ function(file, $q) {
 			if (data && data.then) {
 				data.then(function(rsp) {
 					file.export(story.title, extension, rsp, datatype);
-				})
+				});
 			} else {
 				return file.export(story.title, extension, data, datatype);
 			}

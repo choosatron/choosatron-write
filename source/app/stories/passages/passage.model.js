@@ -35,7 +35,7 @@ function(BaseModel, Choice) {
 				this.exitType = 'ending';
 
 			} else if (this.hasAppend()) {
-				this.exitType = 'append'
+				this.exitType = 'append';
 
 			} else {
 				this.exitType = 'choices';
@@ -55,11 +55,16 @@ function(BaseModel, Choice) {
 		},
 
 		exitIsEmpty: function () {
-			return (
-				(this.exitType == 'ending' && !this.hasEnding())
-				|| (this.exitType == 'append' && !this.hasAppend())
-				|| (this.exitType == 'choices' && !this.hasChoices())
-			);
+			if (this.exitType == 'ending' && !this.hasEnding()) {
+				return true;
+			}
+			if (this.exitType == 'append' && !this.hasAppend()) {
+				return true;
+			}
+			if (this.exitType == 'choices' && !this.hasChoices()) {
+				return true;
+			}
+			return false;
 		},
 
 		hasEnding: function () {
@@ -123,7 +128,8 @@ function(BaseModel, Choice) {
 		},
 
 		removeChoice: function(aChoice) {
-			for (var i = 0, c; c = this.choices[i]; i++) {
+			for (var i = 0; i < this.choices.length; i++) {
+				var c = this.choices[i];
 				if (c.id == aChoice.id) {
 					this.choices.splice(i, 1);
 					break;

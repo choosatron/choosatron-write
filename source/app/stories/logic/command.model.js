@@ -17,7 +17,7 @@ function(BaseModel, Operator) {
 		});
 
 		BaseModel.call(this, data);
-	};
+	}
 
 	Command.methods = {
 		parse: function(str) {

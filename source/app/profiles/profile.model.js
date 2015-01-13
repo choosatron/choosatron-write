@@ -23,8 +23,8 @@ function(BaseModel, Auth) {
 
 	Profile.methods = {
 		getChoosatron: function(aId) {
-			for (i in this.choosatrons) {
-				if (this.choosatrons[i].id = aId) {
+			for (var i in this.choosatrons) {
+				if (this.choosatrons[i].id === aId) {
 					return this.choosatrons[i];
 				}
 			}
@@ -100,7 +100,7 @@ function(BaseModel, Auth) {
 			this.entries.unshift(selected);
 			return selected;
 		}
-	}
+	};
 	BaseModel.extend(Profile, Profile.methods);
 
 	return Profile;

@@ -4,10 +4,10 @@
 	angular.module('storyApp.controllers')
 		.controller('StoryCtrl', StoryCtrl);
 
-	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'profiles', 'translators', 'fileEntryAutoSave',
+	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'profiles', 'translators', 'FileEntryAutoSave',
 		'Story', 'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
 
-	function StoryCtrl($scope, $location, $timeout, profiles, translators, fileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
+	function StoryCtrl($scope, $location, $timeout, profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
 		var vm = this;
 
 		// Variables
@@ -70,7 +70,7 @@
 				}
 
 				var entries = profile.entries;
-				if (!entries || entries.length == 0) {
+				if (!entries || entries.length === 0) {
 					console.error("Profile has no entries. Redirecting to ./stories");
 					return $location.path('/stories');
 				}
@@ -132,7 +132,7 @@
 		}
 
 		function autosave(aResult) {
-			var saver = vm.saver = new fileEntryAutoSave(aResult.story.id, aResult.entry, $scope);
+			var saver = vm.saver = new FileEntryAutoSave(aResult.story.id, aResult.entry, $scope);
 
 			var handleStoryChange = function(nv, ov, scope) {
 				if (profiles.current.autosave && angular.isDefined(nv)) {
@@ -198,11 +198,7 @@
 		}
 
 		function validPickingOption(aItem) {
-			return (
-				!vm.picking
-				|| vm.passage.exitType != 'append'
-				|| vm.passage != aItem
-			);
+			return (!vm.picking || vm.passage.exitType != 'append' || vm.passage != aItem);
 		}
 
 		function selectPassage(aId) {

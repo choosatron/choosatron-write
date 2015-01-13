@@ -137,6 +137,15 @@ module.exports = function(grunt) {
 			}
 		},
 
+		jshint: {
+			debug: {
+				src: [ 'source/**/*.js' ]
+			},
+			build: {
+				src: [ 'build/app.min.js' ]
+			}
+		},
+
 		concat: {
 			options: {
 				// define a string to put between each file in the concatenated output
@@ -151,16 +160,17 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-bower-install-simple');
-	grunt.loadNpmTasks('grunt-wiredep');
-	grunt.loadNpmTasks('grunt-usemin');
 	grunt.loadNpmTasks('grunt-autoprefixer');
-	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-bower-install-simple');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-usemin');
+	grunt.loadNpmTasks('grunt-wiredep');
 
 	grunt.registerTask(
 		'stylesheets',
@@ -171,13 +181,13 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'scripts',
 		"Compiles the javascript files",
-		[ "uglify:build", "concat:scripts", "clean:scripts" ]
+		[ "uglify:build", "concat:scripts", "clean:scripts", "jshint:build" ]
 	);
 
 	grunt.registerTask(
 		'debug-scripts',
 		"Beautifies the javascript files",
-		[ "uglify:debug", "concat:scripts", "clean:scripts" ]
+		[ "jshint:debug", "uglify:debug", "concat:scripts", "clean:scripts" ]
 	);
 
 	grunt.registerTask(

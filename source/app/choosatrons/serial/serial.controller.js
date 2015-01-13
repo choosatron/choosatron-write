@@ -41,7 +41,7 @@
 		function stopDeviceScan() {
 			if (angular.isDefined(vm.intervalPromise)) {
 				console.log("Stopping device scan...");
-				$interval.cancel(vm.intervalPromise)
+				$interval.cancel(vm.intervalPromise);
 				vm.intervalPromise = undefined;
 			}
 		}

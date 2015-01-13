@@ -35,7 +35,7 @@
 
 		vm.view = function() {
 			$location.path('/choosatrons');
-		}
+		};
 	}
 
 	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'Choosatron', 'ngDialog'];
@@ -102,7 +102,7 @@
 			/*$profiles.current.choosatrons.find(function(perms) {
 				return perms.usbDevices;
 			});*/
-			for (i in profiles.current.choosatrons) {
+			for (var i in profiles.current.choosatrons) {
 				if (profiles.current.choosatrons[i].id == vm.editing.id) {
 					console.log("Matched: " + $profiles.current.choosatrons[i].id);
 					profiles.current.choosatrons[i] = vm.editing;

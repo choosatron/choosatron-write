@@ -12,7 +12,7 @@ angular.module('storyApp.utils')
 		};
 
 		this.on = function(events, callback) {
-			var events = events.split(' ');
+			events = events.split(' ');
 			var self = this;
 			events.forEach(function(event) {
 				self.listeners[event].push(callback);
@@ -41,7 +41,7 @@ angular.module('storyApp.utils')
 			};
 			this.listeners[event].forEach(call);
 		};
-	};
+	}
 
 	this.create = function() {
 		var eh = new EventHandler();

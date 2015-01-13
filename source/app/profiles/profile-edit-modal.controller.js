@@ -26,14 +26,14 @@
 		activate();
 
 		function activate() {
-			if (profiles.current != null) {
+			if (profiles.current !== null) {
 				profiles.editing = new Profile(profiles.current);
 				profiles.editing.cloud = profiles.current.cloud;
 				console.log("Orig: " + profiles.current.id + ", Copy: " + profiles.editing.id);
 				console.log("Editing existing profile");
 			} else {
 				console.log("New Profile Being Created");
-				vm.headerText = 'Setup Your Profile'
+				vm.headerText = 'Setup Your Profile';
 				profiles.editing = new Profile();
 			}
 

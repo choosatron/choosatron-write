@@ -43,7 +43,7 @@ function(BaseModel) {
 				})
 				.then(this.saveToken.bind(this));
 		},*/
-	}
+	};
 
 	BaseModel.extend(Auth, Auth.methods);
 

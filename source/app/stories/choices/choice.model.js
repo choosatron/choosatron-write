@@ -56,7 +56,7 @@ function(BaseModel, Command) {
 			this.condition = new Command(condition);
 			this.showCondition = condition && condition.length;
 		}
-	}
+	};
 	BaseModel.extend(Choice, Choice.methods);
 
 	return Choice;

@@ -73,7 +73,7 @@ function(BaseModel, Passage) {
 		},
 
 		addPassage: function(aPassage) {
-			if (this.passages.length == 0) {
+			if (this.passages.length === 0) {
 				aPassage.opening = true;
 			}
 			this.passages.push(aPassage);
@@ -132,7 +132,7 @@ function(BaseModel, Passage) {
 				if (!cmd.empty()) {
 					cmds.push(cmd);
 				}
-			};
+			}
 			this.eachPassage(function(p) {
 				p.eachChoice(function(c) {
 					add(c.condition);
@@ -150,9 +150,10 @@ function(BaseModel, Passage) {
 
 			this.eachPassage(function(p) {
 				p.calculateExitType();
-			}
+			});
 		}
 	};
+
 	BaseModel.extend(Story, Story.methods);
 
 	return Story;

@@ -34,7 +34,7 @@ angular.module('storyApp.utils')
 		do {
 			value = build();
 			tries++;
-		} while (tries < len * 10 && this.used.indexOf(value) >= 0)
+		} while (tries < len * 10 && this.used.indexOf(value) >= 0);
 
 		return value;
 	};

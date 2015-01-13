@@ -19,5 +19,5 @@ function(Story) {
 		export: function(aStory) {
 			return aStory.serialize(true);
 		}
-	}
+	};
 }]);

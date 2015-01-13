@@ -67,7 +67,7 @@ function(BaseModel) {
 			return this.isWired;
 		}
 
-	}
+	};
 
 	BaseModel.extend(Choosatron, Choosatron.methods);
 

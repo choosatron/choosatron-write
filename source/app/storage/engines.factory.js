@@ -1,7 +1,7 @@
 angular.module('storyApp.storage')
-.factory('baseStorageEngine', ['$q',
+.factory('BaseStorageEngine', ['$q',
 function ($q) {
-	return function baseStorageEngine() {
+	return function BaseStorageEngine() {
 		this.area = {};
 		this.throttle = 100; // ms
 
@@ -47,13 +47,13 @@ function ($q) {
 			deferred.resolve();
 			return deferred.promise;
 		};
-	}
+	};
 }])
 
-.factory('fileSystemStorageEngine', ['$q', 'baseStorageEngine', 'file',
-function($q, baseStorageEngine, file) {
-	return function fileSystemStorageEngine(extensions, type) {
-		baseStorageEngine.call(this, $q);
+.factory('FileSystemStorageEngine', ['$q', 'BaseStorageEngine', 'file',
+function($q, BaseStorageEngine, file) {
+	return function FileSystemStorageEngine(extensions, type) {
+		BaseStorageEngine.call(this, $q);
 
 		this.extensions = extensions;
 		this.type = type;
@@ -108,7 +108,7 @@ function($q, baseStorageEngine, file) {
 
 			this.getEntry(namespace, key)
 			.then(function(entry) {
-				if (typeof entry == 'FileEntry') {
+				if (typeof entry === FileEntry) {
 					file.read(entry)
 					.then(function(text) {
 						deferred.resolve(self.fromJson(text));
@@ -140,13 +140,13 @@ function($q, baseStorageEngine, file) {
 		this.deleteItem = function(namespace, key) {
 			throw new Error("Cannot delete items in the filesystem");
 		};
-	}
+	};
 }])
 
-.factory('localStorageEngine', ['$q', 'baseStorageEngine',
-function($q, baseStorageEngine) {
-	return function localStorageEngine() {
-		baseStorageEngine.call(this, $q);
+.factory('LocalStorageEngine', ['$q', 'BaseStorageEngine',
+function($q, BaseStorageEngine) {
+	return function LocalStorageEngine() {
+		BaseStorageEngine.call(this, $q);
 
 		this.area = window.localStorage;
 
@@ -193,13 +193,13 @@ function($q, baseStorageEngine) {
 
 			return deferred.promise;
 		};
-	}
+	};
 }])
 
-.factory('chromeStorageEngine', ['$q', 'baseStorageEngine',
-function($q, baseStorageEngine) {
-	return function chromeStorageEngine() {
-		baseStorageEngine.call(this, $q);
+.factory('ChromeStorageEngine', ['$q', 'BaseStorageEngine',
+function($q, BaseStorageEngine) {
+	return function ChromeStorageEngine() {
+		BaseStorageEngine.call(this, $q);
 
 		this.area = chrome.storage.local;
 
@@ -220,7 +220,7 @@ function($q, baseStorageEngine) {
 			};
 			this.area.get(namespace, cb);
 			return deferred.promise;
-		}
+		};
 
 		this.setItem = function(namespace, key, value) {
 			var deferred = $q.defer();
@@ -247,7 +247,7 @@ function($q, baseStorageEngine) {
 			}, deferred.reject);
 
 			return deferred.promise;
-		}
+		};
 
 		this.deleteItem = function(namespace, key) {
 			var deferred = $q.defer();
@@ -275,18 +275,18 @@ function($q, baseStorageEngine) {
 			return deferred.promise;
 
 		};
-	}
+	};
 }])
 
 
-.factory('chromeSyncStorageEngine', ['$q', 'chromeStorageEngine',
-function($q, chromeStorageEngine) {
-	return function chromeSyncStorageEngine() {
-		chromeStorageEngine.call(this, $q);
+.factory('ChromeSyncStorageEngine', ['$q', 'ChromeStorageEngine',
+function($q, ChromeStorageEngine) {
+	return function ChromeSyncStorageEngine() {
+		ChromeStorageEngine.call(this, $q);
 		this.area = chrome.storage.sync;
 
 		// Each change within the throttle time bumps the save action out slightly.
 		// Chrome.sync storage has a max sustained save operation of 10 writes/minute
 		this.throttle = 6000; // ms
-	}
+	};
 }]);

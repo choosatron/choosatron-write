@@ -39,9 +39,9 @@ function(Story, Passage, Choice) {
 				uint32View[i] = i*2;
 			}
 
-			for (var i=0; i<uint16View.length; i++) {
-				console.log("Entry " + i + ": " + uint16View[i]);
-				uint16View[i] = i;
+			for (var j=0; j<uint16View.length; j++) {
+				console.log("Entry " + j + ": " + uint16View[j]);
+				uint16View[j] = j;
 			}
 
 			return buffer;

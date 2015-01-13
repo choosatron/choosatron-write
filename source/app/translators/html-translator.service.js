@@ -15,9 +15,9 @@ function(Story, $http) {
 			return $http
 			.get('/templates/htmlView.html')
 			.then(function(rsp) {
-				var html = rsp.data.replace(placeholder, json);;
+				var html = rsp.data.replace(placeholder, json);
 				return html;
 			});
 		}
-	}
+	};
 }]);

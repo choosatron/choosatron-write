@@ -12,7 +12,7 @@ function(BaseModel) {
 		this.selected = [];
 
 		BaseModel.call(this, data);
-	};
+	}
 
 	Playback.methods = {
 		start: function(aStory) {

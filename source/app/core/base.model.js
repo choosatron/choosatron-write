@@ -39,7 +39,8 @@ function(Random) {
 		each: function(field, callback) {
 			var list = this[field];
 			if (!list) return this;
-			for (var i=0, item; item = list[i]; i++) {
+			for (var i=0; i < list.length; i++) {
+				var item = list[i];
 				var stop = callback(item);
 				if (stop === false) break;
 			}
