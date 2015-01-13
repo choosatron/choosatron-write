@@ -10,7 +10,7 @@
 		var vm = this;
 
 		// Variables
-		vm.profile = $scope.ngDialogData || new Profile();
+		vm.profile = null;
 		vm.state = '';
 
 		// Functions
@@ -19,6 +19,8 @@
 		activate();
 
 		function activate() {
+			vm.profile = profiles.current;
+
 			if (vm.profile.cloud.username) {
 				vm.state = "state_new_or_add";
 			} else {

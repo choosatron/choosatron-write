@@ -56,58 +56,62 @@
 		vm.jsonStory             = jsonStory;
 		vm.exportStory           = exportStory;
 
-		// Load up the selected story
-		profiles.load()
-		.then(function() {
-			var profile = profiles.current;
+		activate();
 
-			if (!profile) {
-				console.error("No profiles selected. Redirecting to ./profiles");
-				return $location.path('profiles');
-			}
+		function activate() {
+			// Load up the selected story
+			profiles.load()
+			.then(function() {
+				var profile = profiles.current;
 
-			var entries = profile.entries;
-			if (!entries || entries.length == 0) {
-				console.error("Profile has no entries. Redirecting to ./stories");
-				return $location.path('stories');
-			}
-
-			var entry = entries[0];
-			var entryId = entry.entryId;
-
-			if (!entryId) {
-				console.error("No entry id found for entry. Redirecting to ./stories");
-				return $location.path('stories');
-			}
-
-			var onFail = function(e) {
-				console.error("Error restoring story", e);
-				return $location.path('stories');
-			};
-
-			vm.entry = entry;
-			translators.restore('json', entryId)
-			.then(function(result) {
-
-				if (!result || !result.story) {
-					return $location.path('stories');
+				if (!profile) {
+					console.error("No profiles selected. Redirecting to ./profiles");
+					return $location.path('/profiles');
 				}
 
-				// Set the current story and passage
-				vm.story = result.story;
-				ensurePassage();
-				vm.showStoryDetails = result.story.passages.length < 2;
-				loadVariables();
+				var entries = profile.entries;
+				if (!entries || entries.length == 0) {
+					console.error("Profile has no entries. Redirecting to ./stories");
+					return $location.path('/stories');
+				}
 
-				// Update the entry record
-				profiles.current.saveEntry(entryId, result.story);
-				profiles.save();
+				var entry = entries[0];
+				var entryId = entry.entryId;
 
-				// Start autosaving changes
-				autosave(result);
+				if (!entryId) {
+					console.error("No entry id found for entry. Redirecting to ./stories");
+					return $location.path('/stories');
+				}
 
-			}, onFail);
-		});
+				var onFail = function(e) {
+					console.error("Error restoring story", e);
+					return $location.path('/stories');
+				};
+
+				vm.entry = entry;
+				translators.restore('json', entryId)
+				.then(function(result) {
+
+					if (!result || !result.story) {
+						return $location.path('/stories');
+					}
+
+					// Set the current story and passage
+					vm.story = result.story;
+					vm.passage = result.story.getOpening();
+					vm.showStoryDetails = result.story.passages.length < 2;
+					loadVariables();
+
+					// Update the entry record
+					profiles.current.saveEntry(entryId, result.story);
+					profiles.save();
+
+					// Start autosaving changes
+					autosave(result);
+
+				}, onFail);
+			});
+		}
 
 		function loadVariables() {
 			var cmds = vm.story.collectCommands();
