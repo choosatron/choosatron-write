@@ -15,22 +15,26 @@ function (localStorageEngine, storage, Profile, $q) {
 	this.loaded = false;
 	this.all = [];
 	this.current = null;
+	this.editing = null;
 
 	this.save = function() {
 		return profileStorage.set('profiles', this.all);
 	}
 
-	this.select = function(profile) {
-		// Look for the existing profile to update and shift
-		for (var i=0; i < this.all.length; i++) {
-			if (this.all[i].id != profile.id) {
-				continue;
-			}
-			this.all.splice(i, 1);
-		}
+	this.select = function(aProfile) {
+		this.add(aProfile);
+		this.current = aProfile;
+	};
 
-		this.all.unshift(profile);
-		this.current = profile;
+	this.add = function(aProfile) {
+		// Look for the existing profile to update and shift
+		for (var i = 0; i < this.all.length; i++) {
+			if (this.all[i].id == aProfile.id) {
+				this.all.splice(i, 1);
+				break;
+			}
+		}
+		this.all.unshift(aProfile);
 		return this.save();
 	};
 
@@ -42,15 +46,22 @@ function (localStorageEngine, storage, Profile, $q) {
 			return deferred.promise;
 		}
 
-		var setAll = function(list) {
-			if (!list) list = [];
-			list.forEach(function(data, i) {
-				list[i] = new Profile(data);
+		var setAll = function(aList) {
+			if (!aList) {
+				aList = [];
+			}
+
+			aList.forEach(function(data, i) {
+				aList[i] = new Profile(data);
 			});
 
 			this.loaded = true;
-			this.all = list;
-			this.current = this.all[0];
+			this.all = aList;
+			// Only set the selected or 'current' profile if there is one.
+			// Otherwise let the user select, or create a new profile.
+			if (this.all.length == 1) {
+				this.current = this.all[0];
+			}
 			deferred.resolve(this);
 		};
 

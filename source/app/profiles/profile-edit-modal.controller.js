@@ -2,24 +2,47 @@
 	'use strict';
 
 	angular.module('storyApp.controllers')
-		.controller('NewProfileModalCtrl', NewProfileModalCtrl);
+		.controller('ProfileEditModalCtrl', ProfileEditModalCtrl);
 
-	NewProfileModalCtrl.$inject = ['$scope', 'Profile'];
+	ProfileEditModalCtrl.$inject = ['$scope', 'profiles', 'Profile'];
 
-	function NewProfileModalCtrl($scope, Profile) {
+	function ProfileEditModalCtrl($scope, profiles, Profile) {
 		var vm = this;
 
 		// Variables
-		vm.profile = $scope.ngDialogData || new Profile();
+		vm.profile = null;
 		vm.authState = 'login';
 		vm.remoteState = 'idle';
+		vm.noCloudAuth = false;
+
+		// Private Variables
 
 		// Functions
-		vm.loginToCloud = loginToCloud;
-		vm.registerInCloud = registerInCloud;
-		vm.changeAuthState = changeAuthState;
+		//vm.loginToCloud = loginToCloud;
+		//vm.registerInCloud = registerInCloud;
+		//vm.changeAuthState = changeAuthState;
 
-		function onError(err) {
+		activate();
+
+		function activate() {
+			if (profiles.current != null) {
+				profiles.editing = new Profile(profiles.current);
+				console.log("Orig: " + profiles.current.id + ", Copy: " + profiles.editing.id);
+				console.log("Editing existing profile");
+			} else {
+				console.log("New Profile Being Created");
+				profiles.editing = new Profile();
+			}
+			vm.profile = profiles.editing;
+
+			if (!vm.profile.cloud.username) {
+				vm.noCloudAuth = true;
+			}
+
+			console.log("Name: " + vm.profile.name + ", ID: " + vm.profile.id);
+		}
+
+		/*function onError(err) {
 			$scope.$apply(function() {
 				console.log('API call completed on promise fail: ', err);
 				vm.error = err;
@@ -65,7 +88,7 @@
 
 		function changeAuthState(aNewState) {
 			vm.authState = aNewState;
-		}
+		}*/
 	}
 
 })();

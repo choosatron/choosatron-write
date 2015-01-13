@@ -11,6 +11,7 @@
 
 		// Variables
 		vm.location = $location;
+		vm.profiles = null;
 
 		// Functions
 		vm.showStoriesMenu = showStoriesMenu;
@@ -29,22 +30,32 @@
 			vm.location.path('stories');
 		}
 
-		function editProfile(aProfile) {
+		function editProfile() {
+			/*if (aProfile) {
+				profiles.editing = aProfile;
+			} else {
+				profiles.editing = new Profile();
+			}*/
+
 			ngDialog.openConfirm({
-				template: 'templates/new-profile-modal.view.html',
-				controller: 'NewProfileModalCtrl',
-				data: aProfile
+				template: 'templates/profile-edit-modal.view.html',
+				controller: 'ProfileEditModalCtrl',
 			}).then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
-				vm.profiles.select(profile);
+				vm.profiles.add(profile);
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
+				profiles.editing = null;
 			});
 		}
 
 		function pickProfile(aProfile) {
-			vm.profiles.select(aProfile);
+			console.log("Pick Profile");
+			//vm.profiles.select(aProfile);
+			vm.profiles.current = aProfile;
 			vm.profiles.save();
+
+			vm.location.path('/stories');
 		}
 	}
 

@@ -1,13 +1,14 @@
 <input ng-model="$parent.vm.showStoryDetails" ng-change="$parent.$parent.vm.showPassages = false" class="sr-only paneToggleCheckbox" type="checkbox" id="paneTopToggle" />
 <div class="pane paneTop theme-inverse paneStoryEdit">
-	<div class="topBar">
+	<!-- <div class="topBar">
 		<p class="h5 pull-left"><a ng-click="vm.showStoriesMenu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 		<p class="h5 pull-right">
 			<a ng-click="vm.location.path('/profiles')">
 				<span class="glyphicon glyphicon-user"></span> {{vm.profiles.current.name}}
 			</a>
 		</p>
-	</div>
+	</div> -->
+	<ng-include src="'templates/topbar.view.html'"></ng-include>
 
 	<div class="row">
 		<div class="col-xs-6 h4">

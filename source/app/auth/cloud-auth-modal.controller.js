@@ -4,13 +4,13 @@
 	angular.module('storyApp.controllers')
 		.controller('CloudAuthModalCtrl', CloudAuthModalCtrl);
 
-	CloudAuthModalCtrl.$inject = ['$scope'];
+	CloudAuthModalCtrl.$inject = ['$scope', 'profiles'];
 
-	function CloudAuthModalCtrl($scope) {
+	function CloudAuthModalCtrl($scope, profiles) {
 		var vm = this;
 
 		// Variables
-		vm.profile = $scope.$parent.vm.profile || new Profile();
+		vm.profile = null;
 		vm.authState = 'login';
 		vm.remoteState = 'idle';
 
@@ -18,6 +18,12 @@
 		vm.loginToCloud = loginToCloud;
 		vm.registerInCloud = registerInCloud;
 		vm.changeAuthState = changeAuthState;
+
+		activate();
+
+		function activate() {
+			vm.profile = profiles.current;
+		}
 
 		function loginToCloud() {
 			console.log("Logging in to cloud");

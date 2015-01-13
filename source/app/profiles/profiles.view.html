@@ -1,12 +1,13 @@
 <div class="menuTop theme-inverse storyMenu">
-	<div class="topBar">
+	<!-- <div class="topBar">
 		<p class="h5 pull-left" ng-show="vm.profiles.all.length"><a ng-click="vm.showStoriesMenu()"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 		<p class="h5 pull-right">
 			<a ng-click="vm.location.path('/profiles')">
 				<span class="glyphicon glyphicon-user"></span> {{vm.profiles.current.name}}
 			</a>
 		</p>
-	</div>
+	</div> -->
+	<ng-include src="'templates/topbar.view.html'"></ng-include>
 
 	<ul class="list-inline list-icon-menu h4">
 		<li><a ng-click="vm.editProfile()"><span class="glyphicon glyphicon-plus"></span> New Profile</a></li>
@@ -23,13 +24,14 @@
 							<h2><span class="glyphicon glyphicon-user"></span> {{p.name}}</h2>
 							<h3 ng-show="p.cloud.username"><span class="fa fa-cloud"></span> {{p.cloud.username}}</h3>
 
-							<a ng-click="vm.editProfile(p)">
+							<!-- <a ng-click="vm.editProfile(p)">
 								<span class="glyphicon glyphicon-edit"></span> Edit profile
-							</a>
+							</a> -->
 							<hr />
 							<ul class="list-unstyled">
 								<li><span class="glyphicon glyphicon-time"></span> Created {{ p.created | date }}</li>
 								<li><span class="glyphicon glyphicon-book"></span> {{ p.entries.length }} {{ p.entries.length == 1 ? 'Story' : 'Stories' }}</li>
+								<li> {{ p.id }} </li>
 								<li> {{ p.cloud.token }} </li>
 							</ul>
 						</div>
