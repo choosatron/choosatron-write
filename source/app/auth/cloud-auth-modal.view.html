@@ -1,6 +1,6 @@
 <div ng-controller="CloudAuthModalCtrl as vm">
 
-<div class="form" ng-show="vm.remoteState == 'idle'">
+<div class="form" ng-show="vm.authStatus.remoteState == 'idle'">
 	<p ng-show="vm.error">{{ vm.error.message }}</p>
 
 	<div class="form-group">
@@ -23,11 +23,11 @@
 
 </div>
 
-<div ng-show="vm.remoteState == 'working'">
+<div ng-show="vm.authStatus.remoteState == 'working'">
 	<p>Talking to the clouds...</p>
 </div>
 
-<div ng-show="vm.remoteState == 'success'">
+<div ng-show="vm.authStatus.remoteState == 'success'">
 	<p>{{vm.info.message}}</p>
 	<button class="btn btn-success" ng-click="vm.openCloudAuth = false">Continue</button>
 </div>

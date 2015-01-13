@@ -12,7 +12,8 @@
 		// Variables
 		vm.profile = null;
 		vm.authState = 'login';
-		vm.remoteState = 'idle';
+		vm.authStatus = authService.authStatus;
+		vm.info = null;
 
 		// Functions
 		vm.loginToCloud = loginToCloud;
@@ -28,19 +29,24 @@
 		function loginToCloud() {
 			console.log("Logging in to cloud");
 
-			vm.remoteState = 'working';
-
-			var onSuccess = function() {
+			var onComplete = function() {
 				$scope.$apply(function() {
-					console.log(authService.authStatus.remoteState);
-					console.log("Cloud Auth Logged in.", vm.profile.cloud);
-					vm.remoteState = 'success';
-					vm.info = { message: "Logged in to the cloud!" };
+					if (vm.authStatus.remoteState == 'error') {
+						if (vm.authStatus.error) {
+							console.log('API call completed on promise fail: ', vm.authStatus.error);
+						}
+						console.log(authService.authStatus.remoteState);
+					} else {
+						console.log(authService.authStatus.remoteState);
+						console.log("Cloud Auth Logged in.", vm.profile.cloud);
+						vm.info = { message: "Logged in to the cloud!" };
+					}
 				});
+
 			};
 			console.log(authService.authStatus.remoteState);
 			authService.login(profiles.editing.cloud, vm.password)
-				.then(onSuccess)
+				.then(onComplete)
 				.catch(onError);
 			console.log(authService.authStatus.remoteState);
 
@@ -52,19 +58,13 @@
 		function registerInCloud() {
 			console.log("Registering in cloud");
 
-			vm.remoteState = 'working';
-
 			var onSuccess = function() {
-				$scope.$apply(function() {
-					console.log("Cloud Auth Registered", vm.profile.cloud);
-					vm.remoteState = 'idle';
-					vm.info = { message: "You've been registered in the cloud!" };
-				});
+				console.log("Cloud Auth Registered", vm.profile.cloud);
+				vm.info = { message: "You've been registered in the cloud!" };
 			};
 
 			authService.register(profiles.editing.cloud, vm.password)
-				.then(onSuccess)
-				.catch(onError);
+				.then(onSuccess);
 
 			/*vm.profile.cloud.register(vm.password)
 				.then(onSuccess)
@@ -76,14 +76,9 @@
 		}
 
 		// Private Functions
-		function onError(err) {
+		/*function onError(err) {
 			console.log(authService.authStatus.remoteState);
-			$scope.$apply(function() {
-				console.log('API call completed on promise fail: ', err);
-				vm.error = err;
-				vm.remoteState = 'idle';
-			});
-		}
+		}*/
 	}
 
 })();

@@ -8,7 +8,8 @@
 
 	function AuthService() {
 		this.authStatus = {
-			remoteState:'idle'
+			remoteState: 'idle',
+			error: null,
 		};
 	}
 
@@ -17,7 +18,7 @@
 		aAuth.token      = aToken.access_token;
 		aAuth.type       = aToken.token_type;
 		aAuth.expiration = +new Date(now + (aToken.expires_in * 1000));
-		this.authStatus.remoteState = 'idle';
+		this.authStatus.remoteState = 'success';
 	};
 
 	AuthService.prototype.register = function(aAuth, aPassword) {
@@ -25,7 +26,8 @@
 		var login = this.login.bind(this, aAuth, aPassword);
 		return spark
 			.createUser(aAuth.username, aPassword)
-			.then(login);
+			.then(login)
+			.catch(onError);
 	};
 
 	AuthService.prototype.login = function(aAuth, aPassword) {
@@ -46,9 +48,9 @@
 	};
 
 	AuthService.prototype.onError = function(aError) {
-		//console.log('authService: API call completed on promise fail: ', aError);
-		this.authStatus.remoteState = 'idle';
+		console.log('authService: API call completed on promise fail: ', aError);
 		this.authStatus.error = aError;
-		throw aError;
+		this.authStatus.remoteState = 'error';
+		//throw aError; // TODO: Get rid of this?
 	};
 })();
