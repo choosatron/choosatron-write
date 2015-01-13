@@ -29,7 +29,7 @@ function(BaseModel) {
 			return this;
 		},
 
-		register: function(password) {
+		/*register: function(password) {
 			return spark
 				.createUser(this.username, password)
 				.then(this.login.bind(this, password));
@@ -37,12 +37,12 @@ function(BaseModel) {
 
 		login: function(password) {
 			return spark
-				.login({ 
+				.login({
 					username: this.username,
 					password: password
 				})
 				.then(this.saveToken.bind(this));
-		},
+		},*/
 	}
 
 	BaseModel.extend(Auth, Auth.methods);
