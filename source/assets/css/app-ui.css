@@ -18,9 +18,8 @@ body {
 	overflow: hidden;
 }
 
-/* TODO: testing */
 hr {
-	border: 2px solid red;
+	border: 1px solid white;
 }
 
 textarea {
@@ -328,6 +327,12 @@ var,
 	height: 50px;
 	padding: 10px 60px;
 	background: #111;
+}
+
+.topBar .dropdown-toggle {
+	background: none;
+	color: white;
+	padding: 0;
 }
 
 .panePassages .list-passages {

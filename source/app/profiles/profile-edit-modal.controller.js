@@ -10,11 +10,11 @@
 		var vm = this;
 
 		// Variables
-		vm.profile = null;
-		vm.authState = 'login';
+		vm.profile     = null;
+		vm.authState   = 'login';
 		vm.remoteState = 'idle';
-		vm.noCloudAuth = false;
-		vm.headerText = 'Edit Your Profile';
+		vm.noCloudAuth = true;
+		vm.headerText  = 'Edit Your Profile';
 
 		// Private Variables
 
@@ -28,6 +28,7 @@
 		function activate() {
 			if (profiles.current != null) {
 				profiles.editing = new Profile(profiles.current);
+				profiles.editing.cloud = profiles.current.cloud;
 				console.log("Orig: " + profiles.current.id + ", Copy: " + profiles.editing.id);
 				console.log("Editing existing profile");
 			} else {
@@ -35,10 +36,11 @@
 				vm.headerText = 'Setup Your Profile'
 				profiles.editing = new Profile();
 			}
+
 			vm.profile = profiles.editing;
 
-			if (!vm.profile.cloud.username) {
-				vm.noCloudAuth = true;
+			if (vm.profile.cloud.expired) {
+				vm.noCloudAuth = false;
 			}
 
 			console.log("Name: " + vm.profile.name + ", ID: " + vm.profile.id);

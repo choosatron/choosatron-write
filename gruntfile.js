@@ -88,7 +88,7 @@ module.exports = function(grunt) {
 		cssmin: {
 			build: {
 				files: {
-					'build/app.min.css': [ 'build/assets/css/*.css' ]
+					'build/app.min.css': [ 'build/assets/css/*.css', '!build/assets/css/app-ui.css', 'build/assets/css/app-ui.css' ]
 				}
 			}
 		},
