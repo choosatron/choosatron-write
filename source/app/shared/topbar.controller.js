@@ -7,13 +7,14 @@
 	angular.module('storyApp.controllers')
 		.controller('TopbarCtrl', TopbarCtrl);
 
-	TopbarCtrl.$inject = ['$location', 'profiles', 'ngDialog'];
-	function TopbarCtrl($location, profiles, ngDialog) {
+	TopbarCtrl.$inject = ['$location', 'profiles', 'ngDialog', 'authService'];
+	function TopbarCtrl($location, profiles, ngDialog, authService) {
 		var vm = this;
 
 		// Variables
 		vm.profile = null;
 		vm.location = $location;
+		vm.authStatus = authService.authStatus; // DEBUG: TODO - REMOVE
 
 		// Functions
 		vm.editProfile = editProfile;

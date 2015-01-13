@@ -1,5 +1,5 @@
 <div ng-controller="TopbarCtrl as vm" class="topBar">
-	<p ng-show="vm.location.path() == '/stories'" class="h4 pull-left">ChoiceWright</p>
+	<p ng-show="vm.location.path() == '/stories'" class="h4 pull-left">ChoiceWright - DEBUG: {{ vm.authStatus.remoteState }} {{ vm.authStatus.error.message }}</p>
 	<p ng-show="vm.checkShowStoriesMenu()" class="h5 pull-left"><a ng-click="vm.location.path('/stories')"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 	<p class="h5 pull-right">
 		<!-- <a ng-click="vm.location.path('/profiles')">

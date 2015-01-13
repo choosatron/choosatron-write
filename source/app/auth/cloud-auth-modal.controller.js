@@ -32,15 +32,17 @@
 
 			var onSuccess = function() {
 				$scope.$apply(function() {
+					console.log(authService.authStatus.remoteState);
 					console.log("Cloud Auth Logged in.", vm.profile.cloud);
 					vm.remoteState = 'success';
 					vm.info = { message: "Logged in to the cloud!" };
 				});
 			};
-
+			console.log(authService.authStatus.remoteState);
 			authService.login(profiles.editing.cloud, vm.password)
 				.then(onSuccess)
 				.catch(onError);
+			console.log(authService.authStatus.remoteState);
 
 			/*vm.profile.cloud.login(vm.password)
 				.then(onSuccess)
@@ -75,6 +77,7 @@
 
 		// Private Functions
 		function onError(err) {
+			console.log(authService.authStatus.remoteState);
 			$scope.$apply(function() {
 				console.log('API call completed on promise fail: ', err);
 				vm.error = err;
