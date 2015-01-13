@@ -31,30 +31,30 @@
 		vm.exitChangeModal = {};
 
 		// Functions
-		vm.loadVariables = loadVariables;
-		vm.ensurePassage = ensurePassage;
-		vm.autosave = autosave;
-		vm.playbackStory = playbackStory;
-		vm.showStoriesMenu = showStoriesMenu;
-		vm.newPassage = newPassage;
-		vm.pickPassage = pickPassage;
-		vm.getPassage = getPassage;
-		vm.validPickingOption = validPickingOption;
-		vm.selectPassage = selectPassage;
-		vm.editPassage = editPassage;
-		vm.setPassage = setPassage;
-		vm.deletePassage = deletePassage;
+		vm.loadVariables         = loadVariables;
+		vm.ensurePassage         = ensurePassage;
+		vm.autosave              = autosave;
+		vm.playbackStory         = playbackStory;
+		vm.showStoriesMenu       = showStoriesMenu;
+		vm.newPassage            = newPassage;
+		vm.pickPassage           = pickPassage;
+		vm.getPassage            = getPassage;
+		vm.validPickingOption    = validPickingOption;
+		vm.selectPassage         = selectPassage;
+		vm.editPassage           = editPassage;
+		vm.setPassage            = setPassage;
+		vm.deletePassage         = deletePassage;
 		vm.confirmExitTypeChange = confirmExitTypeChange;
-		vm.newChoice = newChoice;
-		vm.hasDestination = hasDestination;
-		vm.deleteChoice = deleteChoice;
-		vm.deleteChoiceUpdate = deleteChoiceUpdate;
+		vm.newChoice             = newChoice;
+		vm.hasDestination        = hasDestination;
+		vm.deleteChoice          = deleteChoice;
+		vm.deleteChoiceUpdate    = deleteChoiceUpdate;
 		vm.deleteChoiceCondition = deleteChoiceCondition;
-		vm.addChoiceUpdate = addChoiceUpdate;
-		vm.clearPassageSearch = clearPassageSearch;
-		vm.undoDelete = undoDelete;
-		vm.jsonStory = jsonStory;
-		vm.exportStory = exportStory;
+		vm.addChoiceUpdate       = addChoiceUpdate;
+		vm.clearPassageSearch    = clearPassageSearch;
+		vm.undoDelete            = undoDelete;
+		vm.jsonStory             = jsonStory;
+		vm.exportStory           = exportStory;
 
 		// Load up the selected story
 		profiles.load()
@@ -95,7 +95,7 @@
 
 				// Set the current story and passage
 				vm.story = result.story;
-				vm.passage = result.story.getOpening();
+				ensurePassage();
 				vm.showStoryDetails = result.story.passages.length < 2;
 				loadVariables();
 
@@ -122,6 +122,9 @@
 			if (!aPassage) {
 				vm.passage = vm.story && vm.story.getOpening();
 			}
+			else {
+				vm.passage = aPassage;
+			}
 		}
 
 		function autosave(aResult) {
@@ -136,7 +139,11 @@
 				}
 			};
 
-			$scope.$watch('story', handleStoryChange, true);
+			var storyWatcher = angular.bind(vm, function(name) {
+				return vm.story;
+			});
+
+			$scope.$watch(storyWatcher, handleStoryChange, true);
 
 			saver.onSaving(function(key, value) {
 				vm.saveState = 'transfer';
