@@ -14,6 +14,7 @@
 		vm.authState = 'login';
 		vm.remoteState = 'idle';
 		vm.noCloudAuth = false;
+		vm.headerText = 'Edit Your Profile';
 
 		// Private Variables
 
@@ -31,6 +32,7 @@
 				console.log("Editing existing profile");
 			} else {
 				console.log("New Profile Being Created");
+				vm.headerText = 'Setup Your Profile'
 				profiles.editing = new Profile();
 			}
 			vm.profile = profiles.editing;

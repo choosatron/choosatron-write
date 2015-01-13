@@ -34,7 +34,7 @@
 		});
 
 		function showStoriesMenu() {
-			$location.path('stories');
+			$location.path('/stories');
 		}
 
 		function clearPassageSearch() {
@@ -52,7 +52,7 @@
 
 		function editStory(aStory) {
 			// @todo: Select the passage being viewed
-			$location.path('story');
+			$location.path('/story');
 		}
 	}
 

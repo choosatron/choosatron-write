@@ -1,5 +1,5 @@
 <div ng-controller="ProfileEditModalCtrl as vm" class="dialog-contents">
-	<h2>Edit Your Profile</h2>
+	<h2>{{ vm.headerText }}</h2>
 	<form name="edit_profile_form">
 		<div class="profile-fields" ng-hide="vm.openCloudAuth">
 			<div class="form-group">
