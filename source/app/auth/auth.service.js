@@ -9,7 +9,7 @@
 
 		var service = {
 
-			//saveToken : saveToken,
+			saveToken : saveToken,
 			register : register,
 			login : login
 
@@ -18,20 +18,20 @@
 		return service;
 		///////////////
 
-		/*function saveToken(aToken) {
+		function saveToken(aAuth, aToken) {
 			var now = +new Date();
 
-			this.token      = aToken.access_token;
-			this.type       = aToken.token_type;
-			this.expiration = +new Date(now + (aToken.expires_in * 1000));
+			aAuth.token      = aToken.access_token;
+			aAuth.type       = aToken.token_type;
+			aAuth.expiration = +new Date(now + (aToken.expires_in * 1000));
 
 			return this;
-		}*/
+		}
 
 		function register(aAuth, aPassword) {
 			return spark
 				.createUser(aAuth.username, aPassword)
-				.then(this.login.bind(this, aPassword));
+				.then(this.login.bind(this, aAuth, aPassword));
 		}
 
 		function login(aAuth, aPassword) {
@@ -44,7 +44,7 @@
 			}
 			return spark
 				.login(params)
-				.then(this.saveToken.bind(this));
+				.then(this.saveToken.bind(this, aAuth));
 		}
 	}
 
