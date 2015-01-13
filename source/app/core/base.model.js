@@ -25,7 +25,7 @@ function(Random) {
 	BaseModel.prototype = {
 		load: function(data) {
 			for (var key in data) {
-				var proper = key[0].toUpperCase + key.slice(1);
+				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
 					this[loader]( data[key] );

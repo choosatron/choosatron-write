@@ -1,7 +1,7 @@
 angular.module('storyApp.storage')
-.factory('autoSave', ['$timeout', function($timeout) {
+.factory('AutoSave', ['$timeout', function($timeout) {
 
-	function autoSave(storage, $scope) {
+	function AutoSave(storage, $scope) {
 		this.storage = storage;
 		this.scope = $scope;
 
@@ -23,8 +23,9 @@ angular.module('storyApp.storage')
 		}).bind(this));
 	}
 
-	autoSave.prototype._fire = function() {
+	AutoSave.prototype._fire = function() {
 		var name = arguments[0];
+		console.log("AutoSave event", arguments);
 		if (this.events[name].length === 0) {
 			return;
 		}
@@ -36,19 +37,19 @@ angular.module('storyApp.storage')
 		}
 	};
 
-	autoSave.prototype.onSaving = function(callback) {
+	AutoSave.prototype.onSaving = function(callback) {
 		this.events.saving.push(callback.bind(this));
 	};
 
-	autoSave.prototype.onSaved = function(callback) {
+	AutoSave.prototype.onSaved = function(callback) {
 		this.events.saved.push(callback.bind(this));
 	};
 
-	autoSave.prototype.onError = function(callback) {
+	AutoSave.prototype.onError = function(callback) {
 		this.events.error.push(callback.bind(this));
 	};
 
-	autoSave.prototype.save = function(key, val) {
+	AutoSave.prototype.save = function(key, val) {
 		// No key returned, exit
 		if (!key) {
 			return;
@@ -73,5 +74,5 @@ angular.module('storyApp.storage')
 		this.queue[key] = $timeout(doSave, this.throttle, false);
 	};
 
-	return autoSave;
+	return AutoSave;
 }]);

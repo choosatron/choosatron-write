@@ -1,8 +1,8 @@
 angular.module('storyApp.storage')
-.factory('FileEntryAutoSave', ['autoSave', 'Storage', 'FileSystemStorageEngine',
-function(autoSave, Storage, FileSystemStorageEngine) {
+.factory('FileEntryAutoSave', ['AutoSave', 'Storage', 'FileSystemStorageEngine',
+function(AutoSave, Storage, FileSystemStorageEngine) {
 
-	var namespace = 'autoSave';
+	var namespace = 'AutoSave';
 	var engine = new FileSystemStorageEngine();
 	engine.area[namespace] = {};
 
@@ -10,10 +10,10 @@ function(autoSave, Storage, FileSystemStorageEngine) {
 
 	function FileEntryAutoSave(id, entry, $scope) {
 		engine.area[namespace][id] = entry;
-		autoSave.call(this, storage, $scope);
+		AutoSave.call(this, storage, $scope);
 	}
 
-	FileEntryAutoSave.prototype = Object.create(autoSave.prototype);
+	FileEntryAutoSave.prototype = Object.create(AutoSave.prototype);
 	FileEntryAutoSave.prototype.constructor = FileEntryAutoSave;
 
 	return FileEntryAutoSave;
