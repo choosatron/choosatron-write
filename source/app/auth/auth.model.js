@@ -19,7 +19,7 @@ function(BaseModel) {
 	}
 
 	Auth.methods = {
-		saveToken: function(token) {
+		/*saveToken: function(token) {
 			var now = +new Date();
 
 			this.token      = token.access_token;
@@ -29,7 +29,7 @@ function(BaseModel) {
 			return this;
 		},
 
-		/*register: function(password) {
+		register: function(password) {
 			return spark
 				.createUser(this.username, password)
 				.then(this.login.bind(this, password));

@@ -2,10 +2,10 @@
 	'use strict';
 
 	angular.module('storyApp')
-		.service('AuthService', AuthService);
+		.service('authService', authService);
 
-	AuthService.$inject = ['profiles'];
-	function AuthService(profiles) {
+	authService.$inject = [];
+	function authService() {
 
 		var service = {
 
@@ -20,6 +20,7 @@
 
 		function saveToken(aAuth, aToken) {
 			var now = +new Date();
+			console.log("saving token!!!");
 
 			aAuth.token      = aToken.access_token;
 			aAuth.type       = aToken.token_type;
