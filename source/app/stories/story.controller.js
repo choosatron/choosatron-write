@@ -5,9 +5,9 @@
 		.controller('StoryCtrl', StoryCtrl);
 
 	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'profiles', 'translators', 'fileEntryAutoSave',
-		'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
+		'Story', 'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
 
-	function StoryCtrl($scope, $location, $timeout, profiles, translators, fileEntryAutoSave, Passage, Choice, Command, Operators, Genres) {
+	function StoryCtrl($scope, $location, $timeout, profiles, translators, fileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
 		var vm = this;
 
 		// Variables
@@ -97,7 +97,7 @@
 					}
 
 					// Set the current story and passage
-					vm.story = result.story;
+					vm.story = new Story(result.story);
 					vm.passage = result.story.getOpening();
 					vm.showStoryDetails = result.story.passages.length < 2;
 					loadVariables();
