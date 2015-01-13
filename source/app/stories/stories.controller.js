@@ -29,8 +29,8 @@
 		vm.importStory = importStory;
 
 		profiles.load().then(function() {
-			if (!profiles.current || (profiles.all.length > 1)) {
-				return $location.path('profiles');
+			if (!profiles.current) {
+				return $location.path('/profiles');
 			}
 			vm.profile = profiles.current;
 		});
@@ -61,7 +61,7 @@
 					var entryId = file.getEntryId(entry);
 					vm.profile.saveEntry(entryId, story);
 					profiles.save().then(function() {
-						$location.path('story');
+						$location.path('/story');
 					}, err);
 				}, err);
 			}, err);
@@ -70,7 +70,7 @@
 		function editStory(aEntry) {
 			profiles.current.selectEntry(aEntry);
 			profiles.save().then(function() {
-				$location.path('story');
+				$location.path('/story');
 			});
 		}
 
