@@ -162,11 +162,11 @@
 		}
 
 		function playbackStory() {
-			$location.path('playback');
+			$location.path('/playback');
 		}
 
 		function showStoriesMenu() {
-			$location.path('stories');
+			$location.path('/stories');
 		}
 
 		function newPassage(aEntranceChoice) {
@@ -340,7 +340,9 @@
 		}
 
 		function undoDelete() {
-			if (!vm.deleted) return;
+			if (!vm.deleted) {
+				return;
+			}
 			vm.deleted.undo();
 			vm.deleted = null;
 		}

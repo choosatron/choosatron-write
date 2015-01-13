@@ -29,16 +29,12 @@
 					console.error("No profiles selected. Redirecting to ./profiles");
 					return $location.path('/profiles');
 				}
-			} else {
-				console.log("Meow!");
-				//profiles.current = null;
 			}
 		}
 
 		function editProfile() {
 			ngDialog.openConfirm({
 				template: 'templates/profile-edit-modal.view.html',
-				controller: 'ProfileEditModalCtrl',
 			}).then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
 				profiles.select(profile);

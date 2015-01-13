@@ -27,7 +27,7 @@
 		}
 
 		function showStoriesMenu() {
-			vm.location.path('stories');
+			vm.location.path('/stories');
 		}
 
 		function editProfile() {
@@ -39,13 +39,13 @@
 
 			ngDialog.openConfirm({
 				template: 'templates/profile-edit-modal.view.html',
-				controller: 'ProfileEditModalCtrl',
 			}).then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
 				vm.profiles.add(profile);
+				vm.profiles.editing = null;
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
-				profiles.editing = null;
+				vm.profiles.editing = null;
 			});
 		}
 
