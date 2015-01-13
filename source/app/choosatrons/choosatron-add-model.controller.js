@@ -21,7 +21,7 @@
 		function activate() {
 			vm.profile = profiles.current;
 
-			if (vm.profile.cloud.username) {
+			if (vm.profile.cloud.token) {
 				vm.state = "state_new_or_add";
 			} else {
 				vm.state = "state_no_cloud";

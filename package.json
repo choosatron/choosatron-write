@@ -1,12 +1,12 @@
 {
-  "name": "ChooseWright",
+  "name": "ChoosatronWrite",
   "version": "0.1.0",
   "contributors": [
-    "Barrett Alexander <spleendini@yahoo.com>",
-    "Zachary Johnson <zachary.johnson@gamil.com>",
-    "Jerry Belich <jerry@monkeytheater.com>"
+    "Alexander Barrett <spleendini@yahoo.com>",
+    "Jerry Belich <jerry@monkeytheater.com>",
+    "Zachary Johnson <zachary.johnson@gamil.com>"
   ],
-  "description": "Write Interactive Fiction",
+  "description": "Interactive Story Creator",
   "main": "window-ui.html",
   "license": "NOT DETERMINED YET",
   "homepage": "choosatron.com",

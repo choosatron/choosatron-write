@@ -42,33 +42,32 @@
 						vm.info = { message: "Logged in to the cloud!" };
 					}
 				});
-
 			};
 			console.log(authService.authStatus.remoteState);
 			authService.login(profiles.editing.cloud, vm.password)
-				.then(onComplete)
-				.catch(onError);
+				.then(onComplete);
 			console.log(authService.authStatus.remoteState);
-
-			/*vm.profile.cloud.login(vm.password)
-				.then(onSuccess)
-				.catch(onError);*/
 		}
 
 		function registerInCloud() {
 			console.log("Registering in cloud");
 
-			var onSuccess = function() {
-				console.log("Cloud Auth Registered", vm.profile.cloud);
-				vm.info = { message: "You've been registered in the cloud!" };
+			var onComplete = function() {
+				$scope.$apply(function() {
+					if (vm.authStatus.remoteState == 'error') {
+						if (vm.authStatus.error) {
+							console.log('API call completed on promise fail: ', vm.authStatus.error);
+						}
+						console.log(authService.authStatus.remoteState);
+					} else {
+						console.log("Cloud Auth Registered", vm.profile.cloud);
+						vm.info = { message: "You've been registered in the cloud!" };
+					}
+				});
 			};
 
 			authService.register(profiles.editing.cloud, vm.password)
-				.then(onSuccess);
-
-			/*vm.profile.cloud.register(vm.password)
-				.then(onSuccess)
-				.catch(onError);*/
+				.then(onComplete);
 		}
 
 		function changeAuthState(aNewState) {

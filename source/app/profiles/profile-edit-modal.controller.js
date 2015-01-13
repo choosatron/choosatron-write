@@ -4,21 +4,25 @@
 	angular.module('storyApp.controllers')
 		.controller('ProfileEditModalCtrl', ProfileEditModalCtrl);
 
-	ProfileEditModalCtrl.$inject = ['$scope', 'profiles', 'Profile'];
+	ProfileEditModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'authService'];
 
-	function ProfileEditModalCtrl($scope, profiles, Profile) {
+	function ProfileEditModalCtrl($scope, profiles, Profile, authService) {
 		var vm = this;
 
 		// Variables
 		vm.profile     = null;
-		vm.authState   = 'login';
-		vm.remoteState = 'idle';
-		vm.noCloudAuth = true;
-		vm.headerText  = 'Edit Your Profile';
+		vm.authStatus = authService.authStatus;
+		/*vm.authLink = {
+			openCloudAuth: false
+		};*/
+		vm.openCloudAuth = false;
+		vm.headerText  = '';
 
 		// Private Variables
 
 		// Functions
+		vm.setupCloudLink = setupCloudLink;
+		vm.updateHeader = updateHeader;
 		//vm.loginToCloud = loginToCloud;
 		//vm.registerInCloud = registerInCloud;
 		//vm.changeAuthState = changeAuthState;
@@ -26,24 +30,38 @@
 		activate();
 
 		function activate() {
-			if (profiles.current !== null) {
+			if (profiles.current) {
 				profiles.editing = new Profile(profiles.current);
 				profiles.editing.cloud = profiles.current.cloud;
 				console.log("Orig: " + profiles.current.id + ", Copy: " + profiles.editing.id);
 				console.log("Editing existing profile");
 			} else {
 				console.log("New Profile Being Created");
-				vm.headerText = 'Setup Your Profile';
 				profiles.editing = new Profile();
 			}
 
+			vm.updateHeader();
+
 			vm.profile = profiles.editing;
 
-			if (vm.profile.cloud.expired) {
-				vm.noCloudAuth = false;
-			}
-
 			console.log("Name: " + vm.profile.name + ", ID: " + vm.profile.id);
+		}
+
+		function setupCloudLink() {
+			//vm.headerText = "Setup Cloud Account Link";
+			vm.openCloudAuth = true;
+			//vm.authLink.openCloudAuth = true;
+		}
+
+		function updateHeader() {
+			console.log("updateHeader");
+			if (vm.openCloudAuth) {
+				vm.headerText = "Setup Cloud Account Link";
+			} else if (profiles.current) {
+				vm.headerText = "Edit Your Profile";
+			} else {
+				vm.headerText = "Setup Your Profile";
+			}
 		}
 
 		/*function onError(err) {

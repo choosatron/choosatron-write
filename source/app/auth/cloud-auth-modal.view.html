@@ -19,7 +19,7 @@
 
 	<button class="btn btn-primary" ng-click="vm.loginToCloud()"><span class="fa fa-key"></span> Login</button>
 	<button class="btn btn-success" ng-click="vm.registerInCloud()"><span class="fa fa-plus"></span> Create account</button>
-	<button class="btn btn-link" ng-click="$parent.openCloudAuth = false">Cancel</button>
+	<button class="btn btn-link" ng-click="$parent.vm.openCloudAuth = false">Cancel</button>
 
 </div>
 
@@ -29,7 +29,7 @@
 
 <div ng-show="vm.authStatus.remoteState == 'success'">
 	<p>{{vm.info.message}}</p>
-	<button class="btn btn-success" ng-click="vm.openCloudAuth = false">Continue</button>
+	<button class="btn btn-success" ng-click="$parent.vm.openCloudAuth = false">Continue</button>
 </div>
 
 </div>
