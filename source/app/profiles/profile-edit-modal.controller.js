@@ -11,10 +11,8 @@
 
 		// Variables
 		vm.profile     = null;
+		vm.editState = 'edit';
 		vm.authStatus = authService.authStatus;
-		/*vm.authLink = {
-			openCloudAuth: false
-		};*/
 		vm.openCloudAuth = false;
 		vm.headerText  = '';
 
@@ -23,9 +21,7 @@
 		// Functions
 		vm.setupCloudLink = setupCloudLink;
 		vm.updateHeader = updateHeader;
-		//vm.loginToCloud = loginToCloud;
-		//vm.registerInCloud = registerInCloud;
-		//vm.changeAuthState = changeAuthState;
+
 
 		activate();
 
@@ -40,6 +36,8 @@
 				profiles.editing = new Profile();
 			}
 
+			$scope.$watch('vm.authStatus.remoteState', onRemoteStateChange);
+
 			vm.updateHeader();
 
 			vm.profile = profiles.editing;
@@ -50,12 +48,14 @@
 		function setupCloudLink() {
 			//vm.headerText = "Setup Cloud Account Link";
 			vm.openCloudAuth = true;
+			vm.editingState = 'cloud_link';
+			vm.updateHeader();
 			//vm.authLink.openCloudAuth = true;
 		}
 
 		function updateHeader() {
 			console.log("updateHeader");
-			if (vm.openCloudAuth) {
+			if (vm.editState === 'cloud_link') {
 				vm.headerText = "Setup Cloud Account Link";
 			} else if (profiles.current) {
 				vm.headerText = "Edit Your Profile";
@@ -64,53 +64,17 @@
 			}
 		}
 
-		/*function onError(err) {
-			$scope.$apply(function() {
-				console.log('API call completed on promise fail: ', err);
-				vm.error = err;
-				vm.remoteState = 'idle';
-			});
+		function onRemoteStateChange(aOldState, aNewState) {
+			console.log("Remote state change");
+			if ((vm.authStatus.remoteState === 'success') ||
+			    (vm.authStatus.remoteState === 'error') ||
+			    (vm.authStatus.remoteState === 'canceled')) {
+				console.log("edit state");
+				vm.editState = 'edit';
+			}
+
+			vm.updateHeader();
 		}
-
-		function loginToCloud() {
-			console.log("Logging in to cloud");
-
-			vm.remoteState = 'working';
-
-			var onSuccess = function() {
-				$scope.$apply(function() {
-					console.log("Logged in.", vm.profile.cloud);
-					vm.remoteState = 'success';
-					vm.info = { message: "Logged in to the cloud!" };
-				});
-			};
-
-			vm.profile.cloud.login(vm.password)
-				.then(onSuccess)
-				.catch(onError);
-		}
-
-		function registerInCloud() {
-			console.log("Registering in cloud");
-
-			vm.remoteState = 'working';
-
-			var onSuccess = function() {
-				$scope.$apply(function() {
-					console.log("Registered", vm.profile.cloud);
-					vm.remoteState = 'idle';
-					vm.info = { message: "You've been registered in the cloud!" };
-				});
-			};
-
-			vm.profile.cloud.register(vm.password)
-				.then(onSuccess)
-				.catch(onError);
-		}
-
-		function changeAuthState(aNewState) {
-			vm.authState = aNewState;
-		}*/
 	}
 
 })();

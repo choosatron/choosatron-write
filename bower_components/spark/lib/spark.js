@@ -189,6 +189,21 @@ Spark.prototype.login = function (params, callback) {
 };
 
 /**
+ * Returns true if an access token is stored, and then removes it.
+ *
+ * @this {Spark}
+ * @returns {boolean}
+ */
+Spark.prototype.logout = function () {
+  if (this.accessToken) {
+    this.accessToken = null
+    return true;
+  }
+
+  return false;
+};
+
+/**
  * Returns a device based on the param deviceId
  *
  * @this {Spark}

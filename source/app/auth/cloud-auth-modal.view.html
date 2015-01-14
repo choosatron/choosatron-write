@@ -1,35 +1,42 @@
 <div ng-controller="CloudAuthModalCtrl as vm">
+	<form name="clouth_auth_form" novalidate>
+		<div class="form" ng-show="vm.authStatus.remoteState == 'idle'">
+			<p ng-show="vm.error">{{ vm.error.message }}</p>
 
-<div class="form" ng-show="vm.authStatus.remoteState == 'idle'">
-	<p ng-show="vm.error">{{ vm.error.message }}</p>
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">
+						<span class="fa fa-envelope"></span>
+					</span>
+					<input class="form-control" ng-model="vm.profile.cloud.username" placeholder="Email" type="email" name="email" required />
+				</div>
+			</div>
 
-	<div class="form-group">
-		<div class="input-group">
-			<span class="input-group-addon"><span class="fa fa-envelope"></span></span>
-			<input class="form-control" ng-model="vm.profile.cloud.username" placeholder="Email">
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">
+						<span class="fa fa-certificate"></span>
+					</span>
+					<input class="form-control" ng-model="vm.password" placeholder="Password" type="password" name="password" ng-minlength=6 ng-maxlength=18 required />
+				</div>
+			</div>
+
+			<button class="btn btn-primary" ng-click="vm.loginToCloud()">
+			<span class="fa fa-key"></span> Login</button>
+			<button class="btn btn-success" ng-click="vm.registerInCloud()" ng-disabled="!clouth_auth_form.$valid">
+			<span class="fa fa-plus"></span> Create account</button>
+			<button class="btn btn-link" ng-click="vm.cancelAuth(); $parent.vm.openCloudAuth = false">Cancel</button>
+
 		</div>
-	</div>
 
-	<div class="form-group">
-		<div class="input-group">
-			<span class="input-group-addon"><span class="fa fa-certificate"></span></span>
-			<input class="form-control" ng-model="vm.password" placeholder="Password" type="password">
+		<div ng-show="vm.authStatus.remoteState == 'working'">
+			<p>Talking to the clouds...</p>
 		</div>
-	</div>
 
-	<button class="btn btn-primary" ng-click="vm.loginToCloud()"><span class="fa fa-key"></span> Login</button>
-	<button class="btn btn-success" ng-click="vm.registerInCloud()"><span class="fa fa-plus"></span> Create account</button>
-	<button class="btn btn-link" ng-click="$parent.vm.openCloudAuth = false">Cancel</button>
-
-</div>
-
-<div ng-show="vm.authStatus.remoteState == 'working'">
-	<p>Talking to the clouds...</p>
-</div>
-
-<div ng-show="vm.authStatus.remoteState == 'success'">
-	<p>{{vm.info.message}}</p>
-	<button class="btn btn-success" ng-click="$parent.vm.openCloudAuth = false">Continue</button>
-</div>
+		<div ng-show="vm.authStatus.remoteState == 'success'">
+			<p>{{vm.info.message}}</p>
+			<button class="btn btn-success" ng-click="vm.cancelAuth(); $parent.vm.openCloudAuth = false">Continue</button>
+		</div>
+	</form>
 
 </div>

@@ -1,11 +1,12 @@
-<div ng-controller="ProfileEditModalCtrl as vm" class="dialog-contents" ng-model="vm.openCloudAuth" ng-change="vm.updateHeader()">
+<div ng-controller="ProfileEditModalCtrl as vm" class="dialog-contents">
+<fieldset>
 	<h2>{{ vm.headerText }}</h2>
 	<form name="edit_profile_form" novalidate>
 		<div class="profile-fields" ng-hide="vm.openCloudAuth">
 			<div class="form-group">
 				<div class="checkbox">
 					<label>
-						<input id="autosave" type="checkbox" ng-model="vm.profile.autosave">
+						<input id="autosave" type="checkbox" ng-model="vm.profile.autosave" />
 						Autosave Stories
 					</label>
 				</div>
@@ -16,7 +17,18 @@
 					<span class="input-group-addon">
 						<span class="glyphicon glyphicon-user"></span>
 					</span>
-					<p><input ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name" required/></p>
+					<p><input name="name" ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name" ng-minlength=3 ng-maxlength=20 required /></p>
+					<div class="error" ng-show="edit_profile_form.name.$dirty && edit_profile_form.name.$invalid">
+					<small class="error" ng-show="signup_form.name.$error.required">
+						A profile name is required.
+					</small>
+					<small class="error" ng-show="signup_form.name.$error.minlength">
+						Your name must be at least 3 characters long.
+					</small>
+					<small class="error" ng-show="signup_form.name.$error.maxlength">
+						Your name cannot be longer than 20 characters.
+					</small>
+					</div>
 				</div>
 			</div>
 
@@ -40,4 +52,6 @@
 
 		<div ng-show="vm.openCloudAuth" ng-include="'templates/cloud-auth-modal.view.html'"></div>
 	</form>
+
+</fieldset>
 </div>

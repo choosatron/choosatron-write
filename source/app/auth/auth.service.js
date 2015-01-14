@@ -54,4 +54,9 @@
 		this.authStatus.remoteState = 'error';
 		//throw aError; // TODO: Get rid of this?
 	};
+
+	AuthService.prototype.logout = function() {
+		this.authStatus.remoteState = 'idle';
+		spark.logout();
+	};
 })();

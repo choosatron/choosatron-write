@@ -62,10 +62,8 @@
 
 		function changeProfile() {
 			vm.location.path('/profiles');
-			// TODO: Call 'logout' for any work to be done on closing a profile.
-			// null the current profile on logout completion (or approval if user input needed)
-			// profiles.current.logout(); ???
 			profiles.current = null;
+			authService.logout();
 		}
 
 		function checkShowStoriesMenu() {

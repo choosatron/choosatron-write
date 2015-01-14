@@ -19,6 +19,7 @@
 		vm.loginToCloud = loginToCloud;
 		vm.registerInCloud = registerInCloud;
 		vm.changeAuthState = changeAuthState;
+		vm.cancelAuth = cancelAuth;
 
 		activate();
 
@@ -72,6 +73,10 @@
 
 		function changeAuthState(aNewState) {
 			vm.authState = aNewState;
+		}
+
+		function cancelAuth() {
+			authService.authStatus.remoteState = 'canceled';
 		}
 
 		// Private Functions
