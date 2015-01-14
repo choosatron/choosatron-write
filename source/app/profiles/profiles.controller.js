@@ -31,14 +31,21 @@
 		}
 
 		function newProfile() {
-			/*if (aProfile) {
-				profiles.editing = aProfile;
-			} else {
-				profiles.editing = new Profile();
-			}*/
-
 			ngDialog.openConfirm({
 				template: 'templates/profile-edit-modal.view.html',
+				showClose: false,
+				closeByEscape: false,
+				preCloseCallback: function(value) {
+					var nestedConfirmDialog = ngDialog.openConfirm({
+						template: 'templates/modal-close-confirm.view.html',
+						showClose: false,
+						closeByEscape: false,
+						plain: false
+					});
+
+					// NOTE: return the promise from openConfirm
+					return nestedConfirmDialog;
+				}
 			}).then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
 				vm.profiles.add(profile);

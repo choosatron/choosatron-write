@@ -21,14 +21,13 @@
 			</div>
 
 			<div class="form-group">
-
 				<h3><span ng-show="vm.profile.cloud.token" class="label label-success">
 					<!-- <span class="glyphicon glyphicon-link"></span> -->
 					<span class="fa fa-chain"></span>
 					 Linked with Cloud
 				</span></h3>
 
-				<button ng-show="!vm.profile.cloud.token" type="button" class="btn btn-warning" ng-click="vm.setupCloudLink()" data-toggle="Meow1" data-original-title="meow Title">
+				<button ng-show="!vm.profile.cloud.token" type="button" class="btn btn-warning" ng-click="vm.setupCloudLink()">
 					<!-- <span class="fa fa-cloud"></span> -->
 					<span class="fa fa-chain-broken"></span>
 					 Setup Cloud Link
