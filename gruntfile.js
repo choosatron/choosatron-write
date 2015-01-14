@@ -123,16 +123,16 @@ module.exports = function(grunt) {
 		watch: {
 			stylesheets: {
 				files: 'source/assets/css/*.css',
-				tasks: [ 'debug' ]
+				tasks: [ 'stylesheets', 'wiredep' ]
 			},
 
 			scripts: {
-				files: [ 'source/app/*.js', 'source/app/*/*.js' ],
-				tasks: [ 'debug' ]
+				files: [ 'source/app/**/*.js' ],
+				tasks: [ 'debug-scripts', 'wiredep' ]
 			},
 
 			html: {
-				files: [ 'source/*.html', 'source/app/*/*.html' ],
+				files: [ 'source/app/**/*.html' ],
 				tasks: [ 'debug' ]
 			}
 		},
@@ -193,7 +193,7 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'bower',
 		"Install 3rd-party dependencies",
-		[ 'bower-install-simple', 'wiredep' ]
+		[ 'bower-install-simple' ]
 	);
 
 	grunt.registerTask(
@@ -205,13 +205,13 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'build',
 		"Compiles all of the assets and copies the files to the build directory.",
-		[ "clean:build", "copy", "stylesheets", "scripts", "bower", "optimize" ]
+		[ "clean:build", "copy", "stylesheets", "scripts", "bower", "wiredep", "optimize" ]
 	);
 
 	grunt.registerTask(
 		'debug',
 		"Creates a debug version all of the assets and copies the files to the build directory.",
-		[ "clean:build", "copy", "stylesheets", "debug-scripts", "bower" ]
+		[ "clean:build", "copy", "stylesheets", "debug-scripts", "bower", "wiredep" ]
 	);
 
 	grunt.registerTask(
