@@ -128,7 +128,7 @@ module.exports = function(grunt) {
 
 			scripts: {
 				files: [ 'source/app/**/*.js' ],
-				tasks: [ 'debug-scripts', 'wiredep' ]
+				tasks: [ 'copy', 'debug-scripts', 'wiredep' ]
 			},
 
 			html: {
@@ -181,7 +181,7 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'scripts',
 		"Compiles the javascript files",
-		[ "uglify:build", "concat:scripts", "clean:scripts", "jshint:build" ]
+		[ "jshint:build", "uglify:build", "concat:scripts", "clean:scripts",  ]
 	);
 
 	grunt.registerTask(
@@ -217,6 +217,6 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		'default',
 		"Watches the project for changes, automatically builds them.",
-		[ 'debug', 'watch' ]
+		[ "debug", "watch" ]
 	);
 };
