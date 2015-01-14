@@ -10,7 +10,7 @@
 	<ng-include src="'templates/topbar.view.html'"></ng-include>
 
 	<ul class="list-inline list-icon-menu h4">
-		<li><a ng-click="vm.editProfile()"><span class="glyphicon glyphicon-plus"></span> New Profile</a></li>
+		<li><a ng-click="vm.newProfile()"><span class="glyphicon glyphicon-plus"></span> New Profile</a></li>
 	</ul>
 </div>
 
@@ -24,7 +24,7 @@
 
 				<div class="welcome well" ng-if="vm.profiles.all.length < 1">
 					<h1>Welcome!</h1>
-					<p>To get started <a ng-click="vm.editProfile()">Create a New Profile</a>.</p>
+					<p>To get started <a ng-click="vm.newProfile()">Create a New Profile</a>.</p>
 				</div>
 
 				<ul class="list-unstyled">
@@ -33,7 +33,7 @@
 							<h2><span class="glyphicon glyphicon-user"></span> {{p.name}}</h2>
 							<h3 ng-show="p.cloud.username"><span class="fa fa-cloud"></span> {{p.cloud.username}}</h3>
 
-							<!-- <a ng-click="vm.editProfile(p)">
+							<!-- <a ng-click="vm.newProfile(p)">
 								<span class="glyphicon glyphicon-edit"></span> Edit profile
 							</a> -->
 							<hr />

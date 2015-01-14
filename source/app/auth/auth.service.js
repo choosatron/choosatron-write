@@ -39,6 +39,7 @@
 		if (aAuth.token) {
 			params.access_token = aAuth.token;
 		}
+
 		var saveToken = this.saveToken.bind(this, aAuth);
 		var onError = this.onError.bind(this);
 		return spark

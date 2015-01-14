@@ -16,7 +16,7 @@
 		// Functions
 		vm.showStoriesMenu = showStoriesMenu;
 		vm.pickProfile = pickProfile;
-		vm.editProfile = editProfile;
+		vm.newProfile = newProfile;
 
 		activate();
 
@@ -30,7 +30,7 @@
 			vm.location.path('/stories');
 		}
 
-		function editProfile() {
+		function newProfile() {
 			/*if (aProfile) {
 				profiles.editing = aProfile;
 			} else {

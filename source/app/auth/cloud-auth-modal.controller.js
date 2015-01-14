@@ -23,7 +23,7 @@
 		activate();
 
 		function activate() {
-			vm.profile = profiles.current;
+			vm.profile = profiles.editing;
 		}
 
 		function loginToCloud() {

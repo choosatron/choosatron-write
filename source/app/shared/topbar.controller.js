@@ -40,6 +40,7 @@
 				console.log('Modal promise resolved. Value: ', profile);
 				profiles.select(profile);
 				vm.profile = profile;
+				profiles.editing = null;
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
 				profiles.editing = null;
