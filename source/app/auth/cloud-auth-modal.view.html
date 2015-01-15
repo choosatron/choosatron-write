@@ -1,7 +1,7 @@
 <div ng-controller="CloudAuthModalCtrl as vm">
 	<form name="clouth_auth_form" novalidate>
-		<div class="form" ng-show="vm.authStatus.remoteState == 'idle'">
-			<p ng-show="vm.error">{{ vm.error.message }}</p>
+		<div class="form" ng-show="vm.authStatus.remoteState == 'idle' && vm.authStatus.status !== 'success'">
+			<p ng-show="vm.authStatus.error">{{ vm.authStatus.error.message }}</p>
 
 			<div class="form-group">
 				<div class="input-group">
@@ -25,7 +25,7 @@
 			<span class="fa fa-key"></span> Login</button>
 			<button class="btn btn-success" ng-click="vm.registerInCloud()" ng-disabled="!clouth_auth_form.$valid">
 			<span class="fa fa-plus"></span> Create account</button>
-			<button class="btn btn-link" ng-click="vm.cancelAuth(); $parent.vm.openCloudAuth = false">Cancel</button>
+			<button class="btn btn-link" ng-click="vm.cancelAuth()">Cancel</button>
 
 		</div>
 
@@ -33,9 +33,9 @@
 			<p>Talking to the clouds...</p>
 		</div>
 
-		<div ng-show="vm.authStatus.remoteState == 'success'">
+		<div ng-show="vm.authStatus.status == 'success'">
 			<p>{{vm.info.message}}</p>
-			<button class="btn btn-success" ng-click="vm.cancelAuth(); $parent.vm.openCloudAuth = false">Continue</button>
+			<button class="btn btn-success" ng-click="vm.cancelAuth()">Continue</button>
 		</div>
 	</form>
 

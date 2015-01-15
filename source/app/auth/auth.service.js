@@ -9,6 +9,7 @@
 	function AuthService() {
 		this.authStatus = {
 			remoteState: 'idle',
+			status: 'ready',
 			error: null,
 		};
 	}
@@ -18,10 +19,13 @@
 		aAuth.token      = aToken.access_token;
 		aAuth.type       = aToken.token_type;
 		aAuth.expiration = +new Date(now + (aToken.expires_in * 1000));
-		this.authStatus.remoteState = 'success';
+		this.authStatus.status = 'success';
+		this.authStatus.remoteState = 'idle';
 	};
 
 	AuthService.prototype.register = function(aAuth, aPassword) {
+		this.authStatus.error = null;
+		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
 		var login = this.login.bind(this, aAuth, aPassword);
 		return spark
@@ -31,6 +35,8 @@
 	};
 
 	AuthService.prototype.login = function(aAuth, aPassword) {
+		this.authStatus.error = null;
+		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
 		var params = {
 			username: aAuth.username,
@@ -51,12 +57,21 @@
 	AuthService.prototype.onError = function(aError) {
 		console.log('authService: API call completed on promise fail: ', aError);
 		this.authStatus.error = aError;
-		this.authStatus.remoteState = 'error';
-		//throw aError; // TODO: Get rid of this?
+		this.authStatus.status = 'error';
+		this.authStatus.remoteState = 'idle';
+	};
+
+	AuthService.prototype.reset = function() {
+		console.log("reset");
+		this.authStatus.error = null;
+		this.authStatus.status = 'ready';
+		this.authStatus.remoteState = 'idle';
 	};
 
 	AuthService.prototype.logout = function() {
-		this.authStatus.remoteState = 'idle';
-		spark.logout();
+		this.reset();
+		// TODO: This needs to be park of the actual library, not included when built.
+		//spark.logout();
+		spark.accessToken = null;
 	};
 })();

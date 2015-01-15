@@ -32,9 +32,10 @@
 
 			var onComplete = function() {
 				$scope.$apply(function() {
-					if (vm.authStatus.remoteState == 'error') {
+					if (vm.authStatus.status === 'error') {
 						if (vm.authStatus.error) {
 							console.log('API call completed on promise fail: ', vm.authStatus.error);
+							vm.authStatus.error.message = 'Unable to login, try again later.';
 						}
 						console.log(authService.authStatus.remoteState);
 					} else {
@@ -55,9 +56,10 @@
 
 			var onComplete = function() {
 				$scope.$apply(function() {
-					if (vm.authStatus.remoteState == 'error') {
+					if (vm.authStatus.status === 'error') {
 						if (vm.authStatus.error) {
 							console.log('API call completed on promise fail: ', vm.authStatus.error);
+							vm.authStatus.error.message = 'Unable to register, try again later.';
 						}
 						console.log(authService.authStatus.remoteState);
 					} else {
@@ -76,7 +78,9 @@
 		}
 
 		function cancelAuth() {
-			authService.authStatus.remoteState = 'canceled';
+			console.log("cancel auth");
+			authService.reset();
+			$scope.$parent.vm.editState = 'edit';
 		}
 
 		// Private Functions

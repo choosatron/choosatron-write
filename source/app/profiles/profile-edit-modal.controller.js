@@ -4,9 +4,9 @@
 	angular.module('storyApp.controllers')
 		.controller('ProfileEditModalCtrl', ProfileEditModalCtrl);
 
-	ProfileEditModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'authService'];
+	ProfileEditModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'authService', 'Auth'];
 
-	function ProfileEditModalCtrl($scope, profiles, Profile, authService) {
+	function ProfileEditModalCtrl($scope, profiles, Profile, authService, Auth) {
 		var vm = this;
 
 		// Variables
@@ -21,14 +21,14 @@
 		// Functions
 		vm.setupCloudLink = setupCloudLink;
 		vm.updateHeader = updateHeader;
-
+		vm.cancel = cancel;
 
 		activate();
 
 		function activate() {
 			if (profiles.current) {
 				profiles.editing = new Profile(profiles.current);
-				profiles.editing.cloud = profiles.current.cloud;
+				profiles.editing.cloud = new Auth(profiles.current.cloud);
 				console.log("Orig: " + profiles.current.id + ", Copy: " + profiles.editing.id);
 				console.log("Editing existing profile");
 			} else {
@@ -36,9 +36,7 @@
 				profiles.editing = new Profile();
 			}
 
-			$scope.$watch('vm.authStatus.remoteState', onRemoteStateChange);
-
-			vm.updateHeader();
+			$scope.$watch('vm.editState', onRemoteStatusChange);
 
 			vm.profile = profiles.editing;
 
@@ -46,11 +44,8 @@
 		}
 
 		function setupCloudLink() {
-			//vm.headerText = "Setup Cloud Account Link";
 			vm.openCloudAuth = true;
-			vm.editingState = 'cloud_link';
-			vm.updateHeader();
-			//vm.authLink.openCloudAuth = true;
+			vm.editState = 'cloud_link';
 		}
 
 		function updateHeader() {
@@ -64,13 +59,19 @@
 			}
 		}
 
-		function onRemoteStateChange(aOldState, aNewState) {
-			console.log("Remote state change");
-			if ((vm.authStatus.remoteState === 'success') ||
-			    (vm.authStatus.remoteState === 'error') ||
-			    (vm.authStatus.remoteState === 'canceled')) {
-				console.log("edit state");
+		function cancel() {
+			profiles.editing = null;
+			$scope.closeThisDialog(0);
+		}
+
+		function onRemoteStatusChange(aNewStatus, aOldStatus) {
+			/*console.log("Old status: " + aOldStatus + ", New Status: " + aNewStatus);
+			if ((aOldStatus === 'ready') && (aNewStatus !== 'ready')) {
 				vm.editState = 'edit';
+				vm.openCloudAuth = false;
+			}*/
+			if (aOldStatus === 'cloud_link' && aNewStatus === 'edit') {
+				vm.openCloudAuth = false;
 			}
 
 			vm.updateHeader();
