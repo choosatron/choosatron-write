@@ -25,7 +25,7 @@
 
 <div class="theme-alt wrap">
 	<div class="container storiesListMenu" ng-show="vm.profile.entries">
-		<div class="btn-group btn-group-justified">
+		<div class="btn-group btn-group-justified" ng-if="vm.profile.entries.length > 4">
 			<div class="btn-group">
 				<button class="btn btn-default" ng-click="vm.sortStories('title')">
 					<span class="glyphicon glyphicon-font"></span>
@@ -54,35 +54,43 @@
 		<div class="container">
 			<div class="row storiesList">
 				<ul class="list-unstyled">
-					<li ng-repeat="entry in vm.profile.entries | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation"><div>
-						<h3><a ng-click="vm.editStory(entry)">{{ entry.title }}</a></h3>
+					<li ng-repeat="entry in vm.profile.entries | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation">
+						<div class="storyItem">
+							<div class="storyInfo" ng-click="vm.editStory(entry)">
+								<h3>{{ entry.title }}</h3>
 
-						<ul class="list-unstyled">
-							<li><span class="glyphicon glyphicon-time"></span> {{ entry.created | date }}</li>
-							<li><span class="glyphicon glyphicon-dashboard"></span> {{ entry.modified | date }}</li>
-							<li><strong>By:</strong> {{ entry.author || 'Author' }}</li>
-							<li><strong>Genre:</strong> {{ entry.genre || 'Genre' }}</li>
-						</ul>
+								<ul class="list-unstyled">
+									<li><strong>By:</strong> {{ entry.author || 'Unknown Author' }}</li>
+									<li><strong>Genre:</strong> {{ entry.genre || 'Unknown Genre' }}</li>
+								</ul>
 
-						<p>{{ entry.description || 'Description' }}</p>
+								<p>{{ entry.description || 'Description' }}</p>
+							</div>
 
-						<ul class="list-inline list-icon-menu">
-							<li>
-								<span class="dropdown">
-									<a href="" data-toggle="dropdown" class="icon-subtle"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
+							<div class="btn-group btn-group-justified list-icon-menu">
+								<div class="btn-group">
+									<span class="dropdown">
+										<a href="" data-toggle="dropdown" class="btn btn-default"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
-									<ul class="dropdown-menu">
-										<li ng-repeat="exporter in vm.exporters">
-											<a ng-click="vm.exportStory(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
-										</li>
-									</ul>
-								</span>
-							</li>
-							<!-- TODO: create support for duplicate -->
-							<li><a class="icon-subtle" ng-click="vm.duplicateStory(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a></li>
-							<li><a confirm-click="cm.deleteStory(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)" class="icon-subtle"><span class="glyphicon glyphicon-trash"></span></span> Remove</li>
-						</ul>
-					</div></li>
+										<ul class="dropdown-menu">
+											<li ng-repeat="exporter in vm.exporters">
+												<a ng-click="vm.exportStory(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
+											</li>
+										</ul>
+									</span>
+								</div>
+								<a class="btn btn-default" ng-click="vm.duplicateStory(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a>
+								<a class="btn btn-default" confirm-click="cm.deleteStory(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)"><span class="glyphicon glyphicon-trash"></span> Remove</a>
+							</div>
+						</div>
+					</li>
+					<li class="col-md-4 col-sm-6">
+						<div class="storyItem newItem" ng-click="vm.newStory()">
+							<div class="newItemCallout">
+								<h1><span class="glyphicon glyphicon-plus"></span> New Story</h1>
+							</div>
+						</div>
+					</li>
 				</ul>
 			</div><!-- .storiesList -->
 		</div><!-- .container -->

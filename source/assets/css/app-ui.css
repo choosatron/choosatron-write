@@ -404,15 +404,26 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 	padding-bottom: 200px;
 }
 
-	.storiesList li > div {
+	.storiesList .storyItem {
 		position: relative;
 		background: #ccc;
+		border: 1px solid #eee;
+		border-radius: 4px;
 		padding: 10px;
-		height: 325px;
+		height: 220px;
 		margin-top: 40px;
 	}
 
+	.storiesList .storyItem .storyInfo {
+		cursor: pointer;
+	}
+
+	.storiesList .storyItem:hover {
+		background: #2E9D2E;
+	}
+
 	.storiesList h3 {
+		text-align: center;
 		margin-top: 0;
 	}
 
@@ -422,8 +433,25 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 
 	.storiesList .list-icon-menu {
 		position: absolute;
-		left: 10px;
+		left: 0;
 		bottom: 0;
+		padding: 10px;
+	}
+
+	.storiesList .newItem {
+		text-align: center;
+		cursor: pointer;
+		background: #6FB36F;
+		color: #ccc;
+	}
+
+	.storiesList .newItem:hover {
+		background: #2E9D2E;
+		color: black;
+	}
+
+	.storiesList .storyItem .newItemCallout {
+		margin-top: 80px;
 	}
 
 
