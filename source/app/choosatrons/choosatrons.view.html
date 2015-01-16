@@ -10,15 +10,20 @@
 
 <div class="theme-alt wrap">
 	<div class="scrollable">
-		<div class="container">
+		<div class="container choosatronList">
 			<ul class="list-unstyled list-choosatrons">
 				<li ng-repeat="choosatron in vm.profiles.current.choosatrons | filter:verifiedChoosatron" class="fade-animation">
 					<ng-include src="'templates/choosatron-device.view.html'"></ng-include>
 				</li>
 			</ul>
 			<div class="well welcome" ng-if="vm.profiles.current.choosatrons.length === 0">
-				<h2>Are you ready to choose an adventure?</h2>
+				<h2>Are you ready to choose your own adventure?</h2>
 				<p>This is the screen where you connect and manage your Choosatron.</p>
+			</div>
+			<div class="well newItem" ng-click="vm.newChoosatron()">
+				<div class="newItemCallout">
+					<h1><span class="glyphicon glyphicon-plus"></span> Add Choosatron</h1>
+				</div>
 			</div>
 		</div><!-- .container -->
 	</div><!-- .scrollable -->
