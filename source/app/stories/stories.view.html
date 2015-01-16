@@ -55,34 +55,42 @@
 			<div class="row storiesList">
 				<ul class="list-unstyled">
 					<li ng-repeat="entry in vm.profile.entries | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation">
-						<div class="storyItem">
-							<div class="storyInfo" ng-click="vm.editStory(entry)">
-								<h3>{{ entry.title }}</h3>
-
-								<ul class="list-unstyled">
-									<li><strong>By:</strong> {{ entry.author || 'Unknown Author' }}</li>
-									<li><strong>Genre:</strong> {{ entry.genre || 'Unknown Genre' }}</li>
-								</ul>
-
-								<p>{{ entry.description || 'Description' }}</p>
+						<div class="tile storyItem">
+							<div class="front">
+								<div class="storyInfo" ng-click="vm.editStory(entry)">
+									<h2><span class="glyphicon glyphicon-book"></span> {{ entry.title }}</h2>
+								</div><!-- .front -->
 							</div>
 
-							<div class="btn-group btn-group-justified list-icon-menu">
-								<div class="btn-group">
-									<span class="dropdown">
-										<a href="" data-toggle="dropdown" class="btn btn-default"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
+							<div class="back">
+								<div class="storyInfo" ng-click="vm.editStory(entry)">
+									<h3>{{ entry.title }}</h3>
 
-										<ul class="dropdown-menu">
-											<li ng-repeat="exporter in vm.exporters">
-												<a ng-click="vm.exportStory(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
-											</li>
-										</ul>
-									</span>
+									<ul class="list-unstyled">
+										<li><strong>By:</strong> {{ entry.author || 'Unknown Author' }}</li>
+										<li><strong>Genre:</strong> {{ entry.genre || 'Unknown Genre' }}</li>
+									</ul>
+
+									<p>{{ entry.description }}</p>
 								</div>
-								<a class="btn btn-default" ng-click="vm.duplicateStory(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a>
-								<a class="btn btn-default" confirm-click="cm.deleteStory(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)"><span class="glyphicon glyphicon-trash"></span> Remove</a>
-							</div>
-						</div>
+
+								<div class="btn-group btn-group-justified list-icon-menu">
+									<div class="btn-group">
+										<span class="dropdown">
+											<a href="" data-toggle="dropdown" class="btn btn-default"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
+
+											<ul class="dropdown-menu">
+												<li ng-repeat="exporter in vm.exporters">
+													<a ng-click="vm.exportStory(exporter.type, entry)">{{exporter.exportMenuTitle}}</a>
+												</li>
+											</ul>
+										</span>
+									</div>
+									<a class="btn btn-default" ng-click="vm.duplicateStory(entry)"><span class="glyphicon glyphicon-share"></span> Duplicate</a>
+									<a class="btn btn-default" confirm-click="cm.deleteStory(entry)" confirm-message="Are you sure you want to remove this story from your list?<br><br>(Removing stories does not delete them from your device.)"><span class="glyphicon glyphicon-trash"></span> Remove</a>
+								</div>
+							</div> <!-- .back -->
+						</div><!-- .title -->
 					</li>
 					<li class="col-md-4 col-sm-6">
 						<div class="storyItem newItem" ng-click="vm.newStory()">

@@ -190,6 +190,51 @@ var,
 .btn-great.active {color: #fff; background-color: #0ea60e; cursor: default;}
 
 
+/**
+ *¬Tiles
+.___________. __   __       _______     _______.
+|           ||  | |  |     |   ____|   /       |
+`---|  |----`|  | |  |     |  |__     |   (----`
+    |  |     |  | |  |     |   __|     \   \    
+    |  |     |  | |  `----.|  |____.----)   |   
+    |__|     |__| |_______||_______|_______/    
+                                                
+**/
+.tile {
+	perspective: 600px;
+}
+
+	.tile .front, .tile .back {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		transform-style: preserve-3d;
+		transition: all 0.4s ease-in-out;
+	}
+
+	.tile .front {
+		z-index: 900;
+		transform: rotateY(0deg);
+		backface-visibility: hidden;
+	}
+
+	.tile .back {
+		z-index: 800;
+		transform: rotateY(-179deg);
+	}
+
+	.tile:hover .front {
+		z-index: 800;
+		transform: rotateY(180deg);
+	}
+
+	.tile:hover .back {
+		z-index: 900;
+		transform: rotateY(0deg);
+	}
+
+
 
 
 /**
@@ -406,25 +451,33 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 
 	.storiesList .storyItem {
 		position: relative;
-		background: #ccc;
-		border: 1px solid #eee;
-		border-radius: 4px;
 		padding: 10px;
 		height: 220px;
 		margin-top: 40px;
+	}
+
+	.storyItem .front, .storyItem .back {
+		background: #ccc;
+		border: 1px solid #eee;
+		border-radius: 4px;
+		height: 100%;
+		padding: 10px;
+	}
+
+	.storyItem .front {
+		padding-top: 80px;
 	}
 
 	.storiesList .storyItem .storyInfo {
 		cursor: pointer;
 	}
 
-	.storiesList .storyItem:hover {
+	.storiesList .back:hover {
 		background: #2E9D2E;
 	}
 
-	.storiesList h3 {
+	.storiesList h3, .storiesList h2, .storiesList h1 {
 		text-align: center;
-		margin-top: 0;
 	}
 
 	.storiesList p {
