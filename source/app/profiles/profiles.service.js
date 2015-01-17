@@ -22,8 +22,8 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 	};
 
 	this.select = function(aProfile) {
-		this.add(aProfile);
 		this.current = aProfile;
+		return this.add(aProfile);
 	};
 
 	this.add = function(aProfile) {

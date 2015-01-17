@@ -4,9 +4,9 @@
 	angular.module('storyApp.controllers')
 		.controller('ProfilesCtrl', ProfilesCtrl);
 
-	ProfilesCtrl.$inject = ['$scope', '$location', 'profiles', 'Profile', 'ngDialog'];
+	ProfilesCtrl.$inject = ['$scope', '$location', 'profiles', 'Profile', 'ProfileEditModalService'];
 
-	function ProfilesCtrl($scope, $location, profiles, Profile, ngDialog) {
+	function ProfilesCtrl($scope, $location, profiles, Profile, ProfileEditModalService) {
 		var vm = this;
 
 		// Variables
@@ -17,6 +17,7 @@
 		vm.showStoriesMenu = showStoriesMenu;
 		vm.pickProfile     = pickProfile;
 		vm.newProfile      = newProfile;
+		vm.editProfile     = editProfile;
 		vm.removeProfile   = removeProfile;
 
 		activate();
@@ -32,26 +33,24 @@
 		}
 
 		function newProfile() {
-			ngDialog.openConfirm({
-				template: 'templates/profile-edit-modal.view.html',
-				showClose: false,
-				closeByEscape: false,
-				preCloseCallback: function(value) {
-					var nestedConfirmDialog = ngDialog.openConfirm({
-						template: 'templates/modal-close-confirm.view.html',
-						showClose: false,
-						closeByEscape: false,
-						plain: false
-					});
-
-					// NOTE: return the promise from openConfirm
-					return nestedConfirmDialog;
-				}
-			}).then(function (profile) {
+			ProfileEditModalService.create()
+			.then(function(profile) {
 				console.log('Modal promise resolved. Value: ', profile);
-				vm.profiles.add(profile);
 				vm.profiles.editing = null;
-			}, function (reason) {
+			})
+			.catch(function (reason) {
+				console.log('Modal promise rejected. Reason: ', reason);
+				vm.profiles.editing = null;
+			});
+		}
+
+		function editProfile(aProfile) {
+			ProfileEditModalService.edit(aProfile)
+			.then(function(profile) {
+				console.log('Modal promise resolved. Value: ', profile);
+				vm.profiles.editing = null;
+			})
+			.catch(function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
 				vm.profiles.editing = null;
 			});
@@ -59,10 +58,7 @@
 
 		function pickProfile(aProfile) {
 			console.log("Pick Profile");
-			//vm.profiles.select(aProfile);
-			vm.profiles.current = aProfile;
-			vm.profiles.save();
-
+			vm.profiles.select(aProfile);
 			vm.location.path('/stories');
 		}
 

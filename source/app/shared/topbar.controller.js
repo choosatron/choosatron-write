@@ -1,14 +1,11 @@
 (function() {
 	'use strict';
 
-	/**
-	 *
-	**/
 	angular.module('storyApp.controllers')
 		.controller('TopbarCtrl', TopbarCtrl);
 
-	TopbarCtrl.$inject = ['$location', 'profiles', 'ngDialog', 'authService', 'manifest'];
-	function TopbarCtrl($location, profiles, ngDialog, authService, manifest) {
+	TopbarCtrl.$inject = ['$location', 'profiles', 'ProfileEditModalService', 'authService', 'manifest'];
+	function TopbarCtrl($location, profiles, ProfileEditModalService, authService, manifest) {
 		var vm = this;
 
 		// Variables
@@ -35,24 +32,9 @@
 		}
 
 		function editProfile() {
-			ngDialog.openConfirm({
-				template: 'templates/profile-edit-modal.view.html',
-				showClose: false,
-				closeByEscape: false,
-				preCloseCallback: function(value) {
-					var nestedConfirmDialog = ngDialog.openConfirm({
-						template: 'templates/modal-close-confirm.view.html',
-						showClose: false,
-						closeByEscape: false,
-						plain: false
-					});
-
-					// NOTE: return the promise from openConfirm
-					return nestedConfirmDialog;
-				}
-			}).then(function (profile) {
+			ProfileEditModalService.edit(vm.profile)
+			.then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
-				profiles.select(profile);
 				vm.profile = profile;
 				profiles.editing = null;
 			}, function (reason) {
