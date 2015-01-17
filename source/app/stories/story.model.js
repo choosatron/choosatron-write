@@ -40,6 +40,7 @@ function(BaseModel, Passage) {
 			if (!opening) {
 				opening = new Passage();
 				opening.opening = true;
+				opening.number = this.getNextPassageNumber();
 				this.addPassage(opening);
 			}
 			return opening;

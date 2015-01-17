@@ -33,7 +33,6 @@
 
 		// Functions
 		vm.loadVariables         = loadVariables;
-		vm.ensurePassage         = ensurePassage;
 		vm.autosave              = autosave;
 		vm.playbackStory         = playbackStory;
 		vm.showStoriesMenu       = showStoriesMenu;
@@ -99,12 +98,12 @@
 
 					// Set the current story and passage
 					vm.story = new Story(result.story);
-					vm.passage = result.story.getOpening();
-					vm.showStoryDetails = result.story.passages.length < 2;
+					vm.setPassage(vm.story.getOpening(), true);
+					vm.showStoryDetails = vm.story.passages.length < 2;
 					loadVariables();
 
 					// Update the entry record
-					profiles.current.saveEntry(entryId, result.story);
+					profiles.current.saveEntry(entryId, vm.story);
 					profiles.save();
 
 					// Start autosaving changes
@@ -121,15 +120,6 @@
 				vars.push(cmd.variable);
 			});
 			vm.variables = angular.toJson(vars);
-		}
-
-		function ensurePassage(aPassage) {
-			if (!aPassage) {
-				vm.passage = vm.story && vm.story.getOpening();
-			}
-			else {
-				vm.passage = aPassage;
-			}
 		}
 
 		function autosave(aResult) {
