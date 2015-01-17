@@ -11,7 +11,7 @@
 
 	<ul class="list-inline list-icon-menu h4">
 		<li><a ng-click="vm.newStory()"><span class="glyphicon glyphicon-plus"></span> New Story</a></li>
-		<li class="dropdown" ng-show="importers">
+		<li class="dropdown" ng-show="vm.importers">
 			<a data-toggle="dropdown"><span class="glyphicon glyphicon-cloud-upload"></span> Import Story</a>
 			<ul class="dropdown-menu">
 				<li ng-repeat="importer in vm.importers">
@@ -76,7 +76,7 @@
 
 								<div class="btn-group btn-group-justified list-icon-menu">
 									<div class="btn-group">
-										<span class="dropdown">
+										<span class="dropup">
 											<a href="" data-toggle="dropdown" class="btn btn-default"><span class="glyphicon glyphicon-cloud-download"></span> Export</a>
 
 											<ul class="dropdown-menu">
