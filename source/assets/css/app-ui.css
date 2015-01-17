@@ -211,6 +211,8 @@ var,
 		width: 100%;
 		transform-style: preserve-3d;
 		transition: all 0.4s ease-in-out;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.tile .front {
@@ -371,7 +373,7 @@ var,
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 50px;
+	height: 54px;
 	padding: 10px 60px;
 	background: #111;
 }
@@ -380,6 +382,12 @@ var,
 	background: none;
 	color: white;
 	padding: 0;
+}
+
+.logo > img {
+	position: absolute;
+	top: 3px;
+	left: 0;
 }
 
 .panePassages .list-passages {
@@ -1056,7 +1064,7 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 	}
 
 	.profileCard.active {
-		background: #5cb85c;
+		background: #9BBEDB;
 	}
 
 	.profileCard:hover {
