@@ -1,7 +1,7 @@
 /*
  * ngDialog - easy modals and popup windows
  * http://github.com/likeastore/ngDialog
- * (c) 2013-2014 MIT License, https://likeastore.com
+ * (c) 2013-2015 MIT License, https://likeastore.com
  */
 
 (function (root, factory) {
@@ -106,8 +106,8 @@
 						$rootScope.$broadcast('ngDialog.closing', $dialog);
 
 						if (animationEndSupport) {
+							scope.$destroy();
 							$dialog.unbind(animationEndEvent).bind(animationEndEvent, function () {
-								scope.$destroy();
 								$dialog.remove();
 								if (dialogsCount === 0) {
 									$body.removeClass('ngdialog-open');
