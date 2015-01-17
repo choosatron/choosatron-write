@@ -4,10 +4,11 @@
 	angular.module('storyApp.controllers')
 		.controller('StoryCtrl', StoryCtrl);
 
-	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'profiles', 'translators', 'FileEntryAutoSave',
+	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'ngDialog',
+		'profiles', 'translators', 'FileEntryAutoSave',
 		'Story', 'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
 
-	function StoryCtrl($scope, $location, $timeout, profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
+	function StoryCtrl($scope, $location, $timeout, ngDialog, profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
 		var vm = this;
 
 		// Variables
@@ -253,7 +254,8 @@
 		}
 
 		function confirmExitTypeChange(aPassage, aExitType) {
-			var alert, message, onConfirm;
+			var data = {};
+			var onConfirm;
 
 			if (aPassage.exitType == aExitType) {
 				return;
@@ -266,43 +268,38 @@
 
 			switch (aPassage.exitType) {
 				case 'ending':
-					alert = 'This passage\'s ending value will be deleted.';
+					data.willDelete = 'ending value';
 					break;
 				case 'append':
-					alert = 'This passage\'s append will be deleted.';
+					data.willDelete = 'append';
 					break;
 				case 'choices':
-					alert = 'This passage\'s choices will be deleted.';
+					data.willDelete = 'choices';
 					break;
 			}
-
-			message = 'A passage can only have one type of exit.  ';
 
 			switch (aExitType) {
 				case 'ending':
-					message += 'Are you sure you want to change this passage to an ending?';
+					data.changeTo = 'an ending';
 					break;
 				case 'append':
-					message += 'Are you sure you want to change this passage to have an append?';
+					data.changeTo = 'have an append';
 					break;
 				case 'choices':
-					message += 'Are you sure you want to change this passage to have choices?';
+					data.changeTo = 'have choices';
 					break;
 			}
 
-			vm.exitChangeModal.alert = alert;
-			vm.exitChangeModal.message = message;
-
-			onConfirm = function () {
-				$scope.$apply(function () {
-					aPassage.setExitType(aExitType);
-				});
+			onConfirm = function (okay) {
+				aPassage.setExitType(aExitType);
 			};
 
-			$('#confirmExit').off('click.confirmed');
-			$('#confirmExit').one('click.confirmed', onConfirm);
-
-			$('#exitChangeConfirmModal').modal('show');
+			ngDialog.openConfirm({
+				template: 'templates/confirm-exit-change-modal.view.html',
+				showClose: true,
+				closeByEscape: false,
+				data: data
+			}).then(onConfirm);
 		}
 
 		function newChoice(aPassage) {

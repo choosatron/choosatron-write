@@ -1,8 +1,6 @@
 <div ng-controller="ChoosatronAddModalCtrl as vm" class="dialog-contents">
 	<div class="animate-switch-container" ng-switch on="vm.state">
-		<!-- <div class="animate-switch" ng-switch-default>
 
-		</div> -->
 		<div class="animate-switch" ng-switch-when="state_no_cloud">
 			<div align="center"><h2><span class="label label-warning">No Cloud Account</span></h2></div><br>
 			<p>WiFi features are only available with a cloud account.</p>
@@ -12,6 +10,7 @@
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
 			</p>
 		</div>
+
 		<div class="animate-switch" ng-switch-when="state_cloud_auth">
 			<h2>Cloud Auth</h2>
 			<div ng-include="'templates/cloud-auth-modal.view.html'"></div>
@@ -30,10 +29,12 @@
 			New device setup step one.
 			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
 		</div>
+
 		<div class="animate-switch" ng-switch-when="state_add_step_one">
 			Add device setup step one.
 			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
 		</div>
+
 	</div>
 
 	<!-- <span class="label label-warning">Cloud Account Required for WiFi</span>

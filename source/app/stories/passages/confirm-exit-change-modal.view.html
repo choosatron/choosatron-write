@@ -1,0 +1,16 @@
+<div id="exitChangeConfirmModal" class="dialog-contents">
+	<h2>Wait!</h2>
+
+	<div class="alert alert-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> <span class="alert_message">This passage's {{ ngDialogData.willDelete }} will be deleted!</span></div>
+
+	<p class="confirm_message">Are you sure you want to change this passage to {{ ngDialogData.changeTo }}?</p>
+
+	<div class="row row-gutter-1x">
+		<div class="col-xs-12">
+			<p class="pull-right">
+				<button type="button" class="btn btn-default" ng-click="closeThisDialog()">Cancel</button>
+				<button id="confirmExit" type="button" class="btn btn-danger" ng-click="confirm()">Proceed</button>
+			</p>
+		</div>
+	</div>
+</div><!-- #exitChangeConfirmModal -->
