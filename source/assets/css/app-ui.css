@@ -214,26 +214,26 @@ var,
 	}
 
 	.tile .front {
-		z-index: 900;
+		z-index: 9;
 		position: relative;
-		transform: rotateY(0deg);
+		transform: rotateX(0deg);
 		backface-visibility: hidden;
 	}
 
 	.tile .back {
-		z-index: 800;
+		z-index: 8;
 		position: absolute;
-		transform: rotateY(-179deg);
+		transform: rotateX(-179deg);
 	}
 
 	.tile:hover > .front {
-		z-index: 800;
-		transform: rotateY(180deg);
+		z-index: 8;
+		transform: rotateX(180deg);
 	}
 
 	.tile:hover > .back {
-		z-index: 900;
-		transform: rotateY(0deg);
+		z-index: 9;
+		transform: rotateX(0deg);
 	}
 
 
