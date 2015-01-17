@@ -1,0 +1,14 @@
+<div class="dialog-contents">
+	<h2>{{ title || 'Wait!' }}</h2>
+
+	<p class="confirm_message">{{ message || 'Are you sure?' }}</p>
+
+	<div class="row row-gutter-1x">
+		<div class="col-xs-12">
+			<p class="pull-right">
+				<button type="button" class="btn btn-default" ng-click="closeThisDialog()">Cancel</button>
+				<button id="confirmDelete" type="button" class="btn btn-danger" ng-click="confirm()">Delete</button>
+			</p>
+		</div>
+	</div>
+</div><!-- #confirmModal -->

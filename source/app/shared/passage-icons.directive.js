@@ -1,27 +1,4 @@
 angular.module('storyApp.directives')
-.directive('confirmClick', ['$parse', function ($parse) {
-	return {
-		compile: function($templateElement, $templateAttributes) {
-			var fn = $parse($templateAttributes.confirmClick);
-
-			return function ($scope, $element, attrs) {
-				$element.on('click', function (event) {
-					$('#confirmDelete').off('click.confirmed');
-					$('#confirmDelete').one('click.confirmed', function (evt2) {
-						$scope.$apply(function () {
-							fn($scope, {$event: evt2});
-						});
-					});
-
-					$('#confirmModal .confirm_message').html(attrs.confirmMessage);
-
-					$('#confirmModal').modal('show');
-				});
-			};
-		}
-	};
-}])
-
 .directive('passageIcons', function () {
 	return {
 		compile: function($templateElement, $templateAttributes) {
