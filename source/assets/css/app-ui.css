@@ -1060,7 +1060,14 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 	}
 
 	.profileCard:hover {
-		background: #2E9D2E;
+		background: #9DA7D3;
+	}
+
+	.profileCard .list-icon-menu {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		padding: 10px;
 	}
 
 

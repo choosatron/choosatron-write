@@ -15,8 +15,9 @@
 
 		// Functions
 		vm.showStoriesMenu = showStoriesMenu;
-		vm.pickProfile = pickProfile;
-		vm.newProfile = newProfile;
+		vm.pickProfile     = pickProfile;
+		vm.newProfile      = newProfile;
+		vm.removeProfile   = removeProfile;
 
 		activate();
 
@@ -63,6 +64,10 @@
 			vm.profiles.save();
 
 			vm.location.path('/stories');
+		}
+
+		function removeProfile(aProfile) {
+			vm.profiles.remove(aProfile);
 		}
 	}
 

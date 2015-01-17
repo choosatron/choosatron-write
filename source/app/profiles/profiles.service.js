@@ -38,6 +38,17 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 		return this.save();
 	};
 
+	this.remove = function(aProfile) {
+		// Look for the existing profile to remove
+		for (var i = 0; i < this.all.length; i++) {
+			if (this.all[i].id == aProfile.id) {
+				this.all.splice(i, 1);
+				break;
+			}
+		}
+		return this.save();
+	};
+
 	this.load = function() {
 		var deferred = $q.defer();
 
