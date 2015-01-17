@@ -91,10 +91,10 @@
 				translators.restore('json', aEntry.entryId)
 				.then(function(result) {
 					result.story.title = title;
-					profiles.current.saveEntry(copyId, result.story);
 					file.write(copy, result.story.serialize())
 					.then(function() {
-						profile.save();
+						profiles.current.saveEntry(copyId, result.story);
+						$location.path('/story');
 					});
 				});
 			};
