@@ -2,7 +2,7 @@
 	<div class="logo">
 		<img src="img/icon_48.png" alt="{{vm.manifest.description}}" />
 	</div>
-	<p class="h4 pull-left">
+	<p class="h4 pull-left" ng-show="['/stories', '/profiles'].indexOf(vm.location.path()) >= 0">
 		{{vm.manifest.name}} v{{vm.manifest.version}}
 	</p>
 	<p ng-show="vm.checkShowStoriesMenu()" class="h5 pull-left"><a ng-click="vm.location.path('/stories')"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>

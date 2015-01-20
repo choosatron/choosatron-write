@@ -507,6 +507,7 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		cursor: pointer;
 		background: #6FB36F;
 		color: #ccc;
+		padding-top: 10px;
 	}
 
 	.storiesList .newItem:hover {
