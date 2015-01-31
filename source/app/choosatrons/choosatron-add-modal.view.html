@@ -11,11 +11,25 @@
 			</p>
 		</div>
 
+		<div class="animate-switch" ng-switch-when="plugin">
+			<h2>Okay! First Step: Plug a USB cable into your Choosatron and this computer</h2>
+
+			<p>
+				<button type="button" class="btn btn-primary" ng-click="vm.scanForDevices()">Ready!</button>
+				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
+			</p>
+		</div>
+
+		<div class="animate-switch" ng-switch-when="scanning">
+			<h2>Scanning for Available Choosatrons...</h2>
+		</div>
+
 		<div class="animate-switch" ng-switch-when="state_cloud_auth">
 			<h2>Cloud Auth</h2>
 			<div ng-include="'templates/cloud-auth-modal.view.html'"></div>
 			<!-- <button type="button" class="btn btn-primary" ng-click="vm.state = 'state_new_or_add'">Next</button> -->
 		</div>
+
 		<div class="animate-switch" ng-switch-when="state_new_or_add">
 			<h2>New device setup or adding an existing device?</h2>
 			<p>
@@ -26,8 +40,18 @@
 		</div>
 
 		<div class="animate-switch" ng-switch-when="state_new_step_one">
-			New device setup step one.
-			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
+			<h2>Step 1: Connect</h2>
+			<p>
+				<button type="button" class="btn btn-primary" ng-click="vm.connect()">Add WiFi Network Credentials</button>
+			</p>
+
+			<div ng-show="vm.wifiMsg">
+				<pre>{{ vm.wifiMsg }}</pre>
+				<input class="form-control" ng-model="vm.serialMsg" placeholder="" />
+				<button class="btn btn-default" ng-click="vm.sendMsg()">Send</button>
+			</div>
+
+			<pre ng-show="vm.coreIdMsg">{{ vm.coreIdMsg }}</pre>
 		</div>
 
 		<div class="animate-switch" ng-switch-when="state_add_step_one">

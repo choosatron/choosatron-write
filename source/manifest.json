@@ -25,7 +25,7 @@
 		{
 			"fileSystem": ["write", "retainEntries", "directory"]
 		},
-		"usb"
+		"serial"
 	],
 	"optional_permissions": [
 		{

@@ -1136,8 +1136,6 @@ _  ___ |  / / /  / _  / / / / / /_/ // /_ _  / / /_/ /  / / /(__  )
 
 .animate-switch-container {
 	position:relative;
-	height:250px;
-	overflow:hidden;
 }
 
 .animate-switch {
