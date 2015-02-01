@@ -115,6 +115,27 @@ function($q, ArrayBufferFactory) {
 	};
 
 
+	Serial.prototype.sendMultiple = function(cmds, wait) {
+		var deferred = $q.defer();
+		var send = this.send.bind(this);
+		wait = wait || 100; //ms
+		function run() {
+			if (cmds.length === 0) {
+				deferred.resolve();
+				return;
+			}
+
+			var cmd = cmds.shift() + '\n';
+			console.info("Sending", cmd);
+			send(cmd).then(function() {
+				setTimeout(run, wait);
+			});
+		}
+		run();
+		return deferred.promise;
+	};
+
+
 	/**
 	  *¬Send an ArrayBuffer to the connected port.
 	 **/

@@ -6,7 +6,7 @@
 			<p>WiFi features are only available with a cloud account.</p>
 			<p>
 				<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_cloud_auth'">Setup Cloud</button>
-				<button type="button" class="btn btn-default" ng-click="vm.state = 'state_new_or_add'">Not Now</button>
+				<button type="button" class="btn btn-default" ng-click="vm.state = 'state_add'">Not Now</button>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
 			</p>
 		</div>
@@ -27,36 +27,68 @@
 		<div class="animate-switch" ng-switch-when="state_cloud_auth">
 			<h2>Cloud Auth</h2>
 			<div ng-include="'templates/cloud-auth-modal.view.html'"></div>
-			<!-- <button type="button" class="btn btn-primary" ng-click="vm.state = 'state_new_or_add'">Next</button> -->
+			<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_add'">Next</button>
 		</div>
 
-		<div class="animate-switch" ng-switch-when="state_new_or_add">
+		<div class="animate-switch" ng-switch-when="state_add">
 			<h2>New device setup or adding an existing device?</h2>
 			<p>
-				<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_new_step_one'">New</button>
-				<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_add_step_one'">Add</button>
+				<button type="button" class="btn btn-primary" ng-click="vm.startClaim()">New</button>
+				<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_connect'">Add</button>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
 			</p>
 		</div>
 
-		<div class="animate-switch" ng-switch-when="state_new_step_one">
-			<h2>Step 1: Connect</h2>
+
+		<div class="animate-switch" ng-switch-when="state_claim">
+			<h2>Claim Your New Choosatron</h2>
+
+			<div class="alert alert-danger" ng-show="vm.errors">
+				<strong><span class="glyphicon glyphicon-exclamation-sign"></span> Sorry!</strong>
+				<ul>
+					<li ng-repeat="error in vm.errors">{{ error }}</li>
+				</ul>
+			</div>
+
+			<pre ng-show="vm.coreId">{{ vm.coreIdMsg }}</pre>
+			<pre ng-hide="vm.coreId">Chatting with your Choosatron...</pre>
+
 			<p>
-				<button type="button" class="btn btn-primary" ng-click="vm.connect()">Add WiFi Network Credentials</button>
+				<button type="button" class="btn btn-primary" ng-click="vm.claim()" ng-show="vm.coreId">Claim It!</button>
+				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
+			</p>
+		</div>
+
+
+		<div class="animate-switch" ng-switch-when="state_connect">
+			<h2>Connect to WiFi</h2>
+
+			<input class="form-control" ng-model="vm.creds.ssid" placeholder="WiFi Network Name (SSID)" />
+			<div class="radio">
+				<label><input type="radio" ng-model="vm.creds.security" ng-value="0">No security</label>
+			</div>
+			<div class="radio">
+				<label><input type="radio" ng-model="vm.creds.security" ng-value="1">WEP</label>
+			</div>
+			<div class="radio">
+				<label><input type="radio" ng-model="vm.creds.security" ng-value="2">WPA</label>
+			</div>
+			<div class="radio">
+				<label><input type="radio" ng-model="vm.creds.security" ng-value="3" checked>WPA2</label>
+			</div>
+
+			<input ng-show="vm.security != '0'" class="form-control" ng-model="vm.creds.password" placeholder="WiFi Password" />
+
+			<hr>
+
+			<p>
+				<button type="button" class="btn btn-primary" ng-click="vm.connect()">Connect Your Choosatron</button>
+				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
 			</p>
 
 			<div ng-show="vm.wifiMsg">
 				<pre>{{ vm.wifiMsg }}</pre>
-				<input class="form-control" ng-model="vm.serialMsg" placeholder="" />
-				<button class="btn btn-default" ng-click="vm.sendMsg()">Send</button>
 			</div>
-
-			<pre ng-show="vm.coreIdMsg">{{ vm.coreIdMsg }}</pre>
-		</div>
-
-		<div class="animate-switch" ng-switch-when="state_add_step_one">
-			Add device setup step one.
-			<button type="button" class="btn btn-primary" ng-click="vm.resetState()">Start Over</button>
 		</div>
 
 	</div>
@@ -68,6 +100,3 @@
 	</div> -->
 
 </div>
-
-
-<!-- glyphicon glyphicon-cloud-upload glyphicon glyphicon-transfer glyphicon glyphicon-credit-card

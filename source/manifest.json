@@ -19,13 +19,13 @@
 		"fileBrowserHandler",
 		"geolocation",
 		"identity",
+		"serial",
 		"storage",
 		"syncFileSystem",
 		"unlimitedStorage",
 		{
 			"fileSystem": ["write", "retainEntries", "directory"]
-		},
-		"serial"
+		}
 	],
 	"optional_permissions": [
 		{

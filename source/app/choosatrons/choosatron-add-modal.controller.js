@@ -12,11 +12,18 @@
 		// Variables
 		vm.profile   = null;
 		vm.state     = '';
+		vm.errors    = [];
 		vm.devices   = [];
 		vm.coreId    = '';
 		vm.coreIdMsg = '';
 		vm.wifiMsg   = '';
 		vm.serialMsg = '';
+
+		vm.creds  = {
+			ssid: '',
+			security: 3,
+			password:  ''
+		};
 
 		// Functions
 		vm.resetState     = resetState;
@@ -24,6 +31,7 @@
 		vm.scanForDevices = scanForDevices;
 		vm.connect        = connect;
 		vm.sendMsg        = sendMsg;
+		vm.startClaim     = startClaim;
 		vm.claim          = claim;
 
 		activate();
@@ -44,7 +52,7 @@
 			serial.load('usb').then(function() {
 				vm.devices = serial.devices;
 				if (vm.devices.length) {
-					vm.state = 'state_new_or_add';
+					vm.state = 'state_add';
 				}
 				else {
 					vm.state = 'plugin';
@@ -52,28 +60,21 @@
 			});
 		}
 
-		function getCoreIdMsg(msg) {
-			vm.coreIdMsg += msg;
-			if (vm.coreIdMsg.indexOf('\n') >= 0) {
-				$scope.$digest();
-				console.info("Received message", vm.coreIdMsg);
-				return true;
-			}
-			return false;
-		}
-
 		function getWifiMsg(msg) {
 			vm.wifiMsg += msg;
-			$scope.$digest();
+			console.info(msg);
 			return false;
 		}
 
 		function connect() {
+
 			serial.mute();
 			serial.listen(getWifiMsg, true);
 
+			var sent = ['w', vm.creds.ssid, vm.creds.security, vm.creds.password];
+
 			serial.connect()
-			.then(serial.send.bind(serial, 'w'));
+			.then(serial.sendMultiple.bind(serial, sent));
 		}
 
 		function sendMsg() {
@@ -85,8 +86,20 @@
 			});
 		}
 
-		function claim() {
+		function getCoreIdMsg(msg) {
+			vm.coreIdMsg += msg;
+			if (vm.coreIdMsg.indexOf('\n') >= 0) {
+				var parts = vm.coreIdMsg.split(' ');
+				vm.coreId = parts[parts.length - 1].trim();
+				$scope.$digest();
+				return true;
+			}
+			return false;
+		}
+
+		function startClaim() {
 			vm.coreIdMsg = '';
+			vm.state = 'state_claim';
 			serial.connect()
 			.then(function() {
 				serial.listen(getCoreIdMsg, true);
@@ -94,8 +107,22 @@
 			});
 		}
 
+		function claim() {
+			spark.accessToken = vm.profile.cloud.token;
+			spark.claimCore(vm.coreId, function(err, data) {
+				$scope.$apply(function() {
+					if (data.ok) {
+						vm.state = 'state_connect';
+					}
+					else {
+						vm.errors = data.errors;
+					}
+				});
+			});
+		}
+
 		function resetState() {
-			vm.state = 'state_new_or_add';
+			vm.state = 'state_add';
 		}
 
 		function cancel() {
