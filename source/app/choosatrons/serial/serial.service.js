@@ -6,36 +6,38 @@ angular.module('storyApp.utils').service('serial', ['$q', 'ArrayBufferFactory',
 
 function($q, ArrayBufferFactory) {
 
-	function Serial() {
-		this.api        = null;
-		this.devices    = [];
-		this.listeners  = [];
-		this.connection = null;
-	}
-
-	function Listener(callback) {
-		this.callback = callback;
-		this.ignored  = [];
-		this.uses     = 0;
-		this.called   = 0;
-		this.toString = false;
+	// Internal class used for storing event handlers to handle
+	// received serial data.
+	function Listener(callback, connectionId) {
+		this.callback     = callback;
+		this.connection   = null;
+		this.ignored      = [];
+		this.uses         = 0;
+		this.called       = 0;
+		this.toString     = false;
 	}
 
 	/**
 	  * Calls the listener callback if the data is appropriate.
 	  * If the callback returns true, then it is removed immediately.
 	 **/
-	Listener.prototype.call = function(data) {
-		if (this.ignored.indexOf(data) >= 0) {
+	Listener.prototype.send = function(info) {
+
+		if (this.connection && this.connection.connectionId !== info.connectionId) {
 			return;
 		}
+
 		if (this.toString) {
-			data = ArrayBufferFactory.toString(data);
+			info.text = ArrayBufferFactory.toString(info.data);
+		}
+
+		if (this.ignored.indexOf(info.text) >= 0) {
+			return;
 		}
 
 		this.called++;
 
-		var done = this.callback(data);
+		var done = this.callback(info);
 
 		if (done) {
 			return false;
@@ -44,9 +46,29 @@ function($q, ArrayBufferFactory) {
 		return this.uses === 0 || this.uses < this.called;
 	};
 
+	// Ignore a particular string of data. Useful for filtering out
+	// echoed information.
 	Listener.prototype.ignore = function(ignored) {
 		this.ignored.push(ignored);
 		return this;
+	};
+
+
+	// { "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Spark w/ WiFi - Serial Mode)
+	// { "vendorId": 7504, "productId": 24703 } // VID: 0x1D50, PID: 0x607F (Spark w/ WiFi - CORE DFU)
+
+	function Serial() {
+		this.api        = null;
+		this.ports      = [];
+		this.listeners  = [];
+		this.connection = null;
+	}
+
+	Serial.ConnectionOptions = {
+		bitrate    : 9600,
+		dataBits   : 'eight',
+		parityBit  : 'no',
+		stopBits   : 'one'
 	};
 
 	/**
@@ -61,20 +83,10 @@ function($q, ArrayBufferFactory) {
 				return;
 			}
 
-			if (!this.connection) {
-				console.log('No current connection. Ignoring serial message', info);
-				return;
-			}
-
-			if (this.connection.connectionId !== info.connectionId) {
-				console.log('Serial message from unexpected connection. Skipping', info);
-				return;
-			}
-
 			// Loop the listeners and fire off a message. Remove the listener if
 			// it was only meant to be used once.
 			this.listeners = this.listeners.filter(function(listener) {
-				return listener.call(info.data);
+				return listener.send(info);
 			});
 		};
 
@@ -94,7 +106,7 @@ function($q, ArrayBufferFactory) {
 	  *¬Adds a one-time listener to this connection. 
 	 **/
 	Serial.prototype.once = function(callback, toString) {
-		var listener = new Listener(callback);
+		var listener = new Listener(callback, this.connection);
 		listener.uses = 1;
 		listener.toString = toString;
 
@@ -103,11 +115,12 @@ function($q, ArrayBufferFactory) {
 		return listener;
 	};
 
+
 	/**
 	  *¬Adds a listener to the current connection
 	 **/
 	Serial.prototype.listen = function(callback, toString) {
-		var listener = new Listener(callback);
+		var listener = new Listener(callback, this.connection);
 		listener.toString = toString;
 
 		this.listeners.push(listener);
@@ -168,6 +181,7 @@ function($q, ArrayBufferFactory) {
 		return deferred.promise;
 	};
 
+
 	/**
 	  *¬Connect to the specified path.
 	 **/
@@ -177,6 +191,7 @@ function($q, ArrayBufferFactory) {
 			this.disconnect();
 		}
 		var self = this;
+		options = options || Serial.ConnectionOptions;
 
 		var connected = function(info) {
 			self.connection = info;
@@ -185,8 +200,8 @@ function($q, ArrayBufferFactory) {
 
 		var connect = function() {
 
-			if (!path && self.devices.length) {
-				path = self.devices[0].path;
+			if (!path && self.ports.length) {
+				path = self.ports[0].path;
 			}
 
 			if (!path) {
@@ -196,7 +211,7 @@ function($q, ArrayBufferFactory) {
 			self.api.connect(path, options, connected);
 		};
 
-		if (!this.devices) {
+		if (!this.ports) {
 			this.load().then(connect);
 		}
 		else {
@@ -221,9 +236,34 @@ function($q, ArrayBufferFactory) {
 		return deferred.promise;
 	};
 
+
+	// Sends a message and reads the result until the specified
+	// terminating character is received.
+	Serial.prototype.read = function(send, until) {
+		var msg = '';
+		var deferred = $q.defer();
+		until = until || '\n';
+
+		function readPart(info) {
+			var part = info.text;
+			msg += part;
+			if (part.indexOf(until)) {
+				deferred.resolve(msg);
+				return true;
+			}
+			return false;
+		}
+
+		this.listen(readPart, true);
+		this.send(send);
+
+		return deferred.promise;
+	};
+
+
 	/**
-	  *¬Load up the available devices
-	  * Specify a filter function or regex to limit the list of devices
+	  *¬Load up the available ports
+	  * Specify a filter function or regex to limit the list of ports
 	 **/
 	Serial.prototype.load = function(filter) {
 		var deferred = $q.defer();
@@ -231,18 +271,76 @@ function($q, ArrayBufferFactory) {
 		this.api.getDevices(function(ports) {
 			ports = ports || [];
 			if (typeof filter === 'function') {
-				self.devices = ports.filter(filter);
+				self.ports = ports.filter(filter);
 			}
 			else if (typeof filter === 'string') {
-				self.devices = ports.filter(function(port) {
+				self.ports = ports.filter(function(port) {
 					return port.path.match(filter);
 				});
 			}
 			else {
-				self.devices = ports;
+				self.ports = ports;
 			}
 			deferred.resolve();
 		});
+		return deferred.promise;
+	};
+
+
+	// Sends out a polling message and returns a promise
+	// that will resolve with an object that maps
+	// ports to received responses
+	Serial.prototype.broadcast = function(msg, options, timeout) {
+		var data = typeof msg !== 'object' ? ArrayBufferFactory.fromString(msg) : msg;
+		var deferred = $q.defer();
+		var self = this;
+		timeout = timeout || 1000;
+
+		var connections = {};
+		var input = {};
+
+		var sent = function(info) {
+			if (info.error) {
+				console.error('Send failed', info);
+			}
+		};
+
+		var transmit = function(port) {
+			self.api.connect(port.path, options, function(con) {
+				connections[con.connectionId] = port.path;
+				self.api.send(con.connectionId, data, sent);
+			});
+		};
+
+		var received = function(info) {
+			var path = connections[info.connectionId];
+			if (!input[path]) {
+				input[path] = info.text;
+			}
+			else {
+				input[path] += info.text;
+			}
+		};
+
+		var disconnected = function(result) {
+			console.info('disconnected', connections[i], d);
+		};
+
+		var done = function() {
+			self.mute();
+			for (var id in connections) {
+				self.api.disconnect(parseInt(id), disconnected);
+			}
+			deferred.resolve(input);
+		};
+
+		this.listen(received, true);
+		for (var i=0; i<this.ports.length; i++) {
+			transmit(this.ports[i]);
+		}
+
+		setTimeout(done, timeout);
+
 		return deferred.promise;
 	};
 

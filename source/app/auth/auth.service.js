@@ -74,4 +74,17 @@
 		//spark.logout();
 		spark.accessToken = null;
 	};
+
+	AuthService.prototype.loadDevices = function(aAuth) {
+		spark.accessToken = aAuth.token;
+		return spark.listDevices.then(function(devices) {
+			aAuth.devices = devices;
+		});
+	};
+
+	AuthService.prototype.claimDevice = function(aAuth, coreId) {
+		spark.accessToken = aAuth.token;
+		return spark.claimCore(coreId);
+	};
+
 })();

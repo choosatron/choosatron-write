@@ -4,34 +4,34 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronAddModalCtrl', ChoosatronAddModalCtrl);
 
-	ChoosatronAddModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'serial'];
+	ChoosatronAddModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'serial', 'Devices'];
 
-	function ChoosatronAddModalCtrl($scope, profiles, Profile, serial) {
+	function ChoosatronAddModalCtrl($scope, profiles, Profile, serial, Devices) {
 		var vm = this;
 
 		// Variables
 		vm.profile   = null;
 		vm.state     = '';
 		vm.errors    = [];
-		vm.devices   = [];
-		vm.coreId    = '';
-		vm.coreIdMsg = '';
-		vm.wifiMsg   = '';
-		vm.serialMsg = '';
+		vm.ports     = [];
+		vm.path      = null;
+		vm.devices   = null;
+		vm.device    = {
+			coreId : null,
+			name   : '',
+		};
 
 		vm.creds  = {
-			ssid: '',
-			security: 3,
-			password:  ''
+			ssid     : '',
+			security : 3,
+			password : ''
 		};
 
 		// Functions
-		vm.resetState     = resetState;
 		vm.cancel         = cancel;
 		vm.scanForDevices = scanForDevices;
+		vm.canConnect     = canConnect;
 		vm.connect        = connect;
-		vm.sendMsg        = sendMsg;
-		vm.startClaim     = startClaim;
 		vm.claim          = claim;
 
 		activate();
@@ -40,89 +40,115 @@
 			vm.profile = profiles.current;
 
 			if (vm.profile.cloud.token) {
-				scanForDevices();
+				vm.state = 'plugin';
 			} else {
-				vm.state = 'state_no_cloud';
+				vm.state = 'no_cloud';
 			}
 		}
 
 		function scanForDevices() {
 			vm.state = 'scanning';
 
-			serial.load('usb').then(function() {
-				vm.devices = serial.devices;
-				if (vm.devices.length) {
-					vm.state = 'state_add';
-				}
-				else {
-					vm.state = 'plugin';
-				}
-			});
-		}
+			vm.devices = new Devices(vm.profile.cloud.token);
 
-		function getWifiMsg(msg) {
-			vm.wifiMsg += msg;
-			console.info(msg);
-			return false;
-		}
-
-		function connect() {
-
-			serial.mute();
-			serial.listen(getWifiMsg, true);
-
-			var sent = ['w', vm.creds.ssid, vm.creds.security, vm.creds.password];
-
-			serial.connect()
-			.then(serial.sendMultiple.bind(serial, sent));
-		}
-
-		function sendMsg() {
-			var msg = vm.serialMsg + "\n";
-			serial.send(msg)
-			.then(function() {
-				vm.wifiMsg = '';
-				vm.serialMsg = '';
-			});
-		}
-
-		function getCoreIdMsg(msg) {
-			vm.coreIdMsg += msg;
-			if (vm.coreIdMsg.indexOf('\n') >= 0) {
-				var parts = vm.coreIdMsg.split(' ');
-				vm.coreId = parts[parts.length - 1].trim();
-				$scope.$digest();
-				return true;
-			}
-			return false;
-		}
-
-		function startClaim() {
-			vm.coreIdMsg = '';
-			vm.state = 'state_claim';
-			serial.connect()
-			.then(function() {
-				serial.listen(getCoreIdMsg, true);
-				serial.send('i');
-			});
-		}
-
-		function claim() {
-			spark.accessToken = vm.profile.cloud.token;
-			spark.claimCore(vm.coreId, function(err, data) {
-				$scope.$apply(function() {
-					if (data.ok) {
-						vm.state = 'state_connect';
+			// Load up the current profile's claimed devices
+			vm.devices.load().then(function() {
+				// Then scan USB for connected Choosatrons
+				serial.load('usb').then(function() {
+					vm.ports = serial.ports;
+					if (vm.ports.length) {
+						findCore();
 					}
 					else {
-						vm.errors = data.errors;
+						vm.state = 'plugin';
 					}
 				});
 			});
 		}
 
-		function resetState() {
-			vm.state = 'state_add';
+		// Loop through the USB devices and look for the one
+		// that responds after issuing a request for core id.
+		// If we find a valid core, try to claim it. Otherwise,
+		// prompt the user!
+		function findCore() {
+			serial.broadcast('i')
+			.then(function(result) {
+				for (var path in result) {
+					console.info('Got', result[path], 'from', path);
+					var coreId = foundCore(path, result[path]);
+					if (coreId) {
+						startConnect(path, coreId);
+						return;
+					}
+				}
+				vm.state = 'plugin';
+			});
+		}
+
+		function foundCore(path, response) {
+			if (!response || !response.length) {
+				return false;
+			}
+
+			var pattern = /\s([0-9a-f]{24})\s/;
+			var match = pattern.exec(response);
+
+			if (!match) {
+				return false;
+			}
+
+			return match[1];
+		}
+
+		function startConnect(path, coreId) {
+			if (!path || !coreId) {
+				vm.state = 'plugin';
+				return;
+			}
+			vm.path = path;
+
+			vm.device.coreId = coreId;
+			vm.device.name   = '';
+
+			vm.state = 'connect';
+		}
+
+		function canConnect() {
+			return vm.creds.ssid.length && (vm.creds.security === 0 || vm.creds.password.length);
+		}
+
+		function connect() {
+			vm.state = 'connecting';
+			var sent = ['w', vm.creds.ssid, vm.creds.security, vm.creds.password];
+			serial.connect(vm.path)
+			.then(function() {
+				serial.sendMultiple(sent);
+			});
+		}
+
+		function claim() {
+			var existing = vm.devices.find(vm.device.coreId);
+
+			if (existing) {
+				if (existing.name !== vm.device.name) {
+					existing.rename(vm.device.name);
+				}
+				vm.state = 'claimed';
+				return;
+			}
+
+			vm.devices.claim(vm.device.coreId)
+			.then(function(data) {
+				$scope.$apply(function() {
+					if (data.ok) {
+						vm.state = 'claimed';
+					}
+					else {
+						vm.state = 'unclaimed';
+						vm.errors = data.errors;
+					}
+				});
+			});
 		}
 
 		function cancel() {

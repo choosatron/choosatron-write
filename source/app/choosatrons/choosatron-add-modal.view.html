@@ -1,18 +1,19 @@
 <div ng-controller="ChoosatronAddModalCtrl as vm" class="dialog-contents">
 	<div class="animate-switch-container" ng-switch on="vm.state">
 
-		<div class="animate-switch" ng-switch-when="state_no_cloud">
+		<div class="animate-switch" ng-switch-when="no_cloud">
 			<div align="center"><h2><span class="label label-warning">No Cloud Account</span></h2></div><br>
 			<p>WiFi features are only available with a cloud account.</p>
 			<p>
-				<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_cloud_auth'">Setup Cloud</button>
-				<button type="button" class="btn btn-default" ng-click="vm.state = 'state_add'">Not Now</button>
+				<button type="button" class="btn btn-primary" ng-click="vm.state = 'cloud_auth'">Setup Cloud</button>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
 			</p>
 		</div>
 
+
 		<div class="animate-switch" ng-switch-when="plugin">
-			<h2>Okay! First Step: Plug a USB cable into your Choosatron and this computer</h2>
+			<h2>Okay! First Step</h2>
+			<p>Plug a USB cable into your Choosatron and this computer. Make sure it is in "serial" mode. That means that the LED on Spark Core should be blinking blue. If it isn't blinking blue, you may need to press and hold the 'Mode' button on the Core until the light turns blue.</p>
 
 			<p>
 				<button type="button" class="btn btn-primary" ng-click="vm.scanForDevices()">Ready!</button>
@@ -20,48 +21,24 @@
 			</p>
 		</div>
 
+
 		<div class="animate-switch" ng-switch-when="scanning">
-			<h2>Scanning for Available Choosatrons...</h2>
+			<h2>Looking for Your Choosatrons...</h2>
+			<p>This will take a few seconds.</p>
 		</div>
 
-		<div class="animate-switch" ng-switch-when="state_cloud_auth">
+
+		<div class="animate-switch" ng-switch-when="cloud_auth">
 			<h2>Cloud Auth</h2>
 			<div ng-include="'templates/cloud-auth-modal.view.html'"></div>
-			<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_add'">Next</button>
-		</div>
-
-		<div class="animate-switch" ng-switch-when="state_add">
-			<h2>New device setup or adding an existing device?</h2>
-			<p>
-				<button type="button" class="btn btn-primary" ng-click="vm.startClaim()">New</button>
-				<button type="button" class="btn btn-primary" ng-click="vm.state = 'state_connect'">Add</button>
-				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
-			</p>
+			<button type="button" class="btn btn-primary" ng-click="vm.state = 'plugin'">Next</button>
 		</div>
 
 
-		<div class="animate-switch" ng-switch-when="state_claim">
-			<h2>Claim Your New Choosatron</h2>
+		<div class="animate-switch" ng-switch-when="connect">
+			<h2>Found It!</h2>
 
-			<div class="alert alert-danger" ng-show="vm.errors">
-				<strong><span class="glyphicon glyphicon-exclamation-sign"></span> Sorry!</strong>
-				<ul>
-					<li ng-repeat="error in vm.errors">{{ error }}</li>
-				</ul>
-			</div>
-
-			<pre ng-show="vm.coreId">{{ vm.coreIdMsg }}</pre>
-			<pre ng-hide="vm.coreId">Chatting with your Choosatron...</pre>
-
-			<p>
-				<button type="button" class="btn btn-primary" ng-click="vm.claim()" ng-show="vm.coreId">Claim It!</button>
-				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
-			</p>
-		</div>
-
-
-		<div class="animate-switch" ng-switch-when="state_connect">
-			<h2>Connect to WiFi</h2>
+			<p>I found a Choosatron with the id <code>{{ vm.device.coreId }}</code>. Let's get it connected to the Internet!</p>
 
 			<input class="form-control" ng-model="vm.creds.ssid" placeholder="WiFi Network Name (SSID)" />
 			<div class="radio">
@@ -82,13 +59,51 @@
 			<hr>
 
 			<p>
-				<button type="button" class="btn btn-primary" ng-click="vm.connect()">Connect Your Choosatron</button>
+				<button type="button" class="btn btn-primary" ng-disabled="!vm.canConnect()" ng-click="vm.connect()">Connect Your Choosatron</button>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
 			</p>
+		</div>
 
-			<div ng-show="vm.wifiMsg">
-				<pre>{{ vm.wifiMsg }}</pre>
+
+		<div class="animate-switch" ng-switch-when="connecting">
+			<h2>Connecting to Your Network...</h2>
+			<p>Please stand by while we set up your network connection. This can take up to ten seconds.</p>
+			<p>When you see the LED start pulsing cyan, your Choosatron is ready!</p>
+			<input class="form-control" ng-model="vm.creds.name" placeholder="Give your Choosatron a Name!">
+
+			<p>
+				<button class="btn btn-primary" ng-disabled="!vm.creds.name" ng-click="vm.claim()">Name It</button>
+			</p>
+		</div>
+
+
+		<div class="animate-switch" ng-switch-when="unclaimed">
+			<h2>Could Not Claim Your New Choosatron</h2>
+
+			<div class="alert alert-danger" ng-show="vm.errors.length">
+				<strong><span class="glyphicon glyphicon-exclamation-sign"></span> Sorry!</strong>
+				<ul>
+					<li ng-repeat="error in vm.errors">{{ error }}</li>
+				</ul>
 			</div>
+
+			<pre ng-show="vm.device.coreId">The core id is {{ vm.device.coreId }}</pre>
+			<pre ng-hide="vm.device.coreId">Could not get core id </pre>
+
+			<p>
+				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
+			</p>
+		</div>
+
+
+		<div class="animate-switch" ng-switch-when="claimed">
+			<h2>Your New Choosatron Is Ready!</h2>
+
+			<p>Your Choosatron, whom I'll call <code>{{ vm.device.name }}</code>, is ready to play!</p>
+
+			<p>
+				<button type="button" class="btn btn-success" ng-click="vm.cancel()">Thanks!</button>
+			</p>
 		</div>
 
 	</div>

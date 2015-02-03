@@ -8,6 +8,7 @@ function(BaseModel) {
 		this.token      = null;
 		this.type       = null;
 		this.expiration = null;
+		this.devices    = [];
 
 		Object.defineProperty(this, 'expired', {
 			get: function() {
