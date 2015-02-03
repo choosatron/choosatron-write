@@ -12,8 +12,8 @@
 
 
 		<div class="animate-switch" ng-switch-when="plugin">
-			<h2>Okay! First Step</h2>
-			<p>Plug a USB cable into your Choosatron and this computer. Make sure it is in "serial" mode. That means that the LED on Spark Core should be blinking blue. If it isn't blinking blue, you may need to press and hold the 'Mode' button on the Core until the light turns blue.</p>
+			<h2>Plug It In</h2>
+			<p>Plug a USB cable into your Choosatron and this computer. Make sure the Choosatron is in "serial" mode. That means that the LED on Spark Core should be blinking blue. If it isn't blinking blue, you may need to press and hold the 'Mode' button on the Core until the light turns blue.</p>
 
 			<p>
 				<button type="button" class="btn btn-primary" ng-click="vm.scanForDevices()">Ready!</button>
@@ -23,7 +23,7 @@
 
 
 		<div class="animate-switch" ng-switch-when="scanning">
-			<h2>Looking for Your Choosatrons...</h2>
+			<h2>Looking for Your Choosatron...</h2>
 			<p>This will take a few seconds.</p>
 		</div>
 
@@ -67,13 +67,17 @@
 
 		<div class="animate-switch" ng-switch-when="connecting">
 			<h2>Connecting to Your Network...</h2>
-			<p>Please stand by while we set up your network connection. This can take up to ten seconds.</p>
-			<p>When you see the LED start pulsing cyan, your Choosatron is ready!</p>
-			<input class="form-control" ng-model="vm.creds.name" placeholder="Give your Choosatron a Name!">
+			<p>Please stand by while we set up your network connection. This will take about ten seconds.</p>
 
-			<p>
-				<button class="btn btn-primary" ng-disabled="!vm.creds.name" ng-click="vm.claim()">Name It</button>
-			</p>
+			<div ng-show="vm.device.connected">
+				<p>When you see the LED slowly glowing cyan, your Choosatron is ready!</p>
+
+				<input class="form-control" ng-model="vm.creds.name" placeholder="Give your Choosatron a Name!">
+				<hr>
+				<p>
+					<button class="btn btn-primary" ng-disabled="!vm.creds.name" ng-click="vm.claim()">Name It</button>
+				</p>
+			</div>
 		</div>
 
 

@@ -4,9 +4,9 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronAddModalCtrl', ChoosatronAddModalCtrl);
 
-	ChoosatronAddModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'serial', 'Devices'];
+	ChoosatronAddModalCtrl.$inject = ['$scope', '$timeout', 'profiles', 'Profile', 'serial', 'Devices'];
 
-	function ChoosatronAddModalCtrl($scope, profiles, Profile, serial, Devices) {
+	function ChoosatronAddModalCtrl($scope, $timeout, profiles, Profile, serial, Devices) {
 		var vm = this;
 
 		// Variables
@@ -123,6 +123,9 @@
 			serial.connect(vm.path)
 			.then(function() {
 				serial.sendMultiple(sent);
+				$timeout(function() {
+					vm.device.connected = true;
+				}, 10000);
 			});
 		}
 

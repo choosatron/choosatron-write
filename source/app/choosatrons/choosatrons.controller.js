@@ -7,15 +7,17 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronsCtrl', ChoosatronsCtrl);
 
-	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'Choosatron', 'ngDialog'];
+	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'Devices', 'ngDialog'];
 
-	function ChoosatronsCtrl($location, profiles, Choosatron, ngDialog) {
+	function ChoosatronsCtrl($location, profiles, Devices, ngDialog) {
 		var vm = this;
 
 		// Variables
 		vm.location = $location;
 		vm.profiles = profiles;
 		vm.state = 'disk';
+		vm.devices = null;
+		vm.choosatrons = [];
 
 		// Functions
 		vm.releaseClaim = releaseClaim;
@@ -28,19 +30,12 @@
 
 		function activate() {
 			profiles.load().then(function() {
-				vm.choosatrons = profiles.current.choosatrons;
+				vm.profile = profiles.current;
+				vm.devices = new Devices(vm.profile.cloud.token);
 
-				/*var test = new Choosatron();
-				test.name = "Pickles";
-				test.ownerName = $profiles.current.name;
-				test.coreId = '53ff6b065067544835331287';
-				$profiles.current.choosatrons.push(test);*/
-
-				// Watches are bad: http://www.benlesh.com/2013/10/title.html
-				/*$scope.$watchGroup(['vm.choosatrons.current.name', 'vm.choosatrons.current.coreId'],
-				                   function(newValues, oldValues, scope) {
-					vm.state = 'save';
-				});*/
+				vm.devices.load().then(function() {
+					vm.choosatrons = vm.devices.list;
+				});
 			});
 		}
 
@@ -59,12 +54,6 @@
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
 			});
-
-			/*console.log("Create new Choosatron profile.");
-			var choosatron = new Choosatron();
-			choosatron.ownerName = profiles.current.name;
-			profiles.current.choosatrons.push(choosatron);*/
-			//vm.choosatrons = $profiles.current.choosatrons;
 		}
 
 		function saveChoosatron() {
