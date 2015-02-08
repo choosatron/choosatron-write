@@ -7,16 +7,16 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronsCtrl', ChoosatronsCtrl);
 
-	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'Devices', 'ngDialog'];
+	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'ChoosatronCloud', 'ngDialog'];
 
-	function ChoosatronsCtrl($location, profiles, Devices, ngDialog) {
+	function ChoosatronsCtrl($location, profiles, ChoosatronCloud, ngDialog) {
 		var vm = this;
 
 		// Variables
 		vm.location = $location;
 		vm.profiles = profiles;
 		vm.state = 'disk';
-		vm.devices = null;
+		vm.cloud = null;
 		vm.choosatrons = [];
 
 		// Functions
@@ -24,17 +24,16 @@
 		vm.newChoosatron = newChoosatron;
 		vm.saveChoosatron = saveChoosatron;
 		vm.editChoosatron = editChoosatron;
-		vm.verifiedChoosatron = verifiedChoosatron;
 
 		activate();
 
 		function activate() {
 			profiles.load().then(function() {
 				vm.profile = profiles.current;
-				vm.devices = new Devices(vm.profile.cloud.token);
+				vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
 
-				vm.devices.load().then(function() {
-					vm.choosatrons = vm.devices.list;
+				vm.cloud.load().then(function() {
+					vm.choosatrons = vm.cloud.choosatrons;
 				});
 			});
 		}
@@ -57,9 +56,6 @@
 		}
 
 		function saveChoosatron() {
-			/*$profiles.current.choosatrons.find(function(perms) {
-				return perms.usbDevices;
-			});*/
 			for (var i in profiles.current.choosatrons) {
 				if (profiles.current.choosatrons[i].id == vm.editing.id) {
 					console.log("Matched: " + $profiles.current.choosatrons[i].id);
@@ -76,11 +72,6 @@
 		function editChoosatron(item) {
 			console.log("Edit Choosatron");
 			vm.editing = angular.copy(item);
-		}
-
-		// Filter for verified devices.
-		function verifiedChoosatron(item) {
-			return (item.verified);
 		}
 	}
 

@@ -2,7 +2,7 @@
 
 'use strict';
 
-angular.module('storyApp.utils').service('serial', ['$q', 'ArrayBufferFactory',
+angular.module('storyApp.utils').service('Serial', ['$q', 'ArrayBufferFactory',
 
 function($q, ArrayBufferFactory) {
 
@@ -57,11 +57,12 @@ function($q, ArrayBufferFactory) {
 	// { "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Spark w/ WiFi - Serial Mode)
 	// { "vendorId": 7504, "productId": 24703 } // VID: 0x1D50, PID: 0x607F (Spark w/ WiFi - CORE DFU)
 
-	function Serial() {
-		this.api        = null;
+	function Serial(api) {
 		this.ports      = [];
 		this.listeners  = [];
 		this.connection = null;
+		this.debug      = false;
+		this.init(api || chrome.serial);
 	}
 
 	Serial.ConnectionOptions = {
@@ -78,6 +79,10 @@ function($q, ArrayBufferFactory) {
 		this.api = api;
 
 		var received = function(info) {
+
+			if (this.debug) {
+				console.info("this.api.onReceive", info);
+			}
 
 			if (!this.listeners) {
 				return;
@@ -139,7 +144,6 @@ function($q, ArrayBufferFactory) {
 			}
 
 			var cmd = cmds.shift() + '\n';
-			console.info("Sending", cmd);
 			send(cmd).then(function() {
 				setTimeout(run, wait);
 			});
@@ -153,6 +157,9 @@ function($q, ArrayBufferFactory) {
 	  *¬Send an ArrayBuffer to the connected port.
 	 **/
 	Serial.prototype.send = function(str) {
+		if (this.debug) {
+			console.info("Sending", str);
+		}
 		var data = ArrayBufferFactory.fromString(str);
 		return this.sendData(data);
 	};
@@ -194,7 +201,13 @@ function($q, ArrayBufferFactory) {
 		options = options || Serial.ConnectionOptions;
 
 		var connected = function(info) {
+
 			self.connection = info;
+
+			if (self.debug) {
+				console.info("Connected", info);
+			}
+
 			deferred.resolve();
 		};
 
@@ -206,6 +219,10 @@ function($q, ArrayBufferFactory) {
 
 			if (!path) {
 				deferred.reject(new Error("No path found"));
+			}
+
+			if (self.debug) {
+				console.info("Connecting", path, options);
 			}
 
 			self.api.connect(path, options, connected);
@@ -229,10 +246,22 @@ function($q, ArrayBufferFactory) {
 		var deferred = $q.defer();
 		if (!this.connection) {
 			deferred.resolve();
+			return deferred.promise;
 		}
-		else {
-			this.api.disconnect(this.connection.connectionId, deferred.resolve);
+
+		if (this.debug) {
+			console.info("Disconnecting", this.connection);
 		}
+
+		var self = this;
+		this.api.disconnect(self.connection.connectionId, function(info) {
+			if (this.debug) {
+				console.info("Disconnected", info);
+			}
+			self.connection = null;
+			deferred.resolve();
+		});
+
 		return deferred.promise;
 	};
 
@@ -296,6 +325,10 @@ function($q, ArrayBufferFactory) {
 		var self = this;
 		timeout = timeout || 1000;
 
+		if (this.debug) {
+			console.info("Broadcasting", msg);
+		}
+
 		var connections = {};
 		var input = {};
 
@@ -308,6 +341,9 @@ function($q, ArrayBufferFactory) {
 		var transmit = function(port) {
 			self.api.connect(port.path, options, function(con) {
 				connections[con.connectionId] = port.path;
+				if (self.debug) {
+					console.info("Sending broadcast", con);
+				}
 				self.api.send(con.connectionId, data, sent);
 			});
 		};
@@ -331,6 +367,9 @@ function($q, ArrayBufferFactory) {
 			for (var id in connections) {
 				self.api.disconnect(parseInt(id), disconnected);
 			}
+			if (self.debug) {
+				console.info("Collected", input);
+			}
 			deferred.resolve(input);
 		};
 
@@ -345,9 +384,7 @@ function($q, ArrayBufferFactory) {
 	};
 
 
-	var serial = new Serial();
-	serial.init(chrome.serial);
-	return serial;
+	return Serial;
 
 }]);
 

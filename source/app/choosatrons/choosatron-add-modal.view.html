@@ -38,7 +38,7 @@
 		<div class="animate-switch" ng-switch-when="connect">
 			<h2>Found It!</h2>
 
-			<p>I found a Choosatron with the id <code>{{ vm.device.coreId }}</code>. Let's get it connected to the Internet!</p>
+			<p>I found a Choosatron with the id <code>{{ vm.serial.coreId }}</code>. Let's get it connected to the Internet!</p>
 
 			<input class="form-control" ng-model="vm.creds.ssid" placeholder="WiFi Network Name (SSID)" />
 			<div class="radio">
@@ -68,18 +68,17 @@
 		<div class="animate-switch" ng-switch-when="connecting">
 			<h2>Connecting to Your Network...</h2>
 			<p>Please stand by while we set up your network connection. This will take about ten seconds.</p>
-
-			<div ng-show="vm.device.connected">
-				<p>When you see the LED slowly glowing cyan, your Choosatron is ready!</p>
-
-				<input class="form-control" ng-model="vm.creds.name" placeholder="Give your Choosatron a Name!">
-				<hr>
-				<p>
-					<button class="btn btn-primary" ng-disabled="!vm.creds.name" ng-click="vm.claim()">Name It</button>
-				</p>
-			</div>
 		</div>
 
+		<div class="animate-switch" ng-switch-when="connected">
+			<h2>Connected!</h2>
+			<p>Or, at least I think so. Check your Choosatron.  When you see the LED slowly glowing cyan, your Choosatron is ready to set up.</p>
+
+			<hr>
+			<p>
+				<button class="btn btn-primary" ng-click="vm.claim()">Set it up!</button>
+			</p>
+		</div>
 
 		<div class="animate-switch" ng-switch-when="unclaimed">
 			<h2>Could Not Claim Your New Choosatron</h2>
@@ -91,8 +90,8 @@
 				</ul>
 			</div>
 
-			<pre ng-show="vm.device.coreId">The core id is {{ vm.device.coreId }}</pre>
-			<pre ng-hide="vm.device.coreId">Could not get core id </pre>
+			<pre ng-show="vm.serial.coreId">The core id is {{ vm.serial.coreId }}</pre>
+			<pre ng-hide="vm.serial.coreId">Could not get core id </pre>
 
 			<p>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
@@ -103,7 +102,7 @@
 		<div class="animate-switch" ng-switch-when="claimed">
 			<h2>Your New Choosatron Is Ready!</h2>
 
-			<p>Your Choosatron, whom I'll call <code>{{ vm.device.name }}</code>, is ready to play!</p>
+			<p>Your Choosatron, is ready to play!</p>
 
 			<p>
 				<button type="button" class="btn btn-success" ng-click="vm.cancel()">Thanks!</button>
