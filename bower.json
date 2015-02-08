@@ -4,7 +4,7 @@
 	"authors": [
 		"Alexander Barrett <spleendini@yahoo.com>",
 		"Jerry Belich <jerry@monkeytheater.com>",
-		"Zachary Johnson <zachary.johnson@gamil.com>"
+		"Zachary Johnson <zachary.johnson@gmail.com>"
 	],
 	"description": "Interactive Story Creator",
 	"main": "window-ui.html",
@@ -21,7 +21,7 @@
 		"angular-ui-utils": "~0.1.1",
 		"font-awesome": "~4.2.0",
 		"ngDialog": "~0.3.8",
-		"spark": "~0.2.4"
+		"spark": "master"
 	},
 	"private": true,
 	"ignore": [
@@ -30,8 +30,5 @@
 		"bower_components",
 		"test",
 		"tests"
-	],
-	"resolutions": {
-		"angular": "~1.3.9"
-	}
+	]
 }

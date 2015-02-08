@@ -37,7 +37,7 @@ var fs = require('fs'),
 /**
  * Creates a new SparkApi obj
  * @constructor {SparkApi}
- * @param {Object} args - { clientId: 'clientId', clientSecret: 'clientSecret', baseUrl: 'http://baseurl.com' }
+ * @param {Object} args - { clientId: 'clientId', clientSecret: 'clientSecret', baseUrl: 'https://api.spark.io' }
  */
 var SparkApi = function(args) {
   this.request = require('request');
@@ -50,7 +50,7 @@ var SparkApi = function(args) {
  * Login to the Spark Cloud
  *
  * @param {Object} params - { username, password }
- * @param {callback} callback(err, data)
+ * @param {callback} callback (err, data)
  * @returns {Promise}
  * @endpoint GET /oauth/token
  */
@@ -155,20 +155,18 @@ SparkApi.prototype.removeAccessToken = function (username, password, accessToken
  * Claims a core and adds it to the user currently logged in
  *
  * @param {string} coreId - The id of the Spark core you wish to claim
- * @param {integer} productId - The product id to be associated with this Spark core
  * @param {string} accessToken - current access token
  * @param {function} callback
  * @returns {Promise}
  * @endpoint POST /v1/devices
  */
-SparkApi.prototype.claimCore = function (coreId, productId, accessToken, callback) {
+SparkApi.prototype.claimCore = function (coreId, accessToken, callback) {
   this.request({
     uri: this.baseUrl + '/v1/devices',
     method: 'POST',
     form: {
       id: coreId,
-      access_token: accessToken,
-      product_id: productId
+      access_token: accessToken
     },
     json: true
   }, callback);
@@ -218,6 +216,31 @@ SparkApi.prototype.renameCore = function (coreId, name, accessToken, callback) {
 };
 
 /**
+ * Tries to change the product_id on the device
+ *
+ * @param {string} coreId - The id of the Spark core you wish to claim
+ * @param {string} product_id - use this carefully, it will impact what updates you receive, and can only be used
+ *                              for products that have given their permission
+ * @param {string} should_update - if the device should be immediately updated after changing the product_id
+ * @param {string} accessToken - current access token
+ * @param {function} callback
+ * @returns {Promise}
+ * @endpoint PUT /v1/devices/<core_id>
+ */
+SparkApi.prototype.changeProduct = function (coreId, product_id, should_update, accessToken, callback) {
+  this.request({
+    uri: this.baseUrl + '/v1/devices/' + coreId,
+    method: 'PUT',
+    form: {
+      product_id: product_id,
+      update_after_claim: should_update,
+      access_token: accessToken
+    },
+    json: true
+  }, callback);
+};
+
+/**
  * Gets all attributes for a given core
  *
  * @param {string} coreId - The id of the Spark core you wish get attrs for
@@ -256,18 +279,18 @@ SparkApi.prototype.getVariable = function (coreId, name, accessToken, callback) 
  * Send a signal to a Core
  *
  * @param {string} coreId - The id of the Spark core you wish to signal
- * @param {boolean} name - If the core should be emitting signals or not
+ * @param {boolean} signal - If the core should be emitting signals or not
  * @param {string} accessToken - current access token
  * @param {function} callback
  * @returns {Promise}
  * @endpoint PUT /v1/devices/<core_id>
  */
-SparkApi.prototype.signalCore = function (coreId, beSignalling, accessToken, callback) {
+SparkApi.prototype.signalCore = function (coreId, signal, accessToken, callback) {
   this.request({
     uri: this.baseUrl + '/v1/devices/' + coreId,
     method: 'PUT',
     form: {
-      signal: (beSignalling) ? 1 : 0,
+      signal: (signal) ? 1 : 0,
       access_token: accessToken
     },
     json: true
@@ -300,6 +323,7 @@ SparkApi.prototype.flashTinker = function (coreId, accessToken, callback) {
  *
  * @param {string} coreId - The id of the Spark core you wish to signal
  * @param {[string]} files - An array of strings containing the files to flash
+ * @param {function} accessToken
  * @param {function} callback
  * @returns {Promise}
  * @endpoint PUT /v1/devices/<core_id>
@@ -404,6 +428,7 @@ SparkApi.prototype.sendPublicKey = function (coreId, buffer, accessToken, callba
  * @param {string} functionName - The name of the function to call
  * @param {string} funcParam - Param for the function
  * @param {string} accessToken - current access token
+ * @param {string} callback
  * @returns {Promise}
  * @endpoint GET /v1/devices/<core_id>/<function_name>
  */
@@ -422,13 +447,19 @@ SparkApi.prototype.callFunction = function (coreId, functionName, funcParam, acc
 /**
  * Get eventListener to an event stream in the Spark cloud
  *
- * @param {string} url - Url for the event stream
+ * @param {string} eventName - prefix filter for events, or null to receive all events
+ * @param {string} coreId - ID or name of device, or the string 'mine'
+ *                          to only listen to current user's devices, or
+ *                          null to listen to the public firehose of events
  * @param {string} accessToken - current access token
- * @endpoint GET /v1/devices/<core_id>/events
+ * @param {function} callback - handler to call for each event received from the API
+ * @endpoint GET /v1/events/<optional_event_filter>
+ * @endpoint GET /v1/devices/events/<optional_event_filter>
+ * @endpoint GET /v1/devices/<core_id>/events/<optional_event_filter>
  *
  * @returns {Request}
  */
-SparkApi.prototype.getEventStream = function (eventName, coreId, accessToken) {
+SparkApi.prototype.getEventStream = function (eventName, coreId, accessToken, callback) {
   var url;
 
   if (!coreId) {
@@ -446,7 +477,7 @@ SparkApi.prototype.getEventStream = function (eventName, coreId, accessToken) {
   var requestObj = this.request({
     uri: this.baseUrl + url + '?access_token=' + accessToken,
     method: 'GET'
-  });
+  }, callback);
 
   return requestObj;
 };
@@ -490,15 +521,22 @@ SparkApi.prototype.publishEvent = function (eventName, data, accessToken, callba
  * @returns {Promise}
  */
 SparkApi.prototype.createWebhook = function (eventName, url, coreId, accessToken, callback) {
+  var body = {
+    event: eventName,
+    url: url,
+    access_token: accessToken
+  };
+
+  if (coreId === 'mine') {
+    body.mydevices = true;
+  } else {
+    body.deviceid = coreId;
+  }
+
   this.request({
     uri: this.baseUrl + '/v1/webhooks',
     method: 'POST',
-    form: {
-      event: eventName,
-      url: url,
-      deviceid: coreId,
-      access_token: accessToken
-    },
+    form: body,
     json: true
   }, callback);
 };

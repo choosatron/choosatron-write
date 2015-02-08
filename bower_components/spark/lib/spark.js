@@ -189,21 +189,6 @@ Spark.prototype.login = function (params, callback) {
 };
 
 /**
- * Returns true if an access token is stored, and then removes it.
- *
- * @this {Spark}
- * @returns {boolean}
- */
-Spark.prototype.logout = function () {
-  if (this.accessToken) {
-    this.accessToken = null
-    return true;
-  }
-
-  return false;
-};
-
-/**
  * Returns a device based on the param deviceId
  *
  * @this {Spark}
@@ -328,16 +313,15 @@ Spark.prototype.removeAccessToken = function (username, password, accessToken, c
  * Claims a core and adds it to the user currently logged in
  *
  * @param {string} coreId - The id of the Spark core you wish to claim
- * @param {integer} productId - The product id to be associated with this Spark core
  * @param {function} callback
  * @returns {Promise}
  * @endpoint POST /v1/devices
  */
-Spark.prototype.claimCore = function (coreId, productId, callback) {
+Spark.prototype.claimCore = function (coreId, callback) {
   var defer = this.createDefer('claimCore', callback),
       handler = this.defaultHandler('claimCore', defer, callback).bind(this);
 
-  this.api.claimCore(coreId, productId, this.accessToken, handler);
+  this.api.claimCore(coreId, this.accessToken, handler);
 
   var promise = (!!defer) ? defer.promise : null;
   return promise;
@@ -616,7 +600,9 @@ Spark.prototype.getAttributesForAll = function () {
  * @returns {Request}
  */
 Spark.prototype.getEventStream = function (eventName, coreId, callback) {
-  var requestObj = this.api.getEventStream(eventName, coreId, this.accessToken);
+  var defer = this.createDefer('getEventStream', callback),
+      handler = this.defaultHandler('getEventStream', defer, callback).bind(this),
+      requestObj = this.api.getEventStream(eventName, coreId, this.accessToken, handler);
 
     if (callback) {
         //if ((event !== '') && (typeof(callback) === 'function')) { callback(event); }
