@@ -62,15 +62,26 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
-	ChoosatronCloud.prototype.changeToChoosatron = function(coreId) {
+	ChoosatronCloud.prototype.changeToChoosatron = function(coreId, data) {
 		// @todo: Use a Spark object instead of the spark.api once the codebase is updated
 		var deferred = $q.defer();
 
-		function changed(rsp) {
-			console.info('Changed to Choosatron', rsp);
+		if (data && !data.ok) {
+			console.error('Error claiming Choosatron', data);
+			deferred.reject(data);
+			return deferred.promise;
+		}
+
+		function changed(data) {
+			if (data && !data.ok) {
+				console.error('Error changing to Choosatron', data);
+				return deferred.reject(data);
+			}
+			console.info('Changed to Choosatron', data);
 			deferred.resolve();
 		}
 
+		console.info('Changing core to Choosatron', coreId);
 		this.spark.api.changeProduct(coreId, ChoosatronCloud.productId, true, this.token, changed);
 
 		return deferred.promise;

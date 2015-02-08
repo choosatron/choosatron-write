@@ -2,19 +2,17 @@
 
 'use strict';
 
-angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial', 'ChoosatronCloud',
+angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial',
 
-function ($q, Serial, ChoosatronCloud) {
+function ($q, Serial) {
 
 	var CMD_CHANGE_MODE = 'c';
 	var CMD_GET_INFO    = 'i';
 	var CMD_SET_WIFI    = 'w';
 
-	function ChoosatronSerial(token) {
+	function ChoosatronSerial() {
 		this.coreId = null;
 		this.serial = new Serial();
-		this.cloud  = new ChoosatronCloud(token);
-
 		this.serial.debug = true;
 	}
 
@@ -55,11 +53,6 @@ function ($q, Serial, ChoosatronCloud) {
 
 		loadPorts().then(changeMode).then(getCoreId);
 		return deferred.promise;
-	};
-
-	// Initially set up a Spark Core as a Choosatron product
-	ChoosatronSerial.prototype.claim = function() {
-		return this.cloud.claim(this.coreId);
 	};
 
 	// Add WiFi credentials

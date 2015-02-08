@@ -4,9 +4,9 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronAddModalCtrl', ChoosatronAddModalCtrl);
 
-	ChoosatronAddModalCtrl.$inject = ['$scope', '$timeout', 'profiles', 'Profile', 'ChoosatronSerial'];
+	ChoosatronAddModalCtrl.$inject = ['$scope', '$timeout', 'profiles', 'Profile', 'ChoosatronSerial', 'ChoosatronCloud'];
 
-	function ChoosatronAddModalCtrl($scope, $timeout, profiles, Profile, ChoosatronSerial) {
+	function ChoosatronAddModalCtrl($scope, $timeout, profiles, Profile, ChoosatronSerial, ChoosatronCloud) {
 		var vm = this;
 
 		// Variables
@@ -16,6 +16,7 @@
 		vm.ports     = [];
 		vm.path      = null;
 		vm.serial    = null;
+		vm.cloud     = null;
 
 		vm.creds  = {
 			ssid     : '',
@@ -44,15 +45,17 @@
 
 		function changeState(state) {
 			return function(data) {
-				console.info(state, data);
+				console.info(state, arguments);
 				vm.state = state;
+				vm.errors = data && data.errors;
 			};
 		}
 
 		function scanForDevices() {
 			vm.state = 'scanning';
 
-			vm.serial = new ChoosatronSerial(vm.profile.cloud.token);
+			vm.serial = new ChoosatronSerial();
+			vm.cloud  = new ChoosatronCloud(vm.profile.cloud.token);
 
 			vm.serial.connect()
 			.then(changeState('connect'))
@@ -76,7 +79,11 @@
 		}
 
 		function claim() {
-			vm.serial.claim()
+			if (!vm.serial.coreId) {
+				vm.state = 'connect';
+				return;
+			}
+			vm.cloud.claim(vm.serial.coreId)
 			.then(changeState('claimed'))
 			.catch(changeState('unclaimed'));
 		}
