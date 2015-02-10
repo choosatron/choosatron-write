@@ -81,6 +81,7 @@
 		function claim() {
 			if (!vm.serial.coreId) {
 				vm.state = 'connect';
+				vm.errors = ['Could not find a core id for your Choosatron.'];
 				return;
 			}
 			vm.cloud.claim(vm.serial.coreId)
