@@ -25,6 +25,9 @@
 		function activate() {
 			profiles.load().then(function() {
 				vm.profiles = profiles;
+				if (profiles.all.length === 1) {
+					showStoriesMenu();
+				}
 			});
 		}
 
