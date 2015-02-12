@@ -37,6 +37,12 @@ module.exports = function(grunt) {
 					expand: true},
 
 					{cwd: 'source',
+					src: [ 'assets/bin/*.bin' ],
+					dest: 'build/bin/',
+					flatten: true,
+					expand: true},
+
+					{cwd: 'source',
 					src: ['app/**/*.html'],
 					dest: 'build/templates/',
 					flatten: true,
