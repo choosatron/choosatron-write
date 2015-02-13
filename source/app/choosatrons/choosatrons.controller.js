@@ -13,33 +13,40 @@
 		var vm = this;
 
 		// Variables
-		vm.location = $location;
-		vm.profiles = profiles;
-		vm.state = 'disk';
-		vm.cloud = null;
-		vm.choosatrons = [];
+		vm.location     =  $location;
+		vm.profiles     =  profiles;
+		vm.cloud        =  null;
+		vm.choosatrons  =  [];
 
 		// Functions
-		vm.releaseClaim = releaseClaim;
-		vm.newChoosatron = newChoosatron;
-		vm.saveChoosatron = saveChoosatron;
-		vm.editChoosatron = editChoosatron;
+		vm.releaseClaim     =  releaseClaim;
+		vm.loadChoosatrons  =  loadChoosatrons;
+		vm.newChoosatron    =  newChoosatron;
+		vm.saveChoosatron   =  saveChoosatron;
 
 		activate();
 
 		function activate() {
 			profiles.load().then(function() {
 				vm.profile = profiles.current;
-				vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
-
-				vm.cloud.load().then(function() {
-					vm.choosatrons = vm.cloud.choosatrons;
-				});
+				loadChoosatrons();
 			});
 		}
 
-		function releaseClaim() {
-			console.log("Release claim on Choosatron.");
+		function loadChoosatrons() {
+			vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
+
+			vm.cloud.load().then(function() {
+				vm.choosatrons = vm.cloud.choosatrons;
+			});
+		}
+
+		function releaseClaim(choosatron) {
+			choosatron.remove().then(loadChoosatrons);
+		}
+
+		function saveChoosatron(choosatron, name) {
+			choosatron.rename(name).then(loadChoosatrons);
 		}
 
 		function newChoosatron() {
@@ -53,25 +60,6 @@
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
 			});
-		}
-
-		function saveChoosatron() {
-			for (var i in profiles.current.choosatrons) {
-				if (profiles.current.choosatrons[i].id == vm.editing.id) {
-					console.log("Matched: " + $profiles.current.choosatrons[i].id);
-					profiles.current.choosatrons[i] = vm.editing;
-				}
-			}
-			vm.editing = null;
-			profiles.save()
-				.then(function() {
-				vm.saveState = 'saved';
-			});
-		}
-
-		function editChoosatron(item) {
-			console.log("Edit Choosatron");
-			vm.editing = angular.copy(item);
 		}
 	}
 

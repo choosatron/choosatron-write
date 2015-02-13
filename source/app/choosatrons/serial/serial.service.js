@@ -27,7 +27,7 @@ function($q, ArrayBufferFactory) {
 			return;
 		}
 
-		if (this.toString) {
+		if (this.toString && !info.text) {
 			info.text = ArrayBufferFactory.toString(info.data);
 		}
 
@@ -62,6 +62,7 @@ function($q, ArrayBufferFactory) {
 		this.listeners  = [];
 		this.connection = null;
 		this.debug      = false;
+		this.receiver   = this.onReceived.bind(this);
 		this.init(api || chrome.serial);
 	}
 
@@ -72,30 +73,40 @@ function($q, ArrayBufferFactory) {
 		stopBits   : 'one'
 	};
 
+	Serial.DefaultTimeout = 1000;
+
+	// Deconstructor. Must be called explicitly.
+	Serial.prototype.destroy = function() {
+		this.api.onReceive.removeListener(this.receiver);
+		if (this.connection) {
+			this.disconnect();
+		}
+	};
+
 	/**
 	  *¬Inializes the Serial interface
 	 **/
 	Serial.prototype.init = function(api) {
 		this.api = api;
+		this.api.onReceive.addListener(this.receiver);
+	};
 
-		var received = function(info) {
 
-			if (this.debug) {
-				console.info("this.api.onReceive", info);
-			}
+	Serial.prototype.onReceived = function(info) {
+		if (this.debug) {
+			info.text = ArrayBufferFactory.toString(info.data);
+			console.info("this.api.onReceive", info);
+		}
 
-			if (!this.listeners) {
-				return;
-			}
+		if (!this.listeners) {
+			return;
+		}
 
-			// Loop the listeners and fire off a message. Remove the listener if
-			// it was only meant to be used once.
-			this.listeners = this.listeners.filter(function(listener) {
-				return listener.send(info);
-			});
-		};
-
-		this.api.onReceive.addListener(received.bind(this));
+		// Loop the listeners and fire off a message. Remove the listener if
+		// it was only meant to be used once.
+		this.listeners = this.listeners.filter(function(listener) {
+			return listener.send(info);
+		});
 	};
 
 
@@ -323,10 +334,15 @@ function($q, ArrayBufferFactory) {
 		var data = typeof msg !== 'object' ? ArrayBufferFactory.fromString(msg) : msg;
 		var deferred = $q.defer();
 		var self = this;
-		timeout = timeout || 1000;
+		timeout = timeout || Serial.DefaultTimeout;
+
+		if (!this.ports.length) {
+			deferred.reject('No ports found');
+			return deferred.promise;
+		}
 
 		if (this.debug) {
-			console.info("Broadcasting", msg);
+			console.info("Broadcasting", msg, "to", this.ports);
 		}
 
 		var connections = {};

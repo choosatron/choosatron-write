@@ -16,18 +16,22 @@ function ($q, Serial) {
 		this.serial.debug = true;
 	}
 
+	ChoosatronSerial.prototype.destroy = function() {
+		this.serial.destroy();
+	};
+
 	// Connect to an existing Choosatron and switch to listening mode
-	// Also stores the connected devices coreId
+	ChoosatronSerial.prototype.listen = function() {
+		return this.serial.broadcast(CMD_CHANGE_MODE);
+	};
+
+	// Connects to the first Choosatron device that is in listening mode
 	ChoosatronSerial.prototype.connect = function() {
 		var deferred = $q.defer();
 		var self     = this;
 
 		function loadPorts() {
 			return self.serial.load('usb');
-		}
-
-		function changeMode() {
-			return self.serial.broadcast(CMD_CHANGE_MODE);
 		}
 
 		function getCoreId() {
@@ -51,7 +55,7 @@ function ($q, Serial) {
 			deferred.reject();
 		}
 
-		loadPorts().then(changeMode).then(getCoreId);
+		loadPorts().then(getCoreId);
 		return deferred.promise;
 	};
 

@@ -54,6 +54,10 @@
 		function scanForDevices() {
 			vm.state = 'scanning';
 
+			if (vm.serial) {
+				vm.serial.destroy();
+			}
+
 			vm.serial = new ChoosatronSerial();
 			vm.cloud  = new ChoosatronCloud(vm.profile.cloud.token);
 

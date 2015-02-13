@@ -54,7 +54,24 @@ angular.module('storyApp')
 	ChoosatronCloud.prototype.claim = function(coreId) {
 		var deferred = $q.defer();
 
-		this.spark.claimCore(coreId)
+		function claimed(data) {
+			if (data && data.ok) {
+				deferred.resolve(data);
+			}
+			else {
+				deferred.reject(data);
+			}
+		}
+
+		this.spark.claimCore(coreId).then(claimed).catch(deferred.reject);
+
+		return deferred.promise;
+	};
+
+	ChoosatronCloud.prototype.release = function(coreId) {
+		var deferred = $q.defer();
+
+		this.spark.removeCore(coreId)
 		.then(deferred.resolve)
 		.catch(deferred.reject);
 
@@ -64,6 +81,11 @@ angular.module('storyApp')
 	ChoosatronCloud.prototype.changeToChoosatron = function(coreId) {
 		// @todo: Use a Spark object instead of the spark.api once the codebase is updated
 		var deferred = $q.defer();
+
+		if (!this.spark.api.changeProduct) {
+			deferred.reject("Spark doesn't support changeProduct yet");
+			return deferred.promise;
+		}
 
 		function changed(data) {
 			if (data && !data.ok) {

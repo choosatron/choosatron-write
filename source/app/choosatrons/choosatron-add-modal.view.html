@@ -54,7 +54,15 @@
 				<label><input type="radio" ng-model="vm.creds.security" ng-value="3" checked>WPA2</label>
 			</div>
 
-			<input ng-show="vm.security != '0'" class="form-control" ng-model="vm.creds.password" placeholder="WiFi Password" />
+			<div class="input-group">
+				<input ng-show="vm.showPassword && vm.security != '0'" class="form-control" ng-model="vm.creds.password" placeholder="WiFi Password" />
+				<input ng-show="!vm.showPassword && vm.security != '0'" class="form-control" type="password" ng-model="vm.creds.password" placeholder="WiFi Password" />
+				<div class="input-group-addon">
+					<a ng-click="vm.showPassword = !vm.showPassword">
+						<span class="fa" ng-class="{'fa-eye-slash': vm.showPassword, 'fa-eye': !vm.showPassword}"></span>
+					</a>
+				</div>
+			</div>
 
 			<hr>
 
