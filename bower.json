@@ -20,8 +20,7 @@
 		"angular-bootstrap": "~0.10.0",
 		"angular-ui-utils": "~0.1.1",
 		"font-awesome": "~4.2.0",
-		"ngDialog": "~0.3.8",
-		"spark": "master"
+		"ngDialog": "~0.3.8"
 	},
 	"private": true,
 	"ignore": [

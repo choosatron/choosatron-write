@@ -16,6 +16,10 @@ angular.module('storyApp.utils')
 		return fs.retainEntry(entry);
 	};
 
+	this.getPackageDirectoryEntry = function() {
+		return runtime.getPackageDirectoryEntry();
+	};
+
 	this.restore = function(entryId) {
 		var deferred = $q.defer();
 		fs.isRestorable(entryId, function(restorable) {

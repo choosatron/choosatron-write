@@ -104,7 +104,7 @@
 
 			// @todo: Move this file path into a constant
 			function flash() {
-				return vm.cloud.flashAsChosatron(coreId)
+				return vm.cloud.flashAsChoosatron(coreId)
 					.then(changeState('claimed'))
 					.catch(changeState('unclaimed'));
 			}

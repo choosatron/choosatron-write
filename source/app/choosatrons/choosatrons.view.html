@@ -15,16 +15,30 @@
 			<ul class="list-unstyled list-choosatrons">
 				<li ng-repeat="choosatron in vm.choosatrons" class="tile choosatronItem">
 					<div class="front">
-						<h2>Name: {{ choosatron.name }}</h2>
-						<h3>ID: {{ choosatron.id }}</h3>
+						<h2>{{choosatron.name}}</h2>
+						<h3>{{choosatron.id}}</h3>
 					</div>
 					<div class="back">
-						<p>Name: <input ng-model="choosatron.newName"></p>
+						<div class="form-inline">
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button ng-click="choosatron.editing = !choosatron.editing" class="btn btn-default">
+										<span class="glyphicon glyphicon-pencil"></span>
+									</button>
+								</span>
+								<input class="form-control" ng-show="choosatron.editing" ng-model="choosatron.newName" placeholder="Enter a new name" />
+								<input class="form-control" ng-show="!choosatron.editing" disabled value="{{choosatron.name}}" />
+							</div>
+							<div ng-show="choosatron.editing" class="btn-group">
+								<a class="btn btn-primary" ng-click="vm.rename(choosatron)">Rename</a>
+								<a class="btn btn-link" ng-click="choosatron.newName = ''; choosatron.editing = false">Cancel</a>
+							</div>
+						</div>
+
 						<p>ID: {{ choosatron.id }}</p>
 						<p>Last heard: {{ choosatron.lastHeard }}</p>
 
 						<div ng-class="{active: choosatron.connected}" class="btn-group btn-group-justified list-icon-menu">
-							<a class="btn btn-default" ng-click="vm.rename(choosatron)">Rename</a>
 							<a class="btn btn-warning" ng-click="vm.flash(choosatron)">Update Firmware</a>
 							<a class="btn btn-danger" confirm-click="vm.unclaim(choosatron)" confirm-title="Remove Choosatron?" confirm-message="This will release your claim on the Choosatron. Are you sure?">Unclaim</a>
 						</div>

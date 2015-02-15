@@ -5,13 +5,12 @@
 // Provides access to device features, such as claiming, naming, and pushing.
 // This factory is essentially a wrapper for the spark.js methods.
 angular.module('storyApp')
-	.factory('ChoosatronCloud', ['$q', function($q) {
+	.factory('ChoosatronCloud', ['$q', 'Spark', function($q, Spark) {
 
 	function ChoosatronCloud(token) {
 		this.loaded      = false;
 		this.choosatrons = [];
-		this.spark       = spark;
-		this.spark.login({accessToken: token});
+		this.spark       = new Spark(token);
 	}
 
 	ChoosatronCloud.productId = 7;
@@ -39,18 +38,10 @@ angular.module('storyApp')
 		var deferred = $q.defer();
 		args = args || [];
 
-		function done(data) {
-			if (data && data.ok) {
-				deferred.resolve(data);
-			}
-			else {
-				deferred.reject(data);
-			}
-		}
-
+		console.info("Calling", method, args);
 		this.spark[method]
 			.apply(this.spark, args)
-			.then(done)
+			.then(deferred.resolve)
 			.catch(deferred.reject);
 
 		return deferred.promise;
@@ -94,12 +85,12 @@ angular.module('storyApp')
 
 	// Makes a choosatron by flashing its core with the stored binary
 	ChoosatronCloud.prototype.flashAsChoosatron = function(coreId) {
-		return this.flash(coreId, [chrome.runtime.getURL('bin/choosatron-core.bin')]);
+		return this.flash(coreId, 'bin/choosatron-core.bin');
 	};
 
 
-	ChoosatronCloud.prototype.flash = function(coreId, files) {
-		return this.defer('flashCore', [coreId, files]);
+	ChoosatronCloud.prototype.flash = function(coreId, file) {
+		return this.defer('flashCore', [coreId, file]);
 	};
 
 
