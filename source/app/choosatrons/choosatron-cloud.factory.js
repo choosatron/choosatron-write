@@ -64,11 +64,11 @@ angular.module('storyApp')
 	};
 
 	ChoosatronCloud.prototype.claim = function(coreId) {
-		return this.defer('claimCore', [coreId]);
+		return this.defer('claimCore', [coreId, ChoosatronCloud.productId]);
 	};
 
 	ChoosatronCloud.prototype.remove = function(coreId) {
-		this.defer('removeCore', [coreId]);
+		return this.defer('removeCore', [coreId]);
 	};
 
 	ChoosatronCloud.prototype.changeToChoosatron = function(coreId) {

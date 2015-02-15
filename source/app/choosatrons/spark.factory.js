@@ -97,27 +97,26 @@ angular.module('storyApp')
 
 	Spark.prototype.changeProduct = function(coreId, productId, updateAfter) {
 		var data = {
-			productId          : product_id,
+			product_id         : product_id,
 			update_after_claim : updateAfter,
 			access_token       : this.accessToken
 		};
 		return this.promise('put', this.endpoint('devices/' + coreId), data);
 	};
 
-	Spark.prototype.claimCore = function(coreId) {
+	Spark.prototype.claimCore = function(coreId, productId) {
 		var data = {
 			id           : coreId,
 			access_token : this.accessToken
 		};
+		if (productId) {
+			data.product_id = productId;
+		}
 		return this.promise('post', this.endpoint('devices'), data);
 	};
 
 	Spark.prototype.removeCore = function(coreId) {
-		var data = {
-			id           : coreId,
-			access_token : this.accessToken
-		};
-		return this.promise('delete', this.endpoint('devices'), data);
+		return this.promise('delete', this.endpoint('devices/' + coreId, true));
 	};
 
 	Spark.prototype.flashCore = function(coreId, path) {

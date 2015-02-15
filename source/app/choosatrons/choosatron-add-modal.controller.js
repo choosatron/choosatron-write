@@ -89,27 +89,8 @@
 				return;
 			}
 			vm.cloud.claim(vm.serial.coreId)
-			.then(flashCore)
 			.then(changeState('claimed'))
 			.catch(changeState('unclaimed'));
-		}
-
-		function flashCore() {
-			var coreId = vm.serial.coreId;
-
-			function change() {
-				return vm.cloud.changeToChoosatron(coreId)
-					.then(changeState('claimed'));
-			}
-
-			// @todo: Move this file path into a constant
-			function flash() {
-				return vm.cloud.flashAsChoosatron(coreId)
-					.then(changeState('claimed'))
-					.catch(changeState('unclaimed'));
-			}
-
-			change().catch(flash);
 		}
 
 		function cancel() {

@@ -20,7 +20,7 @@
 						<h3>{{choosatron.id}}</h3>
 					</div>
 					<div class="back">
-						<div class="form-inline">
+						<div ng-show="choosatron.connected" class="form-inline">
 							<div class="input-group">
 								<span class="input-group-btn">
 									<button ng-click="choosatron.editing = !choosatron.editing" class="btn btn-default">
@@ -36,11 +36,15 @@
 							</div>
 						</div>
 
+						<div ng-show="!choosatron.connected">
+							<h2>{{choosatron.name}}</h2>
+							<em>Offline</em>
+						</div>
 						<p>ID: {{ choosatron.id }}</p>
 						<p>Last heard: {{ choosatron.last_heard }}</p>
 
-						<div ng-class="{active: choosatron.connected}" class="btn-group btn-group-justified list-icon-menu">
-							<a class="btn btn-warning" ng-click="vm.flash(choosatron)">Update Firmware</a>
+						<div class="btn-group btn-group-justified list-icon-menu">
+							<a class="btn btn-warning" ng-show="choosatron.connected" ng-click="vm.flash(choosatron)">Update Firmware</a>
 							<a class="btn btn-danger" confirm-click="vm.unclaim(choosatron)" confirm-title="Remove Choosatron?" confirm-message="This will release your claim on the Choosatron. Are you sure?">Unclaim</a>
 						</div>
 					</div>
