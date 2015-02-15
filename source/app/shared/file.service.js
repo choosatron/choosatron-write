@@ -63,7 +63,7 @@ angular.module('storyApp.utils')
 		var method = 'readAs' + type;
 
 		reader.onload = function(data) {
-			deferred.resolve(data.target && data.target.result);
+			deferred.resolve(reader.result);
 		};
 
 		reader.onerror = function(e) {

@@ -47,17 +47,15 @@ angular.module('storyApp')
 		var deferred = this.$q.defer();
 		var fs = this.$fs;
 
-		function read(entry) {
-			fs.read(entry, 'ArrayBuffer')
-			.then(deferred.resolve)
-			.catch(deferred.reject);
+		function gotEntry(entry) {
+			entry.file(deferred.resolve);
 		}
 
 		fs.getPackageDirectoryEntry()
 		.then(function(dir) {
 			console.info('Got package directory', dir);
 			var opts = {create: false};
-			dir.getFile(filename, opts, read, deferred.reject);
+			dir.getFile(filename, opts, gotEntry, deferred.reject);
 		});
 
 		return deferred.promise;
@@ -127,19 +125,27 @@ angular.module('storyApp')
 		var deferred = this.$q.defer();
 		var self = this;
 
-		function putFile(buffer) {
-			if (!buffer) {
+		function putFile(file) {
+			if (!file) {
 				console.info('Empty file', path);
 				deferred.reject('Empty file');
 				return;
 			}
-			console.info('Got file', path, buffer);
-			var form = new FormData();
-			form.append('file', buffer, {filename: path});
 
-			$http.put(url, form)
-				.success(deferred.resolve)
-				.error(deferred.reject);
+			console.info('Got file', path, file);
+
+			var form = new FormData();
+			form.append('file', file);
+
+			$http({
+				url              : url, 
+				method           : 'PUT',
+				headers          : {'Content-Type': undefined},
+				data             : form,
+				transformRequest : []
+			})
+			.success(deferred.resolve)
+			.error(deferred.reject);
 		}
 
 		this.getFile(path).then(putFile).catch(deferred.reject);
