@@ -17,7 +17,9 @@ angular.module('storyApp.utils')
 	};
 
 	this.getPackageDirectoryEntry = function() {
-		return runtime.getPackageDirectoryEntry();
+		var deferred = $q.defer();
+		runtime.getPackageDirectoryEntry(deferred.resolve);
+		return deferred.promise;
 	};
 
 	this.restore = function(entryId) {
@@ -54,9 +56,11 @@ angular.module('storyApp.utils')
 		return deferred.promise;
 	};
 
-	this.read = function(entry) {
+	this.read = function(entry, type) {
 		var deferred = $q.defer();
 		var reader = new FileReader();
+		type = type || 'Text';
+		var method = 'readAs' + type;
 
 		reader.onload = function(data) {
 			deferred.resolve(data.target && data.target.result);
@@ -67,7 +71,7 @@ angular.module('storyApp.utils')
 		};
 
 		entry.file(function(file) {
-			reader.readAsText(file);
+			reader[method].call(reader, file);
 		}, deferred.reject);
 
 		return deferred.promise;

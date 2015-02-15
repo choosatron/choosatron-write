@@ -45,10 +45,19 @@ angular.module('storyApp')
 	// apis.
 	Spark.prototype.getFile = function(filename) {
 		var deferred = this.$q.defer();
+		var fs = this.$fs;
 
-		this.$fs.getPackageDirectoryEntry(function(dir) {
+		function read(entry) {
+			fs.read(entry, 'ArrayBuffer')
+			.then(deferred.resolve)
+			.catch(deferred.reject);
+		}
+
+		fs.getPackageDirectoryEntry()
+		.then(function(dir) {
+			console.info('Got package directory', dir);
 			var opts = {create: false};
-			dir.getFile(filename, opts, deferred.resolve, deferred.reject);
+			dir.getFile(filename, opts, read, deferred.reject);
 		});
 
 		return deferred.promise;
@@ -118,12 +127,19 @@ angular.module('storyApp')
 		var deferred = this.$q.defer();
 		var self = this;
 
-		function putFile(entry) {
+		function putFile(buffer) {
+			if (!buffer) {
+				console.info('Empty file', path);
+				deferred.reject('Empty file');
+				return;
+			}
+			console.info('Got file', path, buffer);
 			var form = new FormData();
-			form.append('file', entry);
-			self.promise('put', url, form)
-				.then(deferred.resolve)
-				.catch(deferred.reject);
+			form.append('file', buffer, {filename: path});
+
+			$http.put(url, form)
+				.success(deferred.resolve)
+				.error(deferred.reject);
 		}
 
 		this.getFile(path).then(putFile).catch(deferred.reject);

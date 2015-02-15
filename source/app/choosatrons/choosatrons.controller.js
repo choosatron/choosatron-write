@@ -36,7 +36,7 @@
 
 		function inform(msg) {
 			return function(data) {
-				if (data && data.ok) {
+				if (!data.error) {
 					vm.message = {
 						type: 'success',
 						content: msg
@@ -45,7 +45,7 @@
 				else {
 					vm.message = {
 						type: 'error',
-						content: data.errors[0]
+						content: data.error
 					};
 				}
 			};
@@ -75,12 +75,13 @@
 		function rename(choosatron) {
 			vm.cloud.rename(choosatron.id, choosatron.newName)
 				.then(loadChoosatrons)
-				.catch(warn('Problem!'));
+				.catch(warn('Could not rename your Choosatron!'));
 		}
 
 		function flash(choosatron) {
 			vm.cloud.flashAsChoosatron(choosatron.id)
-				.then(inform('Done!'));
+				.then(inform('Done!'))
+				.catch(warn('Could not update your Choosatron!'));
 		}
 
 		function newChoosatron() {
