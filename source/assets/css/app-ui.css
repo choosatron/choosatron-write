@@ -1021,6 +1021,26 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' 
 **/
 
+	.choosatronList .choosatronItem {
+		position: relative;
+		height: 200px;
+		margin-top: 40px;
+	}
+
+	.choosatronItem .front, .choosatronItem .back {
+		background: #9CB5D7;
+		border: 1px solid #eee;
+		border-radius: 4px;
+		height: 100%;
+		padding: 10px;
+	}
+
+	.choosatronItem .front {
+		text-align: center;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
 	.choosatronList .newItem {
 		text-align: center;
 		cursor: pointer;

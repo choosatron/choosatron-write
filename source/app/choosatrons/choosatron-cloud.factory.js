@@ -35,6 +35,27 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
+	ChoosatronCloud.prototype.defer = function(method, args) {
+		var deferred = $q.defer();
+		args = args || [];
+
+		function done(data) {
+			if (data && data.ok) {
+				deferred.resolve(data);
+			}
+			else {
+				deferred.reject(data);
+			}
+		}
+
+		this.spark[method]
+			.apply(this.spark, args)
+			.then(done)
+			.catch(deferred.reject);
+
+		return deferred.promise;
+	};
+
 	ChoosatronCloud.prototype.each = function(callback, ctx) {
 		ctx = ctx || this;
 		for (var i=0; i<this.choosatrons.length; i++) {
@@ -52,72 +73,38 @@ angular.module('storyApp')
 	};
 
 	ChoosatronCloud.prototype.claim = function(coreId) {
-		var deferred = $q.defer();
-
-		function claimed(data) {
-			if (data && data.ok) {
-				deferred.resolve(data);
-			}
-			else {
-				deferred.reject(data);
-			}
-		}
-
-		this.spark.claimCore(coreId).then(claimed).catch(deferred.reject);
-
-		return deferred.promise;
+		return this.defer('claimCore', [coreId]);
 	};
 
-	ChoosatronCloud.prototype.release = function(coreId) {
-		var deferred = $q.defer();
-
-		this.spark.removeCore(coreId)
-		.then(deferred.resolve)
-		.catch(deferred.reject);
-
-		return deferred.promise;
+	ChoosatronCloud.prototype.remove = function(coreId) {
+		this.defer('removeCore', [coreId]);
 	};
 
 	ChoosatronCloud.prototype.changeToChoosatron = function(coreId) {
 		// @todo: Use a Spark object instead of the spark.api once the codebase is updated
-		var deferred = $q.defer();
-
-		if (!this.spark.api.changeProduct) {
+		if (!this.spark.changeProduct) {
+			var deferred = $q.defer();
 			deferred.reject("Spark doesn't support changeProduct yet");
 			return deferred.promise;
 		}
 
-		function changed(data) {
-			if (data && !data.ok) {
-				console.error('Error changing to Choosatron', data);
-				return deferred.reject(data);
-			}
-			console.info('Changed to Choosatron', data);
-			deferred.resolve();
-		}
+		return this.defer('changeProduct', [coreId, ChoosatronCloud.productId, true]);
+	};
 
-		console.info('Changing core to Choosatron', coreId);
-		this.spark.api.changeProduct(coreId, ChoosatronCloud.productId, true, this.token, changed);
 
-		return deferred.promise;
+	// Makes a choosatron by flashing its core with the stored binary
+	ChoosatronCloud.prototype.flashAsChoosatron = function(coreId) {
+		return this.flash(coreId, [chrome.runtime.getURL('bin/choosatron-core.bin')]);
 	};
 
 
 	ChoosatronCloud.prototype.flash = function(coreId, files) {
-		var deferred = $q.defer();
+		return this.defer('flashCore', [coreId, files]);
+	};
 
-		function flashed(data) {
-			if (data && data.ok) {
-				deferred.resolve(data);
-			}
-			else {
-				deferred.reject(data);
-			}
-		}
 
-		this.spark.flashCore(coreId, files, flashed);
-
-		return deferred.promise;
+	ChoosatronCloud.prototype.rename = function(coreId, name) {
+		return this.defer('renameCore', [coreId, name]);
 	};
 
 	return ChoosatronCloud;

@@ -24,6 +24,7 @@
 		"syncFileSystem",
 		"unlimitedStorage", {
 			"fileSystem": ["write", "retainEntries", "directory"]
-		}
+		},
+		"https://api.spark.io/"
 	]
 }

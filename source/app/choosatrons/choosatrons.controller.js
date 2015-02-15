@@ -19,10 +19,11 @@
 		vm.choosatrons  =  [];
 
 		// Functions
-		vm.releaseClaim     =  releaseClaim;
 		vm.loadChoosatrons  =  loadChoosatrons;
 		vm.newChoosatron    =  newChoosatron;
-		vm.saveChoosatron   =  saveChoosatron;
+		vm.rename           =  rename;
+		vm.flash            =  flash;
+		vm.unclaim          =  unclaim;
 
 		activate();
 
@@ -33,6 +34,32 @@
 			});
 		}
 
+		function inform(msg) {
+			return function(data) {
+				if (data && data.ok) {
+					vm.message = {
+						type: 'success',
+						content: msg
+					};
+				}
+				else {
+					vm.message = {
+						type: 'error',
+						content: data.errors[0]
+					};
+				}
+			};
+		}
+
+		function warn(msg) {
+			return function(error) {
+				vm.message = {
+					type: 'error',
+					content: error.message || msg
+				};
+			};
+		}
+
 		function loadChoosatrons() {
 			vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
 
@@ -41,12 +68,19 @@
 			});
 		}
 
-		function releaseClaim(choosatron) {
-			choosatron.remove().then(loadChoosatrons);
+		function unclaim(choosatron) {
+			vm.cloud.remove(choosatron.id).then(loadChoosatrons);
 		}
 
-		function saveChoosatron(choosatron, name) {
-			choosatron.rename(name).then(loadChoosatrons);
+		function rename(choosatron) {
+			vm.cloud.rename(choosatron.id, choosatron.newName)
+				.then(loadChoosatrons)
+				.catch(warn('Problem!'));
+		}
+
+		function flash(choosatron) {
+			vm.cloud.flashAsChoosatron(choosatron.id)
+				.then(inform('Done!'));
 		}
 
 		function newChoosatron() {
@@ -56,7 +90,6 @@
 				data: vm.profiles.current
 			}).then(function (device) {
 				console.log('Modal promise resolved. Value: ', device);
-
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
 			});

@@ -61,7 +61,36 @@ function ($q, Serial) {
 
 	// Add WiFi credentials
 	ChoosatronSerial.prototype.wifi = function(ssid, type, pwd) {
-		return this.serial.sendMultiple([CMD_SET_WIFI, ssid, type, pwd]);
+		var deferred = $q.defer();
+		var send = this.serial.send.bind(this.serial);
+		var cmds = [ssid, type, pwd];
+		var response = '';
+
+		// Here, we need to time things just right. After the 'w'
+		// command is sent, watch for the next  ': ' string, which
+		// is the prompt for the next required input.
+		function queue(info) {
+			response += info.text;
+			if (response.indexOf(': ') < 1) {
+				return false;
+			}
+
+			response = '';
+			send(cmds.shift() + '\n');
+
+			if (cmds.length === 0) {
+				console.info('Done with queue');
+				deferred.resolve();
+				return true;
+			}
+
+			return false;
+		}
+
+		this.serial.listen(queue);
+		this.serial.send(CMD_SET_WIFI);
+
+		return deferred.promise;
 	};
 
 	return ChoosatronSerial;

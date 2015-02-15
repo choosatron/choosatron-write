@@ -104,7 +104,7 @@
 
 			// @todo: Move this file path into a constant
 			function flash() {
-				return vm.cloud.flash(coreId, [chrome.runtime.getURL('bin/choosatron-core.bin')])
+				return vm.cloud.flashAsChosatron(coreId)
 					.then(changeState('claimed'))
 					.catch(changeState('unclaimed'));
 			}

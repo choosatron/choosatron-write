@@ -2,9 +2,9 @@
 
 'use strict';
 
-angular.module('storyApp.utils').service('Serial', ['$q', 'ArrayBufferFactory',
+angular.module('storyApp.utils').service('Serial', ['$q', '$timeout', 'ArrayBufferFactory',
 
-function($q, ArrayBufferFactory) {
+function($q, $timeout, ArrayBufferFactory) {
 
 	// Internal class used for storing event handlers to handle
 	// received serial data.
@@ -141,26 +141,6 @@ function($q, ArrayBufferFactory) {
 
 		this.listeners.push(listener);
 		return listener;
-	};
-
-
-	Serial.prototype.sendMultiple = function(cmds, wait) {
-		var deferred = $q.defer();
-		var send = this.send.bind(this);
-		wait = wait || 100; //ms
-		function run() {
-			if (cmds.length === 0) {
-				deferred.resolve();
-				return;
-			}
-
-			var cmd = cmds.shift() + '\n';
-			send(cmd).then(function() {
-				setTimeout(run, wait);
-			});
-		}
-		run();
-		return deferred.promise;
 	};
 
 
@@ -394,7 +374,7 @@ function($q, ArrayBufferFactory) {
 			transmit(this.ports[i]);
 		}
 
-		setTimeout(done, timeout);
+		$timeout(done, timeout);
 
 		return deferred.promise;
 	};
