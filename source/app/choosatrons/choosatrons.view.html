@@ -20,7 +20,7 @@
 						<h3>{{choosatron.id}}</h3>
 					</div>
 					<div class="back">
-						<div ng-show="choosatron.connected" class="form-inline">
+						<div ng-show="choosatron.connected" class="form">
 							<div class="input-group">
 								<span class="input-group-btn">
 									<button ng-click="choosatron.editing = !choosatron.editing" class="btn btn-default">
@@ -32,11 +32,11 @@
 							</div>
 							<div ng-show="choosatron.product_id === vm.productId" class="dropdown">
 								<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-									Command
+									Get Information about your Choosatron
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu">
-									<li ng-repeat="cmd in vm.commands"><a class="btn btn-link" ng-click="vm.command(choosatron, cmd.method)">{{cmd.name}}</a></li>
+									<li ng-repeat="(cmd, name) in vm.commands"><a class="btn btn-link" ng-click="vm.command(choosatron, cmd)">{{name}}</a></li>
 								</ul>
 							</div>
 							<div ng-show="choosatron.editing" class="btn-group">

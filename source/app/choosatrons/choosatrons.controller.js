@@ -29,16 +29,11 @@
 		vm.command          =  command;
 
 		// Commands
-		vm.commands  =  [
-			{
-				method : 'get_story_count',
-				name   : 'Get Story Count'
-			},
-			{
-				method : 'get_free_space',
-				name   : 'Get Free Space',
-			}
-		];
+		vm.commands  =  {
+			'get_current_story'  : 'Get Current Story Info',
+			'get_storage_report' : 'Get Storage Report',
+			'get_state'          : 'Get State',
+		};
 
 		activate();
 
@@ -52,7 +47,7 @@
 			.then(function(response) {
 				vm.message = {
 					type    : 'info',
-					content : response.return_value
+					content : response.return_value.toString()
 				};
 			});
 		}
