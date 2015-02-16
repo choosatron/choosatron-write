@@ -30,6 +30,15 @@
 								<input class="form-control" ng-show="choosatron.editing" ng-model="choosatron.newName" placeholder="Enter a new name" />
 								<input class="form-control" ng-show="!choosatron.editing" disabled value="{{choosatron.name}}" />
 							</div>
+							<div ng-show="choosatron.product_id === vm.productId" class="dropdown">
+								<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									Command
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li ng-repeat="cmd in vm.commands"><a class="btn btn-link" ng-click="vm.command(choosatron, cmd.method)">{{cmd.name}}</a></li>
+								</ul>
+							</div>
 							<div ng-show="choosatron.editing" class="btn-group">
 								<a class="btn btn-primary" ng-click="vm.rename(choosatron)">Rename</a>
 								<a class="btn btn-link" ng-click="choosatron.newName = ''; choosatron.editing = false">Cancel</a>

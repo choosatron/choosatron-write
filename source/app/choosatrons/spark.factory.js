@@ -188,6 +188,18 @@ angular.module('storyApp')
 		return this.promise('put', this.endpoint('devices/' + coreId), data);
 	};
 
+
+	// Post to a named function on a device
+	Spark.prototype.callFunction = function(coreId, method, args) {
+		args = args || '';
+		var url  = this.endpoint('devices/' + coreId + '/' + method);
+		var data = {
+			access_token : this.accessToken,
+			args         : args
+		};
+		return this.promise('post', url, data);
+	};
+
 	return Spark;
 }]);
 

@@ -26,8 +26,36 @@
 		vm.change           =  change;
 		vm.flash            =  flash;
 		vm.unclaim          =  unclaim;
+		vm.command          =  command;
+
+		// Commands
+		vm.commands  =  [
+			{
+				method : 'get_story_count',
+				name   : 'Get Story Count'
+			},
+			{
+				method : 'get_free_space',
+				name   : 'Get Free Space',
+			}
+		];
 
 		activate();
+
+		// Creates a command function for a choosatron
+		function command(choosatron, method) {
+			if (!vm.cloud) {
+				console.error('Not connected to the cloud.');
+				return false;
+			}
+			vm.cloud.command(choosatron.id, method)
+			.then(function(response) {
+				vm.message = {
+					type    : 'info',
+					content : response.return_value
+				};
+			});
+		}
 
 		function activate() {
 			profiles.load().then(function() {

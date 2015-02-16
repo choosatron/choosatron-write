@@ -14,6 +14,7 @@ angular.module('storyApp')
 	}
 
 	ChoosatronCloud.productId = PRODUCT_IDS.choosatron;
+	ChoosatronCloud.argumentDelimeter = '|';
 
 	ChoosatronCloud.prototype.load = function(force) {
 		var deferred = $q.defer();
@@ -96,6 +97,20 @@ angular.module('storyApp')
 
 	ChoosatronCloud.prototype.rename = function(coreId, name) {
 		return this.defer('renameCore', [coreId, name]);
+	};
+
+
+	// Send a Choosatron command to a device
+	ChoosatronCloud.prototype.command = function(coreId, method, args) {
+		args = args || '';
+		if (Array.isArray(args)) {
+			args = args.join(ChoosatronCloud.argumentDelimeter);
+		}
+		if (args.length) {
+			args = ChoosatronCloud.argumentDelimeter + args;
+		}
+		args = method + args;
+		return this.defer('callFunction', [coreId, 'command', args]);
 	};
 
 	return ChoosatronCloud;
