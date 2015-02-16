@@ -95,6 +95,35 @@ angular.module('storyApp')
 		return this.promise('get', this.endpoint('devices', true));
 	};
 
+	Spark.prototype.listDevicesWithAttributes = function() {
+		var deferred  = $q.defer();
+		var collected = [];
+		var self      = this;
+
+		function listed(devices) {
+			if (!devices || devices.length === 0) {
+				return deferred.resolve(collected);
+			}
+
+			var device = devices.shift();
+
+			self.getAttributes(device.id)
+			.then(function(attributes) {
+				device.attributes = attributes; 
+				collected.push(device);
+				listed(devices);
+			});
+		}
+
+		this.listDevices().then(listed).catch(deferred.reject);
+
+		return deferred.promise;
+	};
+
+	Spark.prototype.getAttributes = function(coreId) {
+		return this.promise('get', this.endpoint('devices/' + coreId, true));
+	};
+
 	Spark.prototype.changeProduct = function(coreId, productId, updateAfter) {
 		var data = {
 			product_id         : product_id,

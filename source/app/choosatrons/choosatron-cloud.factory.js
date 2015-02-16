@@ -5,7 +5,7 @@
 // Provides access to device features, such as claiming, naming, and pushing.
 // This factory is essentially a wrapper for the spark.js methods.
 angular.module('storyApp')
-	.factory('ChoosatronCloud', ['$q', 'Spark', function($q, Spark) {
+	.factory('ChoosatronCloud', ['$q', 'Spark', 'PRODUCT_IDS', function($q, Spark, PRODUCT_IDS) {
 
 	function ChoosatronCloud(token) {
 		this.loaded      = false;
@@ -13,7 +13,7 @@ angular.module('storyApp')
 		this.spark       = new Spark(token);
 	}
 
-	ChoosatronCloud.productId = 7;
+	ChoosatronCloud.productId = PRODUCT_IDS.choosatron;
 
 	ChoosatronCloud.prototype.load = function(force) {
 		var deferred = $q.defer();
@@ -24,7 +24,7 @@ angular.module('storyApp')
 
 		var self = this;
 
-		this.spark.listDevices()
+		this.spark.listDevicesWithAttributes()
 		.then(function(devices) {
 			self.choosatrons = devices;
 			self.loaded = true;

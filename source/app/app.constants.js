@@ -21,3 +21,8 @@ angular.module('storyApp').constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
   notAuthorized: 'auth-not-authorized'
 });
+
+angular.module('storyApp').constant('PRODUCT_IDS', {
+	spark      : 1,
+	choosatron : 7
+});

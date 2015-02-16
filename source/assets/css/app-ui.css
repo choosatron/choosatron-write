@@ -50,6 +50,10 @@ a[data-target] {
 	color: #ddd;
 }
 
+.alert {
+	margin-top: 30px;
+}
+
 .input-group-extra {
 	display: table-cell;
 	line-height: 1;
@@ -1028,11 +1032,15 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 	}
 
 	.choosatronItem .front, .choosatronItem .back {
-		background: #9CB5D7;
+		background-color: #9CB5D7;
 		border: 1px solid #eee;
 		border-radius: 4px;
 		height: 100%;
 		padding: 10px;
+	}
+
+	.choosatronItem.connected .front, .choosatronItem.connected .back {
+		background-color: #99C4FD;
 	}
 
 	.choosatronItem .front {

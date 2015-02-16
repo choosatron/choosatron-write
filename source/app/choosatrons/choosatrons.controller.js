@@ -7,9 +7,9 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronsCtrl', ChoosatronsCtrl);
 
-	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'ChoosatronCloud', 'ngDialog'];
+	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'ChoosatronCloud', 'ngDialog', 'PRODUCT_IDS'];
 
-	function ChoosatronsCtrl($location, profiles, ChoosatronCloud, ngDialog) {
+	function ChoosatronsCtrl($location, profiles, ChoosatronCloud, ngDialog, PRODUCT_IDS) {
 		var vm = this;
 
 		// Variables
@@ -17,11 +17,13 @@
 		vm.profiles     =  profiles;
 		vm.cloud        =  null;
 		vm.choosatrons  =  [];
+		vm.productId    =  PRODUCT_IDS.choosatron;
 
 		// Functions
 		vm.loadChoosatrons  =  loadChoosatrons;
 		vm.newChoosatron    =  newChoosatron;
 		vm.rename           =  rename;
+		vm.change           =  change;
 		vm.flash            =  flash;
 		vm.unclaim          =  unclaim;
 
@@ -65,6 +67,7 @@
 
 			vm.cloud.load().then(function() {
 				vm.choosatrons = vm.cloud.choosatrons;
+				console.info(vm.choosatrons);
 			});
 		}
 
@@ -74,14 +77,20 @@
 
 		function rename(choosatron) {
 			vm.cloud.rename(choosatron.id, choosatron.newName)
-				.then(loadChoosatrons)
-				.catch(warn('Could not rename your Choosatron!'));
+			.then(loadChoosatrons)
+			.catch(warn('Could not rename your Choosatron!'));
+		}
+
+		function change(choosatron) {
+			vm.cloud.changetoChoosatron(choosatron.id)
+			.then(inform('A change request has been sent'))
+			.catch(warn('Could not change your device to a Choosatron!'));
 		}
 
 		function flash(choosatron) {
 			vm.cloud.flashAsChoosatron(choosatron.id)
-				.then(inform('Done!'))
-				.catch(warn('Could not update your Choosatron!'));
+			.then(inform('Done!'))
+			.catch(warn('Could not update your Choosatron!'));
 		}
 
 		function newChoosatron() {

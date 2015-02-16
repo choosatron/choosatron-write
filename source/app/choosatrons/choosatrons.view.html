@@ -14,7 +14,7 @@
 		<div class="container choosatronList">
 			<div ng-show="vm.message.content" class="alert alert-{{ vm.message.type }}">{{ vm.message.content }}</div>
 			<ul class="list-unstyled list-choosatrons">
-				<li ng-repeat="choosatron in vm.choosatrons" class="tile choosatronItem">
+				<li ng-repeat="choosatron in vm.choosatrons" class="tile choosatronItem" ng-class="{connected: choosatron.connected}">
 					<div class="front">
 						<h2>{{choosatron.name}}</h2>
 						<h3>{{choosatron.id}}</h3>
@@ -40,11 +40,21 @@
 							<h2>{{choosatron.name}}</h2>
 							<em>Offline</em>
 						</div>
-						<p>ID: {{ choosatron.id }}</p>
-						<p>Last heard: {{ choosatron.last_heard }}</p>
+
+						<br>
+
+						<div class="row">
+							<strong class="col-xs-2 text-right">ID</strong>
+							<div class="col-xs-10">{{ choosatron.id }}</div>
+						</div>
+						<div class="row">
+							<strong class="col-xs-2 text-right">Last heard</strong>
+							<div class="col-xs-10">{{ choosatron.last_heard }}</div>
+						</div>
 
 						<div class="btn-group btn-group-justified list-icon-menu">
-							<a class="btn btn-warning" ng-show="choosatron.connected" ng-click="vm.flash(choosatron)">Update Firmware</a>
+							<a class="btn btn-default" ng-show="choosatron.connected && choosatron.product_id !== vm.productId" ng-click="vm.change(choosatron)">Convert to Choosatron</a>
+							<a class="btn btn-default" ng-show="choosatron.connected" ng-click="vm.flash(choosatron)">Update Firmware</a>
 							<a class="btn btn-danger" confirm-click="vm.unclaim(choosatron)" confirm-title="Remove Choosatron?" confirm-message="This will release your claim on the Choosatron. Are you sure?">Unclaim</a>
 						</div>
 					</div>
