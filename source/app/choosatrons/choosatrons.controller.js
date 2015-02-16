@@ -33,6 +33,8 @@
 			'get_current_story'  : 'Get Current Story Info',
 			'get_storage_report' : 'Get Storage Report',
 			'get_state'          : 'Get State',
+			'get_local_ip'       : 'Get IP Address',
+			'get_mac_addr'       : 'Get MAC Address'
 		};
 
 		activate();
@@ -88,7 +90,8 @@
 		function loadChoosatrons() {
 			vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
 
-			vm.cloud.load().then(function() {
+			var force = true;
+			vm.cloud.load(force).then(function() {
 				vm.choosatrons = vm.cloud.choosatrons;
 				console.info(vm.choosatrons);
 			});

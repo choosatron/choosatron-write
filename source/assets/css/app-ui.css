@@ -1026,27 +1026,20 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 **/
 
 	.choosatronList .choosatronItem {
-		position: relative;
-		height: 200px;
 		margin-top: 40px;
-	}
-
-	.choosatronItem .front, .choosatronItem .back {
 		background-color: #9CB5D7;
 		border: 1px solid #eee;
 		border-radius: 4px;
-		height: 100%;
 		padding: 10px;
 	}
 
-	.choosatronItem.connected .front, .choosatronItem.connected .back {
+	.choosatronItem.connected, .choosatronItem.connected {
 		background-color: #99C4FD;
 	}
 
-	.choosatronItem .front {
-		text-align: center;
-		display: inline-block;
-		vertical-align: middle;
+	.choosatronItem .list-icon-menu {
+		margin-top: 20px;
+		padding: 10px;
 	}
 
 	.choosatronList .newItem {
@@ -1059,13 +1052,6 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 	.choosatronList .newItem:hover {
 		background: #4781CF;
 		color: white;
-	}
-
-	.choosatronItem .list-icon-menu {
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		padding: 10px;
 	}
 
 
