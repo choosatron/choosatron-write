@@ -189,6 +189,72 @@ angular.module('storyApp')
 	};
 
 
+	// Subscribes to an event stream and returns the EventSource object.
+	Spark.prototype.subscribe = function(coreId, eventName) {
+		var path = '';
+
+		if (!coreId) {
+			path += 'events';
+		}
+		else {
+			path += 'devices/' + coreId + '/events';
+		}
+
+		if (eventName) {
+			path += '/' + eventName;
+		}
+
+		console.info("subscription", path);
+		return new EventSource(this.endpoint(path, true));
+	};
+
+
+	// Listens to an EventSource object until the specified event occurs.
+	// Returns a promise that resolves with the data provided when the event occurs.
+	Spark.prototype.listen = function(coreId, eventName) {
+		var deferred = this.$q.defer();
+		var source   = this.subscribe(coreId, eventName);
+		var baseUrl  = this.baseUrl;
+
+		function openHandler(e) {
+			console.info("Subscription open", e);
+			deferred.notify("open");
+		}
+
+		function eventHandler(e) {
+			deferred.notify(eventName);
+			console.info(eventName, e);
+			source.close();
+			if (e.origin !== baseUrl) {
+				console.error("Invalid origin", e);
+				deferred.reject(e);
+			}
+			else {
+				var data = JSON.parse(e.data);
+				deferred.resolve(data);
+			}
+		}
+
+		function errorHandler(e) {
+			deferred.notify('error');
+			console.error(eventName, e);
+			source.close();
+			deferred.reject(e);
+		}
+
+		function messageHandler(e) {
+			console.info("Received message", e);
+		}
+
+		source.addEventListener(eventName, eventHandler, false);
+		source.onopen    = openHandler;
+		source.onerror   = errorHandler;
+		source.onmessage = messageHandler;
+
+		return deferred.promise;
+	};
+
+
 	// Post to a named function on a device
 	Spark.prototype.callFunction = function(coreId, method, args) {
 		args = args || '';

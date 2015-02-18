@@ -100,6 +100,26 @@ angular.module('storyApp')
 	};
 
 
+	// Send a Choosatron command and listen for the response on an event stream
+	ChoosatronCloud.prototype.request = function(coreId, method, args) {
+		var deferred = $q.defer();
+		var command  = this.command.bind(this);
+
+		function notified(value) {
+			console.info("notified", value);
+			if (value !== 'open') {
+				return;
+			}
+			command(coreId, method, args);
+		}
+
+		this.spark.listen(coreId, method)
+		.then(deferred.resolve, deferred.reject, notified);
+
+		return deferred.promise;
+	};
+
+
 	// Send a Choosatron command to a device
 	ChoosatronCloud.prototype.command = function(coreId, method, args) {
 		args = args || '';

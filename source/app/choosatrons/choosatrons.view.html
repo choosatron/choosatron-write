@@ -47,6 +47,7 @@
 									</button>
 									<ul class="dropdown-menu">
 										<li ng-repeat="(cmd, name) in vm.commands"><a class="btn btn-link" ng-click="vm.command(choosatron, cmd)">{{name}}</a></li>
+										<li ng-repeat="(cmd, name) in vm.requests"><a class="btn btn-link" ng-click="vm.request(choosatron, cmd)">{{name}}</a></li>
 									</ul>
 								</div><!--/.dropdown-->
 								<input class="form-control" ng-model="choosatron.newName" placeholder="Enter a new name" />

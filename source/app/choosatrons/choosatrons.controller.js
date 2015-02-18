@@ -27,12 +27,16 @@
 		vm.flash            =  flash;
 		vm.unclaim          =  unclaim;
 		vm.command          =  command;
+		vm.request          =  request;
 
-		// Commands
+		// Commands that return a value
 		vm.commands  =  {
 			'get_current_story'  : 'Get Current Story Info',
-			'get_storage_report' : 'Get Storage Report',
-			'get_state'          : 'Get State',
+			'get_storage_report' : 'Get Storage Report'
+		};
+
+		// Commands that require a subscription to read
+		vm.requests = {
 			'get_local_ip'       : 'Get IP Address',
 			'get_mac_addr'       : 'Get MAC Address'
 		};
@@ -41,15 +45,23 @@
 
 		// Creates a command function for a choosatron
 		function command(choosatron, method) {
-			if (!vm.cloud) {
-				console.error('Not connected to the cloud.');
-				return false;
-			}
 			vm.cloud.command(choosatron.id, method)
 			.then(function(response) {
 				vm.message = {
 					type    : 'info',
 					content : response.return_value.toString()
+				};
+			});
+		}
+
+		// Call a command on the choostron and wait for a 
+		// result to be send through an event stream
+		function request(choosatron, method) {
+			vm.cloud.request(choosatron.id, method)
+			.then(function(response) {
+				vm.message = {
+					type    : 'info',
+					content : response
 				};
 			});
 		}
