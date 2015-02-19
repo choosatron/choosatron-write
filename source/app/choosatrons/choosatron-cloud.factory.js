@@ -133,6 +133,7 @@ angular.module('storyApp')
 		return this.defer('callFunction', [coreId, 'command', args]);
 	};
 
+
 	ChoosatronCloud.prototype.getIpAddress = function(coreId) {
 		return this.command(coreId, 'get_local_ip');
 	};

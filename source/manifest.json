@@ -22,6 +22,11 @@
 		"serial",
 		"storage",
 		"syncFileSystem",
+		"tcp": {
+			"connect": [
+				"10.*.*.*:5683", "172.*.*.*:5683", "192.168.*.*:5683"
+			]
+		},
 		"unlimitedStorage", {
 			"fileSystem": ["write", "retainEntries", "directory"]
 		},
