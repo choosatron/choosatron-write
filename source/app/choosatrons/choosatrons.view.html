@@ -12,13 +12,17 @@
 <div class="theme-alt wrap">
 	<div class="scrollable">
 		<div class="container choosatronList">
-			<div ng-show="vm.message.content" class="alert alert-{{ vm.message.type }}">{{ vm.message.content }}</div>
+
+			<div ng-show="vm.message.content" class="alert alert-{{ vm.message.type }}">
+				<button class="close" data-dismiss="alert"><span>&times;</span></button>
+				{{ vm.message.content }}
+			</div>
+
 			<ul class="list-unstyled list-choosatrons">
 				<li ng-repeat="choosatron in vm.choosatrons" class="choosatronItem" ng-class="{connected: choosatron.connected}">
 					<div class="header">
 						<h2>
 							<a ng-show="choosatron.connected" ng-click="choosatron.editing = !choosatron.editing">
-								<span class="glyphicon glyphicon-pencil"></span>
 								{{choosatron.name}}
 							</a>
 						</h2>
@@ -39,23 +43,23 @@
 					</div>
 					<div ng-show="choosatron.editing" class="body">
 						<hr/>
+
 						<div class="form">
 							<div class="input-group">
-								<div ng-show="choosatron.product_id === vm.productId" class="dropdown input-group-btn">
-									<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu">
-										<li ng-repeat="(cmd, name) in vm.commands"><a class="btn btn-link" ng-click="vm.command(choosatron, cmd)">{{name}}</a></li>
-										<li ng-repeat="(cmd, name) in vm.requests"><a class="btn btn-link" ng-click="vm.request(choosatron, cmd)">{{name}}</a></li>
-									</ul>
-								</div><!--/.dropdown-->
 								<input class="form-control" ng-model="choosatron.newName" placeholder="Enter a new name" />
 								<div ng-show="choosatron.editing" class="input-group-btn">
 									<a class="btn btn-primary" ng-click="vm.rename(choosatron)">Rename</a>
 								</div> <!--/.btn-group-->
 							</div> <!--/.input-group-->
 						</div><!--/.form-->
+
+						<br/>
+
+						<button class="btn bnt-default" ng-click="vm.loadStories(choosatron)"><span class="fa fa-book"></span> Stories</button>
+
+						<ul ng-show="choosatron.stories">
+							<li ng-repeat="story in choosatron.stories">{{story}}</li>
+						</ul>
 
 						<div class="btn-group btn-group-justified list-icon-menu">
 							<a class="btn btn-default" ng-show="choosatron.connected && choosatron.product_id !== vm.productId" ng-click="vm.change(choosatron)">Convert to Choosatron</a>

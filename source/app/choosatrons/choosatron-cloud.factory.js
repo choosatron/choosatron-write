@@ -5,13 +5,26 @@
 // Provides access to device features, such as claiming, naming, and pushing.
 // This factory is essentially a wrapper for the spark.js methods.
 angular.module('storyApp')
-	.factory('ChoosatronCloud', ['$q', 'Spark', 'PRODUCT_IDS', function($q, Spark, PRODUCT_IDS) {
+	.factory('ChoosatronCloud', ['$q', 'Spark', 'TcpConnection, 'PRODUCT_IDS', 
+		function($q, Spark, TcpConnection, PRODUCT_IDS) {
 
 	function ChoosatronCloud(token) {
 		this.loaded      = false;
 		this.choosatrons = [];
 		this.spark       = new Spark(token);
 	}
+
+	ChoosatronCloud.serverCode = {
+		notImplemented : -6,
+		maxReached     : -5,
+		busy           : -4,
+		invalidCmd     : -3,
+		invalidIndex   : -2,
+		fail           : -1,
+		success        : 0,
+		eventIncoming  : 1,
+		connecting     : 2
+	};
 
 	ChoosatronCloud.productId = PRODUCT_IDS.choosatron;
 	ChoosatronCloud.argumentDelimeter = '|';
@@ -105,9 +118,9 @@ angular.module('storyApp')
 		var deferred = $q.defer();
 		var command  = this.command.bind(this);
 
-		function notified(value) {
-			console.info("notified", value);
-			if (value !== 'open') {
+		function notified(rsp) {
+			console.info("notified", rsp.event);
+			if (rsp.event !== 'open') {
 				return;
 			}
 			command(coreId, method, args);
@@ -136,6 +149,42 @@ angular.module('storyApp')
 
 	ChoosatronCloud.prototype.getIpAddress = function(coreId) {
 		return this.command(coreId, 'get_local_ip');
+	};
+
+
+	// Gets all of the story information by looping through indices
+	// until the core responds with an invalid index result
+	ChoosatronCloud.prototype.getStoryInfo = function(coreId) {
+		var deferred = $q.defer();
+		var cmd = 'get_story_info';
+		var stories = [];
+		var spark = this.spark;
+
+		function loadNextStory() {
+			spark.callFunction(coreId, cmd, [stories.length])
+			.catch(deferred.reject);
+		}
+
+		function saveInfo(rsp) {
+			if (typeof rsp.data === 'number' && rsp.data < ChoosatronCloud.serverCode.success) {
+				rsp.source.close();
+				if (rsp.data === ChoosatronCloud.serverCode.invalidIndex) {
+					return deferred.resolve(stories);
+				}
+				else {
+					return deferred.reject(rsp);
+				}
+			}
+			stories.push(rsp.data);
+			loadNextStory();
+		}
+
+		this.spark.listen(coreId, cmd, true)
+			.then(deferred.resolve, deferred.reject, saveInfo);
+
+		loadNextStory();
+
+		return deferred.promise;
 	};
 
 	return ChoosatronCloud;

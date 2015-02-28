@@ -211,39 +211,66 @@ angular.module('storyApp')
 
 	// Listens to an EventSource object until the specified event occurs.
 	// Returns a promise that resolves with the data provided when the event occurs.
-	Spark.prototype.listen = function(coreId, eventName) {
+	// If the listener is persistent, the deferred promise will fire
+	// notify events when messages are recieved. For a non-persistent
+	// listener, the promise will resolve with the response instead.
+	Spark.prototype.listen = function(coreId, eventName, persistent) {
 		var deferred = this.$q.defer();
 		var source   = this.subscribe(coreId, eventName);
 		var baseUrl  = this.baseUrl;
 
+		function response(event, e) {
+			e.source = source;
+			e.event  = event;
+			e.valid  = e.origin === baseUrl;
+			console.info(event, e);
+			return e;
+		}
+
 		function openHandler(e) {
-			console.info("Subscription open", e);
-			deferred.notify("open");
+			var rsp = response('open', e);
+			if (rsp.valid) {
+				deferred.notify(rsp);
+			}
 		}
 
 		function eventHandler(e) {
-			deferred.notify(eventName);
-			console.info(eventName, e);
-			source.close();
-			if (e.origin !== baseUrl) {
-				console.error("Invalid origin", e);
-				deferred.reject(e);
+			var rsp  = response(eventName, e);
+			rsp.data = JSON.parse(e.data);
+
+			if (persistent && rsp.valid) {
+				deferred.notify(rsp);
 			}
-			else {
-				var data = JSON.parse(e.data);
-				deferred.resolve(data);
+
+			if (!persistent) {
+				source.close();
+				if (rsp.valid) {
+					deferred.resolve(rsp);
+				}
+				else {
+					deferred.reject(rsp);
+				}
 			}
 		}
 
 		function errorHandler(e) {
-			deferred.notify('error');
-			console.error(eventName, e);
-			source.close();
-			deferred.reject(e);
+			var rsp = response('error', e);
+
+			if (persistent && rsp.valid) {
+				deferred.notify(rsp);
+			}
+
+			if (!persistent) {
+				source.close();
+				deferred.reject(rsp);
+			}
 		}
 
 		function messageHandler(e) {
-			console.info("Received message", e);
+			var rsp = response('message', e);
+			if (rsp.valid) {
+				deferred.notify(rsp);
+			}
 		}
 
 		source.addEventListener(eventName, eventHandler, false);

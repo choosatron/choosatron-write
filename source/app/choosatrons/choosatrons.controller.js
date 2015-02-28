@@ -28,6 +28,7 @@
 		vm.unclaim          =  unclaim;
 		vm.command          =  command;
 		vm.request          =  request;
+		vm.loadStories      =  loadStories;
 
 		// Commands that return a value
 		vm.commands  =  {
@@ -63,6 +64,13 @@
 					type    : 'info',
 					content : response
 				};
+			});
+		}
+
+		function loadStories(choosatron) {
+			vm.cloud.getStoryInfo(choosatron.id)
+			.then(function(stories) {
+				choosatron.stories = stories;
 			});
 		}
 
