@@ -7,12 +7,6 @@ function(Story, Passage, Choice) {
 		name: 'Choosatron File',
 		datatype: 'application/octet-stream',
 
-		importMenuTitle: 'Import from Choosatron File',
-		imports: [ 'dam' ],
-		import: function(data) {
-
-		},
-
 		exportMenuTitle: 'Create a Choosatron File',
 		exports: 'dam',
 		export: function(story) {
