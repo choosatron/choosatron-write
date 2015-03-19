@@ -17,6 +17,19 @@ angular.module('storyApp.utils')
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
 
+	this.uuid = function() {
+		var digits = '0123456789abdef';
+		var char = this.char;
+		function part(len) {
+			var a = new Array(len);
+			for (var i=0; i<len; i++) {
+				a[i] = char(digits);
+			}
+			return a;
+		}
+		return [part(8), part(4), part(4), part(4), part(12)].join('-');
+	};
+
 	this.id = function(len) {
 		len = len || this.defaultLen;
 		var self = this;
@@ -39,9 +52,10 @@ angular.module('storyApp.utils')
 		return value;
 	};
 
-	this.char = function() {
-		var i = this.int(0, this.candidates.length - 1);
-		var c = this.candidates[i];
+	this.char = function(candidates) {
+		candidates = candidates || this.candidates;
+		var i = this.int(0, candidates.length - 1);
+		var c = candidates[i];
 		return String.fromCharCode(c);
 	};
 });

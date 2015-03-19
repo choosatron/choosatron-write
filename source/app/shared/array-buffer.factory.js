@@ -6,6 +6,16 @@ angular.module('storyApp.utils').factory('ArrayBufferFactory', ArrayBufferFactor
 
 var factory = {};
 
+// Copies the contents of a string into the buffer
+// starting at the specified offset
+factory.writeString = function(str, offset, buffer) {
+	var writer = new Uint8Array(buffer);
+	for (var i=0; i<str.length; i++) {
+		writer[i + offset] = str.charCodeAt(i);
+	}
+	return buffer;
+};
+
 factory.fromString = function(str) {
 	var buffer = new ArrayBuffer(str.length);
 	var view   = new Uint8Array(buffer);

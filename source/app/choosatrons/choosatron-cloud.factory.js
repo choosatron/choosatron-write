@@ -5,7 +5,7 @@
 // Provides access to device features, such as claiming, naming, and pushing.
 // This factory is essentially a wrapper for the spark.js methods.
 angular.module('storyApp')
-	.factory('ChoosatronCloud', ['$q', 'Spark', 'TcpConnection, 'PRODUCT_IDS', 
+	.factory('ChoosatronCloud', ['$q', 'Spark', 'TcpConnection', 'PRODUCT_IDS', 
 		function($q, Spark, TcpConnection, PRODUCT_IDS) {
 
 	function ChoosatronCloud(token) {
