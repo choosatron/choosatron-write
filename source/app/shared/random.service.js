@@ -19,7 +19,7 @@ angular.module('storyApp.utils')
 
 	this.uuid = function() {
 		var digits = '0123456789abdef';
-		var char = this.char;
+		var char = this.char.bind(this);
 		function part(len) {
 			var a = new Array(len);
 			for (var i=0; i<len; i++) {

@@ -96,15 +96,20 @@ function(BaseModel, Passage) {
 		},
 
 		getPassage: function(aId) {
-			var passage = null;
-			this.passages.some(function(p) {
-				if (p.id == aId) {
-					passage = p;
-					return true;
+			var index = this.getPassageIndex(aId);
+			if (index >= 0) {
+				return this.passages[index];
+			}
+			return null;
+		},
+
+		getPassageIndex: function(aId) {
+			for (var i=0; i<this.passages.length; i++) {
+				if (this.passages[i].id === aId) {
+					return i;
 				}
-				return false;
-			});
-			return passage;
+			}
+			return false;
 		},
 
 		eachPassage: function(aCallback) {

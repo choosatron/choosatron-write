@@ -70,25 +70,34 @@
  */
 
 angular.module('storyApp.translators')
-.service('choosatronTranslator', [
-'Story', 'Passage', 'Choice', 'Random',
-function(Story, Passage, Choice, Random) {
+.service('choosatronTranslator', ['Random', 'ArrayBufferFactory',
+function(Random, ArrayBufferFactory) {
+
+	function ChoosatronStoryVersion(version) {
+		var parts = version ? version.toString().split('.') : [];
+		this.major = parts.length > 0 ? parts[0] : 0;
+		this.minor = parts.length > 1 ? parts[1] : 0;
+		this.revision = parts.length > 2 ? parts[2] : 0;
+	}
+
 
 	// The header is always 414 bytes
 	//
 	// Properties on this object are defined dynamically to
 	// allow writing directly to the underlying ArrayBuffer
 	// when set.
-	function Header() {
-		this.buffer = new ArrayBuffer(414);
+	function ChoosatronStoryHeader(story) {
+		this.size = 414;
+		this.buffer = new ArrayBuffer(this.size);
 		this.view = new DataView(this.buffer);
 
 		var self = this;
 
 		function intProp(offset, name, setter) {
 			Object.defineProperty(self, name, {
+				configurable: true,
 				set: function(value) {
-					setter(offset, value);
+					setter.call(self.view, offset, value);
 				}
 			});
 		}
@@ -97,12 +106,17 @@ function(Story, Passage, Choice, Random) {
 			intProp(offset, name, self.view.setInt8);
 		}
 
+		function int16Prop(offset, name) {
+			intProp(offset, name, self.view.setInt16);
+		}
+
 		function int32Prop(offset, name) {
 			intProp(offset, name, self.view.setInt32);
 		}
 
 		function stringProp(offset, name) {
 			Object.defineProperty(self, name, {
+				configurable: true,
 				set: function(str) {
 					for (var i=0; i<str.length; i++) {
 						self.view.setInt8(i + offset, str.charCodeAt(i));
@@ -111,6 +125,7 @@ function(Story, Passage, Choice, Random) {
 			});
 		}
 
+		// Here is the start of the property definitions
 		int8Prop(1, 'binaryVersionMajor');
 		int8Prop(2, 'binaryVersionMinor');
 		int8Prop(3, 'binaryVersionRevision');
@@ -138,8 +153,226 @@ function(Story, Passage, Choice, Random) {
 		stringProp(280, 'contact');
 
 		int32Prop(408, 'publishDate');
-		int32Prop(412, 'variableCount');
+		int16Prop(412, 'variableCount');
+
+		if (story) {
+			this.populate(story);
+		}
+	}
+
+
+	ChoosatronStoryHeader.prototype.populate = function(story) {
+		// Populate the head
+		this.binaryVersionMajor = 0;
+		this.binaryVersionMinor = 0;
+		this.binaryVersionRevision = 0;
+
+		this.uuid = Random.uuid();
+
+		this.features = 0;
+		this.toggles = 0;
+
+		var version = new ChoosatronStoryVersion(story.version);
+		this.storyVersionMajor = version.major;
+		this.storyVersionMinor = version.minor;
+		this.storyVersionRevision = version.revision;
+
+		this.lang = '';
+		this.title = story.title;
+		this.subtitle = story.description;
+		this.author = story.author;
+		this.credits = story.credit;
 	};
+
+
+	function ChoosatronStoryOperation(type, value1, value2) {
+		this.type   = type;
+		this.value1 = value1;
+		this.value2 = value2;
+	}
+
+
+	// Writes an operation to a DataView and returns the # bytes written
+	ChoosatronStoryOperation.prototype.writeToView = function(offset, view) {
+		view.setInt8(offset++, this.type);
+		view.setInt16(offset += 2, this.value1);
+		view.setInt16(offset += 2, this.value2);
+		return 4;
+	};
+
+
+	function ChoosatronStoryChoice() {
+		this.attributes = 0;
+		this.conditionOperations = [];
+		this.updateOperations = [];
+		this.body = '';
+		this.passageIndex = 0;
+	}
+
+
+	ChoosatronStoryChoice.prototype.populate = function(story, choice) {
+		this.body = choice.content;
+		if (choice.destination) {
+			this.passageIndex = story.getPassageIndex(choice.destination);
+		}
+	};
+
+
+	// Writes a choice to a DataView and returns the # bytes written
+	ChoosatronStoryChoice.prototype.writeToView = function(startingOffset, view) {
+		var offset = startingOffset;
+		var i, written;
+
+		view.setInt8(offset++, this.attributes);
+
+		// Conditions
+		view.setInt8(offset++, this.conditionOperations.length);
+		for (i=0; i<this.conditionOperations.length; i++) {
+			written = this.conditionOperations[i].writeToView(offset, view);
+			offset += written;
+		}
+
+		// Operations
+		// Delay writing the operation length
+		var updateOperationLengthOffset = offset;
+		var updateOperationsSize = 0;
+		offset += 2;
+
+		view.setInt8(offset++, this.updateOperations.length);
+		for (i=0; i<this.updateOperations.length; i++) {
+			written = this.updateOperations[i].writeToView(offset, view);
+			offset += written;
+			updateOperationsSize += written;
+		}
+
+		view.setInt16(updateOperationLengthOffset, this.updateOperations.length);
+
+		var size = (offset - startingOffset) + this.body.length + 2; // Two for the PassageIndex
+		view.setInt16(offset += 2, size);
+
+		for (i=0; i<this.body.length; i++) {
+			view.setInt8(offset++, this.body.charCodeAt(i));
+		}
+
+		view.setInt16(offset += 2, this.passageIndex);
+
+		return size;
+	};
+
+
+	function ChoosatronStoryPassage() {
+		this.attributes = 0;
+		this.updateOperations = [];
+		this.choices = [];
+		this.body = '';
+	}
+
+
+	ChoosatronStoryPassage.prototype.populate = function(story, passage) {
+		this.body = passage.body;
+		if (!passage.choices) {
+			return;
+		}
+		for (var i=0; i<passage.choices.length; i++) {
+			var choice = new ChoosatronStoryChoice();
+			choice.populate(story, passage.choices[i]);
+			this.choices.push(choice);
+		}
+	};
+
+
+	ChoosatronStoryPassage.prototype.writeToView = function(startingOffset, view) {
+		var offset = startingOffset;
+		var i, written;
+
+		view.setInt8(offset++, this.attributes);
+		view.setInt8(offset++, this.updateOperations.length);
+
+		for (i=0; i<this.updateOperations.length; i++) {
+			written = this.updateOperations.writeToView(offset, view);
+			offset += written;
+		}
+
+		view.setInt16(offset += 2, this.body.length);
+		for (i=0; i<this.body.length; i++) {
+			view.setInt8(offset++, this.body.charCodeAt(i));
+		}
+
+		view.setInt8(offset++, this.choices.length);
+		for (i=0; i<this.choices.length; i++) {
+			written = this.choices[i].writeToView(offset, view);
+			offset += written;
+		}
+	};
+
+
+	function ChoosatronStoryBody(story) {
+		this.passages = [];
+		if (story) {
+			this.populate(story);
+		}
+	}
+
+	ChoosatronStoryBody.prototype.populate = function(story) {
+		if (!story.passages) {
+			return;
+		}
+		for (var i=0; i<story.passages.length; i++) {
+			var passage = new ChoosatronStoryPassage();
+			passage.populate(story, story.passages[i]);
+			this.passages.push(passage);
+		}
+	};
+
+	ChoosatronStoryBody.prototype.writeToView = function(startingOffset, view) {
+		var offset = startingOffset;
+		var passageOffsets = [];
+		var size = 0;
+
+		var i, written;
+
+		view.setInt16(offset += 2, this.passages.length); // PassageCount
+		offset += (2 * this.passages.length); // Offset start after PassageOffsets
+
+		for (i=0; i<this.passages.length; i++) {
+			written = this.passages.writeToView(offset, view);
+			passageOffsets.push(offset);
+			offset += written;
+		}
+
+		// The final size of the body
+		size = offset;
+
+		// Rewind to write the passage offsets
+		offset = startingOffset + 2;
+		for (i=0; i<passageOffsets.length; i++) {
+			view.setInt16(offset += 2, passageOffsets[i]);
+		}
+
+		return size;
+	};
+
+
+	function ChoosatronStoryFile(story) {
+		this.header = new ChoosatronStoryHeader(story);
+		this.body   = new ChoosatronStoryBody(story);
+	}
+
+	ChoosatronStoryFile.prototype.generateArrayBuffer = function() {
+		// Start with the buffer used for the head
+		var builder = ArrayBufferFactory.Builder(this.header.buffer);
+
+		// Write out the body so we can determine the overall size
+		var bodySize = this.body.writeToView(this.header.size, builder);
+
+		// One for the end byte
+		this.header.storySize = bodySize + this.header.size + 1;
+
+		// Add the EndBody byte
+		builder.setInt8(bodySize + this.header.size, 0x03);
+		return builder.trim();
+	};
+
 
 	return {
 		type: 'bin',
@@ -149,35 +382,8 @@ function(Story, Passage, Choice, Random) {
 		exportMenuTitle: 'Create a Choosatron File',
 		exports: 'dam',
 		export: function(story) {
-			// TODO: Convert story to binary here either directly via story object or via story.serialize() JSON
-
-			// Create a binary unsigned byte view of 100 bytes.
-			var buffer = new ArrayBuffer(100),
-				byteView = new Uint8Array(buffer),
-				uint16View = new Uint16Array(buffer),
-				uint32View = new Uint32Array(buffer);
-
-			// Set a few example byte values
-			/*byteView[0] = 0;
-			byteView[1] = 255;
-			byteView[2] = 0xff;
-			byteView[3] = 1;
-			byteView[4] = 0x01;
-
-			uint32View[2] = 0xffffffff;
-			uint32View[3] = 0x01010101;
-			uint32View[4] = 6000000;*/
-
-			for (var i=0; i<uint32View.length; i++) {
-				uint32View[i] = i*2;
-			}
-
-			for (var j=0; j<uint16View.length; j++) {
-				console.log("Entry " + j + ": " + uint16View[j]);
-				uint16View[j] = j;
-			}
-
-			return buffer;
+			var file = new ChoosatronStoryFile(story);
+			return file.generateArrayBuffer();
 		}
 	};
 }]);
