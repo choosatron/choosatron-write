@@ -27,10 +27,15 @@ Builder.prototype.expand = function(length) {
 		return;
 	}
 	var newFrames = Math.ceil(needed / this.frameSize);
-	var newLength = newFrames * this.frameSize;
+	var addLength = newFrames * this.frameSize;
 	var oldBuffer = this.buffer;
-	this.buffer = new ArrayBuffer(this.buffer.byteLength + newLength);
-	this.view   = new DataView(this.buffer);
+
+	this.buffer   = new ArrayBuffer(oldBuffer.byteLength + addLength);
+	this.view     = new DataView(this.buffer);
+
+	// Copy the old data
+	var dest = new Int8Array(this.buffer);
+	dest.set(new Int8Array(oldBuffer));
 };
 
 // Trims the internal buffer to the specified length.

@@ -103,8 +103,11 @@
 			.then(copyOriginal);
 		}
 
-		function exportStory(aType, aStory) {
-			translators.export(aType, aStory);
+		function exportStory(aType, aEntry) {
+			translators.restore('json', aEntry.entryId)
+			.then(function(result) {
+				translators.export(aType, result.story);
+			});
 		}
 
 		function importStory(aType) {

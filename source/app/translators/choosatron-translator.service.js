@@ -114,23 +114,30 @@ function(Random, ArrayBufferFactory) {
 			intProp(offset, name, self.view.setInt32);
 		}
 
-		function stringProp(offset, name) {
+		function stringProp(offset, len, name) {
 			Object.defineProperty(self, name, {
 				configurable: true,
 				set: function(str) {
-					for (var i=0; i<str.length; i++) {
-						self.view.setInt8(i + offset, str.charCodeAt(i));
+					for (var i=0; i<len; i++) {
+						if (str.length > i) {
+							self.view.setInt8(i + offset, str.charCodeAt(i));
+						}
+						else {
+							self.view.setInt8(i + offset, 0);
+						}
 					}
 				}
 			});
 		}
+
+		int8Prop(0, 'populated');
 
 		// Here is the start of the property definitions
 		int8Prop(1, 'binaryVersionMajor');
 		int8Prop(2, 'binaryVersionMinor');
 		int8Prop(3, 'binaryVersionRevision');
 
-		stringProp(4, 'uuid');
+		stringProp(4, 36, 'uuid');
 
 		int8Prop(40, 'features');
 		int8Prop(41, 'toggles');
@@ -145,12 +152,12 @@ function(Random, ArrayBufferFactory) {
 
 		int8Prop(51, 'rsvd');
 
-		stringProp(52, 'lang');
-		stringProp(56, 'title');
-		stringProp(120, 'subtitle');
-		stringProp(152, 'author');
-		stringProp(200, 'credits');
-		stringProp(280, 'contact');
+		stringProp(52, 4, 'lang');
+		stringProp(56, 64, 'title');
+		stringProp(120, 32, 'subtitle');
+		stringProp(152, 48, 'author');
+		stringProp(200, 80, 'credits');
+		stringProp(280, 128, 'contact');
 
 		int32Prop(408, 'publishDate');
 		int16Prop(412, 'variableCount');
@@ -162,21 +169,25 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryHeader.prototype.populate = function(story) {
-		// Populate the head
+		this.populated = 1;
+
 		this.binaryVersionMajor = 0;
-		this.binaryVersionMinor = 0;
+		this.binaryVersionMinor = 1;
 		this.binaryVersionRevision = 0;
 
 		this.uuid = Random.uuid();
 
 		this.features = 0;
 		this.toggles = 0;
+		this.flags3 = 0;
+		this.flags4 = 0;
 
 		var version = new ChoosatronStoryVersion(story.version);
 		this.storyVersionMajor = version.major;
 		this.storyVersionMinor = version.minor;
 		this.storyVersionRevision = version.revision;
 
+		this.rsvd = 0;
 		this.lang = '';
 		this.title = story.title;
 		this.subtitle = story.description;
@@ -269,7 +280,7 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryPassage.prototype.populate = function(story, passage) {
-		this.body = passage.body;
+		this.body = passage.content;
 		if (!passage.choices) {
 			return;
 		}
@@ -303,6 +314,8 @@ function(Random, ArrayBufferFactory) {
 			written = this.choices[i].writeToView(offset, view);
 			offset += written;
 		}
+
+		return offset - startingOffset;
 	};
 
 
@@ -335,7 +348,7 @@ function(Random, ArrayBufferFactory) {
 		offset += (2 * this.passages.length); // Offset start after PassageOffsets
 
 		for (i=0; i<this.passages.length; i++) {
-			written = this.passages.writeToView(offset, view);
+			written = this.passages[i].writeToView(offset, view);
 			passageOffsets.push(offset);
 			offset += written;
 		}
@@ -383,7 +396,8 @@ function(Random, ArrayBufferFactory) {
 		exports: 'dam',
 		export: function(story) {
 			var file = new ChoosatronStoryFile(story);
-			return file.generateArrayBuffer();
+			var buffer = file.generateArrayBuffer();
+			return buffer;
 		}
 	};
 }]);
