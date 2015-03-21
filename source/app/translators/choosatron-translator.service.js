@@ -74,6 +74,8 @@ angular.module('storyApp.translators')
 function(Random, ArrayBufferFactory) {
 
 	var ENDIAN = true; // true for little-endian, false for big-endian
+	var SOH    = 0x01;
+	var ETX    = 0x03;
 
 	function ChoosatronStoryVersion(version) {
 		var parts = version ? version.toString().split('.') : [];
@@ -170,7 +172,7 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryHeader.prototype.populate = function(story) {
-		this.populated = 1;
+		this.populated = SOH;
 
 		this.binaryVersionMajor = 0;
 		this.binaryVersionMinor = 1;
@@ -206,9 +208,9 @@ function(Random, ArrayBufferFactory) {
 
 	// Writes an operation to a DataView and returns the # bytes written
 	ChoosatronStoryOperation.prototype.writeToView = function(offset, view) {
-		view.setInt8(offset++, this.type);
-		view.setInt16(offset += 2, this.value1, ENDIAN);
-		view.setInt16(offset += 2, this.value2, ENDIAN);
+		view.setInt8(offset, this.type);
+		view.setInt16(offset + 1, this.value1, ENDIAN);
+		view.setInt16(offset + 3, this.value2, ENDIAN);
 		return 4;
 	};
 
@@ -235,10 +237,12 @@ function(Random, ArrayBufferFactory) {
 		var offset = startingOffset;
 		var i, written;
 
-		view.setInt8(offset++, this.attributes);
+		view.setInt8(offset, this.attributes);
+		offset += 1;
 
 		// Conditions
-		view.setInt8(offset++, this.conditionOperations.length);
+		view.setInt8(offset, this.conditionOperations.length);
+		offset += 1;
 		for (i=0; i<this.conditionOperations.length; i++) {
 			written = this.conditionOperations[i].writeToView(offset, view);
 			offset += written;
@@ -250,7 +254,8 @@ function(Random, ArrayBufferFactory) {
 		var updateOperationsSize = 0;
 		offset += 2;
 
-		view.setInt8(offset++, this.updateOperations.length);
+		view.setInt8(offset, this.updateOperations.length);
+		offset += 1;
 		for (i=0; i<this.updateOperations.length; i++) {
 			written = this.updateOperations[i].writeToView(offset, view);
 			offset += written;
@@ -260,13 +265,16 @@ function(Random, ArrayBufferFactory) {
 		view.setInt16(updateOperationLengthOffset, this.updateOperations.length, ENDIAN);
 
 		var size = (offset - startingOffset) + this.body.length + 2; // Two for the PassageIndex
-		view.setInt16(offset += 2, size, ENDIAN);
+		view.setInt16(offset, size, ENDIAN);
+		offset += 2;
 
 		for (i=0; i<this.body.length; i++) {
-			view.setInt8(offset++, this.body.charCodeAt(i));
+			view.setInt8(offset, this.body.charCodeAt(i));
+			offset += 1;
 		}
 
-		view.setInt16(offset += 2, this.passageIndex, ENDIAN);
+		view.setInt16(offset, this.passageIndex, ENDIAN);
+		offset += 2;
 
 		return size;
 	};
@@ -297,20 +305,29 @@ function(Random, ArrayBufferFactory) {
 		var offset = startingOffset;
 		var i, written;
 
-		view.setInt8(offset++, this.attributes);
-		view.setInt8(offset++, this.updateOperations.length);
+		view.setInt8(offset, this.attributes);
+		offset += 1;
+
+		// UpdateOperations
+		view.setInt8(offset, this.updateOperations.length);
+		offset += 1;
 
 		for (i=0; i<this.updateOperations.length; i++) {
 			written = this.updateOperations.writeToView(offset, view);
 			offset += written;
 		}
 
-		view.setInt16(offset += 2, this.body.length, ENDIAN);
+		// Body
+		view.setInt16(offset, this.body.length, ENDIAN);
+		offset += 2;
 		for (i=0; i<this.body.length; i++) {
-			view.setInt8(offset++, this.body.charCodeAt(i));
+			view.setInt8(offset, this.body.charCodeAt(i));
+			offset += 1;
 		}
 
-		view.setInt8(offset++, this.choices.length);
+		// Choices
+		view.setInt8(offset, this.choices.length);
+		offset += 1;
 		for (i=0; i<this.choices.length; i++) {
 			written = this.choices[i].writeToView(offset, view);
 			offset += written;
@@ -355,7 +372,7 @@ function(Random, ArrayBufferFactory) {
 		}
 
 		// The final size of the body
-		size = offset;
+		size = offset - startingOffset;
 
 		// Rewind to write the passage offsets
 		offset = startingOffset;
@@ -383,11 +400,12 @@ function(Random, ArrayBufferFactory) {
 		var bodySize = this.body.writeToView(this.header.size, builder);
 
 		// One for the end byte
-		this.header.storySize = bodySize + this.header.size + 1;
+		var fullSize = bodySize + this.header.size + 1;
+		this.header.storySize = fullSize;
 
 		// Add the EndBody byte
-		builder.setInt8(bodySize + this.header.size, 0x03);
-		return builder.trim();
+		builder.setInt8(fullSize - 1, ETX);
+		return builder.trim(fullSize);
 	};
 
 
