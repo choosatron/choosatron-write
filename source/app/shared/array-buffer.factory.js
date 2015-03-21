@@ -51,27 +51,27 @@ Builder.prototype.setInt8 = function(offset, value) {
 	this.view.setInt8(offset, value);
 };
 
-Builder.prototype.setInt16 = function(offset, value) {
+Builder.prototype.setInt16 = function(offset, value, little) {
 	this.expand(offset + 2);
-	this.view.setInt16(offset, value);
+	this.view.setInt16(offset, value, little || false);
 };
 
-Builder.prototype.setInt32 = function(offset, value) {
+Builder.prototype.setInt32 = function(offset, value, little) {
 	this.expand(offset + 4);
-	this.view.setInt32(offset, value);
+	this.view.setInt32(offset, value, little || false);
 };
 
-Builder.prototype.setFloat64 = function(offset, value) {
+Builder.prototype.setFloat64 = function(offset, value, little) {
 	this.expand(offset + 8);
-	this.view.setFloat64(offset, value);
+	this.view.setFloat64(offset, value, little || false);
 };
 
 // Assumes 8-bit string values
-Builder.prototype.setString = function(offset, str) {
+Builder.prototype.setString = function(offset, str, little) {
 	this.expand(offset + str.length);
 	for (var i=0; i<str.length; i++) {
 		var charCode = str.charCodeAt(i);
-		this.view.setInt8(offset + i, charCode);
+		this.view.setInt8(offset + i, charCode, little || false);
 	}
 };
 

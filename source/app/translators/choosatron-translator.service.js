@@ -73,6 +73,8 @@ angular.module('storyApp.translators')
 .service('choosatronTranslator', ['Random', 'ArrayBufferFactory',
 function(Random, ArrayBufferFactory) {
 
+	var ENDIAN = true; // true for little-endian, false for big-endian
+
 	function ChoosatronStoryVersion(version) {
 		var parts = version ? version.toString().split('.') : [];
 		this.major = parts.length > 0 ? parts[0] : 0;
@@ -87,17 +89,16 @@ function(Random, ArrayBufferFactory) {
 	// allow writing directly to the underlying ArrayBuffer
 	// when set.
 	function ChoosatronStoryHeader(story) {
-		this.size = 414;
+		this.size   = 414;
 		this.buffer = new ArrayBuffer(this.size);
-		this.view = new DataView(this.buffer);
-
-		var self = this;
+		this.view   = new DataView(this.buffer);
+		var self    = this;
 
 		function intProp(offset, name, setter) {
 			Object.defineProperty(self, name, {
 				configurable: true,
 				set: function(value) {
-					setter.call(self.view, offset, value);
+					setter.call(self.view, offset, value, ENDIAN);
 				}
 			});
 		}
@@ -206,8 +207,8 @@ function(Random, ArrayBufferFactory) {
 	// Writes an operation to a DataView and returns the # bytes written
 	ChoosatronStoryOperation.prototype.writeToView = function(offset, view) {
 		view.setInt8(offset++, this.type);
-		view.setInt16(offset += 2, this.value1);
-		view.setInt16(offset += 2, this.value2);
+		view.setInt16(offset += 2, this.value1, ENDIAN);
+		view.setInt16(offset += 2, this.value2, ENDIAN);
 		return 4;
 	};
 
@@ -256,16 +257,16 @@ function(Random, ArrayBufferFactory) {
 			updateOperationsSize += written;
 		}
 
-		view.setInt16(updateOperationLengthOffset, this.updateOperations.length);
+		view.setInt16(updateOperationLengthOffset, this.updateOperations.length, ENDIAN);
 
 		var size = (offset - startingOffset) + this.body.length + 2; // Two for the PassageIndex
-		view.setInt16(offset += 2, size);
+		view.setInt16(offset += 2, size, ENDIAN);
 
 		for (i=0; i<this.body.length; i++) {
 			view.setInt8(offset++, this.body.charCodeAt(i));
 		}
 
-		view.setInt16(offset += 2, this.passageIndex);
+		view.setInt16(offset += 2, this.passageIndex, ENDIAN);
 
 		return size;
 	};
@@ -304,7 +305,7 @@ function(Random, ArrayBufferFactory) {
 			offset += written;
 		}
 
-		view.setInt16(offset += 2, this.body.length);
+		view.setInt16(offset += 2, this.body.length, ENDIAN);
 		for (i=0; i<this.body.length; i++) {
 			view.setInt8(offset++, this.body.charCodeAt(i));
 		}
@@ -340,16 +341,16 @@ function(Random, ArrayBufferFactory) {
 	ChoosatronStoryBody.prototype.writeToView = function(startingOffset, view) {
 		var offset = startingOffset;
 		var passageOffsets = [];
+		var passageOffset = 0; // passage offset is relative
 		var size = 0;
 
 		var i, written;
 
-		view.setInt16(offset += 2, this.passages.length); // PassageCount
-		offset += (2 * this.passages.length); // Offset start after PassageOffsets
-
+		offset += 2 + (4 * this.passages.length); // Offset start after PassageOffsets
 		for (i=0; i<this.passages.length; i++) {
 			written = this.passages[i].writeToView(offset, view);
-			passageOffsets.push(offset);
+			passageOffsets.push(passageOffset);
+			passageOffset += written;
 			offset += written;
 		}
 
@@ -357,9 +358,12 @@ function(Random, ArrayBufferFactory) {
 		size = offset;
 
 		// Rewind to write the passage offsets
-		offset = startingOffset + 2;
+		offset = startingOffset;
+		view.setInt16(offset, this.passages.length, ENDIAN); // PassageCount
+		offset += 2;
 		for (i=0; i<passageOffsets.length; i++) {
-			view.setInt16(offset += 2, passageOffsets[i]);
+			view.setInt32(offset, passageOffsets[i], ENDIAN);
+			offset += 4;
 		}
 
 		return size;
