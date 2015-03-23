@@ -147,7 +147,8 @@ function(Random, ArrayBufferFactory) {
 		int8Prop(42, 'flags3');
 		int8Prop(43, 'flags4');
 
-		int32Prop(44, 'storySize');
+		this.storySizeIndex = 44;
+		int32Prop(this.storySizeIndex, 'storySize');
 
 		int8Prop(48, 'storyVersionMajor');
 		int8Prop(49, 'storyVersionMinor');
@@ -248,10 +249,11 @@ function(Random, ArrayBufferFactory) {
 			offset += written;
 		}
 
+
 		// Operations
-		// Delay writing the operation length
-		var updateOperationLengthOffset = offset;
-		var updateOperationsSize = 0;
+		// Delay writing the 2B operation length
+		var updateOperationsLengthOffset = offset;
+		var updateOperationsLength = 0;
 		offset += 2;
 
 		view.setInt8(offset, this.updateOperations.length);
@@ -259,15 +261,14 @@ function(Random, ArrayBufferFactory) {
 		for (i=0; i<this.updateOperations.length; i++) {
 			written = this.updateOperations[i].writeToView(offset, view);
 			offset += written;
-			updateOperationsSize += written;
+			updateOperationsLength += written;
 		}
+		view.setInt16(updateOperationsLengthOffset, updateOperationsLength, ENDIAN);
 
-		view.setInt16(updateOperationLengthOffset, this.updateOperations.length, ENDIAN);
 
-		var size = (offset - startingOffset) + this.body.length + 2; // Two for the PassageIndex
-		view.setInt16(offset, size, ENDIAN);
+		// Set the choice body size
+		view.setInt16(offset, this.body.length, ENDIAN);
 		offset += 2;
-
 		for (i=0; i<this.body.length; i++) {
 			view.setInt8(offset, this.body.charCodeAt(i));
 			offset += 1;
@@ -276,7 +277,7 @@ function(Random, ArrayBufferFactory) {
 		view.setInt16(offset, this.passageIndex, ENDIAN);
 		offset += 2;
 
-		return size;
+		return offset - startingOffset;
 	};
 
 
@@ -285,12 +286,14 @@ function(Random, ArrayBufferFactory) {
 		this.updateOperations = [];
 		this.choices = [];
 		this.body = '';
+		this.endingValue = false;
 	}
 
 
 	ChoosatronStoryPassage.prototype.populate = function(story, passage) {
 		this.body = passage.content;
-		if (!passage.choices) {
+		if (!passage.choices || !passage.choices.length) {
+			this.endingValue = passage.endingValue || 0;
 			return;
 		}
 		for (var i=0; i<passage.choices.length; i++) {
@@ -305,15 +308,15 @@ function(Random, ArrayBufferFactory) {
 		var offset = startingOffset;
 		var i, written;
 
+		// Attributes
 		view.setInt8(offset, this.attributes);
 		offset += 1;
 
 		// UpdateOperations
 		view.setInt8(offset, this.updateOperations.length);
 		offset += 1;
-
 		for (i=0; i<this.updateOperations.length; i++) {
-			written = this.updateOperations.writeToView(offset, view);
+			written = this.updateOperations[i].writeToView(offset, view);
 			offset += written;
 		}
 
@@ -332,6 +335,14 @@ function(Random, ArrayBufferFactory) {
 			written = this.choices[i].writeToView(offset, view);
 			offset += written;
 		}
+
+		if (this.endingValue !== false) {
+			view.setInt8(offset, this.endingValue);
+			offset += 1;
+		}
+
+		view.setInt8(offset, ETX);
+		offset += 1;
 
 		return offset - startingOffset;
 	};
@@ -398,13 +409,9 @@ function(Random, ArrayBufferFactory) {
 
 		// Write out the body so we can determine the overall size
 		var bodySize = this.body.writeToView(this.header.size, builder);
+		var fullSize = bodySize + this.header.size;
 
-		// One for the end byte
-		var fullSize = bodySize + this.header.size + 1;
-		this.header.storySize = fullSize;
-
-		// Add the EndBody byte
-		builder.setInt8(fullSize - 1, ETX);
+		builder.setInt32(this.header.storySizeIndex, fullSize, ENDIAN);
 		return builder.trim(fullSize);
 	};
 

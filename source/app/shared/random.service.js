@@ -18,14 +18,14 @@ angular.module('storyApp.utils')
 	};
 
 	this.uuid = function() {
-		var digits = '0123456789abdef';
+		var digits = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102];
 		var char = this.char.bind(this);
 		function part(len) {
 			var a = new Array(len);
 			for (var i=0; i<len; i++) {
 				a[i] = char(digits);
 			}
-			return a;
+			return a.join('');
 		}
 		return [part(8), part(4), part(4), part(4), part(12)].join('-');
 	};
