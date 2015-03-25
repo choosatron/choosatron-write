@@ -10,6 +10,7 @@
 ## Team members
 
 [Jerry Belich](http://jerrytron.com) - [[Twitter](https://www.twitter.com/j3rrytron)] : [[Presskit](http://jerrytron.com/press)]
+
 Alex Barrett - [[Twitter](https://www.twitter.com/spleenboy)]
 
 ## Community 
