@@ -1,4 +1,4 @@
-# Choosatron Writer #
+# Choosatron Write [![Backlog](https://badge.waffle.io/choosatron/choosatron-write.png?label=backlog&title=backlog)](https://waffle.io/choosatron/choosatron-write) [![Build Status](https://travis-ci.org/choosatron/choosatron-write.svg)](https://travis-ci.org/choosatron/choosatron-write)
 
 ## APIs ##
  - [USB raw access](https://developer.chrome.com/apps/usb)
@@ -17,19 +17,19 @@
    - `npm install -g bower`
    - `npm install -g grunt`
    - `npm install -g grunt-cli` [optional - puts grunt in your path]
-1. `git clone https://path.to/git ./choicewright`
-2. `cd ./choicewright`
+1. `git clone https://github.com/choosatron/choosatron-write`
+2. `cd ./choosatron-write`
 3. `npm install`
 4. `grunt build`
 
 ## Installing the App ##
 
-1. **Choosatron Writer** is a Chrome Packaged App. You will need to use grunt to build the application before running it as an application.
+1. **Choosatron Write** is a Chrome Packaged App. You will need to use grunt to build the application before running it as an application.
  - `grunt build` will create a minified version of the application.
  - `grunt debug` will create a debuggable version of the application. This will also keep a watch for any changes you make to the files in `./source/` and re-build the application if any changes are detected.
 2. Open Chrome and go to your [Chrome extensions](chrome://extensions)
 3. Ensure that "Developer mode" is checked.
-4. Click "Load unpacked extension..." and select the `./choicewright/build/` directory.
+4. Click "Load unpacked extension..." and select the `./choosatron-write/build/` directory.
 
 =======
 

@@ -3,12 +3,12 @@
 	"version": "0.1.0",
 	"authors": [
 		"Alexander Barrett <spleendini@yahoo.com>",
-		"Jerry Belich <jerry@monkeytheater.com>",
+		"Jerry Belich <jerry@choosatron.com>",
 		"Zachary Johnson <zachary.johnson@gmail.com>"
 	],
 	"description": "Interactive Story Creator",
 	"main": "window-ui.html",
-	"license": "NOT DETERMINED YET",
+	"license": "GNU GPL 3.0",
 	"homepage": "choosatron.com",
 	"dependencies": {
 		"jquery": "2.1.x",
