@@ -258,24 +258,31 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	// Sends a message and reads the result until the specified
-	// terminating character is received.
-	Serial.prototype.read = function(send, until) {
-		var msg = '';
+	// terminating byte is received. Returns a promise that
+	// resolves with the byte data of the message sent
+	// up until the terminating byte.
+	Serial.prototype.sendDataUntil = function(data, untilByte) {
+		var buffer   = new ArrayBuffer(1024);
+		var builder  = ArrayBufferFactory.Builder(buffer);
+		var offset   = 0;
 		var deferred = $q.defer();
-		until = until || '\n';
 
 		function readPart(info) {
-			var part = info.text;
-			msg += part;
-			if (part.indexOf(until)) {
-				deferred.resolve(msg);
-				return true;
+			for (var i=0; i<info.data.length; i++) {
+				var byte = info.data[i];
+				builder.setInt8(offset, byte);
+				if (byte === untilByte) {
+					var msg = builder.trim();
+					deferred.resolve(msg);
+					return true;
+				}
+				offset++;
 			}
 			return false;
 		}
 
 		this.listen(readPart, true);
-		this.send(send);
+		this.sendData(data);
 
 		return deferred.promise;
 	};

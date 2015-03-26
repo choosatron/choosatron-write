@@ -8,9 +8,17 @@ var factory = {};
 
 // A ArrayBuffer builder that grows the size of the array buffer
 // as needed
-function Builder(buffer) {
+function Builder(bufferOrSize) {
 	this.frameSize = 512; // The number of bytes to expand when needed.
-	this.buffer = buffer || new ArrayBuffer(this.frameSize);
+	if (bufferOrSize instanceof Number) {
+		this.buffer = new ArrayBuffer(buffer);
+	}
+	else if (!(buffer instanceof ArrayBuffer)) {
+		this.buffer = new ArrayBuffer(this.frameSize * 2);
+	}
+	else {
+		this.buffer = bufferOrSize;
+	}
 	this.view   = new DataView(this.buffer);
 	this.length = 0; // Keeps track of the last offset written
 }
@@ -66,12 +74,20 @@ Builder.prototype.setFloat64 = function(offset, value, little) {
 	this.view.setFloat64(offset, value, little || false);
 };
 
+// Copies a buffer starting at the specified offset
+Builder.prototype.setData = function(offset, buffer) {
+	var view = new DataView(buffer);
+	for (var i=0; i<buffer.byteLength; i++) {
+		this.view.setInt8(offset + i, view.getInt8(i));
+	}
+};
+
 // Assumes 8-bit string values
-Builder.prototype.setString = function(offset, str, little) {
+Builder.prototype.setString = function(offset, str) {
 	this.expand(offset + str.length);
 	for (var i=0; i<str.length; i++) {
 		var charCode = str.charCodeAt(i);
-		this.view.setInt8(offset + i, charCode, little || false);
+		this.view.setInt8(offset + i, charCode);
 	}
 };
 
@@ -90,8 +106,8 @@ factory.toString = function(buffer) {
 	return String.fromCharCode.apply(null, arr);
 };
 
-factory.Builder = function(buffer) {
-	return new Builder(buffer);
+factory.Builder = function(bufferOrSize) {
+	return new Builder(bufferOrSize);
 };
 
 function ArrayBufferFactoryProvider() {
