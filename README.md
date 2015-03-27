@@ -1,7 +1,13 @@
 # Choosatron Write [![Backlog](https://badge.waffle.io/choosatron/choosatron-write.png?label=backlog&title=backlog)](https://waffle.io/choosatron/choosatron-write) [![Build Status](https://travis-ci.org/choosatron/choosatron-write.svg)](https://travis-ci.org/choosatron/choosatron-write)
 
-## APIs ##
- - [USB raw access](https://developer.chrome.com/apps/usb)
+## Filing Issues ##
+Note, **this app is still in pre-alpha**, expect a lot of bugs! Despite that, we'd love to hear about any issues you discover.
+
+When you file an issue, please include:
+ - Your operating system
+ - The branch on which you are running
+ - The steps taken to discover the issue
+ - Any error messages indicated in the [DevTools console](https://developer.chrome.com/devtools)
 
 ## Dependencies ##
  - [chrome](http://www.google.com/chrome/)
