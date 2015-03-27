@@ -1,20 +1,7 @@
 /**
  * Implementation of the X/YModem protocol over serial.
  * @see http://textfiles.com/programming/ymodem.txt
- *
- * 1024 byte packets 
- *  SENDER				  RECEIVER
-						  "s -k	foo.bar"
-	  "foo.bar open	x.x minutes"
-						  C
-	  STX 01 FE Data[1024] CRC CRC
-						  ACK
-	  STX 02 FD Data[1024] CRC CRC
-						  ACK
-	  STX 03 FC Data[1000] CPMEOF[24] CRC CRC
-						  ACK
-	  EOT
-						  ACK
+ * @see https://code.google.com/p/xtreamerdev/source/browse/trunk/rtdsr/ymodem.c?r=2
 **/
 (function() {
 
