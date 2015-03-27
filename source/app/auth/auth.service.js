@@ -4,9 +4,12 @@
 	angular.module('storyApp')
 		.service('authService', AuthService);
 
-	AuthService.$inject = [];
+	AuthService.$inject = ['Spark'];
 
-	function AuthService() {
+	function AuthService(Spark) {
+		this.spark = function(aAuth) {
+			return new Spark(aAuth && aAuth.token);
+		};
 		this.authStatus = {
 			remoteState: 'idle',
 			status: 'ready',
@@ -28,7 +31,7 @@
 		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
 		var login = this.login.bind(this, aAuth, aPassword);
-		return spark
+		return this.spark(aAuth)
 			.createUser(aAuth.username, aPassword)
 			.then(login)
 			.catch(onError);
@@ -48,8 +51,8 @@
 
 		var saveToken = this.saveToken.bind(this, aAuth);
 		var onError = this.onError.bind(this);
-		return spark
-			.login(params)
+		return this.spark(aAuth)
+			.login(aAuth.username, aPassword)
 			.then(saveToken)
 			.catch(onError);
 	};
@@ -70,21 +73,16 @@
 
 	AuthService.prototype.logout = function() {
 		this.reset();
-		// TODO: This needs to be park of the actual library, not included when built.
-		//spark.logout();
-		spark.accessToken = null;
 	};
 
 	AuthService.prototype.loadDevices = function(aAuth) {
-		spark.accessToken = aAuth.token;
-		return spark.listDevices.then(function(devices) {
+		return this.spark(aAuth).listDevices.then(function(devices) {
 			aAuth.devices = devices;
 		});
 	};
 
 	AuthService.prototype.claimDevice = function(aAuth, coreId) {
-		spark.accessToken = aAuth.token;
-		return spark.claimCore(coreId);
+		return this.spark(aAuth).claimCore(coreId);
 	};
 
 })();
