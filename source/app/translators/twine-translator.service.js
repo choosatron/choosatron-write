@@ -18,6 +18,9 @@ function(Story, Passage, Choice) {
 
 			// Looks through the content of the passage for choices
 			function fixPassage(passage) {
+				if (!passage.content) {
+					return;
+				}
 				var contents = passage.content.split('\n');
 				var content = null;
 				passage.content = '';
@@ -28,7 +31,7 @@ function(Story, Passage, Choice) {
 						var choice = new Choice();
 						choice.content = match[1];
 						choice.destination = match[2];
-						passage.add_choice(choice);
+						passage.addChoice(choice);
 					}
 					else {
 						passage.content += content;
@@ -65,7 +68,7 @@ function(Story, Passage, Choice) {
 							passage.content += content + '\n';
 						}
 						fixPassage(passage);
-						story.add_passage(passage);
+						story.addPassage(passage);
 				}
 			}
 
