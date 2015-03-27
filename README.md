@@ -1,7 +1,7 @@
 # Choosatron Write [![Backlog](https://badge.waffle.io/choosatron/choosatron-write.png?label=backlog&title=backlog)](https://waffle.io/choosatron/choosatron-write) [![Build Status](https://travis-ci.org/choosatron/choosatron-write.svg)](https://travis-ci.org/choosatron/choosatron-write)
 
 ## Filing Issues ##
-Note, **this app is still in pre-alpha**, expect a lot of bugs! Despite that, we'd love to hear about any issues you discover.
+Note: **this app is still in pre-alpha**; expect a lot of bugs! Despite that, we'd love to hear about any issues you discover.
 
 When you file an issue, please include:
  - Your operating system
