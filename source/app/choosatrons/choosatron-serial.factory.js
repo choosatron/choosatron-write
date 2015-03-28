@@ -2,9 +2,9 @@
 
 'use strict';
 
-angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial',
+angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial', 'Ymodem',
 
-function ($q, Serial) {
+function ($q, Serial, Ymodem) {
 
 	var CMD_CHANGE_MODE = 'c';
 	var CMD_GET_INFO    = 'i';
@@ -14,6 +14,7 @@ function ($q, Serial) {
 		this.coreId = null;
 		this.serial = new Serial();
 		this.serial.debug = true;
+		this.modem  = new Ymodem(this.serial);
 	}
 
 	ChoosatronSerial.prototype.destroy = function() {

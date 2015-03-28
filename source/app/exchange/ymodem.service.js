@@ -12,6 +12,7 @@ function($q, ArrayBufferFactory, Serial) {
 
 	function Ymodem(serial) {
 		this.serial = serial;
+		this.maxRetries = 3;
 	}
 
 	var SOH = Ymodem.SOH = 0x01;
@@ -67,12 +68,20 @@ function($q, ArrayBufferFactory, Serial) {
 		var deferred = $q.defer();
 		var packet   = this.buildPacket(number, buffer);
 		var send     = this.serial.sendData.bind(this.serial, packet);
+		var self     = this;
+		var tries    = 0;
 
 		function listener(info) {
 			for (var i=0; i<info.data.length; i++) {
 				var byte = info.data[i];
 				if (byte === NAK) {
 					// Retry submission on NAK
+					tries++;
+					if (tries > self.maxTries) {
+						self.abort();
+						deferred.reject();
+						return false;
+					}
 					send();
 					return false;
 				}
@@ -93,6 +102,14 @@ function($q, ArrayBufferFactory, Serial) {
 	Ymodem.prototype.end = function() {
 		return this.serial.sendDataUntil(EOT, NAK)
 			.then(this.serial.sendDataUntil.bind(this.serial, EOT, ACK));
+	};
+
+	Ymode.prototype.abort = function() {
+		var cancan = new ArrayBuffer(2);
+		var view   = new Int8Array(cancan);
+		view[0]    = CAN;
+		view[1]    = CAN;
+		return this.serial.sendData(cancan);
 	};
 
 	Ymodem.prototype.buildPacket = function(number, buffer) {
