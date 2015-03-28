@@ -13,7 +13,7 @@ function(Story, $http) {
 			var placeholder = '{{STORY_JSON}}';
 			var json = angular.toJson(aStory);
 			return $http
-			.get('/templates/htmlView.html')
+			.get('/templates/html-translator.view.html')
 			.then(function(rsp) {
 				var html = rsp.data.replace(placeholder, json);
 				return html;
