@@ -14,7 +14,20 @@ function(Story, Passage, Choice) {
 			// reg ex identifiers
 			var reId = /:: (.+)/;
 			var reAttributes = /\s(\[([^\]\[]+)\])\s/;
-			var reChoice = /\[\[(.+)\|(.+)\]\]/;
+			var reChoice = /\[\[(.+)\]\]/;
+
+			function makeChoice(str) {
+				var pipe = str.indexOf('|');
+				var choice = new Choice();
+				if (pipe < 0) {
+					choice.content = str;
+					choice.destination = str;
+					return choice;
+				}
+				choice.content = str.substr(0, pipe);
+				choice.destination = str.substr(pipe + 1);
+				return choice;
+			}
 
 			// Looks through the content of the passage for choices
 			function fixPassage(passage) {
@@ -28,9 +41,7 @@ function(Story, Passage, Choice) {
 					content = contents.shift();
 					var match = reChoice.exec(content);
 					if (match) {
-						var choice = new Choice();
-						choice.content = match[1];
-						choice.destination = match[2];
+						var choice = makeChoice(match[1]);
 						passage.addChoice(choice);
 					}
 					else {
