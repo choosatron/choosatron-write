@@ -1,13 +1,17 @@
 # Choosatron Write [![Backlog](https://badge.waffle.io/choosatron/choosatron-write.png?label=backlog&title=backlog)](https://waffle.io/choosatron/choosatron-write) [![Build Status](https://travis-ci.org/choosatron/choosatron-write.svg)](https://travis-ci.org/choosatron/choosatron-write)
 
-## Filing Issues ##
+## Issues ##
+### Logging Issues ###
 Note: **this app is still in pre-alpha**; expect a lot of bugs! Despite that, we'd love to hear about any issues you discover.
 
 When you file an issue, please include:
- - Your operating system
+ - Your operating system and version of Chrome
  - The branch on which you are running
  - The steps taken to discover the issue
  - Any error messages indicated in the [DevTools console](https://developer.chrome.com/devtools)
+
+### Fixing Issues ###
+Issues with assignees are more likely to be actively under development. If you'd like to help solve any current issues, look first for ones that haven't been assigned. Read the information about [how to contribute](https://github.com/choosatron/open-source) before filing a pull request.
 
 ## Dependencies ##
  - [chrome](http://www.google.com/chrome/)
