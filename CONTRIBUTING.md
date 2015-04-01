@@ -11,7 +11,7 @@
 
 [Jerry Belich](http://jerrytron.com) - [[Twitter](https://www.twitter.com/j3rrytron)] : [[Presskit](http://jerrytron.com/press)]
 
-Alex Barrett - [[Twitter](https://www.twitter.com/spleenboy)]
+[Alex Barrett](http://github.com/spleenboy) - [[Twitter](https://www.twitter.com/spleenboy)]
 
 ## Community 
 If you'd like to contribute in a non-development related way, consider the following:
