@@ -77,6 +77,8 @@ function(Random, ArrayBufferFactory) {
 	var SOH    = 0x01;
 	var ETX    = 0x03;
 
+	var PSG_FLAG_APPEND = 7; // 0x80;
+
 	function ChoosatronStoryVersion(version) {
 		var parts = version ? version.toString().split('.') : [];
 		this.major = parts.length > 0 ? parts[0] : 0;
@@ -291,6 +293,10 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryPassage.prototype.populate = function(story, passage) {
+		if (passage.exitType == 'append') {
+			this.attributes |= 1 << 7;
+		}
+
 		this.body = passage.content;
 		if (!passage.choices || !passage.choices.length) {
 			this.endingValue = passage.endingValue || 0;
