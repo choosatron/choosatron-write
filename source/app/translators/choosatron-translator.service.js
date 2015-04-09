@@ -77,7 +77,7 @@ function(Random, ArrayBufferFactory) {
 	var SOH    = 0x01;
 	var ETX    = 0x03;
 
-	var PSG_FLAG_APPEND = 7; // 0x80;
+	var PSG_FLAG_APPEND_INDEX = 7; // 0x80;
 
 	function ChoosatronStoryVersion(version) {
 		var parts = version ? version.toString().split('.') : [];
@@ -293,19 +293,25 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryPassage.prototype.populate = function(story, passage) {
-		if (passage.exitType == 'append') {
-			this.attributes |= 1 << 7;
-		}
-
 		this.body = passage.content;
-		if (!passage.choices || !passage.choices.length) {
-			this.endingValue = passage.endingValue || 0;
-			return;
-		}
-		for (var i=0; i<passage.choices.length; i++) {
-			var choice = new ChoosatronStoryChoice();
-			choice.populate(story, passage.choices[i]);
+
+		var choice;
+
+		if (passage.hasAppend()) {
+			// Set the append flag at the proper index.
+			this.attributes |= 1 << PSG_FLAG_APPEND_INDEX;
+			// Append link isn't in the list of choices, so we need to add it here.
+			choice = new ChoosatronStoryChoice();
+			choice.populate(story, passage.appendLink);
 			this.choices.push(choice);
+		} else if (passage.hasEnding()) {
+			this.endingValue = passage.endingValue || 0;
+		} else if (passage.hasChoices()) {
+			for (var i=0; i<passage.choices.length; i++) {
+				choice = new ChoosatronStoryChoice();
+				choice.populate(story, passage.choices[i]);
+				this.choices.push(choice);
+			}
 		}
 	};
 
