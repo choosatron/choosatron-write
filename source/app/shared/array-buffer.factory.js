@@ -11,9 +11,9 @@ var factory = {};
 function Builder(bufferOrSize) {
 	this.frameSize = 512; // The number of bytes to expand when needed.
 	if (bufferOrSize instanceof Number) {
-		this.buffer = new ArrayBuffer(buffer);
+		this.buffer = new ArrayBuffer(bufferOrSize);
 	}
-	else if (!(buffer instanceof ArrayBuffer)) {
+	else if (!(bufferOrSize instanceof ArrayBuffer)) {
 		this.buffer = new ArrayBuffer(this.frameSize * 2);
 	}
 	else {
@@ -24,7 +24,7 @@ function Builder(bufferOrSize) {
 }
 
 // Expands the internal buffer to at least the specified length
-// This method will use the frame size to determine the actual length, 
+// This method will use the frame size to determine the actual length,
 // so that we don't need to continually expand the array for each
 // subsequent write.
 Builder.prototype.expand = function(length) {
