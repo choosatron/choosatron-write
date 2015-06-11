@@ -11,18 +11,16 @@
 		}
 	},
 	"icons": { "16": "img/icon_16.png", "48": "img/icon_48.png", "128": "img/icon_128.png" },
-	"web_accessible_resources": ["img/*"],
 	"offline_enabled": true,
 	"permissions": [
 		"clipboardRead",
 		"clipboardWrite",
-		"fileBrowserHandler",
 		"geolocation",
 		"identity",
 		"serial",
 		"storage",
 		"syncFileSystem",
-		"unlimitedStorage", 
+		"unlimitedStorage",
 		{"fileSystem": ["write", "retainEntries", "directory"]},
 		"https://api.spark.io/"
 	],

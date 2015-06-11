@@ -45,7 +45,7 @@
 
 		function changeProfile() {
 			vm.location.path('/profiles');
-			profiles.current = null;
+			//profiles.current = null;
 			authService.logout();
 		}
 

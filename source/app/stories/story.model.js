@@ -9,6 +9,7 @@ function(BaseModel, Passage) {
 		this.created      =  Date.now();
 		this.modified     =  Date.now();
 		this.title        =  '';
+		this.subtitle     =  '';
 		this.version      =  1.0;
 		this.description  =  '';
 		this.cover_url    =  '';
