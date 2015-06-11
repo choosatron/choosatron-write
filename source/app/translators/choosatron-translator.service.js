@@ -165,7 +165,8 @@ function(Random, ArrayBufferFactory) {
 		stringProp(200, 80, 'credits');
 		stringProp(280, 128, 'contact');
 
-		int32Prop(408, 'publishDate');
+		this.publishedIndex = 408;
+		int32Prop(this.publishedIndex, 'published');
 		int16Prop(412, 'variableCount');
 
 		if (story) {
@@ -196,9 +197,13 @@ function(Random, ArrayBufferFactory) {
 		this.rsvd = 0;
 		this.lang = '';
 		this.title = story.title;
-		this.subtitle = story.description;
+		this.subtitle = story.subtitle;
 		this.author = story.author;
-		this.credits = story.credit;
+		this.credits = story.credits;
+		this.contact = story.contact;
+
+		story.published = new Date();
+		this.published = story.published.getTime() / 1000;
 	};
 
 
@@ -246,7 +251,7 @@ function(Random, ArrayBufferFactory) {
 		// Conditions
 		view.setInt8(offset, this.conditionOperations.length);
 		offset += 1;
-		for (i=0; i<this.conditionOperations.length; i++) {
+		for (i = 0; i < this.conditionOperations.length; i++) {
 			written = this.conditionOperations[i].writeToView(offset, view);
 			offset += written;
 		}
@@ -260,7 +265,7 @@ function(Random, ArrayBufferFactory) {
 
 		view.setInt8(offset, this.updateOperations.length);
 		offset += 1;
-		for (i=0; i<this.updateOperations.length; i++) {
+		for (i = 0; i < this.updateOperations.length; i++) {
 			written = this.updateOperations[i].writeToView(offset, view);
 			offset += written;
 			updateOperationsLength += written;
@@ -271,7 +276,7 @@ function(Random, ArrayBufferFactory) {
 		// Set the choice body size
 		view.setInt16(offset, this.body.length, ENDIAN);
 		offset += 2;
-		for (i=0; i<this.body.length; i++) {
+		for (i = 0; i < this.body.length; i++) {
 			view.setInt8(offset, this.body.charCodeAt(i));
 			offset += 1;
 		}
@@ -307,7 +312,7 @@ function(Random, ArrayBufferFactory) {
 		} else if (passage.hasEnding()) {
 			this.endingValue = passage.endingValue || 0;
 		} else if (passage.hasChoices()) {
-			for (var i=0; i<passage.choices.length; i++) {
+			for (var i = 0; i < passage.choices.length; i++) {
 				choice = new ChoosatronStoryChoice();
 				choice.populate(story, passage.choices[i]);
 				this.choices.push(choice);
@@ -371,7 +376,7 @@ function(Random, ArrayBufferFactory) {
 		if (!story.passages) {
 			return;
 		}
-		for (var i=0; i<story.passages.length; i++) {
+		for (var i = 0; i < story.passages.length; i++) {
 			var passage = new ChoosatronStoryPassage();
 			passage.populate(story, story.passages[i]);
 			this.passages.push(passage);

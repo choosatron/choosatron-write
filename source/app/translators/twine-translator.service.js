@@ -12,9 +12,13 @@ function(Story, Passage, Choice) {
 			var line = '';
 
 			// reg ex identifiers
-			var reId = /:: (.+)/;
-			var reAttributes = /\s(\[([^\]\[]+)\])\s/;
+			// Match two items from the ID, the name of the passage, and all tags if any.
+			var reId = /::\s+(\S+)(?:\s+\[([\S]+\:[\S]+(?:[\s][\S]+\:[\S]+)*)\])?/;
+			//var reId = /:: (.+)/;
+			//var reAttributes = /\s(\[([^\]\[]+)\])\s/;
 			var reChoice = /\[\[(.+)\]\]/;
+
+			console.log('Twine import:');
 
 			function makeChoice(str) {
 				var pipe = str.indexOf('|');
@@ -30,7 +34,7 @@ function(Story, Passage, Choice) {
 			}
 
 			// Looks through the content of the passage for choices
-			function fixPassage(passage) {
+			function parseChoices(passage) {
 				if (!passage.content) {
 					return;
 				}
@@ -48,28 +52,79 @@ function(Story, Passage, Choice) {
 						passage.content += content;
 					}
 				}
+
+				if (passage.choices.length === 0) {
+					passage.exitType = 'ending';
+					// Translate the ending quality.
+					if (typeof passage.tags.eq != 'undefined') {
+						passage.setEnding(passage.tags.eq - 3);
+					} else {
+						passage.setEnding(0);
+					}
+					console.log("Ending Val: " + passage.endingValue);
+				} else if (passage.choices.length === 1) {
+					console.log(passage.choices[0].content);
+					console.log(passage.choices[0]);
+					if (passage.choices[0].content == '<append>') {
+						passage.exitType = 'append';
+						passage.appendLink = passage.choices[0];
+						console.log("Appended");
+					} else if (passage.choices[0].content == '<continue>') {
+						passage.exitType = 'choices';
+						passage.choices[0].setContent = 'Continue...';
+						console.log("Continue");
+					}
+				}
 			}
 
 			var story = new Story();
 			var passage = null;
 			while (lines.length) {
 				line = lines.shift().trim();
-				if (!line.length) continue;
+				//if (!line.length) continue;
+				while (reId.test(line) === false) {
+					line = lines.shift().trim();
+					console.log(line);
+				}
+
 				var id = reId.exec(line);
+				console.log("Id: " + id[1]);
 				if (!id) continue;
 				switch (id[1].trim()) {
 					case('StoryAuthor'):
 						story.author = lines.shift();
+						console.log("Author: " + story.author);
 						break;
 					case('StoryTitle'):
 						story.title = lines.shift();
+						console.log("Title: " + story.title);
+						break;
+					case('StorySubtitle'):
+						story.subtitle = lines.shift();
+						console.log("Subtitle: " + story.subtitle);
 						break;
 					default: // Parse the text!
 						passage = new Passage();
 						var content = '';
-						var attrs = reAttributes.exec(id);
-						passage.id = id[1].replace(reAttributes, '').trim();
-						if (attrs) passage.tags = attrs[1];
+						//var attrs = reAttributes.exec(id);
+						passage.id = id[1];
+
+						if (typeof id[2] === 'undefined') {
+							console.log("No tags for passage: " + passage.id);
+						} else {
+							console.log(id[2]);
+							var tagItems = [];
+							var cur, pair;
+							tagItems = id[2].split(' ');
+							for (var i = 0; i < tagItems.length; i++) {
+								pair = tagItems[i].split(':');
+								passage.tags[pair[0]] = pair[1];
+								//console.log("Tag: " + pair[0] + ", Val: " + pair[1]);
+							}
+						}
+
+						//if (attrs) passage.tags = attrs[1];
+
 						while (lines.length) {
 							content = lines.shift().trim();
 							if (reId.test(content)) {
@@ -78,7 +133,7 @@ function(Story, Passage, Choice) {
 							}
 							passage.content += content + '\n';
 						}
-						fixPassage(passage);
+						parseChoices(passage);
 						story.addPassage(passage);
 				}
 			}

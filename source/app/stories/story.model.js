@@ -8,6 +8,7 @@ function(BaseModel, Passage) {
 
 		this.created      =  Date.now();
 		this.modified     =  Date.now();
+		this.published    =  false;
 		this.title        =  '';
 		this.subtitle     =  '';
 		this.version      =  1.0;
@@ -15,7 +16,8 @@ function(BaseModel, Passage) {
 		this.cover_url    =  '';
 		this.genre        =  '';
 		this.author       =  '';
-		this.credit       =  '';
+		this.credits      =  '';
+		this.contact      =  '';
 		this.passages     =  [];
 		BaseModel.call(this, data);
 	}
