@@ -33,13 +33,13 @@ function(BaseModel, Choice) {
 	Passage.methods = {
 		/*calculateExitType: function () {
 			if (this.hasEnding()) {
-				this.exitType = 'ending';
+				this.exitType = CDAM.Strings.kExitTypeEnding;
 
 			} else if (this.hasAppend()) {
-				this.exitType = 'append';
+				this.exitType = CDAM.Strings.kExitTypeAppend;
 
 			} else {
-				this.exitType = 'choices';
+				this.exitType = CDAM.Strings.kExitTypeChoices;
 			}
 		},*/
 
