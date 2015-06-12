@@ -8,7 +8,7 @@ function(BaseModel, Choice) {
 		this.content      = '';
 		this.choices      = [];
 		this.tags         = {};
-		this.opening      = false;
+		this.startPsg     = false;
 		this.value        = 0;
 		this.endingValue  = false; // Not an ending when === false
 		this.trashed      = false;
@@ -31,7 +31,7 @@ function(BaseModel, Choice) {
 	Passage.passages = {};
 
 	Passage.methods = {
-		calculateExitType: function () {
+		/*calculateExitType: function () {
 			if (this.hasEnding()) {
 				this.exitType = 'ending';
 
@@ -41,7 +41,7 @@ function(BaseModel, Choice) {
 			} else {
 				this.exitType = 'choices';
 			}
-		},
+		},*/
 
 		getContent: function () {
 			return this.content || "Unwritten Passage";
@@ -55,7 +55,7 @@ function(BaseModel, Choice) {
 			this.exitType = aExitType;
 		},
 
-		exitIsEmpty: function () {
+		/*exitIsEmpty: function () {
 			if (this.exitType == 'ending' && !this.hasEnding()) {
 				return true;
 			}
@@ -66,7 +66,7 @@ function(BaseModel, Choice) {
 				return true;
 			}
 			return false;
-		},
+		},*/
 
 		hasEnding: function () {
 			return (this.endingValue !== false);
@@ -85,7 +85,9 @@ function(BaseModel, Choice) {
 		},
 
 		setEnding: function (aValue) {
-			this.endingValue = aValue;
+			if (this.exitType === 'ending') {
+				this.endingValue = aValue;
+			}
 		},
 
 		endingTypeName: function () {

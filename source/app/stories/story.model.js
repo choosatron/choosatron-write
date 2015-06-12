@@ -4,8 +4,6 @@ function(BaseModel, Passage) {
 
 	/// Story ///
 	function Story(data) {
-		this.lastPassageNumber = 0;
-
 		this.created      =  Date.now();
 		this.modified     =  Date.now();
 		this.published    =  false;
@@ -18,7 +16,8 @@ function(BaseModel, Passage) {
 		this.author       =  '';
 		this.credits      =  '';
 		this.contact      =  '';
-		this.passages     =  [];
+		this.passages     =  {};
+		this.startKey     =  '';
 		BaseModel.call(this, data);
 	}
 
@@ -27,11 +26,7 @@ function(BaseModel, Passage) {
 			return this.title || "Untitled Story";
 		},
 
-		getNextPassageNumber: function () {
-			return ++this.lastPassageNumber;
-		},
-
-		getOpening: function() {
+		getStartPsg: function() {
 			var opening = null;
 			this.eachPassage(function(p) {
 				if (p.opening) {
@@ -43,7 +38,7 @@ function(BaseModel, Passage) {
 			if (!opening) {
 				opening = new Passage();
 				opening.opening = true;
-				opening.number = this.getNextPassageNumber();
+				opening.number = this.passages.length;
 				this.addPassage(opening);
 			}
 			return opening;

@@ -29,7 +29,7 @@
 		vm.showStoryDetails   = false;
 		vm.showPassages       = false;
 		vm.saveState          = 'floppy-disk';
-		vm.exitChangeModal = {};
+		vm.exitChangeModal    = {};
 
 		// Functions
 		vm.loadVariables         = loadVariables;
