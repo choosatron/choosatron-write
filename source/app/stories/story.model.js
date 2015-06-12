@@ -8,13 +8,16 @@ function(BaseModel, Passage) {
 
 		this.created      =  Date.now();
 		this.modified     =  Date.now();
+		this.published    =  false;
 		this.title        =  '';
+		this.subtitle     =  '';
 		this.version      =  1.0;
 		this.description  =  '';
 		this.cover_url    =  '';
 		this.genre        =  '';
 		this.author       =  '';
-		this.credit       =  '';
+		this.credits      =  '';
+		this.contact      =  '';
 		this.passages     =  [];
 		BaseModel.call(this, data);
 	}
@@ -74,10 +77,32 @@ function(BaseModel, Passage) {
 		},
 
 		addPassage: function(aPassage) {
+			// If it's the only passage, it is the start.
 			if (this.passages.length === 0) {
 				aPassage.opening = true;
+				this.passages.push(aPassage);
+			} else {
+				// If the new passage is set to opening,
+				// make sure there isn't another opening passage.
+				if (aPassage.opening === true) {
+					this.eachPassage(function(p) {
+						if (p.opening) {
+							// If there is, unset it.
+							p.opening = false;
+							return;
+						}
+					});
+					// Put the new start passage at the beginning.
+					this.passages.unshift(aPassage);
+				} else {
+					// Just add the passage.
+					this.passages.push(aPassage);
+				}
 			}
-			this.passages.push(aPassage);
+
+			/*this.eachPassage(function(p) {
+				console.log(p.id);
+			});*/
 			return aPassage.id;
 		},
 

@@ -66,6 +66,27 @@ angular.module('storyApp')
 		return this.baseUrl + '/' + this.version + '/' + path + token;
 	};
 
+	// Creates a new user and logs them in
+	Spark.prototype.createUser = function(un, pw) {
+		var deferred = this.$q.defer();
+		var data = {
+			username : un,
+			password : pw
+		};
+		var self = this;
+
+		function setToken(data) {
+			self.accessToken = data.access_token || data.accessToken;
+			deferred.resolve(data);
+		}
+
+		this.promise('post', this.endpoint('users'), data)
+			.then(setToken)
+			.catch(deferred.reject);
+
+		return deferred.promise;
+	};
+
 	// Logs a member in
 	Spark.prototype.login = function(un, pw) {
 		var deferred = this.$q.defer();

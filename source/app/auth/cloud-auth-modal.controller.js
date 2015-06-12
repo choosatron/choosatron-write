@@ -31,19 +31,17 @@
 			console.log("Logging in to cloud");
 
 			var onComplete = function() {
-				$scope.$apply(function() {
-					if (vm.authStatus.status === 'error') {
-						if (vm.authStatus.error) {
-							console.log('API call completed on promise fail: ', vm.authStatus.error);
-							vm.authStatus.error.message = 'Unable to login, try again later.';
-						}
-						console.log(authService.authStatus.remoteState);
-					} else {
-						console.log(authService.authStatus.remoteState);
-						console.log("Cloud Auth Logged in.", vm.profile.cloud);
-						vm.info = { message: "Logged in to the cloud!" };
+				if (vm.authStatus.status === 'error') {
+					if (vm.authStatus.error) {
+						console.log('API call completed on promise fail: ', vm.authStatus.error);
+						vm.authStatus.error.message = 'Unable to login, try again later.';
 					}
-				});
+					console.log(authService.authStatus.remoteState);
+				} else {
+					console.log(authService.authStatus.remoteState);
+					console.log("Cloud Auth Logged in.", vm.profile.cloud);
+					vm.info = { message: "Logged in to the cloud!" };
+				}
 			};
 			console.log(authService.authStatus.remoteState);
 			authService.login(profiles.editing.cloud, vm.password)
@@ -55,18 +53,16 @@
 			console.log("Registering in cloud");
 
 			var onComplete = function() {
-				$scope.$apply(function() {
-					if (vm.authStatus.status === 'error') {
-						if (vm.authStatus.error) {
-							console.log('API call completed on promise fail: ', vm.authStatus.error);
-							vm.authStatus.error.message = 'Unable to register, try again later.';
-						}
-						console.log(authService.authStatus.remoteState);
-					} else {
-						console.log("Cloud Auth Registered", vm.profile.cloud);
-						vm.info = { message: "You've been registered in the cloud!" };
+				if (vm.authStatus.status === 'error') {
+					if (vm.authStatus.error) {
+						console.log('API call completed on promise fail: ', vm.authStatus.error);
+						vm.authStatus.error.message = 'Unable to register, try again later.';
 					}
-				});
+					console.log(authService.authStatus.remoteState);
+				} else {
+					console.log("Cloud Auth Registered", vm.profile.cloud);
+					vm.info = { message: "You've been registered in the cloud!" };
+				}
 			};
 
 			authService.register(profiles.editing.cloud, vm.password)

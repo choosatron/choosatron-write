@@ -7,6 +7,7 @@ function(BaseModel, Choice) {
 		this.number       = null;
 		this.content      = '';
 		this.choices      = [];
+		this.tags         = {};
 		this.opening      = false;
 		this.value        = 0;
 		this.endingValue  = false; // Not an ending when === false

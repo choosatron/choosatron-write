@@ -13,7 +13,7 @@
 
 		<div class="animate-switch" ng-switch-when="plugin">
 			<h2>Plug It In</h2>
-			<p>Plug a USB cable into your Choosatron and this computer. Make sure the Choosatron is in "serial" mode. That means that the LED on Spark Core should be blinking blue. If it isn't blinking blue, you may need to press and hold the 'Mode' button on the Core until the light turns blue.</p>
+			<p>Plug a USB cable into your Choosatron and this computer. Make sure the Choosatron is in "serial" mode. That means that the LED on Spark Core should be blinking blue. If it isn't blinking blue, you may need to press and hold the 'Mode' button on the Core (when facing the micro-USB, the button on the right) until the light flashes blue.</p>
 
 			<p>
 				<button type="button" class="btn btn-primary" ng-click="vm.scanForDevices()">Ready!</button>
@@ -80,7 +80,7 @@
 
 		<div class="animate-switch" ng-switch-when="connected">
 			<h2>Connected!</h2>
-			<p>Or, at least I think so. Check your Choosatron.  When you see the LED slowly glowing cyan, your Choosatron is ready to set up.</p>
+			<p>Or, at least I think so. Check your Choosatron. When you see the LED slowly glowing cyan, your Choosatron is ready to set up.</p>
 
 			<hr>
 			<p>
@@ -99,7 +99,7 @@
 			</div>
 
 			<pre ng-show="vm.serial.coreId">The core id is {{ vm.serial.coreId }}</pre>
-			<pre ng-hide="vm.serial.coreId">Could not get core id </pre>
+			<pre ng-hide="vm.serial.coreId">Could not get core id</pre>
 
 			<p>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>
@@ -110,7 +110,7 @@
 		<div class="animate-switch" ng-switch-when="claimed">
 			<h2>Your New Choosatron Is Ready!</h2>
 
-			<p>Your Choosatron, is ready to play!</p>
+			<p>Your Choosatron has been claimed! If it doesn't already have firmware, reset or power cycle, and it should flash purple as it updates!</p>
 
 			<p>
 				<button type="button" class="btn btn-success" ng-click="vm.cancel()">Thanks!</button>
