@@ -14,7 +14,7 @@
 				<div class="btn-toolbar">
 					<div ng-repeat="endValue in CDAM.Config.kEndingTags.values" class="choiceContainer fade-animation">
 						<div class="btn-group btn-group-justified btn-group-lg">
-							<a ng-click="vm.passage.setEnding($index)" class="btn btn-default btn-terrible" ng-class="{active: vm.passage.endingIndex === $index}">{{ CDAM.Config.kEndingTags.text[$index] }}</a>
+							<a ng-click="vm.passage.setEnding($index)" class="btn btn-default btn-terrible" ng-class="{active: vm.passage.endingIndex === $index}">{{ CDAM.Config.kEndingTags.titles[$index] }}</a>
 						</div>
 					</div>
 				</div>
@@ -92,7 +92,7 @@
 						<div ng-if="choice.hasDestination()">
 							<div ng-if="choice.destination" class="choicePassage">
 
-								<a class="truncated" ng-click="vm.editPassage(choice.destination)">{{ vm.getPassage(choice.destination).getContent() | truncate | quote }}</a>
+								<a class="truncated" ng-click="vm.navHistory.push(vm.passage.id); vm.editPassage(choice.destination)">{{ vm.getPassage(choice.destination).getContent() | truncate | quote }}</a>
 
 								<a ng-click="vm.editPassage(choice.destination)"><span class="passageLink" passage-icons="vm.getPassage(choice.destination)">P{{ vm.getPassage(choice.destination).number }}</span></a>
 							</div>

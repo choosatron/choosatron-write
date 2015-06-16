@@ -95,7 +95,6 @@ function(BaseModel, Passage) {
 				}
 			}
 			this.passages[aPassage.id] = aPassage;
-			console.log("P Num: %d", Object.keys(this.passages).length);
 			this.passages[aPassage.id].number = Object.keys(this.passages).length;
 
 			return aPassage.id;
@@ -173,11 +172,16 @@ function(BaseModel, Passage) {
 		},
 
 		loadPassages: function(aPassages) {
+			console.log("loadPassages");
+			console.log(aPassages);
 			for (var id in aPassages) {
 				this.passages[id] = new Passage(aPassages[id]);
-				//console.log("Loading psg: %s", this.passages[id].id);
+				console.log("Loading psg: %s", this.passages[id].id);
 			}
 
+			console.log('start');
+			console.log(this.passages);
+			console.log('done');
 			// TODO: Why do we need to call this?
 			// Wouldn't the exitType string get saved like
 			// everything else?

@@ -221,7 +221,8 @@
 				vm.prevPassage = vm.passage;
 			}*/
 
-			if (vm.passage !== null) {
+			if ((typeof vm.passage !== 'undefined') &&
+			    (vm.passage !== null)) {
 				var index = vm.navHistory.indexOf(vm.passage.id);
 				if (index >= 0) {
 					vm.navHistory = vm.navHistory.splice(index, index + 1);
@@ -257,7 +258,7 @@
 			// I'm just checking when a choice is displaying its paths whether
 			// they are linking to a valid passage
 			vm.story.deletePassage(aPassage.id);
-			var previous = vm.prevPassage || vm.story.getOpening();
+			var previous = vm.story.passages[vm.navHistory[-1]] || vm.story.getStartPsg();
 			vm.setPassage(previous, true);
 		}
 

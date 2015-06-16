@@ -9,6 +9,7 @@ angular.module('storyApp.directives')
 					if (!passage) {
 						return;
 					}
+					console.log("dir psg:");
 					console.log(passage);
 
 					var choices = passage.choices ? passage.choices.length : 0;

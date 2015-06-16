@@ -130,7 +130,6 @@ function(Story, Passage, Choice) {
 							var tagItems = [];
 							var cur, pair;
 							tagItems = id[2].split(' ');
-							console.log(tagItems);
 							for (var i = 0; i < tagItems.length; i++) {
 								pair = tagItems[i].split(':');
 								if (pair.length === 2) {

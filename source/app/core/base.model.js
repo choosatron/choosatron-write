@@ -28,6 +28,7 @@ function(Random) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
+					console.log(key);
 					this[loader]( data[key] );
 				}
 				else {

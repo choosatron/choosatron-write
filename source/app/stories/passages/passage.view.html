@@ -9,13 +9,13 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="entrance in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.prevPassage)}">
-				<a ng-click="vm.editPassage(entrance.id)">
-					<span class="passageBack" passage-icons="entrance">P{{ entrance.number }}</span>
+			<li ng-repeat="entrance in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.navHistory[vm.navHistory.length - 1])}">
+				<a ng-click="vm.editPassage(entrance)">
+					<span class="passageBack" passage-icons="vm.getPassage(entrance)">P{{ vm.getPassage(entrance).number }} {{ entrance }} {{ vm.navHistory[vm.navHistory.length - 1] }} {{entrance == vm.navHistory[-1] }}</span>
 					<div>
-						<p class="truncated">{{ entrance.getContent() | truncate | quote }}</p>
-						<p ng-if="entrance.getPassageChoice(vm.passage)" class="h4 truncated">{{ entrance.getPassageChoice(vm.passage) | truncate }}</p>
-						<p ng-if="entrance.hasAppend(vm.passage)" class="h4 truncated">Via Append</p>
+						<p class="truncated">{{ vm.getPassage(entrance).getContent() | truncate | quote }}</p>
+						<p ng-if="vm.getPassage(entrance).getPassageChoice(vm.passage)" class="h4 truncated">{{ vm.getPassage(entrance).getPassageChoice(vm.passage) | truncate }}</p>
+						<p ng-if="vm.getPassage(entrance).hasAppend(vm.passage)" class="h4 truncated">Via Append</p>
 					</div>
 				</a>
 			</li>
@@ -28,8 +28,8 @@
 			<h2>
 				Passage {{ vm.passage.number }}
 				<!-- TODO: may indicate this some other way? -->
-				<span ng-if="vm.passage.opening" class="label label-success">Start</span>
-				<a ng-if="!vm.passage.opening" class="h4 icon-inline icon-subtle" confirm-click="vm.deletePassage(vm.passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
+				<span ng-if="vm.passage.isStart" class="label label-success">Start</span>
+				<a ng-if="!vm.passage.isStart" class="h4 icon-inline icon-subtle" confirm-click="vm.deletePassage(vm.passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
 				<div class="savePassage fade-animation" ng-hide="vm.profiles.current.autosave">
 					<button class="btn btn-primary" ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.id, vm.story)"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</button>
 				</div>
@@ -65,11 +65,11 @@
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
 				<li><button class="btn btn-link" ng-click="vm.newPassage()"><span class="glyphicon glyphicon-plus"></span> New Passage</button></li>
-				<li ng-repeat="p in vm.story.passages | filter:vm.passageSearch | filter:vm.validPickingOption" class="fade-animation">
+				<li ng-repeat="p in vm.story.passages | orderObjectBy:'number':false | filter:vm.passageSearch | filter:vm.validPickingOption" class="fade-animation">
 					<a ng-click="vm.selectPassage(p.id)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
 						<!-- TODO: may indicate this some other way? -->
-						<span ng-if="p.opening" class="label label-success">Start</span>
+						<span ng-if="p.isStart" class="label label-success">Start</span>
 						{{ p.getContent() | truncate | quote }}
 					</a>
 				</li>

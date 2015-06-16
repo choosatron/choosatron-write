@@ -16,5 +16,6 @@ angular.module('storyApp', [
 	'ngRoute',
 	/* 3rd-Party Modules */
 	'ui.utils',
-	'ngDialog'
+	'ngDialog',
+	'ngOrderObjectBy'
 ]);

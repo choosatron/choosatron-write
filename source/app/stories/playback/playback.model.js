@@ -17,9 +17,9 @@ function(BaseModel) {
 	Playback.methods = {
 		start: function(aStory) {
 			this.story = aStory;
-			var opening = aStory && aStory.getOpening();
-			this.trim(opening);
-			return opening;
+			var start = aStory && aStory.getStartPsg();
+			this.trim(start);
+			return start;
 		},
 
 		trim: function(aPassage) {

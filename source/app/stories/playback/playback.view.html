@@ -26,7 +26,7 @@
 		<div class="passageBody">
 			<h2>
 				Passage {{ vm.passage.number }}
-				<span ng-if="vm.passage.opening" class="label label-success">Start</span>
+				<span ng-if="vm.passage.isStart" class="label label-success">Start</span>
 			</h2>
 
 			<div>{{vm.passage.content}}</div>
@@ -92,7 +92,7 @@
 				<li ng-repeat="p in vm.story.passages | filter:vm.passageSearch">
 					<a ng-click="vm.selectPassage(p)" class="truncated">
 						<span class="badge" passage-icons="p">P{{ p.number }}</span>
-						<span ng-if="p.opening" class="label label-success">Start</span>
+						<span ng-if="p.isStart" class="label label-success">Start</span>
 						{{ p.getContent() | truncate | quote }}
 					</a>
 				</li>
