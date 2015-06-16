@@ -59,15 +59,25 @@ function(Random) {
 					o[key] = val.serialize();
 				}
 				else {
+					// Will it cause any issues to NOT store null values?
+					if ((typeof(val) === 'undefined') ||
+					 	(val === null) ||
+					    (typeof(val) === 'function') ||
+					    (val.length === 0)) {
+						continue;
+					}
 					o[key] = val;
 				}
 			}
 			return o;
 		},
 
-		serialize: function(pretty) {
+		serialize: function(aPretty) {
 			var o = this.object();
-			var s = angular.toJson(o, pretty);
+			//console.log("Final Object:");
+			//console.log(o);
+			var s = angular.toJson(o, aPretty);
+			//console.log(angular.toJson(o, true));
 			return s;
 		}
 	};

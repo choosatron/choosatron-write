@@ -18,8 +18,6 @@ function(Story, Passage, Choice) {
 			//var reAttributes = /\s(\[([^\]\[]+)\])\s/;
 			var reChoice = /^\[\[(.+)\]\]/;
 
-			console.log('Twine import:');
-
 			function makeChoice(str) {
 				var pipe = str.indexOf('|');
 				var choice = new Choice();
@@ -30,8 +28,6 @@ function(Story, Passage, Choice) {
 				}
 				choice.content = str.substr(0, pipe);
 				choice.destination = str.substr(pipe + 1);
-				console.log("Choice content: " + choice.content);
-				console.log("Choice dest: " + choice.destination);
 				return choice;
 			}
 
@@ -60,23 +56,11 @@ function(Story, Passage, Choice) {
 					aTweeLines = [];
 				}
 
-				// Cycle through content lines until we hit a choice (which must be on it's own line).
-				/*while (aTweeLines.length) {
-					if (reChoice.test(aTweeLines[0])) {
-						break;
-					} else {
-						aPassage.content += aTweeLines.shift();
-					}
-				}*/
-				console.log("Content: " + aPassage.content);
-
 				// Parse remaining choice lines.
 				while (aTweeLines.length) {
 					content = aTweeLines.shift().trim();
 					var match = reChoice.exec(content);
-					console.log(content);
 					if (match) {
-						console.log("Is choice: " + match[1]);
 						var choice = makeChoice(match[1]);
 						aPassage.addChoice(choice);
 					} else {
@@ -85,25 +69,20 @@ function(Story, Passage, Choice) {
 				}
 
 				if (aPassage.choices.length === 0) {
-					aPassage.exitType = 'ending';
+					aPassage.exitType = CDAM.Strings.kExitTypeEnding;
 					// Translate the ending quality.
 					if (typeof aPassage.tags.eq != 'undefined') {
-						aPassage.setEnding(passage.tags.eq - 3);
+						aPassage.setEndingIndex(passage.tags.eq - 1);
 					} else {
-						aPassage.setEnding(0);
+						aPassage.setEndingIndex(2);
 					}
-					console.log("Ending Val: " + aPassage.endingValue);
 				} else if (aPassage.choices.length === 1) {
-					console.log(aPassage.choices[0].content);
-					console.log(aPassage.choices[0]);
 					if (aPassage.choices[0].content == '<append>') {
-						aPassage.exitType = 'append';
+						aPassage.exitType = CDAM.Strings.kExitTypeAppend;
 						aPassage.appendLink = aPassage.choices[0];
-						console.log("Appended");
 					} else if (aPassage.choices[0].content == '<continue>') {
-						aPassage.exitType = 'choices';
+						aPassage.exitType = CDAM.Strings.kExitTypeChoices;
 						aPassage.choices[0].content = 'Continue...';
-						console.log("Continue");
 					}
 				}
 			}
@@ -141,42 +120,31 @@ function(Story, Passage, Choice) {
 						passage.id = id[1].trim();
 
 						if (passage.id === 'Start') {
-							passage.opening = true;
+							//console.log("Start Passage Found!");
+							passage.isStart = true;
 						}
 
 						if (typeof id[2] === 'undefined') {
 							console.log("No tags for passage: " + passage.id);
 						} else {
-							//console.log(id[2]);
 							var tagItems = [];
 							var cur, pair;
 							tagItems = id[2].split(' ');
 							console.log(tagItems);
 							for (var i = 0; i < tagItems.length; i++) {
 								pair = tagItems[i].split(':');
-								console.log("Items: " + pair);
 								if (pair.length === 2) {
 									passage.tags[pair[0]] = pair[1];
 								}
-								//console.log("Tag: " + pair[0] + ", Val: " + pair[1]);
 							}
 						}
-
-						//if (attrs) passage.tags = attrs[1];
-
-						/*while (lines.length) {
-							content = lines.shift().trim();
-							if (reId.test(content)) {
-								lines.unshift(content);
-								break;
-							}
-							passage.content += content + '\n';
-						}*/
+						// Parse and create choices.
 						parseChoices(passage, tweeLines);
 						// Add the passage.
 						story.addPassage(passage);
 				}
 			}
+			story.generatePsgEntrances();
 
 			return story;
 		},

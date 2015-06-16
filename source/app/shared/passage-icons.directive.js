@@ -9,6 +9,7 @@ angular.module('storyApp.directives')
 					if (!passage) {
 						return;
 					}
+					console.log(passage);
 
 					var choices = passage.choices ? passage.choices.length : 0;
 					var verb = 'Links to ';

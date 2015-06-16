@@ -4,8 +4,6 @@ function(BaseModel, Passage) {
 
 	/// Story ///
 	function Story(data) {
-		this.created      =  Date.now();
-		this.modified     =  Date.now();
 		this.published    =  false;
 		this.title        =  '';
 		this.subtitle     =  '';
@@ -17,7 +15,10 @@ function(BaseModel, Passage) {
 		this.credits      =  '';
 		this.contact      =  '';
 		this.passages     =  {};
-		this.startKey     =  '';
+		this.startId      =  '';
+
+		this.endingTags   = CDAM.Config.kEndingTags;
+
 		BaseModel.call(this, data);
 	}
 
@@ -27,23 +28,14 @@ function(BaseModel, Passage) {
 		},
 
 		getStartPsg: function() {
-			var opening = null;
-			this.eachPassage(function(p) {
-				if (p.opening) {
-					opening = p;
-					return false;
-				}
-			});
-			// There should always be an opening. Make one if needed.
-			if (!opening) {
-				opening = new Passage();
-				opening.opening = true;
-				opening.number = this.passages.length;
-				this.addPassage(opening);
+			if (this.startId.length > 0) {
+				return this.passages[this.startId];
 			}
-			return opening;
+			return false;
 		},
 
+		// Return a list of IDs for passages with no parents
+		// and no child links.
 		getOrphans: function() {
 			var destinations = [];
 			this.eachPassage(function(p) {
@@ -51,14 +43,28 @@ function(BaseModel, Passage) {
 			});
 			var ophans = [];
 			this.eachPassage(function(p) {
-				if (destinations.indexOf(p.id) < 0) {
+				if ((p.entrances.length === 0) &&
+				    (p.getDestinations().length === 0)) {
 					orphans.push(p);
 				}
 			});
-			return p;
+			return orphans;
+		},
+
+		// Return a list of IDs for passages with no parents,
+		// but at least one valid child link (not including Start).
+		getParentless: function() {
+			// TODO
+		},
+
+		// Return a list of IDs for passages that aren't exits,
+		// but have missing child links (even w/ some valid links).
+		getMissingLinks: function() {
+			// TODO
 		},
 
 		getChoice: function(aId) {
+			// TODO: Review
 			var choice = null;
 			this.passages.some(function(p) {
 				var c = p.getChoice(aId);
@@ -74,30 +80,24 @@ function(BaseModel, Passage) {
 		addPassage: function(aPassage) {
 			// If it's the only passage, it is the start.
 			if (this.passages.length === 0) {
-				aPassage.opening = true;
-				this.passages.push(aPassage);
+				this.startId = aPassage.id;
+				aPassage.isStart = true;
+				console.log("No passages yet!");
 			} else {
-				// If the new passage is set to opening,
-				// make sure there isn't another opening passage.
-				if (aPassage.opening === true) {
-					this.eachPassage(function(p) {
-						if (p.opening) {
-							// If there is, unset it.
-							p.opening = false;
-							return;
-						}
-					});
-					// Put the new start passage at the beginning.
-					this.passages.unshift(aPassage);
-				} else {
-					// Just add the passage.
-					this.passages.push(aPassage);
+				// If the new passage is set to isStart,
+				// make sure there isn't another isStart passage.
+				if (aPassage.isStart === true) {
+					if (this.startId.length > 0) {
+						this.passages[this.startId].isStart = false;
+						console.log("Old id: %s, new id: %s", this.startId, aPassage.id);
+					}
+					this.startId = aPassage.id;
 				}
 			}
+			this.passages[aPassage.id] = aPassage;
+			console.log("P Num: %d", Object.keys(this.passages).length);
+			this.passages[aPassage.id].number = Object.keys(this.passages).length;
 
-			/*this.eachPassage(function(p) {
-				console.log(p.id);
-			});*/
 			return aPassage.id;
 		},
 
@@ -105,38 +105,29 @@ function(BaseModel, Passage) {
 			if (!this.passages) {
 				return;
 			}
-			for (var i = 0; i < this.passages.length; i++) {
-				if (this.passages[i].id == aId) {
-					// Delete entry from array
-					this.passages[i].trashed = true;
-					this.passages.splice(i, 1);
-					break;
-				}
+			if (aId in this.passages) {
+				this.passages[aId].unlinkChoices();
+
+				this.passages[aId].entrances.forEach(function(aEntrance) {
+					this.passages[aEntrance].unlinkChoices();
+				});
+				this.passages[aId].trashed = true;
+				delete this.passages[aId];
+			} else {
+				console.warning("deletePassage: Passage '%s' not found.", aId);
 			}
 		},
 
 		getPassage: function(aId) {
-			var index = this.getPassageIndex(aId);
-			if (index >= 0) {
-				return this.passages[index];
-			}
-			return null;
-		},
-
-		getPassageIndex: function(aId) {
-			for (var i=0; i<this.passages.length; i++) {
-				if (this.passages[i].id === aId) {
-					return i;
-				}
-			}
-			return false;
+			return this.passages[aId];
 		},
 
 		eachPassage: function(aCallback) {
 			return this.each('passages', aCallback);
 		},
 
-		collectEntrances: function(aPassage) {
+		/*collectEntrances: function(aPassage) {
+			// TODO: Review
 			var entrances = [];
 			this.eachPassage(function(p) {
 				if (p.hasDestination(aPassage)) {
@@ -148,35 +139,64 @@ function(BaseModel, Passage) {
 				}
 			});
 			return entrances;
-		},
+		},*/
 
 		// Gathers all of the commands used in the story
 		// and returns an array
 		collectCommands: function() {
 			var cmds = [];
-			function add(cmd) {
-				if (!cmd.empty()) {
-					cmds.push(cmd);
+			function add(aCmd) {
+				if (!aCmd.empty()) {
+					cmds.push(aCmd);
 				}
 			}
-			this.eachPassage(function(p) {
+			for (var id in this.passages) {
+				for (var choice in this.passages[id].choices) {
+					if (('undefined' !== typeof choice.condition) &&
+					    (choice.condition !== null)) {
+						cmds.push(choice.condition);
+					}
+					if (typeof choice.updates != 'undefined') {
+						choice.updates.forEach(add);
+					}
+				}
+			}
+
+			/*this.eachPassage(function(p) {
 				p.eachChoice(function(c) {
 					add(c.condition);
 					c.updates.forEach(add);
 				});
-			});
+			});*/
 			console.debug('FOUND', cmds);
 			return cmds;
 		},
 
 		loadPassages: function(aPassages) {
-			for (var i = 0; i < aPassages.length; i++) {
-				this.passages.push(new Passage(aPassages[i]));
+			for (var id in aPassages) {
+				this.passages[id] = new Passage(aPassages[id]);
+				//console.log("Loading psg: %s", this.passages[id].id);
 			}
 
-			this.eachPassage(function(p) {
-				p.calculateExitType();
-			});
+			// TODO: Why do we need to call this?
+			// Wouldn't the exitType string get saved like
+			// everything else?
+			//for (var eId in this.passages) {
+				//this.passages[eId].calculateExitType();
+			//}
+		},
+
+		generatePsgEntrances: function() {
+			for (var findId in this.passages) {
+				this.passages[findId].entrances = [];
+				for (var currentId in this.passages) {
+					if (findId !== currentId) {
+						if (this.passages[currentId].hasDestination(findId)) {
+							this.passages[findId].entrances.push(currentId);
+						}
+					}
+				}
+			}
 		}
 	};
 

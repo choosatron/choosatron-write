@@ -3,7 +3,7 @@ angular.module('storyApp.models')
 function(BaseModel, Command) {
 	/// Choice ///
 	function Choice(data) {
-		this.content     =  '';
+		this.content = '';
 
 		// Used to determine whether conditions are shown in the UI
 		this.showCondition = false;
@@ -12,10 +12,10 @@ function(BaseModel, Command) {
 		this.showUpdates = false;
 
 		// These are the conditions used to determine whether this choice is displayed
-		this.condition = new Command();
+		this.condition = null;
 
 		// The id of the passage that this choice links to
-		this.destination = null;
+		this.destination = '';
 
 		// The updates to perform when this choice is selected
 		this.updates = [];
@@ -28,33 +28,42 @@ function(BaseModel, Command) {
 			return this.content || "Unwritten Choice";
 		},
 
-		hasDestination: function(passage) {
-			if ('undefined' == typeof passage) {
+		hasDestination: function(aId) {
+			if ('undefined' == typeof aId) {
 				return this.destination;
 			}
-			return passage && passage.id && passage.id == this.destination;
+			return aId == this.destination;
 		},
 
-		setDestination: function(passage) {
-			this.destination = passage && passage.id;
+		setDestination: function(aId) {
+			this.destination = aId;
 		},
 
-		addUpdate: function(update) {
-			this.updates.push(new Command(update));
+		removeDestination: function() {
+			this.destination = null;
 		},
 
-		loadUpdates: function(updates) {
+		addUpdate: function(aUpdate) {
+			this.updates.push(new Command(aUpdate));
+		},
+
+		loadUpdates: function(aUpdates) {
 			this.updates = [];
-			for (var i=0; i<updates.length; i++) {
-				var update = new Command(updates[i]);
+			for (var i = 0; i < aUpdates.length; i++) {
+				var update = new Command(aUpdates[i]);
 				this.updates.push(update);
 			}
 			this.showUpdates = this.updates.length > 0;
 		},
 
-		loadCondition: function(condition) {
-			this.condition = new Command(condition);
-			this.showCondition = condition && condition.length;
+		loadCondition: function(aCondition) {
+			if (aCondition !== null) {
+				console.log("Condition: ");
+				console.log(aCondition);
+				console.log("done");
+				this.condition = new Command(aCondition);
+				this.showCondition = aCondition && aCondition.length;
+			}
 		}
 	};
 	BaseModel.extend(Choice, Choice.methods);

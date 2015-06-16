@@ -4,21 +4,23 @@ function(BaseModel, Choice) {
 
 	/// Passage ///
 	function Passage(data) {
-		this.number       = null;
-		this.content      = '';
-		this.choices      = [];
-		this.tags         = {};
-		this.startPsg     = false;
-		this.value        = 0;
-		this.endingValue  = false; // Not an ending when === false
-		this.trashed      = false;
-		this.exitType     = 'choices';
+		this.number         = null;
+		this.content        = '';
+		this.choices        = [];
+		this.entrances      = [];
+		this.tags           = {};
+		this.isStart        = false;
+		this.isValid        = false;
+		this.value          = 0;
+		this.endingIndex    = false; // Not an ending when === false
+		this.trashed        = false;
+		this.exitType       = CDAM.Strings.kExitTypeChoices;
 		// Cheating and using a Choice for the append data struct so I can reuse a bunch of code
-		this.appendLink  = new Choice();
+		this.appendLink = null;
 
 		BaseModel.call(this, data);
 
-		this.calculateExitType();
+		//this.calculateExitType();
 
 		Passage.passages[this.id] = this;
 
@@ -43,11 +45,11 @@ function(BaseModel, Choice) {
 			}
 		},*/
 
-		getContent: function () {
+		getContent: function() {
 			return this.content || "Unwritten Passage";
 		},
 
-		setExitType: function (aExitType) {
+		setExitType: function(aExitType) {
 			this.endingValue = false;
 			this.choices = [];
 			this.appendLink = new Choice();
@@ -55,38 +57,40 @@ function(BaseModel, Choice) {
 			this.exitType = aExitType;
 		},
 
-		/*exitIsEmpty: function () {
-			if (this.exitType == 'ending' && !this.hasEnding()) {
+		// Check if the current exit type is populated.
+		exitIsEmpty: function () {
+			if (this.exitType == CDAM.Strings.kExitTypeEnding &&
+			    !this.hasEnding()) {
 				return true;
 			}
-			if (this.exitType == 'append' && !this.hasAppend()) {
+			if (this.exitType == CDAM.Strings.kExitTypeAppend &&
+			    !this.hasAppend()) {
 				return true;
 			}
-			if (this.exitType == 'choices' && !this.hasChoices()) {
+			if (this.exitType == CDAM.Strings.kExitTypeChoices &&
+			    !this.hasChoices()) {
 				return true;
 			}
 			return false;
-		},*/
-
-		hasEnding: function () {
-			return (this.endingValue !== false);
 		},
 
-		hasAppend: function (aPassage) {
-			if (aPassage) {
-				return (this.appendLink.hasDestination(aPassage));
-			}
+		// True if ending tag isn't set, no information loss if switching
+		// exit type.
+		hasEnding: function() {
+			return (this.endingIndex !== false);
+		},
 
+		hasAppend: function() {
 			return (this.appendLink && this.appendLink.hasDestination && this.appendLink.hasDestination());
 		},
 
-		hasChoices: function () {
+		hasChoices: function() {
 			return (this.choices && this.choices.length);
 		},
 
-		setEnding: function (aValue) {
-			if (this.exitType === 'ending') {
-				this.endingValue = aValue;
+		setEndingIndex: function(aIndex) {
+			if (this.exitType === CDAM.Strings.kExitTypeEnding) {
+				this.endingIndex = aIndex;
 			}
 		},
 
@@ -94,21 +98,7 @@ function(BaseModel, Choice) {
 			if (!this.hasEnding()) {
 				return '';
 			}
-
-			switch (this.endingValue) {
-				case -2:
-					return 'terrible';
-				case -1:
-					return 'bad';
-				case 0:
-					return 'neutral';
-				case 1:
-					return 'good';
-				case 2:
-					return 'great';
-			}
-
-			return '';
+			return CDAM.Config.kEndingTags.titles[this.endingIndex];
 		},
 
 		abbreviate: function(aLength) {
@@ -130,10 +120,21 @@ function(BaseModel, Choice) {
 			return aChoice.id;
 		},
 
+		unlinkChoices: function() {
+			this.choices.forEach(function(choice) {
+				unlinkChoice(choice);
+			});
+		},
+
+		unlinkChoice: function() {
+			// TODO
+		},
+
 		removeChoice: function(aChoice) {
 			for (var i = 0; i < this.choices.length; i++) {
 				var c = this.choices[i];
 				if (c.id == aChoice.id) {
+
 					this.choices.splice(i, 1);
 					break;
 				}
@@ -158,10 +159,10 @@ function(BaseModel, Choice) {
 			return choice;
 		},
 
-		hasDestination: function(aPassage) {
+		hasDestination: function(aId) {
 			var has = false;
-			this.eachChoice( function( c ) {
-				if (c.hasDestination(aPassage)) {
+			this.eachChoice( function(c) {
+				if (c.hasDestination(aId)) {
 					has = true;
 					return false;
 				}
@@ -172,11 +173,9 @@ function(BaseModel, Choice) {
 		getDestinations: function() {
 			var ids = [];
 			this.eachChoice(function(c) {
-				c.eachPath(function(p) {
-					if (ids.indexOf(p.destination) < 0) {
-						ids.push(p.destination);
-					}
-				});
+				if (ids.indexOf(c.destination) < 0) {
+					ids.push(p.destination);
+				}
 			});
 			return ids;
 		},
@@ -205,7 +204,7 @@ function(BaseModel, Choice) {
 			}
 		},
 
-		loadAppendLink: function (aAppendLink) {
+		loadAppendLink: function(aAppendLink) {
 			this.appendLink = new Choice(aAppendLink);
 		}
 	};

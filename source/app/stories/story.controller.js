@@ -22,7 +22,10 @@
 		vm.genres             = Genres;
 		vm.exporters          = translators.exporters();
 		vm.alerts             = [];
-		vm.prevPassage        = null;
+		//vm.prevPassage        = null;
+
+		vm.navHistory         = [];
+
 		vm.picking            = false;
 		vm.deleted            = null;
 		vm.modal              = {confirm_message: ''};
@@ -98,7 +101,7 @@
 
 					// Set the current story and passage
 					vm.story = new Story(result.story);
-					vm.setPassage(vm.story.getOpening(), true);
+					vm.setPassage(vm.story.getStartPsg(), true);
 					vm.showStoryDetails = vm.story.passages.length < 2;
 					loadVariables();
 
@@ -127,6 +130,7 @@
 
 			var handleStoryChange = function(nv, ov, scope) {
 				if (profiles.current.autosave && angular.isDefined(nv)) {
+					console.log("handleStoryChange");
 					saver.save(aResult.story.id, nv.object());
 				}
 				else {
@@ -211,19 +215,33 @@
 			$('.scrollPassages').scrollTop(0);
 
 			if (aReset) {
-				vm.prevPassage = null;
+				vm.navHistory = [];
 			}
-			else {
+			/*else {
 				vm.prevPassage = vm.passage;
+			}*/
+
+			if (vm.passage !== null) {
+				var index = vm.navHistory.indexOf(vm.passage.id);
+				if (index >= 0) {
+					vm.navHistory = vm.navHistory.splice(index, index + 1);
+				}
+				vm.navHistory.push(vm.passage.id);
 			}
 
 			// Collect the entrances just once to improve performance
-			aPassage.entrances = vm.story.collectEntrances(aPassage);
+			//aPassage.entrances = vm.story.collectEntrances(aPassage);
 
-			vm.passage = aPassage;
+			if (aPassage !== false) {
+				vm.passage = aPassage;
+			} else {
+				console.warning("Tried to set a non-existent passage.");
+			}
 		}
 
 		function deletePassage(aPassage) {
+			// TODO: REDO!!!!
+
 			console.info("deleting", aPassage);
 			vm.deleted = {
 				type: "passage",
@@ -257,25 +275,25 @@
 			}
 
 			switch (aPassage.exitType) {
-				case 'ending':
+				case CDAM.Strings.kExitTypeEnding:
 					data.willDelete = 'ending value';
 					break;
-				case 'append':
+				case CDAM.Strings.kExitTypeAppend:
 					data.willDelete = 'append';
 					break;
-				case 'choices':
+				case CDAM.Strings.kExitTypeChoices:
 					data.willDelete = 'choices';
 					break;
 			}
 
 			switch (aExitType) {
-				case 'ending':
+				case CDAM.Strings.kExitTypeEnding:
 					data.changeTo = 'an ending';
 					break;
-				case 'append':
+				case CDAM.Strings.kExitTypeAppend:
 					data.changeTo = 'have an append';
 					break;
-				case 'choices':
+				case CDAM.Strings.kExitTypeChoices:
 					data.changeTo = 'have choices';
 					break;
 			}
