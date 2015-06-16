@@ -11,7 +11,7 @@
 		<ul class="list-unstyled">
 			<li ng-repeat="entrance in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.navHistory[vm.navHistory.length - 1])}">
 				<a ng-click="vm.editPassage(entrance)">
-					<span class="passageBack" passage-icons="vm.getPassage(entrance)">P{{ vm.getPassage(entrance).number }} {{ entrance }} {{ vm.navHistory[vm.navHistory.length - 1] }} {{entrance == vm.navHistory[-1] }}</span>
+					<span class="passageBack" passage-icons="vm.getPassage(entrance)">P{{ vm.getPassage(entrance).number }}</span>
 					<div>
 						<p class="truncated">{{ vm.getPassage(entrance).getContent() | truncate | quote }}</p>
 						<p ng-if="vm.getPassage(entrance).getPassageChoice(vm.passage)" class="h4 truncated">{{ vm.getPassage(entrance).getPassageChoice(vm.passage) | truncate }}</p>
