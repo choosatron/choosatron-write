@@ -12,10 +12,9 @@
 		<div class="tab-content">
 			<div class="tab-pane passageEnding" ng-class="{active: vm.passage.exitType == 'ending'}" id="passageEnding">
 				<div class="btn-toolbar">
-					<div ng-repeat="endValue in CDAM.Config.kEndingTags.values" class="choiceContainer fade-animation">
-						<div class="btn-group btn-group-justified btn-group-lg">
-							<a ng-click="vm.passage.setEnding($index)" class="btn btn-default btn-terrible" ng-class="{active: vm.passage.endingIndex === $index}">{{ CDAM.Config.kEndingTags.titles[$index] }}</a>
-						</div>
+					<div class="btn-group btn-group-justified btn-group-lg">
+					<!-- How do I use the array of button css classes across the ng-repeat? -->
+							<a ng-repeat="endValue in vm.endingTags.values" ng-click="vm.passage.setEnding($index)" class="btn btn-default" ng-class="{active: vm.passage.endingIndex === $index, 'btn-terrible': vm.endingTags.values[$index] === 1, 'btn-bad': vm.endingTags.values[$index] === 2, 'btn-neutral': vm.endingTags.values[$index] === 3, 'btn-good': vm.endingTags.values[$index] === 4, 'btn-great': vm.endingTags.values[$index] === 5}">{{ vm.endingTags.titles[$index] }}</a>
 					</div>
 				</div>
 			</div><!-- .passageEnding -->
@@ -76,7 +75,7 @@
 					<div class="col-xs-9">
 						<p><input ng-model="choice.content" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
-						<!-- Neither of these can happen right now because there is a UI overlay blocking the user from clicking this... but they are still a good theorhetical questions: -->
+						<!-- Neither of these can happen right now because there is a UI overlay blocking the user from clicking this... but they are still a good theoretical questions: -->
 								<!-- TODO: Potentially buggy scenario with picking mode... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
 								<!-- TODO: what happens if you click "Existing Passage" and then immediately pick "New Passage"?? -->
 						<p ng-if="!choice.hasDestination()" class="choicePassageMenu">

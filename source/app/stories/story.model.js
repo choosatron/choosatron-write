@@ -9,7 +9,7 @@ function(BaseModel, Passage) {
 		this.subtitle     =  '';
 		this.version      =  1.0;
 		this.description  =  '';
-		this.cover_url    =  '';
+		this.coverUrl     =  '';
 		this.genre        =  '';
 		this.author       =  '';
 		this.credits      =  '';
@@ -17,7 +17,7 @@ function(BaseModel, Passage) {
 		this.passages     =  {};
 		this.startId      =  '';
 
-		this.endingTags   = CDAM.Config.kEndingTags;
+		//this.endingTags   = CDAM.Config.kEndingTags;
 
 		BaseModel.call(this, data);
 	}
@@ -77,6 +77,50 @@ function(BaseModel, Passage) {
 			return choice;
 		},
 
+		linkEntrances: function(aPassage) {
+			aPassage.entrances.forEach(function(entrance) {
+				this.passages[entrance].choices.forEach(function(choice) {
+
+				});
+			});
+		},
+
+		linkChoices: function(aPassage) {
+			aPassage.choices.forEach(function(choice) {
+				linkChoice(aPassage, choice);
+			});
+		},
+
+		linkChoice: function(aPassage, aChoice) {
+			if (aChoice.hasDestination()) {
+				this.passages[aChoice.destination].addEntrance(aPassage.id);
+			}
+		},
+
+		// Nagivate to all choice destinations and remove the
+		// current passage id from it's list of entrances.
+		unlinkChoices: function(aPassage) {
+			aPassage.choices.forEach(function(choice) {
+				unlinkChoice(aPassage, choice);
+			});
+		},
+
+		unlinkChoice: function(aPassage, aChoice) {
+			if (aChoice.hasDestination()) {
+				this.passages[aChoice.destination].removeEntrance(aPassage.id);
+			}
+		},
+
+		unlinkEntrances: function(aPassage) {
+			aPassage.entrances.forEach(function(entrance) {
+				this.passages[entrance].choices.forEach(function(choice) {
+					if (choice.destination === aPassage.id) {
+						choice.removeDestination();
+					}
+				});
+			});
+		},
+
 		addPassage: function(aPassage) {
 			// If it's the only passage, it is the start.
 			if (this.passages.length === 0) {
@@ -105,13 +149,10 @@ function(BaseModel, Passage) {
 				return;
 			}
 			if (aId in this.passages) {
-				this.passages[aId].unlinkChoices();
-
-				this.passages[aId].entrances.forEach(function(aEntrance) {
-					this.passages[aEntrance].unlinkChoices();
-				});
+				unlinkChoices(this.passages[aId]);
+				unlinkEntrances(this.passages[aId]);
 				this.passages[aId].trashed = true;
-				delete this.passages[aId];
+				//delete this.passages[aId];
 			} else {
 				console.warning("deletePassage: Passage '%s' not found.", aId);
 			}

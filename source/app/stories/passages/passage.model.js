@@ -112,6 +112,20 @@ function(BaseModel, Choice) {
 			return abbr;
 		},
 
+		addEntrance: function(aPassageId) {
+			var index = this.entrances.indexOf(aPassageId);
+			if (index === -1) {
+				this.entrances.push(aPassageId);
+			}
+		},
+
+		removeEntrance: function(aPassageId) {
+			var index = this.entrances.indexOf(aPassageId);
+			if (index > -1) {
+				this.entrances.splice(index, 1);
+			}
+		},
+
 		addChoice: function(aChoice) {
 			if (!this.choices.push) {
 				this.choices = [];
@@ -120,21 +134,33 @@ function(BaseModel, Choice) {
 			return aChoice.id;
 		},
 
-		unlinkChoices: function() {
+
+		// Is this messy? Moved to story.model, passing in all passages
+		// felt weird.
+		/*// Nagivate to all choice destinations and remove the
+		// current passage id from it's list of entrances.
+		unlinkChoices: function(aPassages) {
 			this.choices.forEach(function(choice) {
-				unlinkChoice(choice);
+				unlinkChoice(aPassages, choice);
 			});
 		},
 
-		unlinkChoice: function() {
-			// TODO
+		unlinkChoice: function(aPassage, aChoice) {
+			if (aChoice.hasDestination()) {
+				aPassages[aChoice.destination].removeEntrance(this.id);
+			}
 		},
+
+		linkChoice: function(aPassages, aChoice) {
+			if (aChoice.hasDestination()) {
+				aPassages[aChoice.destination].addEntrance(this.id);
+			}
+		},*/
 
 		removeChoice: function(aChoice) {
 			for (var i = 0; i < this.choices.length; i++) {
 				var c = this.choices[i];
 				if (c.id == aChoice.id) {
-
 					this.choices.splice(i, 1);
 					break;
 				}

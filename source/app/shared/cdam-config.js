@@ -9,8 +9,6 @@
 		kEndingTags: {
 			titles: ['Terrible', 'Bad', 'Neutral', 'Good', 'Great'],
 			values: [1, 2, 3, 4, 5],
-
-			colors: ['#cf1111', '#cf8311', '#b8b8b8', '#11a8cf', '#0ea60e']
-		}
+			css:    ['btn-terrible', 'btn-bad', 'btn-neutral', 'btn-good', 'btn-great']		}
 	};
 }());

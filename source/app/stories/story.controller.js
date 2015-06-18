@@ -34,6 +34,8 @@
 		vm.saveState          = 'floppy-disk';
 		vm.exitChangeModal    = {};
 
+		vm.endingTags   = CDAM.Config.kEndingTags;
+
 		// Functions
 		vm.loadVariables         = loadVariables;
 		vm.autosave              = autosave;
@@ -171,20 +173,35 @@
 			$location.path('/stories');
 		}
 
-		function newPassage(aEntranceChoice) {
-			vm.passage = new Passage();
-			vm.passage.number = vm.story.getNextPassageNumber();
-			vm.story.addPassage(vm.passage);
-			if (aEntranceChoice) {
-				aEntranceChoice.setDestination(vm.passage);
-			}
-			vm.picking = null;
+		function validPickingOption(aItem) {
+			// Is there ANY reason you can't just link to ANY passage? Even the current one?
+			//return (!vm.picking || vm.passage.exitType != 'append' || vm.passage.id != aItem.id);
+			return true;
 		}
 
+		// Create a new passage. If a choice is provide,
+		// connect that choice to the new passage and add
+		// the current passage as an entrance passage for it.
+		function newPassage(aEntranceChoice) {
+			var passage = new Passage();
+			vm.story.addPassage(passage);
+			if (aEntranceChoice) {
+				aEntranceChoice.setDestination(passage.id);
+				passage.addEntrance(vm.passage.id);
+			}
+			// Set our current passage to the new one.
+			vm.passage = passage;
+			vm.picking = false;
+		}
+
+		// When populated with a value,
+		// this triggers the 'picking' css class
+		// in passage.view.html
 		function pickPassage(aChoice) {
 			vm.picking = aChoice;
 		}
 
+		// If the passage exists, return it.
 		function getPassage(aId) {
 			if (!vm.story) {
 				return null;
@@ -192,15 +209,14 @@
 			return vm.story.getPassage(aId);
 		}
 
-		function validPickingOption(aItem) {
-			return (!vm.picking || vm.passage.exitType != 'append' || vm.passage != aItem);
-		}
-
 		function selectPassage(aId) {
 			if (vm.picking) {
+				if (vm.picking.hasDestination()) {
+					vm.story.getPassage(vm.picking.destination).removeEntrance(vm.passage.id);
+				}
 				vm.picking.setDestination(vm.story.getPassage(aId));
-				vm.picking = null;
-
+				vm.story.getPassage(aId).addEntrance(vm.passage.id);
+				vm.picking = false;
 			} else {
 				vm.editPassage(aId);
 			}
@@ -214,29 +230,24 @@
 			// TODO: Is there an Angular way to access this element in the scope to do this?
 			$('.scrollPassages').scrollTop(0);
 
-			if (aReset) {
-				vm.navHistory = [];
-			}
-			/*else {
-				vm.prevPassage = vm.passage;
-			}*/
-
-			if ((typeof vm.passage !== 'undefined') &&
-			    (vm.passage !== null)) {
-				var index = vm.navHistory.indexOf(vm.passage.id);
-				if (index >= 0) {
-					vm.navHistory = vm.navHistory.splice(index, index + 1);
-				}
-				vm.navHistory.push(vm.passage.id);
-			}
-
-			// Collect the entrances just once to improve performance
-			//aPassage.entrances = vm.story.collectEntrances(aPassage);
-
 			if (aPassage !== false) {
 				vm.passage = aPassage;
 			} else {
 				console.warning("Tried to set a non-existent passage.");
+				return;
+			}
+
+			if (aReset) {
+				vm.navHistory = [];
+			}
+
+			if ((typeof vm.passage !== 'undefined') &&
+			    (vm.passage !== null)) {
+				var index = vm.navHistory.indexOf(vm.passage.id);
+				if (index > -1) {
+					vm.navHistory.splice(index, 1);
+				}
+				vm.navHistory.push(vm.passage.id);
 			}
 		}
 
@@ -250,16 +261,23 @@
 				undo: function() {
 					aPassage.trashed = false;
 					vm.story.addPassage(aPassage);
-					vm.passage = aPassage;
+					vm.setPassage(aPassage, false);
 				}
 			};
 			// The choice paths that link to this passage are not being deleted,
 			// but if they were that would require a change to "undo" ... for now
 			// I'm just checking when a choice is displaying its paths whether
 			// they are linking to a valid passage
+
+			// EDIT:
+
 			vm.story.deletePassage(aPassage.id);
+			var index = vm.navHistory.indexOf(aPassage.id);
+			if (index > -1) {
+				vm.navHistory.splice(index, 1);
+			}
 			var previous = vm.story.passages[vm.navHistory[-1]] || vm.story.getStartPsg();
-			vm.setPassage(previous, true);
+			vm.setPassage(previous, false);
 		}
 
 		function confirmExitTypeChange(aPassage, aExitType) {
@@ -311,28 +329,27 @@
 			}).then(onConfirm);
 		}
 
+		function hasDestination(aChoice) {
+			return aChoice.hasDestination();
+		}
+
 		function newChoice(aPassage) {
 			var choice = new Choice();
 			aPassage.addChoice(choice);
-		}
-
-		function hasDestination(aChoice) {
-			return aChoice.hasDestination();
 		}
 
 		function deleteChoice(aPassage, aChoice) {
 			vm.deleted  =  {
 				type: "choice",
 				title: aChoice.content,
-				undo: function() {vm.passage.addChoice(aChoice);}
+				undo: function() {
+					vm.passage.addChoice(aChoice);
+					vm.story.linkChoice(aPassage, aChoice);
+				}
 			};
+			vm.story.unlinkChoice(aPassage, aChoice);
 			aPassage.removeChoice(aChoice);
-		}
 
-		function deleteChoiceUpdate(aChoice, aUpdate) {
-			aChoice.updates = aChoice.updates.filter(function(u) {
-				return (u.raw != aUpdate.raw);
-			});
 		}
 
 		function deleteChoiceCondition(aChoice) {
@@ -344,10 +361,18 @@
 			aChoice.updates.push(new Command());
 		}
 
+		function deleteChoiceUpdate(aChoice, aUpdate) {
+			aChoice.updates = aChoice.updates.filter(function(u) {
+				return (u.raw != aUpdate.raw);
+			});
+		}
+
+		// Clear the search field.
 		function clearPassageSearch() {
 			vm.passageSearch = '';
 		}
 
+		// TODO: Research functionality!!!
 		function undoDelete() {
 			if (!vm.deleted) {
 				return;
@@ -356,11 +381,13 @@
 			vm.deleted = null;
 		}
 
+		// Return a JSON serialized copy of the the current story.
 		function jsonStory(aPretty) {
 			if (!vm.story) return '{}';
 			return vm.story.serialize(aPretty);
 		}
 
+		// Export a story as the provided type.
 		function exportStory(aType) {
 			translators.export(aType, vm.story);
 		}

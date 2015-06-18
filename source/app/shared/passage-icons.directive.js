@@ -9,8 +9,7 @@ angular.module('storyApp.directives')
 					if (!passage) {
 						return;
 					}
-					console.log("dir psg:");
-					console.log(passage);
+					//console.log("Directive Passage");
 
 					var choices = passage.choices ? passage.choices.length : 0;
 					var verb = 'Links to ';
