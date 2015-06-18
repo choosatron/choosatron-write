@@ -78,11 +78,11 @@ function(BaseModel, Passage) {
 		},
 
 		linkEntrances: function(aPassage) {
-			aPassage.entrances.forEach(function(entrance) {
-				this.passages[entrance].choices.forEach(function(choice) {
-
-				});
-			});
+			for (var pId in aPassage.entrances) {
+				for (var cId in aPassage.entrances[pId]) {
+					this.passages[pId].getChoice(cId).setDestination(aPassage.id);
+				}
+			}
 		},
 
 		linkChoices: function(aPassage) {
@@ -93,7 +93,7 @@ function(BaseModel, Passage) {
 
 		linkChoice: function(aPassage, aChoice) {
 			if (aChoice.hasDestination()) {
-				this.passages[aChoice.destination].addEntrance(aPassage.id);
+				this.passages[aChoice.destination].addEntrance(aPassage.id, aChoice.id);
 			}
 		},
 
@@ -107,7 +107,13 @@ function(BaseModel, Passage) {
 
 		unlinkChoice: function(aPassage, aChoice) {
 			if (aChoice.hasDestination()) {
-				this.passages[aChoice.destination].removeEntrance(aPassage.id);
+				this.passages[aChoice.destination].removeEntranceChoices(aPassage.id);
+			}
+		},
+
+		unlinkSingleChoice: function(aPassage, aChoice) {
+			if (aChoice.hasDestination()) {
+				this.passages[aChoice.destination].removeEntranceChoice(aPassage.id, aChoice.id);
 			}
 		},
 
@@ -213,16 +219,17 @@ function(BaseModel, Passage) {
 		},
 
 		loadPassages: function(aPassages) {
-			console.log("loadPassages");
-			console.log(aPassages);
+			//console.log("loadPassages");
+			//console.log(aPassages);
 			for (var id in aPassages) {
 				this.passages[id] = new Passage(aPassages[id]);
-				console.log("Loading psg: %s", this.passages[id].id);
+				//console.log("Loading psg: %s", this.passages[id].id);
 			}
 
-			console.log('start');
-			console.log(this.passages);
-			console.log('done');
+			//console.log('start');
+			//console.log(this.passages);
+			//console.log('done');
+
 			// TODO: Why do we need to call this?
 			// Wouldn't the exitType string get saved like
 			// everything else?
@@ -232,14 +239,19 @@ function(BaseModel, Passage) {
 		},
 
 		generatePsgEntrances: function() {
+			// For each passage...
 			for (var findId in this.passages) {
-				this.passages[findId].entrances = [];
+				// Reset this passages entrances...
+				this.passages[findId].entrances = {};
+				// We'll iterate over every OTHER passages...
 				for (var currentId in this.passages) {
-					if (findId !== currentId) {
-						if (this.passages[currentId].hasDestination(findId)) {
-							this.passages[findId].entrances.push(currentId);
+					//if (this.passages[currentId].choices.length > 0) {
+						for (var i = 0; i < this.passages[currentId].choices.length; i++) {
+							if (this.passages[currentId].choices[i].hasDestination(findId)) {
+								this.passages[findId].addEntrance(currentId, this.passages[currentId].choices[i].id);
+							}
 						}
-					}
+					//}
 				}
 			}
 		}

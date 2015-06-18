@@ -7,7 +7,7 @@ function(BaseModel, Choice) {
 		this.number         = null;
 		this.content        = '';
 		this.choices        = [];
-		this.entrances      = [];
+		this.entrances      = {};
 		this.tags           = {};
 		this.isStart        = false;
 		this.isValid        = false;
@@ -112,18 +112,27 @@ function(BaseModel, Choice) {
 			return abbr;
 		},
 
-		addEntrance: function(aPassageId) {
-			var index = this.entrances.indexOf(aPassageId);
-			if (index === -1) {
-				this.entrances.push(aPassageId);
+		addEntrance: function(aPassageId, aChoiceId) {
+			if (this.entrances.hasOwnProperty(aPassageId)) {
+				this.entrances[aPassageId].push(aChoiceId);
+			} else {
+				this.entrances[aPassageId] = [aChoiceId];
 			}
 		},
 
-		removeEntrance: function(aPassageId) {
-			var index = this.entrances.indexOf(aPassageId);
-			if (index > -1) {
-				this.entrances.splice(index, 1);
+		removeEntranceChoice: function(aPassageId, aChoiceId) {
+			if (this.entrances.hasOwnProperty(aPassageId)) {
+				if (this.entrances[aPassageId].length === 1) {
+					delete this.entrances[aPassageId];
+				} else {
+					var index = this.entrances[aPassageId].indexOf(aChoiceId);
+					this.entrances[aPassageId].splice(index, 1);
+				}
 			}
+		},
+
+		removeEntranceChoices: function(aPassageId) {
+			delete this.entrances[aPassageId];
 		},
 
 		addChoice: function(aChoice) {
@@ -185,6 +194,8 @@ function(BaseModel, Choice) {
 			return choice;
 		},
 
+		// TODO: What if it has multiple destinations to the same place?
+		// Does that matter?
 		hasDestination: function(aId) {
 			var has = false;
 			this.eachChoice( function(c) {

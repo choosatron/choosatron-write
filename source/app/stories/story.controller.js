@@ -187,7 +187,7 @@
 			vm.story.addPassage(passage);
 			if (aEntranceChoice) {
 				aEntranceChoice.setDestination(passage.id);
-				passage.addEntrance(vm.passage.id);
+				passage.addEntrance(vm.passage.id, aEntranceChoice.id);
 			}
 			// Set our current passage to the new one.
 			vm.passage = passage;
@@ -211,11 +211,11 @@
 
 		function selectPassage(aId) {
 			if (vm.picking) {
-				if (vm.picking.hasDestination()) {
-					vm.story.getPassage(vm.picking.destination).removeEntrance(vm.passage.id);
-				}
+				// If there is a link from this choice, remove it.
+				vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.destination), vm.picking.id);
+
 				vm.picking.setDestination(vm.story.getPassage(aId));
-				vm.story.getPassage(aId).addEntrance(vm.passage.id);
+				vm.story.getPassage(aId).addEntrance(vm.passage.id, vm.picking.id);
 				vm.picking = false;
 			} else {
 				vm.editPassage(aId);
@@ -230,6 +230,16 @@
 			// TODO: Is there an Angular way to access this element in the scope to do this?
 			$('.scrollPassages').scrollTop(0);
 
+			if ((typeof vm.passage !== 'undefined') &&
+			    (vm.passage !== null) &&
+			    (aPassage !== false)) {
+				var index = vm.navHistory.indexOf(vm.passage.id);
+				if (index > -1) {
+					vm.navHistory.splice(index, 1);
+				}
+				vm.navHistory.push(vm.passage.id);
+			}
+
 			if (aPassage !== false) {
 				vm.passage = aPassage;
 			} else {
@@ -241,14 +251,7 @@
 				vm.navHistory = [];
 			}
 
-			if ((typeof vm.passage !== 'undefined') &&
-			    (vm.passage !== null)) {
-				var index = vm.navHistory.indexOf(vm.passage.id);
-				if (index > -1) {
-					vm.navHistory.splice(index, 1);
-				}
-				vm.navHistory.push(vm.passage.id);
-			}
+			console.log("History: " + vm.navHistory);
 		}
 
 		function deletePassage(aPassage) {
@@ -261,6 +264,8 @@
 				undo: function() {
 					aPassage.trashed = false;
 					vm.story.addPassage(aPassage);
+					vm.story.linkEntrances(aPassage);
+					vm.story.linkChoices(aPassage);
 					vm.setPassage(aPassage, false);
 				}
 			};

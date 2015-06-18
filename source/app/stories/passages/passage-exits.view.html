@@ -14,7 +14,7 @@
 				<div class="btn-toolbar">
 					<div class="btn-group btn-group-justified btn-group-lg">
 					<!-- How do I use the array of button css classes across the ng-repeat? -->
-							<a ng-repeat="endValue in vm.endingTags.values" ng-click="vm.passage.setEnding($index)" class="btn btn-default" ng-class="{active: vm.passage.endingIndex === $index, 'btn-terrible': vm.endingTags.values[$index] === 1, 'btn-bad': vm.endingTags.values[$index] === 2, 'btn-neutral': vm.endingTags.values[$index] === 3, 'btn-good': vm.endingTags.values[$index] === 4, 'btn-great': vm.endingTags.values[$index] === 5}">{{ vm.endingTags.titles[$index] }}</a>
+							<a ng-repeat="endValue in vm.endingTags.values" ng-click="vm.passage.setEndingIndex($index)" class="btn btn-default" ng-class="{active: vm.passage.endingIndex === $index, 'btn-terrible': vm.endingTags.values[$index] === 1, 'btn-bad': vm.endingTags.values[$index] === 2, 'btn-neutral': vm.endingTags.values[$index] === 3, 'btn-good': vm.endingTags.values[$index] === 4, 'btn-great': vm.endingTags.values[$index] === 5}">{{ vm.endingTags.titles[$index] }}</a>
 					</div>
 				</div>
 			</div><!-- .passageEnding -->
@@ -91,7 +91,7 @@
 						<div ng-if="choice.hasDestination()">
 							<div ng-if="choice.destination" class="choicePassage">
 
-								<a class="truncated" ng-click="vm.navHistory.push(vm.passage.id); vm.editPassage(choice.destination)">{{ vm.getPassage(choice.destination).getContent() | truncate | quote }}</a>
+								<a class="truncated" ng-click="vm.editPassage(choice.destination)">{{ vm.getPassage(choice.destination).getContent() | truncate | quote }}</a>
 
 								<a ng-click="vm.editPassage(choice.destination)"><span class="passageLink" passage-icons="vm.getPassage(choice.destination)">P{{ vm.getPassage(choice.destination).number }}</span></a>
 							</div>

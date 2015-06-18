@@ -9,7 +9,7 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="entrance in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.navHistory[vm.navHistory.length - 1])}">
+			<li ng-repeat="(entrance, choices) in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.navHistory[vm.navHistory.length - 1])}">
 				<a ng-click="vm.editPassage(entrance)">
 					<span class="passageBack" passage-icons="vm.getPassage(entrance)">P{{ vm.getPassage(entrance).number }}</span>
 					<div>
