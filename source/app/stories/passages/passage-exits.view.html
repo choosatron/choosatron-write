@@ -26,11 +26,11 @@
 
 				<div ng-if="vm.passage.hasAppend()">
 					<div ng-if="vm.passage.appendLink.destination" class="choicePassage">
-						<a class="choicePassageUnlink icon-subtle" ng-click="vm.passage.appendLink.setDestination(null)"><span class="glyphicon glyphicon-remove-circle"></span></a>
+						<a class="choicePassageUnlink icon-subtle" ng-click="vm.passage.appendLink.removeDestination()"><span class="glyphicon glyphicon-remove-circle"></span></a>
 
-						<a class="truncated" ng-click="vm.editPassage(vm.passage.appendLink.destination)">{{ vm.getPassage(vm.passage.appendLink.destination).getContent() | truncate | quote }}</a>
+						<a class="truncated" ng-click="vm.editPassage(vm.passage.appendLink.destination)"><i>{{ vm.getPassage(vm.passage.appendLink.destination).getContent() | truncate }}</i></a>
 
-						<a ng-click="vm.editPassage(vm.passage.appendLink.destination)"><span class="passageLink" passage-icons="vm.getPassage(passage.appendLink.destination)">P{{ vm.getPassage(vm.passage.appendLink.destination).number }}</span></a>
+						<a ng-click="vm.editPassage(vm.passage.appendLink.destination)"><span class="passageLink" passage-icons="vm.getPassage(vm.passage.appendLink.destination)">P{{ vm.getPassage(vm.passage.appendLink.destination).number }}</span></a>
 					</div>
 				</div>
 			</div><!-- .passageAppend -->
@@ -91,7 +91,7 @@
 						<div ng-if="choice.hasDestination()">
 							<div ng-if="choice.destination" class="choicePassage">
 
-								<a class="truncated" ng-click="vm.editPassage(choice.destination)">{{ vm.getPassage(choice.destination).getContent() | truncate | quote }}</a>
+								<a class="truncated" ng-click="vm.editPassage(choice.destination)"><i>{{ vm.getPassage(choice.destination).getContent() | truncate }}</i></a>
 
 								<a ng-click="vm.editPassage(choice.destination)"><span class="passageLink" passage-icons="vm.getPassage(choice.destination)">P{{ vm.getPassage(choice.destination).number }}</span></a>
 							</div>

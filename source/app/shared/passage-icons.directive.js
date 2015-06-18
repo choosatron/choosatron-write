@@ -31,7 +31,7 @@ angular.module('storyApp.directives')
 					}
 
 					if (passage.hasEnding()) {
-						$element.attr('data-ending', passage.endingValue);
+						$element.attr('data-ending', CDAM.Config.kEndingTags.values[passage.endingIndex]);
 						noun = 'an ending passage with ';
 					} else {
 						$element.removeAttr('data-ending');

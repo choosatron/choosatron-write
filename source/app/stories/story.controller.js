@@ -212,9 +212,12 @@
 		function selectPassage(aId) {
 			if (vm.picking) {
 				// If there is a link from this choice, remove it.
-				vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.destination), vm.picking.id);
+				if (vm.picking.hasDestination()) {
+					console.log("Changing old destination to new.");
+					vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.destination), vm.picking);
+				}
 
-				vm.picking.setDestination(vm.story.getPassage(aId));
+				vm.picking.setDestination(aId);
 				vm.story.getPassage(aId).addEntrance(vm.passage.id, vm.picking.id);
 				vm.picking = false;
 			} else {

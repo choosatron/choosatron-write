@@ -86,9 +86,9 @@ function(BaseModel, Passage) {
 		},
 
 		linkChoices: function(aPassage) {
-			aPassage.choices.forEach(function(choice) {
-				linkChoice(aPassage, choice);
-			});
+			for (var i = 0; i < aPassage.choices.length; i++) {
+				this.linkChoice(aPassage, aPassage.choices[i]);
+			}
 		},
 
 		linkChoice: function(aPassage, aChoice) {
@@ -100,9 +100,9 @@ function(BaseModel, Passage) {
 		// Nagivate to all choice destinations and remove the
 		// current passage id from it's list of entrances.
 		unlinkChoices: function(aPassage) {
-			aPassage.choices.forEach(function(choice) {
-				unlinkChoice(aPassage, choice);
-			});
+			for (var i = 0; i < aPassage.choices.length; i++) {
+				this.unlinkChoice(aPassage, aPassage.choices[i]);
+			}
 		},
 
 		unlinkChoice: function(aPassage, aChoice) {
@@ -118,13 +118,13 @@ function(BaseModel, Passage) {
 		},
 
 		unlinkEntrances: function(aPassage) {
-			aPassage.entrances.forEach(function(entrance) {
-				this.passages[entrance].choices.forEach(function(choice) {
-					if (choice.destination === aPassage.id) {
-						choice.removeDestination();
+			for (var entrance in aPassage.entrances) {
+				for (var i = 0; i < this.passages[entrance].choices.length; i++) {
+					if (this.passages[entrance].choices[i].destination === aPassage.id) {
+						this.passages[entrance].choices[i].removeDestination();
 					}
-				});
-			});
+				}
+			}
 		},
 
 		addPassage: function(aPassage) {
@@ -155,8 +155,8 @@ function(BaseModel, Passage) {
 				return;
 			}
 			if (aId in this.passages) {
-				unlinkChoices(this.passages[aId]);
-				unlinkEntrances(this.passages[aId]);
+				this.unlinkChoices(this.passages[aId]);
+				this.unlinkEntrances(this.passages[aId]);
 				this.passages[aId].trashed = true;
 				//delete this.passages[aId];
 			} else {
