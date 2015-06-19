@@ -119,19 +119,16 @@ Choosatron.prototype.bindStory = function() {
 		passage = this.findPassage(location.hash.substr(1));
 	}
 	if (!passage) {
-		passage = this.story.passages[0];
+		passage = this.story.passages[this.story.startId];
 	}
 	this.showPassage(passage);
 }
 
 Choosatron.prototype.findPassage = function(id) {
-	if (!this.story.passages) return null;
-	for (var i=0; i<this.story.passages.length; i++) {
-		if (this.story.passages[i].id == id) {
-			return this.story.passages[i];
-		}
+	if (!this.story.passages) {
+		return null;
 	}
-	return null;
+	return this.story.passages[id];
 }
 
 Choosatron.prototype.findChoice = function(id) {
