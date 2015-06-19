@@ -50,7 +50,7 @@ function(BaseModel, Choice) {
 		},
 
 		setExitType: function(aExitType) {
-			this.endingValue = false;
+			this.endingIndex = false;
 			this.choices = [];
 			this.appendLink = new Choice();
 

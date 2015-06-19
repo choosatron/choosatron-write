@@ -125,7 +125,7 @@ function(Story, Passage, Choice) {
 						}
 
 						if (typeof id[2] === 'undefined') {
-							console.log("No tags for passage: " + passage.id);
+							//console.log("No tags for passage: " + passage.id);
 						} else {
 							var tagItems = [];
 							var cur, pair;

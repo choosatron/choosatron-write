@@ -4,18 +4,19 @@ function(BaseModel, Passage) {
 
 	/// Story ///
 	function Story(data) {
-		this.published    =  false;
-		this.title        =  '';
-		this.subtitle     =  '';
-		this.version      =  1.0;
-		this.description  =  '';
-		this.coverUrl     =  '';
-		this.genre        =  '';
-		this.author       =  '';
-		this.credits      =  '';
-		this.contact      =  '';
-		this.passages     =  {};
-		this.startId      =  '';
+		this.lastPsgNumber =  0;
+		this.published     =  false;
+		this.title         =  '';
+		this.subtitle      =  '';
+		this.version       =  1.0;
+		this.description   =  '';
+		this.coverUrl      =  '';
+		this.genre         =  '';
+		this.author        =  '';
+		this.credits       =  '';
+		this.contact       =  '';
+		this.passages      =  {};
+		this.startId       =  '';
 
 		//this.endingTags   = CDAM.Config.kEndingTags;
 
@@ -27,11 +28,15 @@ function(BaseModel, Passage) {
 			return this.title || "Untitled Story";
 		},
 
+		getNextPassageNumber: function () {
+			return ++this.lastPsgNumber;
+		},
+
 		getStartPsg: function() {
-			if (this.startId.length > 0) {
-				return this.passages[this.startId];
+			if (Object.keys(this.passages).length === 0) {
+				this.addPassage(new Passage());
 			}
-			return false;
+			return this.passages[this.startId];
 		},
 
 		// Return a list of IDs for passages with no parents
@@ -129,10 +134,9 @@ function(BaseModel, Passage) {
 
 		addPassage: function(aPassage) {
 			// If it's the only passage, it is the start.
-			if (this.passages.length === 0) {
+			if (Object.keys(this.passages).length === 0) {
 				this.startId = aPassage.id;
 				aPassage.isStart = true;
-				console.log("No passages yet!");
 			} else {
 				// If the new passage is set to isStart,
 				// make sure there isn't another isStart passage.
@@ -145,7 +149,7 @@ function(BaseModel, Passage) {
 				}
 			}
 			this.passages[aPassage.id] = aPassage;
-			this.passages[aPassage.id].number = Object.keys(this.passages).length;
+			this.passages[aPassage.id].number = this.getNextPassageNumber();
 
 			return aPassage.id;
 		},
@@ -207,28 +211,14 @@ function(BaseModel, Passage) {
 					}
 				}
 			}
-
-			/*this.eachPassage(function(p) {
-				p.eachChoice(function(c) {
-					add(c.condition);
-					c.updates.forEach(add);
-				});
-			});*/
-			console.debug('FOUND', cmds);
+			console.debug('CMDS FOUND: ', cmds);
 			return cmds;
 		},
 
 		loadPassages: function(aPassages) {
-			//console.log("loadPassages");
-			//console.log(aPassages);
 			for (var id in aPassages) {
 				this.passages[id] = new Passage(aPassages[id]);
-				//console.log("Loading psg: %s", this.passages[id].id);
 			}
-
-			//console.log('start');
-			//console.log(this.passages);
-			//console.log('done');
 
 			// TODO: Why do we need to call this?
 			// Wouldn't the exitType string get saved like
@@ -245,13 +235,14 @@ function(BaseModel, Passage) {
 				this.passages[findId].entrances = {};
 				// We'll iterate over every OTHER passages...
 				for (var currentId in this.passages) {
-					//if (this.passages[currentId].choices.length > 0) {
-						for (var i = 0; i < this.passages[currentId].choices.length; i++) {
-							if (this.passages[currentId].choices[i].hasDestination(findId)) {
-								this.passages[findId].addEntrance(currentId, this.passages[currentId].choices[i].id);
-							}
+					// Iterate over every choice in each passage...
+					for (var i = 0; i < this.passages[currentId].choices.length; i++) {
+						// If a choices destination is our 'findId' passage, create an entrance on 'findId'.
+						if (this.passages[currentId].choices[i].hasDestination(findId)) {
+							// We keep track if multiple choices from one passage lead to the same destination.
+							this.passages[findId].addEntrance(currentId, this.passages[currentId].choices[i].id);
 						}
-					//}
+					}
 				}
 			}
 		}
