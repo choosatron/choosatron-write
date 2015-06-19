@@ -36,16 +36,28 @@ function(Story, Passage, Choice) {
 				if (aTweeLines.length === 0) {
 					return;
 				}
-				//var contents = passage.content.split('\n');
-				var content = null;
 
+				var content = null;
 				aPassage.content = '';
 
 				var hasChoices = false;
 				for (var i = 0; i < aTweeLines.length; i++) {
 					if (reChoice.test(aTweeLines[i].trim())) {
 						hasChoices = true;
-						aPassage.content = aTweeLines.slice(0, i - 1).join('\n');
+						var contentLines = aTweeLines.slice(0, i);
+						// Remove all blank lines AFTER the final line of content,
+						// but BEFORE the first choice.
+						for (var j = contentLines.length - 1; j >= 0; j--) {
+							if ((contentLines[j] === '\r') ||
+							    (contentLines[j] === '\n') ||
+								(contentLines[j].length === 0)) {
+								contentLines.pop();
+							} else {
+								break;
+							}
+						}
+
+						aPassage.content = contentLines.join('\n');
 						aTweeLines = aTweeLines.slice(i);
 						break;
 					}
@@ -54,6 +66,12 @@ function(Story, Passage, Choice) {
 				if (hasChoices === false) {
 					aPassage.content = aTweeLines.join('\n');
 					aTweeLines = [];
+				}
+
+				// Cleanup any trailing newline or carriage return.
+				if ((aPassage.content[aPassage.content.length - 1] === '\r') ||
+					(aPassage.content[aPassage.content.length - 1] === '\n')) {
+					aPassage.content = aPassage.content.slice(0, -1);
 				}
 
 				// Parse remaining choice lines.
@@ -91,12 +109,7 @@ function(Story, Passage, Choice) {
 			var passage = null;
 			while (tweePassages.length) {
 				tweeLines = tweePassages.shift().trim().split('\n');
-
 				var tweeTitle = tweeLines.shift().trim();
-				/*while (reId.test(line) === false) {
-					line = lines.shift().trim();
-					console.log(line);
-				}*/
 
 				var id = reId.exec(tweeTitle);
 				if (!id) continue;
