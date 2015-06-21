@@ -10,6 +10,29 @@ function ($q, Serial, Ymodem) {
 	var CMD_GET_INFO    = 'i';
 	var CMD_SET_WIFI    = 'w';
 
+	var CMD_WRITE_FLASHRAW     = 0x66;
+	var CMD_WRITE_FLASHEE      = 0x03;
+	var CMD_KEYPAD_INPUT       = 0x04;
+	var CMD_BUTTON_INPUT       = 0x05;
+	var CMD_ADJUST_CREDITS     = 0x06;
+	var CMD_SET_CREDITS        = 0x07;
+	var CMD_ADD_STORY          = 0x08;
+	var CMD_REMOVE_STORY       = 0x09;
+	var CMD_REMOVE_ALL_STORIES = 0x0A;
+	var CMD_MOVE_STORY         = 0x0B;
+	var CMD_SET_FLAG           = 0x0C;
+	var CMD_SET_VALUE          = 0x0D;
+	var CMD_RESET_METADATA     = 0x0E;
+	var CMD_ERASE_FLASH        = 0x0F;
+	var CMD_REBOOT_UNIT        = 0x10;
+	var CMD_DFU_MODE           = 0x16;
+
+	var CMD_GET_VERSION        = 0x11;
+	var CMD_GET_FLAG           = 0x12;
+	var CMD_GET_VALUE          = 0x13;
+	var CMD_GET_NAMES          = 0x14;
+	var CMD_GET_STORYINFO      = 0x15;
+
 	function ChoosatronSerial() {
 		this.coreId = null;
 		this.serial = new Serial();
@@ -37,10 +60,12 @@ function ($q, Serial, Ymodem) {
 
 		function getCoreId() {
 			return self.serial.broadcast(CMD_GET_INFO)
-				.then(processCoreIds);
+				.then(processCoreIds)
+				.catch(deferred.reject);
 		}
 
 		function processCoreIds(result) {
+			console.info('Broadcast result', result);
 			for (var path in result) {
 				var msg = result[path];
 				var pattern = /\s([0-9a-f]{24})\s/;
@@ -90,6 +115,36 @@ function ($q, Serial, Ymodem) {
 
 		this.serial.listen(queue);
 		this.serial.send(CMD_SET_WIFI);
+
+		return deferred.promise;
+	};
+
+
+	ChoosatronSerial.prototype.command = function(cmd) {
+		var deferred = $q.defer();
+		var self = this;
+		function ready() {
+			self.serial.send(cmd)
+				.then(deferred.resolve)
+				.catch(deferred.reject);
+			return true;
+		}
+		this.serial.listen(ready);
+		this.serial.send(CMD_CHANGE_MODE);
+		return deferred.promise;
+	};
+
+	ChoosatronSerial.prototype.addStory = function(filename, buffer) {
+		var deferred = $q.defer();
+		var self = this;
+
+		function ready() {
+			self.modem.send(filename, buffer);
+		}
+
+		this.command(CMD_ADD_STORY)
+			.then(ready)
+			.catch(deferred.reject);
 
 		return deferred.promise;
 	};

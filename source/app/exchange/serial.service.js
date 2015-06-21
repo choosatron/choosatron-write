@@ -297,6 +297,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		var self = this;
 		this.api.getDevices(function(ports) {
 			ports = ports || [];
+			console.info('Loaded ports', ports);
 			if (typeof filter === 'function') {
 				self.ports = ports.filter(filter);
 			}

@@ -1033,6 +1033,12 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 		padding: 10px;
 	}
 
+	.choosatronList .choosatronItem .header {
+		background: url(img/icon_128.png) no-repeat;
+		padding-left: 128px;
+		height: 128px;
+	}
+
 	.choosatronItem.connected, .choosatronItem.connected {
 		background-color: #99C4FD;
 	}

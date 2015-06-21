@@ -71,6 +71,14 @@
 			vm.cloud.getStoryInfo(choosatron.id)
 			.then(function(stories) {
 				choosatron.stories = stories;
+				choosatron.mode    = 'stories';
+			})
+			.catch(function() {
+				vm.message = {
+					type    : 'error',
+					content : 'Sorry, I couldn\'t load your stories'
+				};
+				choosatron.mode = '';
 			});
 		}
 
