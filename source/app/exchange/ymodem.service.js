@@ -146,6 +146,8 @@ function($q, ArrayBufferFactory, Serial) {
 		return (crc & 0xFFFF);
 	};
 
+	return Ymodem;
+
 }]);
 
 })();
