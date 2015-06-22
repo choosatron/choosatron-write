@@ -88,11 +88,11 @@ angular.module('storyApp')
 	};
 
 	// Logs a member in
-	Spark.prototype.login = function(un, pw) {
+	Spark.prototype.login = function(aUsername, aPassword) {
 		var deferred = this.$q.defer();
 		var data = {
-			username      : un,
-			password      : pw,
+			username      : aUsername,
+			password      : aPassword,
 			grant_type    : 'password',
 			client_id     : this.clientId,
 			client_secret : this.clientSecret
@@ -130,7 +130,7 @@ angular.module('storyApp')
 
 			self.getAttributes(device.id)
 			.then(function(attributes) {
-				device.attributes = attributes; 
+				device.attributes = attributes;
 				collected.push(device);
 				listed(devices);
 			});
@@ -187,7 +187,7 @@ angular.module('storyApp')
 			form.append('file', file);
 
 			$http({
-				url              : url, 
+				url              : url,
 				method           : 'PUT',
 				headers          : {'Content-Type': undefined},
 				data             : form,

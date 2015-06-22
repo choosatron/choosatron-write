@@ -104,7 +104,7 @@ function($q, ArrayBufferFactory, Serial) {
 			.then(this.serial.sendDataUntil.bind(this.serial, EOT, ACK));
 	};
 
-	Ymode.prototype.abort = function() {
+	Ymodem.prototype.abort = function() {
 		var cancan = new ArrayBuffer(2);
 		var view   = new Int8Array(cancan);
 		view[0]    = CAN;
@@ -134,7 +134,7 @@ function($q, ArrayBufferFactory, Serial) {
 		for (var i=0; i<size; i++) {
 			var byte = view[i];
 			crc = crc ^ (byte << 8);
-			for (var y=0; i<8; y++) {
+			for (var y = 0; i < 8; y++) {
 				if (crc & 0x8000) {
 					crc = crc << 1 ^ 0x1021;
 				}

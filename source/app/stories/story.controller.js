@@ -97,6 +97,9 @@
 				translators.restore('json', entryId)
 				.then(function(result) {
 
+					/*jshint -W087 */
+					debugger;
+
 					if (!result || !result.story) {
 						return $location.path('/stories');
 					}
@@ -230,12 +233,11 @@
 		}
 
 		function setPassage(aPassage, aReset) {
+
 			// TODO: Is there an Angular way to access this element in the scope to do this?
 			$('.scrollPassages').scrollTop(0);
 
-			if ((typeof vm.passage !== 'undefined') &&
-			    (vm.passage !== null) &&
-			    (aPassage !== false)) {
+			if (vm.passage) {
 				var index = vm.navHistory.indexOf(vm.passage.id);
 				if (index > -1) {
 					vm.navHistory.splice(index, 1);
