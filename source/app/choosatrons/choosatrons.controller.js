@@ -136,7 +136,7 @@
 		}
 
 		function change(choosatron) {
-			vm.cloud.changetoChoosatron(choosatron.id)
+			vm.cloud.changeToChoosatron(choosatron.id)
 			.then(inform('A change request has been sent'))
 			.catch(warn('Could not change your device to a Choosatron!'));
 		}

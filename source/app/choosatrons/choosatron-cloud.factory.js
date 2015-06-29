@@ -5,7 +5,7 @@
 // Provides access to device features, such as claiming, naming, and pushing.
 // This factory is essentially a wrapper for the spark.js methods.
 angular.module('storyApp')
-	.factory('ChoosatronCloud', ['$q', 'Spark', 'PRODUCT_IDS', 
+	.factory('ChoosatronCloud', ['$q', 'Spark', 'PRODUCT_IDS',
 		function($q, Spark, PRODUCT_IDS) {
 
 	function ChoosatronCloud(token) {
@@ -17,9 +17,9 @@ angular.module('storyApp')
 	ChoosatronCloud.serverCode = {
 		notImplemented : -6,
 		maxReached     : -5,
-		busy           : -4,
-		invalidCmd     : -3,
-		invalidIndex   : -2,
+		invalidIndex   : -4,
+		busy           : -3,
+		invalidCmd     : -2,
 		fail           : -1,
 		success        : 0,
 		eventIncoming  : 1,
@@ -63,13 +63,13 @@ angular.module('storyApp')
 
 	ChoosatronCloud.prototype.each = function(callback, ctx) {
 		ctx = ctx || this;
-		for (var i=0; i<this.choosatrons.length; i++) {
+		for (var i = 0; i < this.choosatrons.length; i++) {
 			callback.call(ctx, this.choosatrons[i], i, this.choosatrons);
 		}
 	};
 
 	ChoosatronCloud.prototype.find = function(coreId) {
-		for (var i=0; i<this.choosatrons.length; i++) {
+		for (var i = 0; i < this.choosatrons.length; i++) {
 			if (this.choosatrons[i].deviceId === coreId) {
 				return this.choosatrons[i];
 			}
