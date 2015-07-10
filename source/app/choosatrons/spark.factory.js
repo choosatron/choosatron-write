@@ -147,7 +147,7 @@ angular.module('storyApp')
 
 	Spark.prototype.changeProduct = function(coreId, productId, updateAfter) {
 		var data = {
-			product_id         : product_id,
+			product_id         : productId,
 			update_after_claim : updateAfter,
 			access_token       : this.accessToken
 		};
@@ -306,10 +306,10 @@ angular.module('storyApp')
 	// Post to a named function on a device
 	Spark.prototype.callFunction = function(coreId, method, args) {
 		args = args || '';
-		var url  = this.endpoint('devices/' + coreId + '/' + method);
+		var url  = this.endpoint('devices/' + coreId + '/command');
 		var data = {
 			access_token : this.accessToken,
-			args         : args
+			args         : method + '|' + args
 		};
 		return this.promise('post', url, data);
 	};

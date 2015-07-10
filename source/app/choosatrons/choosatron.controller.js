@@ -33,7 +33,7 @@
 		});
 
 		vm.view = function() {
-			$location.path('/choosatrons');
+			$location.path('/choosatron');
 		};
 	}
 })();

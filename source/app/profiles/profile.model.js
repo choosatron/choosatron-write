@@ -7,13 +7,13 @@ function(BaseModel, Auth) {
 		this.autosave  = true;
 
 		// Cloud auth
-		this.cloud     = new Auth(data && data.cloud);
+		this.cloud = new Auth(data && data.cloud);
 
 		// Access tokens for guest Choosatron access.
 		this.guestAuth = {};
 
 		// Saves data to associate with Choosatrons
-		this.choosatrons = [];
+		this.choosatrons = {};
 
 		// Saves file entry references to a profiles stories
 		this.entries = [];
@@ -22,11 +22,36 @@ function(BaseModel, Auth) {
 	}
 
 	Profile.methods = {
+
+		saveChoosatron: function(aChoosatron) {
+			var choosatron = {
+				id: aChoosatron.id
+			};
+
+			if (this.choosatrons[aChoosatron.id]) {
+				choosatron = this.choosatrons[aChoosatron.id];
+				console.debug("Updating existing choosatron", aChoosatron);
+			} else {
+				console.debug("Adding new choosatron", aChoosatron);
+			}
+
+			// Very shallow copy of the choosatron
+			var types = ['string', 'number', 'boolean'];
+			for (var key in aChoosatron) {
+				var value = aChoosatron[key];
+				var type = typeof(value);
+				if (types.indexOf(type) < 0) continue;
+				choosatron[key] = value;
+			}
+
+			this.choosatrons[aChoosatron.id] = choosatron;
+
+			return choosatron;
+		},
+
 		getChoosatron: function(aId) {
-			for (var i in this.choosatrons) {
-				if (this.choosatrons[i].id === aId) {
-					return this.choosatrons[i];
-				}
+			if (this.choosatrons[aId]) {
+				return this.choosatrons[aId];
 			}
 		},
 
@@ -43,8 +68,7 @@ function(BaseModel, Auth) {
 				entry = this.entries[index];
 				this.entries.splice(index, 1);
 				console.debug("Updating existing entry", aEntryId, entry, aStory);
-			}
-			else {
+			} else {
 				console.debug("Adding new entry", aEntryId, entry, aStory);
 			}
 

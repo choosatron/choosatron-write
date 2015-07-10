@@ -6,10 +6,18 @@ angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial', 'Y
 
 function ($q, Serial, Ymodem) {
 
-	var CMD_CHANGE_MODE = 'c';
-	var CMD_GET_INFO    = 'i';
-	var CMD_SET_WIFI    = 'w';
+	var CMD_MODE = 'c';
 
+	// Active the micro-controller's listening mode (flashing blue).
+	var CMD_LISTENING_MODE = 'l';
+
+	// Commands in the micro-controller's internal listening mode (flashing blue).
+	var CMD_GET_ID         = 'i'; // Core ID returned
+	var CMD_SET_WIFI       = 'w'; // Begin WiFi setup
+	var CMD_GET_MAC        = 'm'; // Get the wireless modules mac address
+	var CMD_FLASH_FIRMWARE = 'f'; // Prepare to flash firmware over serial
+
+	var CMD_CLEAR_WIFI         = 'x';
 	var CMD_WRITE_FLASHRAW     = 0x66;
 	var CMD_WRITE_FLASHEE      = 0x03;
 	var CMD_KEYPAD_INPUT       = 0x04;
@@ -35,6 +43,7 @@ function ($q, Serial, Ymodem) {
 
 	function ChoosatronSerial() {
 		this.coreId = null;
+		this.firmwareInstalled = false;
 		this.serial = new Serial();
 		this.serial.debug = true;
 		this.modem  = new Ymodem(this.serial);
@@ -46,7 +55,7 @@ function ($q, Serial, Ymodem) {
 
 	// Connect to an existing Choosatron and switch to listening mode
 	ChoosatronSerial.prototype.listen = function() {
-		return this.serial.broadcast(CMD_CHANGE_MODE);
+		return this.serial.broadcast(CMD_MODE);
 	};
 
 	// Connects to the first Choosatron device that is in listening mode
@@ -55,19 +64,19 @@ function ($q, Serial, Ymodem) {
 		var self     = this;
 
 		function loadPorts() {
-			return self.serial.load('usb');
+			return self.serial.load('tty.usb');
 		}
 
 		function getCoreId() {
-			return self.serial.broadcast(CMD_GET_INFO)
+			return self.serial.broadcast(CMD_MODE + CMD_LISTENING_MODE + CMD_GET_ID)
 				.then(processCoreIds)
 				.catch(deferred.reject);
 		}
 
-		function processCoreIds(result) {
-			console.info('Broadcast result', result);
-			for (var path in result) {
-				var msg = result[path];
+		function processCoreIds(aResult) {
+			console.info('Broadcast result', aResult);
+			for (var path in aResult) {
+				var msg = aResult[path];
 				var pattern = /\s([0-9a-f]{24})\s/;
 				var match = pattern.exec(msg);
 				if (match) {
@@ -86,17 +95,17 @@ function ($q, Serial, Ymodem) {
 	};
 
 	// Add WiFi credentials
-	ChoosatronSerial.prototype.wifi = function(ssid, type, pwd) {
+	ChoosatronSerial.prototype.wifi = function(aSsid, aType, aPwd) {
 		var deferred = $q.defer();
 		var send = this.serial.send.bind(this.serial);
-		var cmds = [ssid, type, pwd];
+		var cmds = [aSsid, aType, aPwd];
 		var response = '';
 
 		// Here, we need to time things just right. After the 'w'
 		// command is sent, watch for the next  ': ' string, which
 		// is the prompt for the next required input.
-		function queue(info) {
-			response += info.text;
+		function queue(aInfo) {
+			response += aInfo.text;
 			if (response.indexOf(': ') < 1) {
 				return false;
 			}
@@ -120,26 +129,32 @@ function ($q, Serial, Ymodem) {
 	};
 
 
-	ChoosatronSerial.prototype.command = function(cmd) {
+	// Clear WiFi credentials
+	ChoosatronSerial.prototype.clearWifi = function() {
+
+	};
+
+
+	ChoosatronSerial.prototype.command = function(aCommand) {
 		var deferred = $q.defer();
 		var self = this;
 		function ready() {
-			self.serial.send(cmd)
+			self.serial.send(aCommand)
 				.then(deferred.resolve)
 				.catch(deferred.reject);
 			return true;
 		}
 		this.serial.listen(ready);
-		this.serial.send(CMD_CHANGE_MODE);
+		this.serial.send(CMD_MODE);
 		return deferred.promise;
 	};
 
-	ChoosatronSerial.prototype.addStory = function(filename, buffer) {
+	ChoosatronSerial.prototype.addStory = function(aFilename, aBuffer) {
 		var deferred = $q.defer();
 		var self = this;
 
 		function ready() {
-			self.modem.send(filename, buffer);
+			self.modem.send(aFilename, aBuffer);
 		}
 
 		this.command(CMD_ADD_STORY)

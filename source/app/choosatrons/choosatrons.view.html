@@ -19,7 +19,7 @@
 			</div>
 
 			<ul class="list-unstyled list-choosatrons">
-				<li ng-repeat="choosatron in vm.choosatrons" class="choosatronItem" ng-class="{connected: choosatron.connected}">
+				<li ng-repeat="choosatron in vm.profile.choosatrons | orderObjectBy:'name':false" class="choosatronItem" ng-class="{connected: choosatron.connected}">
 					<div class="header">
 						<h2>{{choosatron.name || choosatron.id}}</h2>
 
@@ -58,7 +58,7 @@
 					</div>
 				</li>
 			</ul>
-			<div class="well welcome" ng-if="vm.choosatrons.length === 0">
+			<div class="well welcome" ng-if="vm.profile.choosatrons.keys().length === 0">
 				<h2>Are you ready to choose your own adventure?</h2>
 				<p>This is the screen where you connect and manage your Choosatron.</p>
 			</div>

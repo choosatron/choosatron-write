@@ -15,8 +15,8 @@
 		// Variables
 		vm.location     =  $location;
 		vm.profiles     =  profiles;
+		vm.profile      =  null;
 		vm.cloud        =  null;
-		vm.choosatrons  =  [];
 		vm.productId    =  PRODUCT_IDS.choosatron;
 
 		// Functions
@@ -55,7 +55,7 @@
 			});
 		}
 
-		// Call a command on the choostron and wait for a 
+		// Call a command on the choostron and wait for a
 		// result to be send through an event stream
 		function request(choosatron, method) {
 			vm.cloud.request(choosatron.id, method)
@@ -72,6 +72,8 @@
 			.then(function(stories) {
 				choosatron.stories = stories;
 				choosatron.mode    = 'stories';
+
+				console.log(stories);
 			})
 			.catch(function() {
 				vm.message = {
@@ -120,30 +122,32 @@
 
 			var force = true;
 			vm.cloud.load(force).then(function() {
-				vm.choosatrons = vm.cloud.choosatrons;
-				console.info(vm.choosatrons);
+				for (var i = 0; i < vm.cloud.choosatrons.length; i++) {
+					vm.profile.saveChoosatron(vm.cloud.choosatrons[i]);
+				}
+				vm.profiles.save();
 			});
 		}
 
-		function unclaim(choosatron) {
-			vm.cloud.remove(choosatron.id).then(loadChoosatrons);
+		function unclaim(aId) {
+			vm.cloud.remove(aId).then(loadChoosatrons);
 		}
 
-		function rename(choosatron) {
-			vm.cloud.rename(choosatron.id, choosatron.newName)
+		function rename(aId) {
+			vm.cloud.rename(aId, choosatron.newName)
 			.then(loadChoosatrons)
 			.catch(warn('Could not rename your Choosatron!'));
 		}
 
-		function change(choosatron) {
-			vm.cloud.changeToChoosatron(choosatron.id)
+		function change(aId) {
+			vm.cloud.changeToChoosatron(aId)
 			.then(inform('A change request has been sent'))
 			.catch(warn('Could not change your device to a Choosatron!'));
 		}
 
-		function flash(choosatron) {
-			vm.cloud.flashAsChoosatron(choosatron.id)
-			.then(inform('Done!'))
+		function flash(aId) {
+			vm.cloud.flashAsChoosatron(aId)
+			.then(inform('Firmware is updating! Wait until the purple stops flashing.'))
 			.catch(warn('Could not update your Choosatron!'));
 		}
 

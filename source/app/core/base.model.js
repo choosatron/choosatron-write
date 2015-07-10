@@ -4,10 +4,11 @@ function(Random) {
 
 	/// Model base class ///
 	function BaseModel(data) {
-		this.id       = Random.id();
-		this.created  = Date.now();
-		this.modified = null;
-		this.opened   = null;
+		this.id        = Random.id();
+		this.created   = Date.now();
+		this.modified  = null;
+		this.opened    = null;
+		this.serialize = {};
 
 		if (data) this.load(data);
 	}
