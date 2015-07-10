@@ -29,14 +29,8 @@ function(Random) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
-					//console.log("Base load: %s", key);
 					this[loader]( data[key] );
-				}
-				else {
-					/*if (key === 'id') {
-						console.log("Psg Key: %s", data[key]);
-					}*/
-
+				} else {
 					this[key] = data[key];
 				}
 			}
@@ -44,8 +38,10 @@ function(Random) {
 
 		each: function(field, callback) {
 			var list = this[field];
-			if (!list) return this;
-			for (var i=0; i < list.length; i++) {
+			if (!list) {
+				return this;
+			}
+			for (var i = 0; i < list.length; i++) {
 				var item = list[i];
 				var stop = callback(item);
 				if (stop === false) break;
@@ -63,8 +59,7 @@ function(Random) {
 				var val = this[key];
 				if (val instanceof BaseModel) {
 					o[key] = val.serialize();
-				}
-				else {
+				} else {
 					// Will it cause any issues to NOT store null values?
 					if ((typeof(val) === 'undefined') ||
 					 	(val === null) ||

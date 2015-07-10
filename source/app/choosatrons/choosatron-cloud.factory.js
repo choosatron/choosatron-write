@@ -8,10 +8,10 @@ angular.module('storyApp')
 	.factory('ChoosatronCloud', ['$q', 'Spark', 'PRODUCT_IDS',
 		function($q, Spark, PRODUCT_IDS) {
 
-	function ChoosatronCloud(token) {
+	function ChoosatronCloud(aToken) {
 		this.loaded      = false;
 		this.choosatrons = [];
-		this.spark       = new Spark(token);
+		this.spark       = new Spark(aToken);
 	}
 
 	ChoosatronCloud.serverCode = {
@@ -161,11 +161,19 @@ angular.module('storyApp')
 		var spark = this.spark;
 
 		function loadNextStory() {
-			spark.callFunction(coreId, cmd, [stories.length])
+			console.log("Request story index: %d", stories.length);
+			/*jshint -W087 */
+			//debugger;
+
+			// TODO: Need to catch a response error HERE, not from the listener.
+			// If an index is bad, we get that response right away!
+			spark.callFunction(coreId, cmd, ['0' + stories.length])
 			.catch(deferred.reject);
 		}
 
 		function saveInfo(rsp) {
+			/*jshint -W087 */
+			//debugger;
 			if (typeof rsp.data === 'number' && rsp.data < ChoosatronCloud.serverCode.success) {
 				rsp.source.close();
 				if (rsp.data === ChoosatronCloud.serverCode.invalidIndex) {

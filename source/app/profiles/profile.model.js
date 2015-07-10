@@ -5,6 +5,7 @@ function(BaseModel, Auth) {
 		this.created   = Date.now();
 		this.name      = '';
 		this.autosave  = true;
+		this.currentChoosatron = null;
 
 		// Cloud auth
 		this.cloud = new Auth(data && data.cloud);
@@ -22,6 +23,14 @@ function(BaseModel, Auth) {
 	}
 
 	Profile.methods = {
+
+		selectChoosatron: function(aId) {
+			this.currentChoosatron = aId;
+		},
+
+		currentChoosatron: function() {
+			return this.choosatrons[this.currentChoosatron];
+		},
 
 		saveChoosatron: function(aChoosatron) {
 			var choosatron = {

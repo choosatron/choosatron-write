@@ -7,28 +7,32 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronsCtrl', ChoosatronsCtrl);
 
-	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'ChoosatronCloud', 'ngDialog', 'PRODUCT_IDS'];
+	ChoosatronsCtrl.$inject = ['$location', 'profiles', 'ChoosatronSerial', 'ChoosatronCloud', 'ngDialog', 'PRODUCT_IDS'];
 
-	function ChoosatronsCtrl($location, profiles, ChoosatronCloud, ngDialog, PRODUCT_IDS) {
+	function ChoosatronsCtrl($location, profiles, ChoosatronSerial, ChoosatronCloud, ngDialog, PRODUCT_IDS) {
 		var vm = this;
 
 		// Variables
 		vm.location     =  $location;
 		vm.profiles     =  profiles;
 		vm.profile      =  null;
+		vm.serial       =  null;
 		vm.cloud        =  null;
 		vm.productId    =  PRODUCT_IDS.choosatron;
 
 		// Functions
-		vm.loadChoosatrons  =  loadChoosatrons;
-		vm.newChoosatron    =  newChoosatron;
+		vm.command          =  command;
+		vm.request          =  request;
+		vm.inform           =  inform;
+		vm.warn             =  warn;
+		vm.loadStories      =  loadStories;
+		vm.unclaim          =  unclaim;
 		vm.rename           =  rename;
 		vm.change           =  change;
 		vm.flash            =  flash;
-		vm.unclaim          =  unclaim;
-		vm.command          =  command;
-		vm.request          =  request;
-		vm.loadStories      =  loadStories;
+		vm.findOverUsb      =  findOverUsb;
+		vm.selectChoosatron =  selectChoosatron;
+		vm.newChoosatron    =  newChoosatron;
 
 		// Commands that return a value
 		vm.commands  =  {
@@ -43,6 +47,15 @@
 		};
 
 		activate();
+
+		function activate() {
+			profiles.load().then(function() {
+				vm.profile = profiles.current;
+				vm.serial = new ChoosatronSerial();
+				vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
+				loadChoosatrons();
+			});
+		}
 
 		// Creates a command function for a choosatron
 		function command(choosatron, method) {
@@ -64,30 +77,6 @@
 					type    : 'info',
 					content : response
 				};
-			});
-		}
-
-		function loadStories(choosatron) {
-			vm.cloud.getStoryInfo(choosatron.id)
-			.then(function(stories) {
-				choosatron.stories = stories;
-				choosatron.mode    = 'stories';
-
-				console.log(stories);
-			})
-			.catch(function() {
-				vm.message = {
-					type    : 'error',
-					content : 'Sorry, I couldn\'t load your stories'
-				};
-				choosatron.mode = '';
-			});
-		}
-
-		function activate() {
-			profiles.load().then(function() {
-				vm.profile = profiles.current;
-				loadChoosatrons();
 			});
 		}
 
@@ -118,14 +107,29 @@
 		}
 
 		function loadChoosatrons() {
-			vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
-
 			var force = true;
 			vm.cloud.load(force).then(function() {
 				for (var i = 0; i < vm.cloud.choosatrons.length; i++) {
 					vm.profile.saveChoosatron(vm.cloud.choosatrons[i]);
 				}
 				vm.profiles.save();
+			});
+		}
+
+		function loadStories(choosatron) {
+			vm.cloud.getStoryInfo(choosatron.id)
+			.then(function(stories) {
+				choosatron.stories = stories;
+				choosatron.mode    = 'stories';
+
+				console.log(stories);
+			})
+			.catch(function() {
+				vm.message = {
+					type    : 'error',
+					content : 'Sorry, I couldn\'t load your stories'
+				};
+				choosatron.mode = '';
 			});
 		}
 
@@ -149,6 +153,15 @@
 			vm.cloud.flashAsChoosatron(aChoosatron.id)
 			.then(inform('Firmware is updating! Wait until the purple stops flashing.'))
 			.catch(warn('Could not update your Choosatron!'));
+		}
+
+		function findOverUsb(aChoosatron) {
+			console.log("findOverUsb");
+		}
+
+		function selectChoosatron(aChoosatron) {
+			console.log("selectChoosatron: %s", aChoosatron.id);
+			vm.profile.selectChoosatron(aChoosatron.id);
 		}
 
 		function newChoosatron() {

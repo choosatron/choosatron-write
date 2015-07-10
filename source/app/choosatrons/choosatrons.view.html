@@ -48,6 +48,8 @@
 
 						<div ng-show="!choosatron.connected">
 							<em>Offline</em>
+							</br>
+							<a class="btn btn-default" ng-click="vm.findOverUsb(choosatron)"><span class="fa fa-plug"></span> Find Over USB</a>
 						</div>
 					</div>
 
@@ -55,6 +57,9 @@
 						<ul ng-show="choosatron.stories">
 							<li ng-repeat="story in choosatron.stories">{{story}}</li>
 						</ul>
+					</div>
+					<div>
+						<a class="btn btn-default" ng-click="vm.selectChoosatron(choosatron); vm.location.path('choosatron')"> Manage Choosatron</a>
 					</div>
 				</li>
 			</ul>
