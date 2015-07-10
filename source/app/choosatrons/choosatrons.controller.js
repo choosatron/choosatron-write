@@ -129,24 +129,24 @@
 			});
 		}
 
-		function unclaim(aId) {
-			vm.cloud.remove(aId).then(loadChoosatrons);
+		function unclaim(aChoosatron) {
+			vm.cloud.remove(aChoosatron.id).then(loadChoosatrons);
 		}
 
-		function rename(aId) {
-			vm.cloud.rename(aId, choosatron.newName)
+		function rename(aChoosatron) {
+			vm.cloud.rename(aChoosatron.id, aChoosatron.newName)
 			.then(loadChoosatrons)
 			.catch(warn('Could not rename your Choosatron!'));
 		}
 
-		function change(aId) {
-			vm.cloud.changeToChoosatron(aId)
+		function change(aChoosatron) {
+			vm.cloud.changeToChoosatron(aChoosatron.id)
 			.then(inform('A change request has been sent'))
 			.catch(warn('Could not change your device to a Choosatron!'));
 		}
 
-		function flash(aId) {
-			vm.cloud.flashAsChoosatron(aId)
+		function flash(aChoosatron) {
+			vm.cloud.flashAsChoosatron(aChoosatron.id)
 			.then(inform('Firmware is updating! Wait until the purple stops flashing.'))
 			.catch(warn('Could not update your Choosatron!'));
 		}
