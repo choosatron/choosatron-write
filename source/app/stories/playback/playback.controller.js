@@ -4,9 +4,9 @@
 	angular.module('storyApp.controllers')
 		.controller('PlaybackCtrl', PlaybackCtrl);
 
-	PlaybackCtrl.$inject = ['$location', 'profiles', 'translators', 'Story', 'Playback'];
+	PlaybackCtrl.$inject = ['$location', 'Profiles', 'translators', 'Story', 'Playback'];
 
-	function PlaybackCtrl($location, profiles, translators, Story, Playback) {
+	function PlaybackCtrl($location, Profiles, translators, Story, Playback) {
 		var vm = this;
 
 		// Variables
@@ -21,10 +21,10 @@
 		vm.selectPassage = selectPassage;
 		vm.editStory = editStory;
 
-		profiles.load()
+		Profiles.load()
 		.then(function() {
-			var profile = profiles.current;
-			var entry = profile.entries[0];
+			var profile = Profiles.current;
+			var entry = profile.getEntryAtIndex(0);
 			translators.restore('json', entry.entryId)
 			.then(function(result) {
 				vm.story = new Story(result.story);

@@ -79,12 +79,12 @@ function(Random, ArrayBufferFactory) {
 
 	var PSG_FLAG_APPEND_INDEX = 7; // 0x80;
 
-	function ChoosatronStoryVersion(aVersion) {
+	/*function ChoosatronStoryVersion(aVersion) {
 		var parts = aVersion ? aVersion.toString().split('.') : [];
 		this.major = parts.length > 0 ? parts[0] : 0;
 		this.minor = parts.length > 1 ? parts[1] : 0;
 		this.revision = parts.length > 2 ? parts[2] : 0;
-	}
+	}*/
 
 
 	// The header is always 414 bytes
@@ -189,21 +189,21 @@ function(Random, ArrayBufferFactory) {
 		this.flags3 = 0;
 		this.flags4 = 0;
 
-		var version = new ChoosatronStoryVersion(aStory.version);
-		this.storyVersionMajor = version.major;
-		this.storyVersionMinor = version.minor;
-		this.storyVersionRevision = version.revision;
+		//var version = new ChoosatronStoryVersion(aStory.getVersionStr());
+		this.storyVersionMajor = aStory.getVersion().major;
+		this.storyVersionMinor = aStory.getVersion().minor;
+		this.storyVersionRevision = aStory.getVersion().revision;
 
 		this.rsvd = 0;
 		this.lang = '';
-		this.title = aStory.title;
-		this.subtitle = aStory.subtitle;
-		this.author = aStory.author;
-		this.credits = aStory.credits;
-		this.contact = aStory.contact;
+		this.title = aStory.getTitle();
+		this.subtitle = aStory.getSubtitle();
+		this.author = aStory.getAuthor();
+		this.credits = aStory.getCredits();
+		this.contact = aStory.getContact();
 
-		aStory.published = new Date();
-		this.published = aStory.published.getTime() / 1000;
+		aStory.setPublishedOn(new Date());
+		this.published = aStory.publishedOn().getTime() / 1000;
 	};
 
 
@@ -233,10 +233,10 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryChoice.prototype.populate = function(aChoice, aKeys) {
-		this.body = aChoice.content;
-		if (aChoice.destination) {
+		this.body = aChoice.getContent();
+		if (aChoice.getDestination()) {
 			for (var i = 0; i < aKeys.length; i++) {
-				if (aKeys[i] == aChoice.destination) {
+				if (aKeys[i] == aChoice.getDestination()) {
 					this.passageIndex = i;
 					break;
 				}
@@ -312,14 +312,14 @@ function(Random, ArrayBufferFactory) {
 			this.attributes |= 1 << PSG_FLAG_APPEND_INDEX;
 			// Append link isn't in the list of choices, so we need to add it here.
 			choice = new ChoosatronStoryChoice();
-			choice.populate(aPassage.appendLink, aKeys);
+			choice.populate(aPassage.getChoiceAtIndex(0), aKeys);
 			this.choices.push(choice);
 		} else if (aPassage.hasEnding()) {
-			this.endingValue = CDAM.Config.kEndingTags.values[aPassage.endingIndex] || 3;
+			this.endingValue = CDAM.Config.kEndingTags.values[aPassage.getEndingIndex()] || 3;
 		} else if (aPassage.hasChoices()) {
-			for (var i = 0; i < aPassage.choices.length; i++) {
+			for (var i = 0; i < aPassage.getChoices().length; i++) {
 				choice = new ChoosatronStoryChoice();
-				choice.populate(aPassage.choices[i], aKeys);
+				choice.populate(aPassage.getChoiceAtIndex(i), aKeys);
 				this.choices.push(choice);
 			}
 		}
@@ -353,7 +353,7 @@ function(Random, ArrayBufferFactory) {
 		// Choices
 		aView.setInt8(offset, this.choices.length);
 		offset += 1;
-		for (i=0; i<this.choices.length; i++) {
+		for (i = 0; i < this.choices.length; i++) {
 			written = this.choices[i].writeToView(offset, aView);
 			offset += written;
 		}
@@ -378,10 +378,10 @@ function(Random, ArrayBufferFactory) {
 	}
 
 	ChoosatronStoryBody.prototype.populate = function(aStory) {
-		var keys = Object.keys(aStory.passages);
+		var keys = Object.keys(aStory.getPassages());
 		for (var i = 0; i < keys.length; i++) {
 			var passage = new ChoosatronStoryPassage();
-			passage.populate(aStory.passages[keys[i]], keys);
+			passage.populate(aStory.getPassage(keys[i]), keys);
 			this.passages.push(passage);
 		}
 	};
@@ -395,7 +395,7 @@ function(Random, ArrayBufferFactory) {
 		var i, written;
 
 		offset += 2 + (4 * this.passages.length); // Offset start after PassageOffsets
-		for (i=0; i<this.passages.length; i++) {
+		for (i = 0; i < this.passages.length; i++) {
 			written = this.passages[i].writeToView(offset, aView);
 			passageOffsets.push(passageOffset);
 			passageOffset += written;

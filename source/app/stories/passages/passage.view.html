@@ -9,9 +9,9 @@
 <div class="scrollable scrollPassages">
 	<div class="passage-container passageEntrances">
 		<ul class="list-unstyled">
-			<li ng-repeat="(entrance, choices) in vm.passage.entrances" ng-class="{lastActive: (entrance == vm.navHistory[vm.navHistory.length - 1])}">
+			<li ng-repeat="(entrance, choices) in vm.passage.getEntrances()" ng-class="{lastActive: (entrance == vm.navHistory[vm.navHistory.length - 1])}">
 				<a ng-click="vm.editPassage(entrance)">
-					<span class="passageBack" passage-icons="vm.getPassage(entrance)">P{{ vm.getPassage(entrance).number }}</span>
+					<span class="passageBack" passage-icons="vm.getPassage(entrance)">P{{ vm.getPassage(entrance).getNumber() }}</span>
 					<div>
 						<p class="truncated">{{ vm.getPassage(entrance).getContent() | truncate | quote }}</p>
 						<p ng-if="vm.getPassage(entrance).getPassageChoice(vm.passage)" class="h4 truncated">{{ vm.getPassage(entrance).getPassageChoice(vm.passage) | truncate }}</p>
@@ -26,16 +26,16 @@
 		<div class="passageBody">
 			<!-- TODO: when you delete a passage, you seem to always be sent to the starting passage of the story... might be nice if you went to your previous passage?? -->
 			<h2>
-				Passage {{ vm.passage.number }}
+				Passage {{ vm.passage.getNumber() }}
 				<!-- TODO: may indicate this some other way? -->
-				<span ng-if="vm.passage.isStart" class="label label-success">Start</span>
-				<a ng-if="!vm.passage.isStart" class="h4 icon-inline icon-subtle" confirm-click="vm.deletePassage(vm.passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
-				<div class="savePassage fade-animation" ng-hide="vm.profiles.current.autosave">
-					<button class="btn btn-primary" ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.id, vm.story)"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</button>
+				<span ng-if="vm.passage.isStart()" class="label label-success">Start</span>
+				<a ng-if="!vm.passage.isStart()" class="h4 icon-inline icon-subtle" confirm-click="vm.deletePassage(vm.passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
+				<div class="savePassage fade-animation" ng-hide="vm.profiles.current.getAutosave()">
+					<button class="btn btn-primary" ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.getId(), vm.story)"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</button>
 				</div>
 			</h2>
 
-			<textarea ng-model="vm.passage.content" class="form-control passage_{{vm.passage.id}}" rows="10" placeholder="Write your passage content here."></textarea>
+			<textarea ng-model="vm.passage.getContent()" class="form-control passage_{{vm.passage.getId()}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 
@@ -65,11 +65,11 @@
 		<div class="scrollable">
 			<ul class="list-unstyled list-passages">
 				<li><button class="btn btn-link" ng-click="vm.newPassage()"><span class="glyphicon glyphicon-plus"></span> New Passage</button></li>
-				<li ng-repeat="p in vm.story.passages | orderObjectBy:'number':false | filter:vm.passageSearch | filter:vm.validPickingOption" class="fade-animation">
-					<a ng-click="vm.selectPassage(p.id)" class="truncated">
-						<span class="badge" passage-icons="p">P{{ p.number }}</span>
+				<li ng-repeat="p in vm.story.getPassages() | orderObjectBy:'number':false | filter:vm.passageSearch | filter:vm.validPickingOption" class="fade-animation">
+					<a ng-click="vm.selectPassage(p.getId())" class="truncated">
+						<span class="badge" passage-icons="p">P{{ p.getNumber() }}</span>
 						<!-- TODO: may indicate this some other way? -->
-						<span ng-if="p.isStart" class="label label-success">Start</span>
+						<span ng-if="p.isStart()" class="label label-success">Start</span>
 						{{ p.getContent() | truncate | quote }}
 					</a>
 				</li>

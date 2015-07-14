@@ -5,17 +5,17 @@
 		.controller('StoryCtrl', StoryCtrl);
 
 	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'ngDialog',
-		'profiles', 'translators', 'FileEntryAutoSave',
+		'Profiles', 'translators', 'FileEntryAutoSave',
 		'Story', 'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
 
-	function StoryCtrl($scope, $location, $timeout, ngDialog, profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
+	function StoryCtrl($scope, $location, $timeout, ngDialog, Profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
 		var vm = this;
 
 		// Variables
 		vm.entry              = null;
 		vm.story              = null;
 		vm.passage            = null;
-		vm.profiles           = profiles;
+		vm.profiles           = Profiles;
 		vm.variables          = [];
 
 		vm.operators          = Operators;
@@ -65,16 +65,16 @@
 
 		function activate() {
 			// Load up the selected story
-			profiles.load()
+			Profiles.load()
 			.then(function() {
-				var profile = profiles.current;
+				var profile = Profiles.current;
 
 				if (!profile) {
 					console.error("No profiles selected. Redirecting to ./profiles");
 					return $location.path('/profiles');
 				}
 
-				var entries = profile.entries;
+				var entries = profile.getEntries();
 				if (!entries || entries.length === 0) {
 					console.error("Profile has no entries. Redirecting to ./stories");
 					return $location.path('/stories');
@@ -82,6 +82,9 @@
 
 				var entry = entries[0];
 				var entryId = entry.entryId;
+
+				console.log("Current Entry:");
+				console.log(entry);
 
 				if (!entryId) {
 					console.error("No entry id found for entry. Redirecting to ./stories");
@@ -107,12 +110,12 @@
 					// Set the current story and passage
 					vm.story = new Story(result.story);
 					vm.setPassage(vm.story.getStartPsg(), true);
-					vm.showStoryDetails = vm.story.passages.length < 2;
+					vm.showStoryDetails = vm.story.getPassages().length < 2;
 					loadVariables();
 
 					// Update the entry record
-					profiles.current.saveEntry(entryId, vm.story);
-					profiles.save();
+					Profiles.current.saveEntry(entryId, vm.story);
+					Profiles.save();
 
 					// Start autosaving changes
 					autosave(result);
@@ -125,7 +128,7 @@
 			var cmds = vm.story.collectCommands();
 			var vars = [];
 			cmds.forEach(function(cmd) {
-				vars.push(cmd.variable);
+				vars.push(cmd.getVariable());
 			});
 			vm.variables = angular.toJson(vars);
 		}
@@ -134,9 +137,9 @@
 			var saver = vm.saver = new FileEntryAutoSave(aResult.story.id, aResult.entry, $scope);
 
 			var handleStoryChange = function(nv, ov, scope) {
-				if (profiles.current.autosave && angular.isDefined(nv)) {
+				if (Profiles.current.getAutosave() && angular.isDefined(nv)) {
 					console.log("handleStoryChange");
-					saver.save(aResult.story.id, nv.object());
+					saver.save(aResult.story.getId(), nv.object());
 				}
 				else {
 					vm.saveState = 'floppy-save';
@@ -176,9 +179,15 @@
 			$location.path('/stories');
 		}
 
-		function validPickingOption(aItem) {
+		function validPickingOption(aPassage) {
 			// Is there ANY reason you can't just link to ANY passage? Even the current one?
 			//return (!vm.picking || vm.passage.exitType != 'append' || vm.passage.id != aItem.id);
+
+			// You don't want to ever append to an append, could cause an endless loop.
+			// You should never need to do this, I think.
+			if (vm.passage.hasAppend() && aPassage.hasAppend()) {
+				return false;
+			}
 			return true;
 		}
 
@@ -189,8 +198,8 @@
 			var passage = new Passage();
 			vm.story.addPassage(passage);
 			if (aEntranceChoice) {
-				aEntranceChoice.setDestination(passage.id);
-				passage.addEntrance(vm.passage.id, aEntranceChoice.id);
+				aEntranceChoice.setDestination(passage.getId());
+				passage.addEntrance(vm.passage.getId(), aEntranceChoice.getId());
 			}
 			// Set our current passage to the new one.
 			vm.passage = passage;
@@ -217,11 +226,11 @@
 				// If there is a link from this choice, remove it.
 				if (vm.picking.hasDestination()) {
 					console.log("Changing old destination to new.");
-					vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.destination), vm.picking);
+					vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.getDestination()), vm.picking);
 				}
 
 				vm.picking.setDestination(aId);
-				vm.story.getPassage(aId).addEntrance(vm.passage.id, vm.picking.id);
+				vm.story.getPassage(aId).addEntrance(vm.passage.getId(), vm.picking.getId());
 				vm.picking = false;
 			} else {
 				vm.editPassage(aId);
@@ -238,11 +247,11 @@
 			$('.scrollPassages').scrollTop(0);
 
 			if (vm.passage) {
-				var index = vm.navHistory.indexOf(vm.passage.id);
+				var index = vm.navHistory.indexOf(vm.passage.getId());
 				if (index > -1) {
 					vm.navHistory.splice(index, 1);
 				}
-				vm.navHistory.push(vm.passage.id);
+				vm.navHistory.push(vm.passage.getId());
 			}
 
 			if (aPassage !== false) {
@@ -265,9 +274,9 @@
 			console.info("deleting", aPassage);
 			vm.deleted = {
 				type: "passage",
-				title: aPassage.content,
+				title: aPassage.getContent(),
 				undo: function() {
-					aPassage.trashed = false;
+					aPassage.setTrashed(false);
 					vm.story.addPassage(aPassage);
 					vm.story.linkEntrances(aPassage);
 					vm.story.linkChoices(aPassage);
@@ -281,12 +290,12 @@
 
 			// EDIT:
 
-			vm.story.deletePassage(aPassage.id);
-			var index = vm.navHistory.indexOf(aPassage.id);
+			vm.story.deletePassage(aPassage.getId());
+			var index = vm.navHistory.indexOf(aPassage.getId());
 			if (index > -1) {
 				vm.navHistory.splice(index, 1);
 			}
-			var previous = vm.story.passages[vm.navHistory[-1]] || vm.story.getStartPsg();
+			var previous = vm.story.getPassages()[vm.navHistory[-1]] || vm.story.getStartPsg();
 			vm.setPassage(previous, false);
 		}
 
@@ -294,7 +303,7 @@
 			var data = {};
 			var onConfirm;
 
-			if (aPassage.exitType == aExitType) {
+			if (aPassage.getExitType() == aExitType) {
 				return;
 			}
 
@@ -303,7 +312,7 @@
 				return;
 			}
 
-			switch (aPassage.exitType) {
+			switch (aPassage.getExitType()) {
 				case CDAM.Strings.kExitTypeEnding:
 					data.willDelete = 'ending value';
 					break;
@@ -351,7 +360,7 @@
 		function deleteChoice(aPassage, aChoice) {
 			vm.deleted  =  {
 				type: "choice",
-				title: aChoice.content,
+				title: aChoice.getContent(),
 				undo: function() {
 					vm.passage.addChoice(aChoice);
 					vm.story.linkChoice(aPassage, aChoice);
@@ -364,17 +373,18 @@
 
 		function deleteChoiceCondition(aChoice) {
 			aChoice.condition = new Command();
-			aChoice.showCondition = false;
+			aChoice.setShowCondition(false);
 		}
 
 		function addChoiceUpdate(aChoice) {
-			aChoice.updates.push(new Command());
+			aChoice.addUpdate(new Command());
 		}
 
 		function deleteChoiceUpdate(aChoice, aUpdate) {
-			aChoice.updates = aChoice.updates.filter(function(u) {
+			aChoice.removeUpdate(aUpdate);
+			/*aChoice.updates = aChoice.getUpdates().filter(function(u) {
 				return (u.raw != aUpdate.raw);
-			});
+			});*/
 		}
 
 		// Clear the search field.

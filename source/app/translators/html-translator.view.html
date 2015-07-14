@@ -40,15 +40,15 @@
 </style>
 
 <script>
-function Choosatron(story) {
-	this.story = story;
+function Choosatron(aStory) {
+	this.story = aStory;
 	this.passage = {};
 	this.play = {};
 	this.dataset = {};
 }
 
-Choosatron.create = function(story) {
-	var c = new Choosatron(story);
+Choosatron.create = function(aStory) {
+	var c = new Choosatron(aStory);
 	c.start();
 	return c;
 }
@@ -67,51 +67,57 @@ Choosatron.prototype.data = function() {
 	return this.dataset[key];
 }
 
-Choosatron.prototype.showPassage = function(passage) {
-	if (!passage) return;
-	if (passage.id == this.passage.id) return;
+Choosatron.prototype.showPassage = function(aPassage) {
+	if (!aPassage) {
+		return;
+	}
+	if (aPassage.getId() == this.passage.getId()) {
+		return;
+	}
 
-	location.hash = passage.id;
-	this.passage = passage;
+	location.hash = aPassage.getId();
+	this.passage = aPassage;
 
 	var $section = $('.section-inner');
 
 	var height  = $section.height();
 	var preshow = {top: height + 'px'};
 	var shown   = {top: 0}
-	var hidden  = {top: '-' + (height/2) + 'px'};
+	var hidden  = {top: '-' + (height / 2) + 'px'};
 
 	var show = function() {
-		$('.passage').html(passage.content);
-		this.showChoices(passage);
-		this.showFeedback(passage);
+		$('.passage').html(aPassage.getContent());
+		this.showChoices(aPassage);
+		this.showFeedback(aPassage);
 		$section.hide().css(preshow).show().animate(shown);
 	};
 
 	$section.animate(hidden, $.proxy(show, this));
 }
 
-Choosatron.prototype.showChoices = function(passage) {
-	var choices = passage && passage.choices ? passage.choices : [];
+Choosatron.prototype.showChoices = function(aPassage) {
+	var choices = aPassage && aPassage.getChoices() ? aPassage.getChoices() : [];
 	var html = [];
-	for (var i=0; i<choices.length; i++) {
-		var choice = '<div class="choice" id="' + choices[i].id + '">' + choices[i].content + '</div>';
+	for (var i = 0; i < choices.length; i++) {
+		var choice = '<div class="choice" id="' + choices[i].getId() + '">' + choices[i].getContent() + '</div>';
 		html.push(choice);
 	}
 	$('.choices').html(html.join('\n'));
 }
 
-Choosatron.prototype.showFeedback = function(passage) {
-	if (passage.ending_value === false) return;
+Choosatron.prototype.showFeedback = function(aPassage) {
+	if (aPassage.getEndingIndex() === false) {
+		return;
+	}
 }
 
 Choosatron.prototype.bindStory = function() {
 	// Bind the basic data
-	document.title = this.story.title;
-	$('.title').html(this.story.title);
-	$('.author').html(this.story.author);
+	document.title = this.story.getTitle();
+	$('.title').html(this.story.getTitle());
+	$('.author').html(this.story.getAuthor());
 
-	if (!this.story.passages) return;
+	if (!this.story.getPassages()) return;
 
 	var passage = null;
 
@@ -119,32 +125,37 @@ Choosatron.prototype.bindStory = function() {
 		passage = this.findPassage(location.hash.substr(1));
 	}
 	if (!passage) {
-		passage = this.story.passages[this.story.startId];
+		passage = this.story.getPassage(this.story.getStartId());
 	}
 	this.showPassage(passage);
 }
 
-Choosatron.prototype.findPassage = function(id) {
-	if (!this.story.passages) {
+Choosatron.prototype.findPassage = function(aId) {
+	if (!this.story.getPassages()) {
 		return null;
 	}
-	return this.story.passages[id];
+	return this.story.getPassage(aId);
 }
 
-Choosatron.prototype.findChoice = function(id) {
-	if (!this.passage || !this.passage.choices) return null;
-	for (var i=0; i<this.passage.choices.length; i++) {
-		if (this.passage.choices[i].id == id) {
-			return this.passage.choices[i];
+Choosatron.prototype.findChoice = function(aId) {
+	if (!this.passage || !this.passage.getChoices()) {
+		return null;
+	}
+
+	for (var i = 0; i < this.passage.getChoices().length; i++) {
+		if (this.passage.getChoiceAtIndex(i).getId() == aId) {
+			return this.passage.getChoiceAtIndex(i);
 		}
 	}
 	return null;
 }
 
-Choosatron.prototype.makeChoice = function(e) {
-	var choice = this.findChoice(e.target.id);
-	if (!choice) return;
-	var passage = this.findPassage(choice.destination);
+Choosatron.prototype.makeChoice = function(aEvent) {
+	var choice = this.findChoice(aEvent.target.id);
+	if (!choice) {
+		return;
+	}
+	var passage = this.findPassage(choice.getDestination());
 	this.showPassage(passage);
 }
 

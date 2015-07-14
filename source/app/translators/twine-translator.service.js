@@ -22,12 +22,12 @@ function(Story, Passage, Choice) {
 				var pipe = str.indexOf('|');
 				var choice = new Choice();
 				if (pipe < 0) {
-					choice.content = str;
-					choice.destination = str;
+					choice.setContent(str);
+					choice.setDestination(str);
 					return choice;
 				}
-				choice.content = str.substr(0, pipe);
-				choice.destination = str.substr(pipe + 1);
+				choice.setContent(str.substr(0, pipe));
+				choice.setDestination(str.substr(pipe + 1));
 				return choice;
 			}
 
@@ -38,7 +38,7 @@ function(Story, Passage, Choice) {
 				}
 
 				var content = null;
-				aPassage.content = '';
+				aPassage.setContent('');
 
 				var hasChoices = false;
 				for (var i = 0; i < aTweeLines.length; i++) {
@@ -57,21 +57,23 @@ function(Story, Passage, Choice) {
 							}
 						}
 
-						aPassage.content = contentLines.join('\n');
+						aPassage.setContent(contentLines.join('\n'));
 						aTweeLines = aTweeLines.slice(i);
 						break;
 					}
 				}
 
 				if (hasChoices === false) {
-					aPassage.content = aTweeLines.join('\n');
+					aPassage.setContent(aTweeLines.join('\n'));
 					aTweeLines = [];
 				}
 
 				// Cleanup any trailing newline or carriage return.
-				if ((aPassage.content[aPassage.content.length - 1] === '\r') ||
-					(aPassage.content[aPassage.content.length - 1] === '\n')) {
-					aPassage.content = aPassage.content.slice(0, -1);
+				content = aPassage.getContent();
+				if ((content[content.length - 1] === '\r') ||
+					(content[content.length - 1] === '\n')) {
+					aPassage.setContent(content.slice(0, -1));
+					content = '';
 				}
 
 				// Parse remaining choice lines.
@@ -86,21 +88,21 @@ function(Story, Passage, Choice) {
 					}
 				}
 
-				if (aPassage.choices.length === 0) {
-					aPassage.exitType = CDAM.Strings.kExitTypeEnding;
+				if (aPassage.getChoices().length === 0) {
+					aPassage.setExitType(CDAM.Strings.kExitTypeEnding);
 					// Translate the ending quality.
-					if (typeof aPassage.tags.eq != 'undefined') {
-						aPassage.setEndingIndex(passage.tags.eq - 1);
+					if (typeof aPassage.getTags().eq != 'undefined') {
+						aPassage.setEndingIndex(passage.getTags().eq - 1);
 					} else {
 						aPassage.setEndingIndex(2);
 					}
-				} else if (aPassage.choices.length === 1) {
-					if (aPassage.choices[0].content == '<append>') {
-						aPassage.exitType = CDAM.Strings.kExitTypeAppend;
-						aPassage.appendLink = aPassage.choices[0];
-					} else if (aPassage.choices[0].content == '<continue>') {
-						aPassage.exitType = CDAM.Strings.kExitTypeChoices;
-						aPassage.choices[0].content = 'Continue...';
+				} else if (aPassage.getChoices().length === 1) {
+					if (aPassage.getChoiceAtIndex(0).getContent() === '<append>') {
+						aPassage.setExitType(CDAM.Strings.kExitTypeAppend);
+						//aPassage.appendLink = aPassage.choices[0];
+					} else if (aPassage.getChoiceAtIndex(0).getContent() === '<continue>') {
+						aPassage.setExitType(CDAM.Strings.kExitTypeChoices);
+						aPassage.getChoiceAtIndex(0).setContent('Continue...');
 					}
 				}
 			}
@@ -115,26 +117,26 @@ function(Story, Passage, Choice) {
 				if (!id) continue;
 				switch (id[1].trim()) {
 					case('StoryAuthor'):
-						story.author = tweeLines.join('');
+						story.setAuthor(tweeLines.join(''));
 						//console.log("Author: " + story.author);
 						break;
 					case('StoryTitle'):
-						story.title = tweeLines.join('');
+						story.setTitle(tweeLines.join(''));
 						//console.log("Title: " + story.title);
 						break;
 					case('StorySubtitle'):
-						story.subtitle = tweeLines.join('');
+						story.setSubtitle(tweeLines.join(''));
 						//console.log("Subtitle: " + story.subtitle);
 						break;
 					default: // Parse the text!
 						passage = new Passage();
 						var content = '';
 						//var attrs = reAttributes.exec(id);
-						passage.id = id[1].trim();
+						passage.setId(id[1].trim());
 
-						if (passage.id === 'Start') {
+						if (passage.getId() === 'Start') {
 							//console.log("Start Passage Found!");
-							passage.isStart = true;
+							passage.setIsStart(true);
 						}
 
 						if (typeof id[2] === 'undefined') {
@@ -146,7 +148,8 @@ function(Story, Passage, Choice) {
 							for (var i = 0; i < tagItems.length; i++) {
 								pair = tagItems[i].split(':');
 								if (pair.length === 2) {
-									passage.tags[pair[0]] = pair[1];
+									passage.addTag(pair[0], pair[1]);
+									//passage.tags[pair[0]] = pair[1];
 								}
 							}
 						}

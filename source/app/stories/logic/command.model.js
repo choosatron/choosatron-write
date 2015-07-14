@@ -2,68 +2,114 @@ angular.module('storyApp.models')
 .factory('Command', ['BaseModel', 'Operator',
 function(BaseModel, Operator) {
 
-	function Command(data) {
-		this.variable = null;
-		this.verb     = null;
-		this.value    = null;
+	function Command(aData) {
+		if (!aData) {
+			this.data.created = Date.now();
+		}
 
-		Object.defineProperty(this, 'raw', {
-			get: function() {
-				return this.variable + ' ' + this.verb + ' ' + this.value;
-			},
-			set: function(str) {
-				this.parse(str);
-			},
-		});
+		/* Non Serialized */
+		this.raw = '';
 
-		BaseModel.call(this, data);
+		/* Serialized */
+		this.data.variable = null;
+		this.data.verb     = null;
+		this.data.value    = null;
+
+		BaseModel.call(this, aData);
 	}
 
 	Command.methods = {
-		parse: function(str) {
-			this.raw = str;
+		parse: function(aString) {
+			this.raw = aString;
 			var ptrn = /^(\S+)\s(\S+)\s(.+)$/;
-			var parts = ptn.exec(str);
+			var parts = ptn.exec(aString);
 			if (parts.length < 4) {
 				return false;
 			}
-			this.variable = parts[1];
-			this.verb     = parts[2];
-			this.value    = parts[3];
+			this.data.variable = parts[1];
+			this.data.verb     = parts[2];
+			this.data.value    = parts[3];
 			return true;
 		},
 
-		empty: function() {
-			return !this.variable || !this.verb || !this.value;
+		isEmpty: function() {
+			return !this.getVariable() || !this.getVerb() || !this.getValue();
 		},
 
-		cast: function(v) {
-			var f = parseFloat(v);
-			if (!isNaN(f)) return f;
-			var i = parseInt(v);
-			if (!isNaN(i)) return i;
-			return v;
-		},
-
-		apply: function(source) {
-			var func = Operator[this.verb];
-			if (func && func.action) {
-				var data = this.cast(source[this.variable] || 0);
-				var value = this.cast(this.value);
-				source[this.variable] = func.action(data, value);
+		cast: function(aValue) {
+			var floatVal = parseFloat(aValue);
+			if (!isNaN(floatVal)) {
+				return floatVal;
 			}
-			return source[this.variable];
+
+			var intVal = parseInt(aValue);
+			if (!isNaN(intVal)) {
+				return intVal;
+			}
+			return aValue;
 		},
 
-		test: function(source) {
-			var func = Operator[this.verb];
+		apply: function(aSource) {
+			var func = Operator[this.getVerb()];
 			if (func && func.action) {
-				var data = this.cast(source[this.variable] || 0);
-				var value = this.cast(this.value);
+				var data = this.cast(aSource[this.getVariable()] || 0);
+				var value = this.cast(this.getValue());
+				aSource[this.getVariable()] = func.action(data, value);
+			}
+			return aSource[this.getVariable()];
+		},
+
+		test: function(aSource) {
+			var func = Operator[this.getVerb()];
+			if (func && func.action) {
+				var data = this.cast(source[this.getVariable()] || 0);
+				var value = this.cast(this.getValue());
 				return func.action(data, value);
 			}
 			return false;
-		}
+		},
+
+		/* Getters / Setters */
+
+		getRaw: function() {
+			return this.raw;
+		},
+
+		getCommandStr: function() {
+			return this.getVariable() + ' ' + this.getVerb() + ' ' + this.getValue();
+		},
+
+		setCommandStr: function(aValue) {
+			this.parse(aValue);
+			this.wasModified();
+		},
+
+		getVariable: function() {
+			return this.data.variable;
+		},
+
+		setVariable: function(aValue) {
+			this.data.variable = aValue;
+			this.wasModified();
+		},
+
+		getVerb: function() {
+			return this.data.verb;
+		},
+
+		setVerb: function(aValue) {
+			this.data.verb = aValue;
+			this.wasModified();
+		},
+
+		getValue: function() {
+			return this.data.value;
+		},
+
+		setValue: function(aValue) {
+			this.data.value = aValue;
+			this.wasModified();
+		},
 	};
 	BaseModel.extend(Command, Command.methods);
 
