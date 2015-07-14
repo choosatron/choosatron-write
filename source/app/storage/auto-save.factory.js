@@ -32,7 +32,7 @@ angular.module('storyApp.storage')
 
 		var ctx = this;
 		var args = Array.prototype.slice.call(arguments, 1);
-		for (var i=0; i<this.events[name].length; i++) {
+		for (var i = 0; i < this.events[name].length; i++) {
 			this.events[name][i](args);
 		}
 	};

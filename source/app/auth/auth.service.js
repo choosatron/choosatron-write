@@ -4,11 +4,11 @@
 	angular.module('storyApp')
 		.service('authService', AuthService);
 
-	AuthService.$inject = ['Spark'];
+	AuthService.$inject = ['Particle'];
 
-	function AuthService(Spark) {
-		this.spark = function(aAuth) {
-			return new Spark(aAuth && aAuth.token);
+	function AuthService(Particle) {
+		this.particle = function(aAuth) {
+			return new Particle(aAuth && aAuth.getToken());
 		};
 		this.authStatus = {
 			remoteState: 'idle',
@@ -19,9 +19,9 @@
 
 	AuthService.prototype.saveToken = function(aAuth, aToken) {
 		var now = +new Date();
-		aAuth.token      = aToken.access_token;
-		aAuth.type       = aToken.token_type;
-		aAuth.expiration = +new Date(now + (aToken.expires_in * 1000));
+		aAuth.setToken(aToken.access_token);
+		aAuth.setType(aToken.token_type);
+		aAuth.setExpiration(+new Date(now + (aToken.expires_in * 1000)));
 		this.authStatus.status = 'success';
 		this.authStatus.remoteState = 'idle';
 	};
@@ -31,7 +31,7 @@
 		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
 		var login = this.login.bind(this, aAuth, aPassword);
-		return this.spark(aAuth)
+		return this.particle(aAuth)
 			.createUser(aAuth.username, aPassword)
 			.then(login)
 			.catch(onError);
@@ -42,16 +42,16 @@
 		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
 		var params = {
-			username: aAuth.username,
+			username: aAuth.getUsername(),
 			password: aPassword
 		};
-		if (aAuth.token) {
-			params.access_token = aAuth.token;
+		if (aAuth.getToken()) {
+			params.access_token = aAuth.getToken();
 		}
 
 		var saveToken = this.saveToken.bind(this, aAuth);
 		var onError = this.onError.bind(this);
-		return this.spark(aAuth)
+		return this.particle(aAuth)
 			.login(aAuth.username, aPassword)
 			.then(saveToken)
 			.catch(onError);
@@ -76,13 +76,13 @@
 	};
 
 	AuthService.prototype.loadDevices = function(aAuth) {
-		return this.spark(aAuth).listDevices.then(function(devices) {
-			aAuth.devices = devices;
+		return this.particle(aAuth).listDevices.then(function(devices) {
+			aAuth.setDevices(devices);
 		});
 	};
 
-	AuthService.prototype.claimDevice = function(aAuth, coreId) {
-		return this.spark(aAuth).claimCore(coreId);
+	AuthService.prototype.claimDevice = function(aAuth, aDeviceId) {
+		return this.particle(aAuth).claimCore(aDeviceId);
 	};
 
 })();

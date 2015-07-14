@@ -8,30 +8,35 @@
 		.controller('ChoosatronCtrl', ChoosatronCtrl);
 
 
-	ChoosatronCtrl.$inject = ['$location', 'profiles', 'ChoosatronSerial', 'ChoosatronCloud'];
+	ChoosatronCtrl.$inject = ['$location', 'Profiles', 'ChoosatronSerial', 'ChoosatronCloud'];
 
-	function ChoosatronCtrl($location, profiles, ChoosatronSerial, ChoosatronCloud) {
+	function ChoosatronCtrl($location, Profiles, ChoosatronSerial, ChoosatronCloud) {
 		var vm = this;
 
 		// Variables
 		vm.location = $location;
-		vm.profiles = profiles;
+		vm.profiles = Profiles;
 		vm.profile = null;
-		vm.serial =  null;
-		vm.cloud =  null;
+		vm.serial = null;
+		vm.cloud = null;
 
 		activate();
 
 		function activate() {
-			profiles.load().then(function() {
-				vm.profile = profiles.current;
+			Profiles.load().then(function() {
+				vm.profile = Profiles.current;
+				if (!vm.profile) {
+					console.error("No profiles selected. Redirecting to ./profiles");
+					return $location.path('profiles');
+				}
+
 				vm.serial = new ChoosatronSerial();
-				vm.cloud = new ChoosatronCloud(vm.profile.cloud.token);
+				vm.cloud = new ChoosatronCloud(vm.profile.getCloudAuth().getToken());
 				loadChoosatrons();
 			});
 		}
 
-		profiles.load().then(function () {
+		//profiles.load().then(function () {
 			//vm.choosatrons = $profiles.current.choosatrons;
 
 			/*var profile = $profiles.current;
@@ -46,7 +51,7 @@
 				return $location.path('stories');
 			}*/
 
-		});
+		//});
 
 		vm.view = function() {
 			$location.path('/choosatron');

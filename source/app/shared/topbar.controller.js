@@ -4,14 +4,13 @@
 	angular.module('storyApp.controllers')
 		.controller('TopbarCtrl', TopbarCtrl);
 
-	TopbarCtrl.$inject = ['$location', 'profiles', 'ProfileEditModalService', 'authService', 'manifest'];
-	function TopbarCtrl($location, profiles, ProfileEditModalService, authService, manifest) {
+	TopbarCtrl.$inject = ['$location', 'Profiles', 'ProfileEditModalService', 'authService', 'manifest'];
+	function TopbarCtrl($location, Profiles, ProfileEditModalService, authService, manifest) {
 		var vm = this;
 
 		// Variables
 		vm.profile = null;
 		vm.location = $location;
-		vm.authStatus = authService.authStatus; // DEBUG: TODO - REMOVE
 		vm.manifest = manifest;
 
 		// Functions
@@ -22,7 +21,7 @@
 		activate();
 
 		function activate() {
-			vm.profile = profiles.current;
+			vm.profile = Profiles.current;
 			if (vm.location.path() != '/profiles') {
 				if (!vm.profile) {
 					console.error("No profiles selected. Redirecting to ./profiles");
@@ -36,10 +35,10 @@
 			.then(function (profile) {
 				console.log('Modal promise resolved. Value: ', profile);
 				vm.profile = profile;
-				profiles.editing = null;
+				Profiles.editing = null;
 			}, function (reason) {
 				console.log('Modal promise rejected. Reason: ', reason);
-				profiles.editing = null;
+				Profiles.editing = null;
 			});
 		}
 

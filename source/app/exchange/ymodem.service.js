@@ -131,14 +131,14 @@ function($q, ArrayBufferFactory, Serial) {
 	Ymodem.prototype.crc = function(buffer, size) {
 		var view = new Int16Array(buffer);
 		var crc = 0;
-		for (var i=0; i<size; i++) {
+		for (var i = 0; i < size; i++) {
 			var byte = view[i];
 			crc = crc ^ (byte << 8);
+
 			for (var y = 0; i < 8; y++) {
 				if (crc & 0x8000) {
 					crc = crc << 1 ^ 0x1021;
-				}
-				else {
+				} else {
 					crc = crc << 1;
 				}
 			}

@@ -3,12 +3,12 @@
 'use strict';
 
 angular.module('storyApp')
-.factory('Spark', ['$q', '$http', 'file', function($q, $http, $fs) {
+.factory('Particle', ['$q', '$http', 'file', function($q, $http, $fs) {
 
-	function Spark(token) {
-		this.baseUrl      = 'https://api.spark.io';
-		this.clientId     = 'Spark';
-		this.clientSecret = 'Spark';
+	function Particle(token) {
+		this.baseUrl      = 'https://api.particle.io';
+		this.clientId     = 'Particle';
+		this.clientSecret = 'Particle';
 		this.accessToken  = token;
 		this.version      = 'v1';
 
@@ -19,7 +19,7 @@ angular.module('storyApp')
 		this.setHttpDefaults();
 	}
 
-	Spark.prototype.setHttpDefaults = function() {
+	Particle.prototype.setHttpDefaults = function() {
 		var xForm = {'Content-Type' : 'application/x-www-form-urlencoded'};
 
 		this.$http.defaults.headers.post = xForm;
@@ -28,9 +28,11 @@ angular.module('storyApp')
 
 	// Converts the $http specific promise into the more
 	// standard $q promise
-	Spark.prototype.promise = function(method, url, form) {
+	Particle.prototype.promise = function(method, url, form) {
 		var deferred = this.$q.defer();
 		var data = form && $.param(form);
+
+		console.log("Particle Promise %s, %s", method, url);
 
 		this.$http[method](url, data)
 		.success(deferred.resolve)
@@ -43,7 +45,7 @@ angular.module('storyApp')
 	// This is where we go chrome-app specific. In order to read
 	// a file in a packaged app, we need to use chromes internal
 	// apis.
-	Spark.prototype.getFile = function(filename) {
+	Particle.prototype.getFile = function(filename) {
 		var deferred = this.$q.defer();
 		var fs = this.$fs;
 
@@ -61,13 +63,13 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
-	Spark.prototype.endpoint = function(path, withToken) {
+	Particle.prototype.endpoint = function(path, withToken) {
 		var token = withToken ? '?access_token=' + this.accessToken : '';
 		return this.baseUrl + '/' + this.version + '/' + path + token;
 	};
 
 	// Creates a new user and logs them in
-	Spark.prototype.createUser = function(un, pw) {
+	Particle.prototype.createUser = function(un, pw) {
 		var deferred = this.$q.defer();
 		var data = {
 			username : un,
@@ -88,7 +90,7 @@ angular.module('storyApp')
 	};
 
 	// Logs a member in
-	Spark.prototype.login = function(aUsername, aPassword) {
+	Particle.prototype.login = function(aUsername, aPassword) {
 		var deferred = this.$q.defer();
 		var data = {
 			username      : aUsername,
@@ -112,11 +114,11 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
-	Spark.prototype.listDevices = function() {
+	Particle.prototype.listDevices = function() {
 		return this.promise('get', this.endpoint('devices', true));
 	};
 
-	Spark.prototype.listDevicesWithAttributes = function() {
+	Particle.prototype.listDevicesWithAttributes = function() {
 		var deferred  = $q.defer();
 		var collected = [];
 		var self      = this;
@@ -130,6 +132,8 @@ angular.module('storyApp')
 
 			self.getAttributes(device.id)
 			.then(function(attributes) {
+				//console.log("attrs:");
+				//console.log(attributes);
 				device.attributes = attributes;
 				collected.push(device);
 				listed(devices);
@@ -141,11 +145,11 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
-	Spark.prototype.getAttributes = function(coreId) {
+	Particle.prototype.getAttributes = function(coreId) {
 		return this.promise('get', this.endpoint('devices/' + coreId, true));
 	};
 
-	Spark.prototype.changeProduct = function(coreId, productId, updateAfter) {
+	Particle.prototype.changeProduct = function(coreId, productId, updateAfter) {
 		var data = {
 			product_id         : productId,
 			update_after_claim : updateAfter,
@@ -154,7 +158,7 @@ angular.module('storyApp')
 		return this.promise('put', this.endpoint('devices/' + coreId), data);
 	};
 
-	Spark.prototype.claimCore = function(coreId, productId) {
+	Particle.prototype.claimCore = function(coreId, productId) {
 		var data = {
 			id           : coreId,
 			access_token : this.accessToken
@@ -165,11 +169,11 @@ angular.module('storyApp')
 		return this.promise('post', this.endpoint('devices'), data);
 	};
 
-	Spark.prototype.removeCore = function(coreId) {
+	Particle.prototype.removeCore = function(coreId) {
 		return this.promise('delete', this.endpoint('devices/' + coreId, true));
 	};
 
-	Spark.prototype.flashCore = function(coreId, path) {
+	Particle.prototype.flashCore = function(coreId, path) {
 		var url  = this.endpoint('devices/' + coreId, true);
 		var deferred = this.$q.defer();
 		var self = this;
@@ -201,7 +205,7 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
-	Spark.prototype.renameCore = function(coreId, name) {
+	Particle.prototype.renameCore = function(coreId, name) {
 		var data = {
 			name         : name,
 			access_token : this.accessToken
@@ -211,7 +215,7 @@ angular.module('storyApp')
 
 
 	// Subscribes to an event stream and returns the EventSource object.
-	Spark.prototype.subscribe = function(coreId, eventName) {
+	Particle.prototype.subscribe = function(coreId, eventName) {
 		var path = '';
 
 		if (!coreId) {
@@ -235,13 +239,14 @@ angular.module('storyApp')
 	// If the listener is persistent, the deferred promise will fire
 	// notify events when messages are recieved. For a non-persistent
 	// listener, the promise will resolve with the response instead.
-	Spark.prototype.listen = function(coreId, eventName, persistent) {
+	Particle.prototype.listen = function(coreId, eventName, persistent) {
 		var deferred = this.$q.defer();
 		var source   = this.subscribe(coreId, eventName);
 		var baseUrl  = this.baseUrl;
 
 		function response(event, e) {
-			e.source = source;
+			// TODO: This is crashing!!!
+			//e.source = source;
 			e.event  = event;
 			e.valid  = e.origin === baseUrl;
 			console.info(event, e);
@@ -304,7 +309,7 @@ angular.module('storyApp')
 
 
 	// Post to a named function on a device
-	Spark.prototype.callFunction = function(coreId, method, args) {
+	Particle.prototype.callFunction = function(coreId, method, args) {
 		args = args || '';
 		var url  = this.endpoint('devices/' + coreId + '/command');
 		var data = {
@@ -314,7 +319,7 @@ angular.module('storyApp')
 		return this.promise('post', url, data);
 	};
 
-	return Spark;
+	return Particle;
 }]);
 
 })();

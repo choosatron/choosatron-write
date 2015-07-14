@@ -4,9 +4,9 @@
 	angular.module('storyApp.controllers')
 		.controller('CloudAuthModalCtrl', CloudAuthModalCtrl);
 
-	CloudAuthModalCtrl.$inject = ['$scope', 'profiles', 'authService'];
+	CloudAuthModalCtrl.$inject = ['$scope', 'Choosatrons', 'Profiles', 'authService'];
 
-	function CloudAuthModalCtrl($scope, profiles, authService) {
+	function CloudAuthModalCtrl($scope, Choosatrons, Profiles, authService) {
 		var vm = this;
 
 		// Variables
@@ -14,6 +14,7 @@
 		vm.authState = 'login';
 		vm.authStatus = authService.authStatus;
 		vm.info = null;
+		vm.choosatrons = Choosatrons;
 
 		// Functions
 		vm.loginToCloud = loginToCloud;
@@ -24,7 +25,7 @@
 		activate();
 
 		function activate() {
-			vm.profile = profiles.editing;
+			vm.profile = Profiles.editing;
 		}
 
 		function loginToCloud() {
@@ -44,7 +45,7 @@
 				}
 			};
 			console.log(authService.authStatus.remoteState);
-			authService.login(profiles.editing.cloud, vm.password)
+			authService.login(Profiles.editing.cloud, vm.password)
 				.then(onComplete);
 			console.log(authService.authStatus.remoteState);
 		}
@@ -65,7 +66,7 @@
 				}
 			};
 
-			authService.register(profiles.editing.cloud, vm.password)
+			authService.register(Profiles.editing.cloud, vm.password)
 				.then(onComplete);
 		}
 

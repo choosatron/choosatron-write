@@ -1,5 +1,5 @@
 angular.module('storyApp.databridge')
-.service('profiles', ['ChromeStorageEngine', 'Storage', 'Profile', '$q',
+.service('Profiles', ['ChromeStorageEngine', 'Storage', 'Profile', '$q',
 /**
  * Can be used to manage what is the current story and passage
  * and the $preferences to be a Storage instance

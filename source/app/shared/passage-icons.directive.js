@@ -3,7 +3,7 @@ angular.module('storyApp.directives')
 	return {
 		compile: function($templateElement, $templateAttributes) {
 			return function ($scope, $element, attrs) {
-				$scope.$watch(attrs.passageIcons, function (value) {
+				$scope.$watch(attrs.passageIcons, function(value) {
 					var passage = $scope.$eval(attrs.passageIcons);
 
 					if (!passage) {
@@ -11,7 +11,7 @@ angular.module('storyApp.directives')
 					}
 					//console.log("Directive Passage");
 
-					var choices = passage.choices ? passage.choices.length : 0;
+					var choices = passage.getChoices() ? passage.getChoices().length : 0;
 					var verb = 'Links to ';
 					var noun = 'a passage with ';
 					var count = '';
@@ -31,7 +31,7 @@ angular.module('storyApp.directives')
 					}
 
 					if (passage.hasEnding()) {
-						$element.attr('data-ending', CDAM.Config.kEndingTags.values[passage.endingIndex]);
+						$element.attr('data-ending', CDAM.Config.kEndingTags.values[passage.getEndingIndex()]);
 						noun = 'an ending passage with ';
 					} else {
 						$element.removeAttr('data-ending');

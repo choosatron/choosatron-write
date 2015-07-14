@@ -1,81 +1,48 @@
 angular.module('storyApp.models')
 .factory('Profile', ['BaseModel', 'Auth',
 function(BaseModel, Auth) {
-	function Profile(data) {
-		this.created   = Date.now();
-		this.name      = '';
-		this.autosave  = true;
-		this.currentChoosatron = null;
+	function Profile(aData) {
+		if (!aData) {
+			this.data.created = Date.now();
+		}
+		//this.currentChoosatron = null;
 
+		/* Non Serialized */
+
+		/* Serialized */
 		// Cloud auth
-		this.cloud = new Auth(data && data.cloud);
+		this.data.cloudAuth = new Auth(aData && aData.cloud);
+
+		this.data.name = '';
+
+		this.data.autosave  = true;
 
 		// Access tokens for guest Choosatron access.
-		this.guestAuth = {};
+		this.data.guestAuth = {};
 
 		// Saves data to associate with Choosatrons
-		this.choosatrons = {};
+		this.data.choosatrons = {};
 
 		// Saves file entry references to a profiles stories
-		this.entries = [];
+		this.data.entries = [];
 
-		BaseModel.call(this, data);
+		BaseModel.call(this, aData);
 	}
 
 	Profile.methods = {
-
-		selectChoosatron: function(aId) {
-			this.currentChoosatron = aId;
-		},
-
-		currentChoosatron: function() {
-			return this.choosatrons[this.currentChoosatron];
-		},
-
-		saveChoosatron: function(aChoosatron) {
-			var choosatron = {
-				id: aChoosatron.id
-			};
-
-			if (this.choosatrons[aChoosatron.id]) {
-				choosatron = this.choosatrons[aChoosatron.id];
-				console.debug("Updating existing choosatron", aChoosatron);
-			} else {
-				console.debug("Adding new choosatron", aChoosatron);
-			}
-
-			// Very shallow copy of the choosatron
-			var types = ['string', 'number', 'boolean'];
-			for (var key in aChoosatron) {
-				var value = aChoosatron[key];
-				var type = typeof(value);
-				if (types.indexOf(type) < 0) continue;
-				choosatron[key] = value;
-			}
-
-			this.choosatrons[aChoosatron.id] = choosatron;
-
-			return choosatron;
-		},
-
-		getChoosatron: function(aId) {
-			if (this.choosatrons[aId]) {
-				return this.choosatrons[aId];
-			}
-		},
 
 		// Add a new entry record
 		saveEntry: function(aEntryId, aStory) {
 			var entry = {
 				entryId : aEntryId,
-				id: aStory.id
+				id: aStory.getId()
 			};
 
 			var index = this.findEntryIndex(entry);
 
 			if (index >= 0) {
-				entry = this.entries[index];
-				this.entries.splice(index, 1);
+				entry = this.data.entries[index];
+				this.data.entries.splice(index, 1);
 				console.debug("Updating existing entry", aEntryId, entry, aStory);
 			} else {
 				console.debug("Adding new entry", aEntryId, entry, aStory);
@@ -91,17 +58,21 @@ function(BaseModel, Auth) {
 			}
 
 			// Add to the beginning of the list
-			this.entries.unshift(entry);
-
+			this.data.entries.unshift(entry);
+			this.wasModified();
 			return entry;
 		},
 
 		findEntryIndex: function(aEntry) {
-			if (!aEntry) return -1;
-			if (!this.entries || !this.entries.length) return -1;
+			if (!aEntry) {
+				return -1;
+			}
+			if (!this.data.entries || !this.data.entries.length) {
+				return -1;
+			}
 
-			for (var i = 0; i < this.entries.length; i++) {
-				var compared = this.entries[i];
+			for (var i = 0; i < this.data.entries.length; i++) {
+				var compared = this.data.entries[i];
 				if (compared.entryId == aEntry.entryId) {
 					return i;
 				}
@@ -119,7 +90,8 @@ function(BaseModel, Auth) {
 			if (i < 0) {
 				return;
 			}
-			this.entries.splice(i, 1);
+			this.data.entries.splice(i, 1);
+			this.wasModified();
 		},
 
 		// Shifts an entry to the top of the queue for selection
@@ -128,12 +100,71 @@ function(BaseModel, Auth) {
 			if (i < 0) {
 				return null;
 			}
-			var selected = this.entries[i];
-			this.entries.splice(i, 1);
-			this.entries.unshift(selected);
+			var selected = this.data.entries[i];
+			this.data.entries.splice(i, 1);
+			this.data.entries.unshift(selected);
 			return selected;
+		},
+
+		/* Getters / Setters */
+
+		// Non Serialized //
+
+		getCloudAuth: function() {
+			return this.data.cloudAuth;
+		},
+
+		// Serialized //
+
+		getName: function() {
+			return this.data.name;
+		},
+
+		setName: function(aValue) {
+			this.data.name = aValue;
+			this.wasModified();
+		},
+
+		getAutosave: function() {
+			return this.data.autosave;
+		},
+
+		setAutosave: function(aValue) {
+			this.data.autosave = aValue;
+			this.wasModified();
+		},
+
+		getGuestAuth: function() {
+			return this.data.guestAuth;
+		},
+
+		getChoosatrons: function() {
+			return this.data.choosatrons;
+		},
+
+		getChoosatron: function(aId) {
+			if (this.data.choosatrons[aId]) {
+				return this.data.choosatrons[aId];
+			}
+		},
+
+		saveChoosatron: function(aChoosatron) {
+			console.log("saveChoosatron");
+			console.log(aChoosatron);
+			this.data.choosatrons[aChoosatron.getDeviceId()] = aChoosatron;
+			this.wasModified();
+		},
+
+		getEntries: function() {
+			return this.data.entries;
+		},
+
+		getEntryAtIndex: function(aIndex) {
+			return this.data.entries[aIndex];
 		}
+
 	};
+
 	BaseModel.extend(Profile, Profile.methods);
 
 	return Profile;

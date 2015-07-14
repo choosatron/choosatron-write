@@ -9,11 +9,11 @@ function(BaseModel, Passage) {
 		}
 
 		// Max lengths for Choosatron binaries.
-		var kMaxSizeAuthor = 48;
-		var kMaxSizeCredits = 80;
-		var kMaxSizeContact = 128;
-		var kMaxSizeTitle = 64;
-		var kMaxSizeSubtitle = 32;
+		this.kMaxSizeAuthor = 48;
+		this.kMaxSizeCredits = 80;
+		this.kMaxSizeContact = 128;
+		this.kMaxSizeTitle = 64;
+		this.kMaxSizeSubtitle = 32;
 
 		/* Non Serialized */
 		this.lastPsgNumber = 0;
@@ -270,10 +270,10 @@ function(BaseModel, Passage) {
 
 		// Has a max length, returns true if value was cutoff.
 		setAuthor: function(aValue) {
-			this.data.author = aValue.substr(0, kMaxSizeAuthor);
+			this.data.author = aValue.substr(0, this.kMaxSizeAuthor);
 			this.wasModified();
 
-			if (aValue.length > kMaxSizeAuthor) {
+			if (aValue.length > this.kMaxSizeAuthor) {
 				return true;
 			}
 			return false;
@@ -285,10 +285,10 @@ function(BaseModel, Passage) {
 
 		// Has a max length, returns true if value was cutoff.
 		setCredits: function(aValue) {
-			this.data.credits = aValue.substr(0, kMaxSizeCredits);
+			this.data.credits = aValue.substr(0, this.kMaxSizeCredits);
 			this.wasModified();
 
-			if (aValue.length > kMaxSizeCredits) {
+			if (aValue.length > this.kMaxSizeCredits) {
 				return true;
 			}
 			return false;
@@ -299,10 +299,10 @@ function(BaseModel, Passage) {
 		},
 
 		setContact: function(aValue) {
-			this.data.contact = aValue.substr(0, kMaxSizeContact);
+			this.data.contact = aValue.substr(0, this.kMaxSizeContact);
 			this.wasModified();
 
-			if (aValue.length > kMaxSizeContact) {
+			if (aValue.length > this.kMaxSizeContact) {
 				return true;
 			}
 			return false;
@@ -314,10 +314,10 @@ function(BaseModel, Passage) {
 
 		// Has a max length, returns true if value was cutoff.
 		setTitle: function(aValue) {
-			this.data.title = aValue.substr(0, kMaxSizeTitle);
+			this.data.title = aValue.substr(0, this.kMaxSizeTitle);
 			this.wasModified();
 
-			if (aValue.length > kMaxSizeTitle) {
+			if (aValue.length > this.kMaxSizeTitle) {
 				return true;
 			}
 			return false;
@@ -329,10 +329,10 @@ function(BaseModel, Passage) {
 
 		// Has a max length, returns true if value was cutoff.
 		setSubtitle: function(aValue) {
-			this.data.subtitle = aValue.substr(0, kMaxSizeSubtitle);
+			this.data.subtitle = aValue.substr(0, this.kMaxSizeSubtitle);
 			this.wasModified();
 
-			if (aValue.length > kMaxSizeSubtitle) {
+			if (aValue.length > this.kMaxSizeSubtitle) {
 				return true;
 			}
 			return false;

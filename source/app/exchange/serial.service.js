@@ -54,8 +54,8 @@ function($q, $timeout, ArrayBufferFactory) {
 	};
 
 
-	// { "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Spark w/ WiFi - Serial Mode)
-	// { "vendorId": 7504, "productId": 24703 } // VID: 0x1D50, PID: 0x607F (Spark w/ WiFi - CORE DFU)
+	// { "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Core w/ WiFi - Serial Mode)
+	// { "vendorId": 7504, "productId": 24703 }  // VID: 0x1D50, PID: 0x607F (Core w/ WiFi - CORE DFU)
 
 	function Serial(aApi) {
 		this.ports      = [];
@@ -193,18 +193,21 @@ function($q, $timeout, ArrayBufferFactory) {
 		options = options || Serial.ConnectionOptions;
 
 		var connected = function(info) {
+			// Check for failure, like trying to connect
+			// to a device no longer plugged in.
+			if (chrome.runtime.lastError) {
+				deferred.reject();
+			} else {
+				self.connection = info;
 
-			self.connection = info;
-
-			if (self.debug) {
-				console.info("Connected", info);
+				if (self.debug) {
+					console.info("Connected", info);
+				}
+				deferred.resolve();
 			}
-
-			deferred.resolve();
 		};
 
 		var connect = function() {
-
 			if (!path && self.ports.length) {
 				path = self.ports[0].path;
 			}
@@ -222,8 +225,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 		if (!this.ports) {
 			this.load().then(connect);
-		}
-		else {
+		} else {
 			connect();
 		}
 
@@ -269,7 +271,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		var deferred = $q.defer();
 
 		function readPart(info) {
-			for (var i=0; i<info.data.length; i++) {
+			for (var i = 0; i < info.data.length; i++) {
 				var byte = info.data[i];
 				builder.setInt8(offset, byte);
 				if (byte === untilByte) {
@@ -367,7 +369,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		};
 
 		var disconnected = function(aResult) {
-			console.info('disconnected', connections[i], aResult);
+			console.info('Broadcast disconnected', aResult);
 		};
 
 		var done = function() {

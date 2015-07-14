@@ -22,7 +22,7 @@
 		"syncFileSystem",
 		"unlimitedStorage",
 		{"fileSystem": ["write", "retainEntries", "directory"]},
-		"https://api.spark.io/"
+		"https://api.particle.io/"
 	],
 	"sockets": {
 		"tcp": {

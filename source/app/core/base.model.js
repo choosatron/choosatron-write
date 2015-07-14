@@ -3,60 +3,66 @@ angular.module('storyApp.models')
 function(Random) {
 
 	/// Model base class ///
-	function BaseModel(data) {
-		this.id        = Random.id();
-		this.created   = Date.now();
-		this.modified  = null;
-		this.opened    = null;
-		this.serialize = {};
+	function BaseModel(aData) {
+		this.data = {};
+		this.data.id = Random.id();
+		this.data.created = Date.now();
+		this.data.modified = null;
+		this.data.opened = null;
 
-		if (data) this.load(data);
+		if (aData) {
+			this.load(aData);
+		}
 	}
 
 	BaseModel.abbrs = [];
 
-	BaseModel.extend = function(cls, data) {
-		cls.prototype = new BaseModel();
-		cls.constructor = cls;
-		angular.forEach(data, function(func, name) {
-			cls.prototype[name] = func;
+	BaseModel.extend = function(aCls, aData) {
+		aCls.prototype = new BaseModel();
+		aCls.constructor = aCls;
+		angular.forEach(aData, function(func, name) {
+			aCls.prototype[name] = func;
 		});
 	};
 
 	BaseModel.prototype = {
-		load: function(data) {
-			for (var key in data) {
+		load: function(aData) {
+			if (typeof aData !== 'object') {
+				console.log("Not object, use .data");
+				aData = aData.data;
+			}
+			console.log("Object:");
+			console.log(aData);
+
+			for (var key in aData) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
-					this[loader]( data[key] );
+					this[loader](aData[key]);
 				} else {
-					this[key] = data[key];
+					this.data[key] = aData[key];
 				}
 			}
 		},
 
-		each: function(field, callback) {
-			var list = this[field];
+		each: function(aField, aCallback) {
+			var list = this[aField];
 			if (!list) {
 				return this;
 			}
 			for (var i = 0; i < list.length; i++) {
 				var item = list[i];
-				var stop = callback(item);
+				var stop = aCallback(item);
 				if (stop === false) break;
 			}
 			return this;
 		},
 
-		refreshId: function() {
-			this.id = Random.id();
-		},
-
 		object: function() {
 			var o = {};
-			for (var key in this) {
-				var val = this[key];
+			// TODO: Serialize ONLY this.data
+			for (var key in this.data) {
+				var val = this.data[key];
 				if (val instanceof BaseModel) {
 					o[key] = val.serialize();
 				} else {
@@ -74,13 +80,39 @@ function(Random) {
 		},
 
 		serialize: function(aPretty) {
-			var o = this.object();
+			var o = this.data.object();
 			//console.log("Final Object:");
 			//console.log(o);
 			var s = angular.toJson(o, aPretty);
 			//console.log(angular.toJson(o, true));
 			return s;
+		},
+
+		wasModified: function() {
+			this.data.modified = Date.now();
+		},
+
+		refreshId: function() {
+			this.id = Random.id();
+		},
+
+		getId: function() {
+			return this.data.id;
+		},
+
+		getCreated: function() {
+			return this.data.created;
+		},
+
+		getModified: function() {
+			return this.data.modified;
+		},
+
+		getOpened: function() {
+			return this.data.opened;
 		}
+
+
 	};
 
 	return BaseModel;
