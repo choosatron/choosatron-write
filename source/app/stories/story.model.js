@@ -4,6 +4,8 @@ function(BaseModel, Passage) {
 
 	/// Story ///
 	function Story(aData) {
+		this.data = {};
+
 		// Max lengths for Choosatron binaries.
 		this.kMaxSizeAuthor = 48;
 		this.kMaxSizeCredits = 80;

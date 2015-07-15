@@ -4,6 +4,8 @@ function(BaseModel, Choice) {
 
 	/// Passage ///
 	function Passage(aData) {
+		this.data = {};
+
 		this.data.number         = null;
 		this.data.content        = '';
 		this.data.choices        = [];

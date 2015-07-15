@@ -3,6 +3,8 @@ angular.module('storyApp.models')
 function(BaseModel, Command) {
 	/// Choice ///
 	function Choice(aData) {
+		this.data = {};
+
 		/* Non Serialized */
 
 		// Used to determine whether conditions are shown in the UI

@@ -3,6 +3,8 @@ angular.module('storyApp.models')
 function(BaseModel) {
 
 	function Playback(aData) {
+		this.data = {};
+
 		this.story = null;
 
 		// Holds all of the data being manipulated during playback

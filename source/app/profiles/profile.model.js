@@ -2,7 +2,7 @@ angular.module('storyApp.models')
 .factory('Profile', ['BaseModel', 'Auth',
 function(BaseModel, Auth) {
 	function Profile(aData) {
-		//this.currentChoosatron = null;
+		this.data = {};
 
 		/* Non Serialized */
 

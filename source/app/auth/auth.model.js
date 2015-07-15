@@ -3,9 +3,7 @@ angular.module('storyApp.models')
 function(BaseModel) {
 
 	function Auth(aData) {
-		if (!aData) {
-			this.data.created = Date.now();
-		}
+		this.data = {};
 
 		/* Serialized */
 		this.data.username   = '';

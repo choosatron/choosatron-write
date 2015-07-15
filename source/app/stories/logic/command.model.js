@@ -3,9 +3,7 @@ angular.module('storyApp.models')
 function(BaseModel, Operator) {
 
 	function Command(aData) {
-		if (!aData) {
-			this.data.created = Date.now();
-		}
+		this.data = {};
 
 		/* Non Serialized */
 		this.raw = '';
