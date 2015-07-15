@@ -59,7 +59,7 @@
 				file.write(entry, story.serialize())
 				.then(function(event) {
 					var entryId = file.getEntryId(entry);
-					vm.profile.saveEntry(entryId, story);
+					Profiles.current.saveEntry(entryId, story);
 					Profiles.save().then(function() {
 						$location.path('/story');
 					}, err);

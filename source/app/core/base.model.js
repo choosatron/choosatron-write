@@ -4,7 +4,9 @@ function(Random) {
 
 	/// Model base class ///
 	function BaseModel(aData) {
-		this.data = {};
+		if (!this.data) {
+			this.data = {};
+		}
 		this.data.id = Random.id();
 		this.data.modified = null;
 		this.data.opened = null;
@@ -36,8 +38,7 @@ function(Random) {
 			/*jshint -W087 */
 			//debugger;
 
-			console.log("Object:");
-			console.log(aData);
+			console.log("Object: ", aData);
 
 			for (var key in aData) {
 				var proper = key[0].toUpperCase() + key.slice(1);
@@ -46,9 +47,12 @@ function(Random) {
 					console.log("Loader: %s, key: %s", aData[key]);
 					this[loader](aData[key]);
 				} else {
-					this.data[key] = aData[key];
+					if (aData[key]) {
+						this.data[key] = aData[key];
+					}
 				}
 			}
+			console.log("Class Obj: ", this);
 		},
 
 		each: function(aField, aCallback) {
@@ -70,13 +74,16 @@ function(Random) {
 			for (var key in this.data) {
 				var val = this.data[key];
 				if (val instanceof BaseModel) {
+					if (key === 'entries') {
+						console.log("Entries Saving");
+					}
 					o[key] = val.serialize();
+					if (key === 'entries') {
+						console.log("Entries Saved: ", o[key]);
+					}
 				} else {
 					// Will it cause any issues to NOT store null values?
-					if ((typeof(val) === 'undefined') ||
-					 	(val === null) ||
-					    (typeof(val) === 'function') ||
-					    (val.length === 0)) {
+					if (!val) {
 						continue;
 					}
 					o[key] = val;

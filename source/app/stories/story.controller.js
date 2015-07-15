@@ -101,7 +101,7 @@
 				.then(function(result) {
 
 					/*jshint -W087 */
-					debugger;
+					//debugger;
 
 					if (!result || !result.story) {
 						return $location.path('/stories');

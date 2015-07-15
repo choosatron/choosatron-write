@@ -57,7 +57,6 @@ function(BaseModel, Auth) {
 			}
 
 			// Add to the beginning of the list
-			console.log(this.data.entries);
 			this.data.entries.unshift(entry);
 			this.wasModified();
 			return entry;
