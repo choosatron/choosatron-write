@@ -5,7 +5,7 @@
 			<div class="form-group">
 				<div class="checkbox">
 					<label>
-						<input id="autosave" type="checkbox" ng-model="vm.autosave" ng-change="vm.updateAutosave(vm.autosave)" />
+						<input id="autosave" type="checkbox" ng-model="vm.profileAutosave" ng-change="vm.profile.setAutosave(vm.profileAutosave)" />
 						Autosave Stories
 					</label>
 				</div>
@@ -16,7 +16,7 @@
 					<span class="input-group-addon">
 						<span class="glyphicon glyphicon-user"></span>
 					</span>
-					<p><input name="name" ng-model="vm.profileName" ng-change="vm.updateProfileName(vm.profileName)" type="text" class="form-control" placeholder="Your Profile Name" ng-minlength='3' ng-maxlength='20' required /></p>
+					<p><input name="name" ng-model="vm.profileName" ng-change="vm.profile.setName(vm.profileName)" type="text" class="form-control" placeholder="Your Profile Name" ng-minlength='3' ng-maxlength='20' required /></p>
 					<div class="error" ng-show="edit_profile_form.name.$dirty && edit_profile_form.name.$invalid">
 						<small class="error" ng-show="edit_profile_form.name.$error.required">
 							A profile name is required.

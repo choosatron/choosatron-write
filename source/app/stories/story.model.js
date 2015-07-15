@@ -4,10 +4,6 @@ function(BaseModel, Passage) {
 
 	/// Story ///
 	function Story(aData) {
-		if (!aData) {
-			this.data.created = Date.now();
-		}
-
 		// Max lengths for Choosatron binaries.
 		this.kMaxSizeAuthor = 48;
 		this.kMaxSizeCredits = 80;
@@ -270,6 +266,7 @@ function(BaseModel, Passage) {
 
 		// Has a max length, returns true if value was cutoff.
 		setAuthor: function(aValue) {
+			console.log(aValue);
 			this.data.author = aValue.substr(0, this.kMaxSizeAuthor);
 			this.wasModified();
 

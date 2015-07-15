@@ -3,10 +3,6 @@ angular.module('storyApp.models')
 function(BaseModel) {
 
 	function Choosatron(aData) {
-		if (!aData) {
-			this.data.created = Date.now();
-		}
-
 		/* Non Serialized */
 		// Is currently reachable from the Particle Cloud
 		this.lastOnline = null; // Need this? or use lastHeard?

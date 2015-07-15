@@ -22,15 +22,13 @@
 		vm.setupCloudLink = setupCloudLink;
 		vm.updateHeader = updateHeader;
 		vm.cancel = cancel;
-		vm.updateAutosave = updateAutosave;
-		vm.updateProfileName = updateProfileName;
 
 		activate();
 
 		function activate() {
 			if (Profiles.current) {
 				Profiles.editing = new Profile(Profiles.current);
-				Profiles.editing.cloud = new Auth(Profiles.current.getCloudAuth());
+				Profiles.editing.setCloudAuth(new Auth(Profiles.current.getCloudAuth()));
 				console.log("Orig: " + Profiles.current.getId() + ", Copy: " + Profiles.editing.getId());
 				console.log("Editing existing profile");
 			} else {
@@ -41,6 +39,8 @@
 			$scope.$watch('vm.editState', onRemoteStatusChange);
 
 			vm.profile = Profiles.editing;
+			vm.profileName = vm.profile.getName();
+			vm.profileAutosave = vm.profile.getAutosave();
 
 			console.log("Name: " + vm.profile.getName() + ", ID: " + vm.profile.getId());
 		}
@@ -64,15 +64,6 @@
 		function cancel() {
 			Profiles.editing = null;
 			$scope.closeThisDialog(0);
-		}
-
-		function updateAutosave(aAutosave) {
-			vm.profile.setAutosave(aAutosave);
-		}
-
-		function updateProfileName(aName) {
-			console.log(aName);
-			vm.profile.setName(aName);
 		}
 
 		function onRemoteStatusChange(aNewStatus, aOldStatus) {

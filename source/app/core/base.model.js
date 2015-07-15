@@ -6,12 +6,13 @@ function(Random) {
 	function BaseModel(aData) {
 		this.data = {};
 		this.data.id = Random.id();
-		this.data.created = Date.now();
 		this.data.modified = null;
 		this.data.opened = null;
 
 		if (aData) {
 			this.load(aData);
+		} else {
+			this.data.created = Date.now();
 		}
 	}
 
@@ -27,10 +28,14 @@ function(Random) {
 
 	BaseModel.prototype = {
 		load: function(aData) {
-			if (typeof aData !== 'object') {
+			//if (typeof aData !== 'object') {
+			if (aData.data) {
 				console.log("Not object, use .data");
 				aData = aData.data;
 			}
+			/*jshint -W087 */
+			//debugger;
+
 			console.log("Object:");
 			console.log(aData);
 
@@ -38,6 +43,7 @@ function(Random) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
+					console.log("Loader: %s, key: %s", aData[key]);
 					this[loader](aData[key]);
 				} else {
 					this.data[key] = aData[key];
@@ -80,7 +86,7 @@ function(Random) {
 		},
 
 		serialize: function(aPretty) {
-			var o = this.data.object();
+			var o = this.object();
 			//console.log("Final Object:");
 			//console.log(o);
 			var s = angular.toJson(o, aPretty);
@@ -90,6 +96,10 @@ function(Random) {
 
 		wasModified: function() {
 			this.data.modified = Date.now();
+		},
+
+		wasOpened: function() {
+			this.data.opened = Date.now();
 		},
 
 		refreshId: function() {

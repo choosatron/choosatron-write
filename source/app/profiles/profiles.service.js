@@ -23,6 +23,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 
 	this.select = function(aProfile) {
 		this.current = aProfile;
+		this.current.wasOpened();
 		return this.add(aProfile);
 	};
 

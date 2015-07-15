@@ -32,12 +32,14 @@
 		this.authStatus.remoteState = 'working';
 		var login = this.login.bind(this, aAuth, aPassword);
 		return this.particle(aAuth)
-			.createUser(aAuth.username, aPassword)
+			.createUser(aAuth.getUsername(), aPassword)
 			.then(login)
 			.catch(onError);
 	};
 
 	AuthService.prototype.login = function(aAuth, aPassword) {
+		console.log(aAuth);
+
 		this.authStatus.error = null;
 		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
@@ -52,7 +54,7 @@
 		var saveToken = this.saveToken.bind(this, aAuth);
 		var onError = this.onError.bind(this);
 		return this.particle(aAuth)
-			.login(aAuth.username, aPassword)
+			.login(aAuth.getUsername(), aPassword)
 			.then(saveToken)
 			.catch(onError);
 	};

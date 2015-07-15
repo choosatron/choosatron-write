@@ -3,10 +3,6 @@ angular.module('storyApp.models')
 function(BaseModel) {
 
 	function Playback(aData) {
-		if (!aData) {
-			this.data.created = Date.now();
-		}
-
 		this.story = null;
 
 		// Holds all of the data being manipulated during playback

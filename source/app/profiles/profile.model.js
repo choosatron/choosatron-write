@@ -2,9 +2,6 @@ angular.module('storyApp.models')
 .factory('Profile', ['BaseModel', 'Auth',
 function(BaseModel, Auth) {
 	function Profile(aData) {
-		if (!aData) {
-			this.data.created = Date.now();
-		}
 		//this.currentChoosatron = null;
 
 		/* Non Serialized */
@@ -50,14 +47,17 @@ function(BaseModel, Auth) {
 
 			// Very shallow copy of the story
 			var types = ['string', 'number', 'boolean'];
-			for (var key in aStory) {
-				var value = aStory[key];
+			for (var key in aStory.data) {
+				var value = aStory.data[key];
 				var type = typeof(value);
-				if (types.indexOf(type) < 0) continue;
+				if (types.indexOf(type) < 0) {
+					continue;
+				}
 				entry[key] = value;
 			}
 
 			// Add to the beginning of the list
+			console.log(this.data.entries);
 			this.data.entries.unshift(entry);
 			this.wasModified();
 			return entry;
@@ -112,6 +112,10 @@ function(BaseModel, Auth) {
 
 		getCloudAuth: function() {
 			return this.data.cloudAuth;
+		},
+
+		setCloudAuth: function(aValue) {
+			this.data.cloudAuth = aValue;
 		},
 
 		// Serialized //

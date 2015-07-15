@@ -11,6 +11,7 @@
 
 		// Variables
 		vm.profile = null;
+		vm.cloudUsername = '';
 		vm.authState = 'login';
 		vm.authStatus = authService.authStatus;
 		vm.info = null;
@@ -26,6 +27,7 @@
 
 		function activate() {
 			vm.profile = Profiles.editing;
+			vm.cloudUsername = vm.profile.getCloudAuth().username;
 		}
 
 		function loginToCloud() {
@@ -40,12 +42,12 @@
 					console.log(authService.authStatus.remoteState);
 				} else {
 					console.log(authService.authStatus.remoteState);
-					console.log("Cloud Auth Logged in.", vm.profile.cloud);
+					console.log("Cloud Auth Logged in.", vm.profile.getCloudAuth());
 					vm.info = { message: "Logged in to the cloud!" };
 				}
 			};
 			console.log(authService.authStatus.remoteState);
-			authService.login(Profiles.editing.cloud, vm.password)
+			authService.login(Profiles.editing.getCloudAuth(), vm.password)
 				.then(onComplete);
 			console.log(authService.authStatus.remoteState);
 		}
