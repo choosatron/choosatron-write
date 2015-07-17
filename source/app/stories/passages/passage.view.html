@@ -31,11 +31,11 @@
 				<span ng-if="vm.passage.isStart()" class="label label-success">Start</span>
 				<a ng-if="!vm.passage.isStart()" class="h4 icon-inline icon-subtle" confirm-click="vm.deletePassage(vm.passage)" confirm-message="Delete passage?"><span class="glyphicon glyphicon-trash"></span></a>
 				<div class="savePassage fade-animation" ng-hide="vm.profiles.current.getAutosave()">
-					<button class="btn btn-primary" ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.getId(), vm.story)"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</button>
+					<button class="btn btn-primary" ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.getId(), vm.story.object())"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</button>
 				</div>
 			</h2>
 
-			<textarea ng-model="vm.passage.getContent()" class="form-control passage_{{vm.passage.getId()}}" rows="10" placeholder="Write your passage content here."></textarea>
+			<textarea ng-model="vm.passage.content" ng-model-options="{ getterSetter: true }" class="form-control passage_{{vm.passage.getId()}}" rows="10" placeholder="Write your passage content here."></textarea>
 		</div><!-- .passageBody -->
 	</div><!-- .passage-box -->
 

@@ -37,8 +37,19 @@ function(BaseModel, Command) {
 				var update = new Command(aUpdates[i]);
 				this.data.updates.push(update);
 			}
-			this.showUpdates = this.updates.data.length > 0;
+			this.showUpdates = this.data.updates.length > 0;
 		},
+
+		// Named for objectifying use in BaseModel
+		objectifyUpdates: function(aUpdates) {
+			var o = [];
+
+			for (var i = 0; i < aUpdates.length; ++i) {
+				o[i] = aUpdates[i].object();
+			}
+			return o;
+		},
+
 
 		loadCondition: function(aCondition) {
 			if (aCondition !== null) {

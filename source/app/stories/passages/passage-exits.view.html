@@ -55,13 +55,13 @@
 
 						<div class="row">
 							<div class="col-xs-1 h4"><a class="icon-subtle" ng-click="vm.deleteChoiceCondition(choice)"><span class="glyphicon glyphicon-remove-circle"></span></a></div>
-							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="choice.getCondition().getVariable()" placeholder="Value" data-provider="typeahead" data-source='{{vm.variables}}' /></div>
+							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="choice.getCondition().variable" ng-change="choice.getCondition(choice.getCondition().variable).setVariable()" placeholder="Value" data-provider="typeahead" data-source='{{vm.variables}}' /></div>
 							<div class="col-xs-3">
-								<select class="form-control" ng-model="choice.getCondition().getVerb()" ng-options="o.keyword as o.name for o in vm.operators.conditions">
+								<select class="form-control" ng-model="choice.getCondition().verb" ng-change="choice.getCondition().setVerb(choice.getCondition().verb)" ng-options="o.keyword as o.name for o in vm.operators.conditions">
 									<option value="">---</option>
 								</select>
 							</div>
-							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="choice.getCondition().getValue()" placeholder="Value" /></div>
+							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="choice.getCondition().value" ng-change="choice.getCondition().setValue(choice.getCondition().value" placeholder="Value" /></div>
 						</div>
 
 						<p class="quip"><span class="glyphicon glyphicon-arrow-down"></span></p>
@@ -73,7 +73,7 @@
 					</div>
 
 					<div class="col-xs-9">
-						<p><input ng-model="choice.getContent()" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
+						<p><input ng-model="choice.content" ng-change="choice.setContent(choice.content)" type="text" class="form-control" placeholder="Write your choice content here." value="" /></p>
 
 						<!-- Neither of these can happen right now because there is a UI overlay blocking the user from clicking this... but they are still a good theoretical questions: -->
 								<!-- TODO: Potentially buggy scenario with picking mode... user has N unfinished choices, and they click "Existing Passage" for one of them, and then also clicks "Existing Passage" for a different one of them before making a selection for the first... -->
@@ -99,8 +99,8 @@
 					</div>
 
 					<div class="col-xs-1 choiceLogic h4">
-						<a ng-click="choice.showCondition() = !choice.showCondition()" ng-class="{active: choice.showCondition()}" class="choiceLogicCondition"><span class="glyphicon glyphicon-eye-open"></span></a>
-						<a ng-click="choice.showUpdates() = !choice.showUpdates()" ng-class="{active: choice.showUpdates()}" class="choiceLogicUpdates"><span class="glyphicon glyphicon-cog"></span></a>
+						<a ng-click="choice.setShowCondition(!choice.showCondition())" ng-class="{active: choice.showCondition()}" class="choiceLogicCondition"><span class="glyphicon glyphicon-eye-open"></span></a>
+						<a ng-click="choice.setShowUpdates(!choice.showUpdates())" ng-class="{active: choice.showUpdates()}" class="choiceLogicUpdates"><span class="glyphicon glyphicon-cog"></span></a>
 					</div>
 
 					<div class="choiceStoryUpdates" ng-class="{active: choice.showUpdates()}">
@@ -110,11 +110,11 @@
 							<div class="col-xs-1 h4"><a ng-click="vm.deleteChoiceUpdate(choice, update);" class="icon-subtle"><span class="glyphicon glyphicon-remove-circle"></span></a></div>
 							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="update.getVariable()" placeholder="Variable" data-provider="typeahead" data-source='{{vm.variables}}' /></div>
 							<div class="col-xs-3">
-								<select class="form-control" ng-model="update.getVerb()" ng-options="o.keyword as o.name for o in vm.operators.updates">
+								<select class="form-control" ng-model="update.verb" ng-change="update.setVerb(update.verb)" ng-options="o.keyword as o.name for o in vm.operators.updates">
 									<option value="">---</option>
 								</select>
 							</div>
-							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="update.getValue()" placeholder="Value" /></div>
+							<div class="col-xs-4"><input type="text" class="form-control var" ng-model="update.value" ng-change="update.setValue(update.value)" placeholder="Value" /></div>
 						</div>
 
 						<div class="row row-gutter-1x">

@@ -30,7 +30,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 	this.add = function(aProfile) {
 		// Look for the existing profile to update and shift
 		for (var i = 0; i < this.all.length; i++) {
-			if (this.all[i].id == aProfile.id) {
+			if (this.all[i].getId() == aProfile.getId()) {
 				this.all.splice(i, 1);
 				break;
 			}
@@ -42,7 +42,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 	this.remove = function(aProfile) {
 		// Look for the existing profile to remove
 		for (var i = 0; i < this.all.length; i++) {
-			if (this.all[i].id == aProfile.id) {
+			if (this.all[i].getId() == aProfile.getId()) {
 				this.all.splice(i, 1);
 				break;
 			}
@@ -69,6 +69,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 
 			this.loaded = true;
 			this.all = aList;
+
 			// Only set the selected or 'current' profile if there is one.
 			// Otherwise let the user select, or create a new profile.
 			if (this.all.length == 1) {

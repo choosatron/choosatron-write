@@ -1,8 +1,8 @@
 angular.module('storyApp.storage')
 .factory('AutoSave', ['$timeout', function($timeout) {
 
-	function AutoSave(storage, $scope) {
-		this.storage = storage;
+	function AutoSave(aStorage, $scope) {
+		this.storage = aStorage;
 		this.scope = $scope;
 
 		this.events = {
@@ -13,12 +13,12 @@ angular.module('storyApp.storage')
 
 		// Each change within the throttle time bumps the save action out slightly.
 		// Chrome.sync storage has a max sustained save operation of 10 writes/minute
-		this.throttle = storage.engine.throttle || 6000; //ms
+		this.throttle = aStorage.engine.throttle || 6000; //ms
 
 		// Store a reference to the promise to save
 		this.queue = {};
 
-		storage.on('error', (function(e) {
+		aStorage.on('error', (function(e) {
 			this._fire('error', e);
 		}).bind(this));
 	}
@@ -37,41 +37,43 @@ angular.module('storyApp.storage')
 		}
 	};
 
-	AutoSave.prototype.onSaving = function(callback) {
-		this.events.saving.push(callback.bind(this));
+	AutoSave.prototype.onSaving = function(aCallback) {
+		this.events.saving.push(aCallback.bind(this));
 	};
 
-	AutoSave.prototype.onSaved = function(callback) {
-		this.events.saved.push(callback.bind(this));
+	AutoSave.prototype.onSaved = function(aCallback) {
+		this.events.saved.push(aCallback.bind(this));
 	};
 
-	AutoSave.prototype.onError = function(callback) {
-		this.events.error.push(callback.bind(this));
+	AutoSave.prototype.onError = function(aCallback) {
+		this.events.error.push(aCallback.bind(this));
 	};
 
-	AutoSave.prototype.save = function(key, val) {
+	AutoSave.prototype.save = function(aKey, aVal) {
 		// No key returned, exit
-		if (!key) {
+		if (!aKey) {
 			return;
 		}
 
+		console.log("Save: ", aVal);
 		var doSave = function() {
-			this._fire('saving', key, val);
-			this.storage.set(key, val)
+			this._fire('saving', aKey, aVal);
+			console.log("SAVING: ", aKey, aVal);
+			this.storage.set(aKey, aVal)
 			.then((function() {
-				this._fire('saved', key, val);
+				this._fire('saved', aKey, aVal);
 			}).bind(this));
 		};
 
 		doSave = doSave.bind(this);
 
 		// Clear the previously queued save
-		if (this.queue[key]) {
-			$timeout.cancel(this.queue[key]);
+		if (this.queue[aKey]) {
+			$timeout.cancel(this.queue[aKey]);
 		}
 
 		// Queue up another save to occur after the throttle time has passed
-		this.queue[key] = $timeout(doSave, this.throttle, false);
+		this.queue[aKey] = $timeout(doSave, this.throttle, false);
 	};
 
 	return AutoSave;

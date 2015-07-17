@@ -9,7 +9,6 @@ function(Random) {
 		}
 		this.data.id = Random.id();
 		this.data.modified = null;
-		this.data.opened = null;
 
 		if (aData) {
 			this.load(aData);
@@ -32,22 +31,22 @@ function(Random) {
 		load: function(aData) {
 			//if (typeof aData !== 'object') {
 			if (aData.data) {
-				console.log("Not object, use .data");
+				//console.log("Not object, use .data");
 				aData = aData.data;
 			}
 			/*jshint -W087 */
 			//debugger;
 
-			console.log("Object: ", aData);
+			//console.log("Object: ", aData);
 
 			for (var key in aData) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
-					console.log("Loader: %s, key: %s", aData[key]);
+					//console.log("Loader: %s, key: %s", aData[key], key);
 					this[loader](aData[key]);
 				} else {
-					if (aData[key]) {
+					if (typeof aData[key] != 'undefined') { // TODO: This ok?
 						this.data[key] = aData[key];
 					}
 				}
@@ -68,25 +67,39 @@ function(Random) {
 			return this;
 		},
 
-		object: function() {
+		/*object: function() {
 			var o = {};
-			// TODO: Serialize ONLY this.data
 			for (var key in this.data) {
 				var val = this.data[key];
 				if (val instanceof BaseModel) {
-					if (key === 'entries') {
-						console.log("Entries Saving");
-					}
+					console.log(val);
 					o[key] = val.serialize();
-					if (key === 'entries') {
-						console.log("Entries Saved: ", o[key]);
-					}
 				} else {
-					// Will it cause any issues to NOT store null values?
-					if (!val) {
-						continue;
+					if (typeof val != 'undefined') { // TODO: This ok?
+						o[key] = val;
 					}
-					o[key] = val;
+				}
+			}
+			return o;
+		},*/
+
+		object: function() {
+			var o = {};
+			for (var key in this.data) {
+				var val = this.data[key];
+
+				var proper = key[0].toUpperCase() + key.slice(1);
+				var objectifier = 'objectify' + proper;
+				if (typeof this[objectifier] === 'function') {
+					//console.log("Objectifier: %s, key: %s", this.data[key], key);
+					o[key] = this[objectifier](this.data[key]);
+				} else if (val instanceof BaseModel) {
+					console.log(val);
+					o[key] = val.serialize();
+				} else {
+					if (typeof val != 'undefined') { // TODO: This ok?
+						o[key] = val;
+					}
 				}
 			}
 			return o;
@@ -94,9 +107,11 @@ function(Random) {
 
 		serialize: function(aPretty) {
 			var o = this.object();
+			//console.log("story: ", o);
 			//console.log("Final Object:");
 			//console.log(o);
-			var s = angular.toJson(o, aPretty);
+			//var s = angular.toJson(o, aPretty);
+			var s = angular.toJson(o, true);
 			//console.log(angular.toJson(o, true));
 			return s;
 		},
@@ -123,12 +138,7 @@ function(Random) {
 
 		getModified: function() {
 			return this.data.modified;
-		},
-
-		getOpened: function() {
-			return this.data.opened;
 		}
-
 
 	};
 

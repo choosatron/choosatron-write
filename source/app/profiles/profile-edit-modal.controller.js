@@ -15,6 +15,8 @@
 		vm.authStatus = authService.authStatus;
 		vm.openCloudAuth = false;
 		vm.headerText  = '';
+		vm.profileName = '';
+		vm.profileAutosave = false;
 
 		// Private Variables
 
@@ -29,7 +31,6 @@
 			if (Profiles.current) {
 				Profiles.editing = new Profile(Profiles.current);
 				Profiles.editing.setCloudAuth(new Auth(Profiles.current.getCloudAuth()));
-				console.log("Orig: " + Profiles.current.getId() + ", Copy: " + Profiles.editing.getId());
 				console.log("Editing existing profile");
 			} else {
 				console.log("New Profile Being Created");
@@ -41,8 +42,6 @@
 			vm.profile = Profiles.editing;
 			vm.profileName = vm.profile.getName();
 			vm.profileAutosave = vm.profile.getAutosave();
-
-			console.log("Name: " + vm.profile.getName() + ", ID: " + vm.profile.getId());
 		}
 
 		function setupCloudLink() {

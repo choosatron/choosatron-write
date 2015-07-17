@@ -120,8 +120,8 @@ function(BaseModel, Choice) {
 		},
 
 		addChoice: function(aChoice) {
-			if (!this.data.choices.push) {
-				this.setChoices([]);
+			if (!this.data.choices) {
+				this.data.choices = [];
 			}
 			this.data.choices.push(aChoice);
 			return aChoice.getId();
@@ -187,7 +187,7 @@ function(BaseModel, Choice) {
 			var n = 1, matchingChoice;
 
 			this.eachChoice(function (aChoice) {
-				if (aChoice.hasDestination(aPassage)) {
+				if (aChoice.hasDestination(aPassage.getId())) {
 					matchingChoice = n + '. ' + aChoice.getContent();
 				}
 
@@ -201,10 +201,21 @@ function(BaseModel, Choice) {
 			return this.each('data.choices', aCallback);
 		},
 
+		// Names for object loading use in BaseModel
 		loadChoices: function(aChoices) {
 			for (var i = 0; i < aChoices.length; i++) {
 				this.getChoices().push(new Choice(aChoices[i]));
 			}
+		},
+
+		// Named for objectifying use in BaseModel
+		objectifyChoices: function(aChoices) {
+			var o = [];
+
+			for (var i = 0; i < aChoices.length; ++i) {
+				o[i] = aChoices[i].object();
+			}
+			return o;
 		},
 
 		getAppendLink: function() {
@@ -244,6 +255,18 @@ function(BaseModel, Choice) {
 			this.wasModified();
 		},
 
+		content: function(aValue) {
+			//console.log("getSetContent");
+			if (angular.isDefined(aValue)) {
+				console.log("set content");
+				this.data.content = aValue;
+				this.wasModified();
+				return;
+			}
+			console.log("get content");
+			return this.data.content;
+		},
+
 		getContent: function() {
 			return this.data.content || "Unwritten Passage";
 		},
@@ -257,7 +280,7 @@ function(BaseModel, Choice) {
 			return this.data.choices;
 		},
 
-		getChoiceByIndex: function(aIndex) {
+		getChoiceAtIndex: function(aIndex) {
 			return this.data.choices[aIndex];
 		},
 

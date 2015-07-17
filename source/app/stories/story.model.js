@@ -14,16 +14,17 @@ function(BaseModel, Passage) {
 		this.kMaxSizeSubtitle = 32;
 
 		/* Non Serialized */
-		this.lastPsgNumber = 0;
 
 		/* Serialized */
+		this.data.opened        =  null;
+		this.data.lastPsgNumber =  0;
 		this.data.author        =  '';
 		this.data.credits       =  '';
 		this.data.contact       =  '';
 		this.data.title         =  '';
 		this.data.subtitle      =  '';
 		this.data.description   =  '';
-		this.data.publishedOn   =  null;
+		this.data.published     =  null;
 		this.data.version       =  {major:0, minor:0, revision:0};
 		this.data.coverUrl      =  '';
 		this.data.genre         =  '';
@@ -35,10 +36,29 @@ function(BaseModel, Passage) {
 		BaseModel.call(this, aData);
 	}
 
+
+	/*Object.defineProperty(Story.prototype, "title", {
+		get: function() {
+			console.log("get title");
+			return this.data.title || "Untitled Story";
+		},
+		set: function(aValue) {
+			console.log("set title");
+			this.data.title = aValue.substr(0, this.kMaxSizeTitle);
+			this.wasModified();
+
+			if (aValue.length > this.kMaxSizeTitle) {
+				return true;
+			}
+			return false;
+		}
+	});*/
+
 	Story.methods = {
 
 		getNextPassageNumber: function() {
-			return this.getLastPsgNumber() + 1;
+			this.setLastPsgNumber(this.getLastPsgNumber() + 1);
+			return this.getLastPsgNumber();
 		},
 
 		getStartPsg: function() {
@@ -134,8 +154,8 @@ function(BaseModel, Passage) {
 		unlinkEntrances: function(aPassage) {
 			for (var entrance in aPassage.getEntrances()) {
 				for (var i = 0; i < this.getPassages(entrance).getChoices().length; i++) {
-					if (this.getPassage(entrance).getChoiceByIndex(i).getDestination() === aPassage.getId()) {
-						this.getPassage(entrance).getChoiceByIndex(i).setDestination();
+					if (this.getPassage(entrance).getChoiceAtIndex(i).getDestination() === aPassage.getId()) {
+						this.getPassage(entrance).getChoiceAtIndex(i).setDestination();
 					}
 				}
 			}
@@ -206,9 +226,13 @@ function(BaseModel, Passage) {
 				}
 			}
 			for (var id in this.getPassages()) {
-				for (var choice in this.getPassage(id).getChoices()) {
-					if (('undefined' !== typeof choice.getCondition()) &&
-					    (choice.getCondition() !== null)) {
+				console.log(id);
+				console.log(this.getPassage(id).getChoices());
+				for (var i = 0; i < this.getPassage(id).getChoices().length; ++i) {
+					var choice = this.getPassage(id).getChoiceAtIndex(i);
+					if (choice.getCondition()) {
+					//if (('undefined' !== typeof choice.getCondition()) &&
+					//    (choice.getCondition() !== null)) {
 						cmds.push(choice.getCondition());
 					}
 					if (typeof choice.updates != 'undefined') {
@@ -220,6 +244,7 @@ function(BaseModel, Passage) {
 			return cmds;
 		},
 
+		// Named for object loading use in BaseModel
 		loadPassages: function(aPassages) {
 			for (var id in aPassages) {
 				this.setPassage(id, new Passage(aPassages[id]));
@@ -233,6 +258,16 @@ function(BaseModel, Passage) {
 			//}
 		},
 
+		// Named for objectifying use in BaseModel
+		objectifyPassages: function(aPassages) {
+			var o = {};
+
+			for (var key in aPassages) {
+				o[key] = aPassages[key].object();
+			}
+			return o;
+		},
+
 		generatePsgEntrances: function() {
 			// For each passage...
 			for (var findId in this.getPassages()) {
@@ -243,9 +278,9 @@ function(BaseModel, Passage) {
 					// Iterate over every choice in each passage...
 					for (var i = 0; i < this.getPassage(currentId).getChoices().length; i++) {
 						// If a choices destination is our 'findId' passage, create an entrance on 'findId'.
-						if (this.getPassage(currentId).getChoiceByIndex(i).hasDestination(findId)) {
+						if (this.getPassage(currentId).getChoiceAtIndex(i).hasDestination(findId)) {
 							// We keep track if multiple choices from one passage lead to the same destination.
-							this.getPassage(findId).addEntrance(currentId, this.getPassage(currentId).getChoiceByIndex(i).getId());
+							this.getPassage(findId).addEntrance(currentId, this.getPassage(currentId).getChoiceAtIndex(i).getId());
 						}
 					}
 				}
@@ -254,8 +289,20 @@ function(BaseModel, Passage) {
 
 		/* Getters / Setters */
 
+		getOpened: function() {
+			return this.data.opened;
+		},
+
+		setOpened: function(aValue) {
+			this.data.opened = aValue;
+		},
+
+		setOpenedNow: function() {
+			this.data.opened = Date.now();
+		},
+
 		getLastPsgNumber: function() {
-			return this.lastPsgNumber;
+			return this.data.lastPsgNumber;
 		},
 
 		setLastPsgNumber: function(aValue) {
@@ -268,7 +315,6 @@ function(BaseModel, Passage) {
 
 		// Has a max length, returns true if value was cutoff.
 		setAuthor: function(aValue) {
-			console.log(aValue);
 			this.data.author = aValue.substr(0, this.kMaxSizeAuthor);
 			this.wasModified();
 
@@ -307,12 +353,33 @@ function(BaseModel, Passage) {
 			return false;
 		},
 
+		/*get title() {
+			console.log("get title");
+			if (!this.data) {
+				return;
+			}
+			return this.data.title || "Untitled Story";
+		},
+
+		set title(aValue) {
+			console.log("set title");
+			this.data.title = aValue.substr(0, this.kMaxSizeTitle);
+			this.wasModified();
+
+			if (aValue.length > this.kMaxSizeTitle) {
+				return true;
+			}
+			return false;
+		},*/
+
 		getTitle: function() {
-			return this.title || "Untitled Story";
+			console.log("getTitle", this);
+			return this.data.title || "Untitled Story";
 		},
 
 		// Has a max length, returns true if value was cutoff.
 		setTitle: function(aValue) {
+			console.log("setTitle");
 			this.data.title = aValue.substr(0, this.kMaxSizeTitle);
 			this.wasModified();
 
@@ -321,6 +388,17 @@ function(BaseModel, Passage) {
 			}
 			return false;
 		},
+
+		// Has a max length, returns true if value was cutoff.
+		/*title: function(aValue) {
+			console.log("getSetTitle");
+			if (angular.isDefined(aValue)) {
+				this.data.title = aValue.substr(0, this.kMaxSizeTitle);
+				this.wasModified();
+			}
+
+			return this.data.title;
+		},*/
 
 		getSubtitle: function() {
 			return this.data.subtitle;
@@ -346,12 +424,12 @@ function(BaseModel, Passage) {
 			this.wasModified();
 		},
 
-		getPublishedOn: function() {
-			return this.data.publishedOn;
+		getPublished: function() {
+			return this.data.published;
 		},
 
-		setPublishedOn: function(aValue) {
-			this.data.publishedOn = aValue;
+		setPublished: function(aValue) {
+			this.data.published = aValue;
 			this.wasModified();
 		},
 
@@ -432,7 +510,7 @@ function(BaseModel, Passage) {
 		},
 
 		getPassage: function(aKey) {
-			return this.data.passages[key];
+			return this.data.passages[aKey];
 		},
 
 		setPassage: function(aKey, aPassage) {

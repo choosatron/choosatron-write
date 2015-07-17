@@ -18,6 +18,11 @@
 		vm.profiles           = Profiles;
 		vm.variables          = [];
 
+		vm.storyTitle       = '';
+		vm.storyAuthor      = '';
+		vm.storyGenre       = '';
+		vm.storyDescription = '';
+
 		vm.operators          = Operators;
 		vm.genres             = Genres;
 		vm.exporters          = translators.exporters();
@@ -109,6 +114,13 @@
 
 					// Set the current story and passage
 					vm.story = new Story(result.story);
+					vm.story.setOpenedNow();
+
+					vm.storyTitle = vm.story.getTitle();
+					vm.storyAuthor = vm.story.getAuthor();
+					vm.storyGenre = vm.story.getGenre();
+					vm.storyDescription = vm.story.getDescription();
+
 					vm.setPassage(vm.story.getStartPsg(), true);
 					vm.showStoryDetails = vm.story.getPassages().length < 2;
 					loadVariables();
@@ -134,11 +146,13 @@
 		}
 
 		function autosave(aResult) {
-			var saver = vm.saver = new FileEntryAutoSave(aResult.story.id, aResult.entry, $scope);
+			var saver = vm.saver = new FileEntryAutoSave(aResult.story.getId(), aResult.entry, $scope);
 
 			var handleStoryChange = function(nv, ov, scope) {
 				if (Profiles.current.getAutosave() && angular.isDefined(nv)) {
 					console.log("handleStoryChange");
+					console.log(nv);
+					console.log(nv.object());
 					saver.save(aResult.story.getId(), nv.object());
 				}
 				else {
