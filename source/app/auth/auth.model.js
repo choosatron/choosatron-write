@@ -27,6 +27,15 @@ function(BaseModel) {
 
 		// Serialized //
 
+		username: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.username = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.username;
+		},
+
 		getUsername: function() {
 			return this.data.username;
 		},
@@ -34,6 +43,15 @@ function(BaseModel) {
 		setUsername: function(aValue) {
 			this.data.username = aValue;
 			this.wasModified();
+		},
+
+		token: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.token = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.token;
 		},
 
 		getToken: function() {
@@ -45,6 +63,15 @@ function(BaseModel) {
 			this.wasModified();
 		},
 
+		type: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.type = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.type;
+		},
+
 		getType: function() {
 			return this.data.type;
 		},
@@ -54,12 +81,30 @@ function(BaseModel) {
 			this.wasModified();
 		},
 
+		expiration: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.expiration = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.expiration;
+		},
+
 		getExpiration: function() {
 			return this.data.expiration;
 		},
 
 		setExpiration: function(aValue) {
 			this.data.expiration = aValue;
+		},
+
+		devices: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.devices = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.devices;
 		},
 
 		getDevices: function() {

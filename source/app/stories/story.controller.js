@@ -18,11 +18,6 @@
 		vm.profiles           = Profiles;
 		vm.variables          = [];
 
-		vm.storyTitle       = '';
-		vm.storyAuthor      = '';
-		vm.storyGenre       = '';
-		vm.storyDescription = '';
-
 		vm.operators          = Operators;
 		vm.genres             = Genres;
 		vm.exporters          = translators.exporters();

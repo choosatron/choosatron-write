@@ -132,6 +132,15 @@ function(Random) {
 			return this.data.id;
 		},
 
+		id: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.id = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.id;
+		},
+
 		getCreated: function() {
 			return this.data.created;
 		},

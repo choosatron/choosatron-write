@@ -289,6 +289,16 @@ function(BaseModel, Passage) {
 
 		/* Getters / Setters */
 
+		opened: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.opened = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.opened;
+		},
+
+
 		getOpened: function() {
 			return this.data.opened;
 		},
@@ -301,6 +311,15 @@ function(BaseModel, Passage) {
 			this.data.opened = Date.now();
 		},
 
+		lastPsgNumber: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.lastPsgNumber = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.lastPsgNumber;
+		},
+
 		getLastPsgNumber: function() {
 			return this.data.lastPsgNumber;
 		},
@@ -308,6 +327,16 @@ function(BaseModel, Passage) {
 		setLastPsgNumber: function(aValue) {
 			this.data.lastPsgNumber = aValue;
 		},
+
+		author: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.author = aValue.substr(0, this.kMaxSizeAuthor);
+				this.wasModified();
+				return;
+			}
+			return this.data.author;
+		},
+
 
 		getAuthor: function() {
 			return this.data.author;
@@ -324,6 +353,16 @@ function(BaseModel, Passage) {
 			return false;
 		},
 
+		credits: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.credits = aValue.substr(0, this.kMaxSizeCredits);
+				this.wasModified();
+				return;
+			}
+			return this.data.credits;
+		},
+
+
 		getCredits: function() {
 			return this.data.credits;
 		},
@@ -337,6 +376,15 @@ function(BaseModel, Passage) {
 				return true;
 			}
 			return false;
+		},
+
+		contact: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.contact = aValue.substr(0, this.kMaxSizeContact);
+				this.wasModified();
+				return;
+			}
+			return this.data.contact;
 		},
 
 		getContact: function() {
@@ -372,6 +420,15 @@ function(BaseModel, Passage) {
 			return false;
 		},*/
 
+		title: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.title = aValue.substr(0, this.kMaxSizeTitle);
+				this.wasModified();
+				return;
+			}
+			return this.data.title;
+		},
+
 		getTitle: function() {
 			console.log("getTitle", this);
 			return this.data.title || "Untitled Story";
@@ -389,16 +446,14 @@ function(BaseModel, Passage) {
 			return false;
 		},
 
-		// Has a max length, returns true if value was cutoff.
-		/*title: function(aValue) {
-			console.log("getSetTitle");
+		subtitle: function(aValue) {
 			if (angular.isDefined(aValue)) {
-				this.data.title = aValue.substr(0, this.kMaxSizeTitle);
+				this.data.subtitle = aValue.substr(0, this.kMaxSizeSubtitle);
 				this.wasModified();
+				return;
 			}
-
-			return this.data.title;
-		},*/
+			return this.data.subtitle;
+		},
 
 		getSubtitle: function() {
 			return this.data.subtitle;
@@ -415,6 +470,15 @@ function(BaseModel, Passage) {
 			return false;
 		},
 
+		description: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.description = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.description;
+		},
+
 		getDescription: function() {
 			return this.data.description;
 		},
@@ -422,6 +486,15 @@ function(BaseModel, Passage) {
 		setDescription: function(aValue) {
 			this.data.description = aValue;
 			this.wasModified();
+		},
+
+		published: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.published = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.published;
 		},
 
 		getPublished: function() {
@@ -435,6 +508,15 @@ function(BaseModel, Passage) {
 
 		setPublishedNow: function() {
 			this.setPublishedOn(new Date());
+		},
+
+		version: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.version = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.version;
 		},
 
 		getVersion: function() {
@@ -478,6 +560,15 @@ function(BaseModel, Passage) {
 			this.wasModified();
 		},
 
+		coverUrl: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.coverUrl = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.coverUrl;
+		},
+
 		getCoverUrl: function() {
 			return this.data.coverUrl;
 		},
@@ -485,6 +576,15 @@ function(BaseModel, Passage) {
 		setCoverUrl: function(aValue) {
 			this.data.coverUrl = aValue;
 			this.wasModified();
+		},
+
+		genre: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.genre = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.genre;
 		},
 
 		getGenre: function() {
@@ -496,6 +596,15 @@ function(BaseModel, Passage) {
 			this.wasModified();
 		},
 
+		startId: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.startId = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.startId;
+		},
+
 		getStartId: function() {
 			return this.data.startId;
 		},
@@ -503,6 +612,15 @@ function(BaseModel, Passage) {
 		setStartId: function(aValue) {
 			this.data.startId = aValue;
 			this.wasModified();
+		},
+
+		passages: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.passages = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.passages;
 		},
 
 		getPassages: function() {

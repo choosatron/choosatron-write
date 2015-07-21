@@ -11,7 +11,6 @@
 
 		// Variables
 		vm.profile = null;
-		vm.cloudUsername = '';
 		vm.authState = 'login';
 		vm.authStatus = authService.authStatus;
 		vm.info = null;
@@ -27,7 +26,6 @@
 
 		function activate() {
 			vm.profile = Profiles.editing;
-			vm.cloudUsername = vm.profile.getCloudAuth().username;
 		}
 
 		function loginToCloud() {

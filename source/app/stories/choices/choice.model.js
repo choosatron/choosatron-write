@@ -65,23 +65,50 @@ function(BaseModel, Command) {
 
 		// Non Serialized //
 
-		showCondition: function() {
+		showCondition: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.showCondition = aValue;
+				this.wasModified();
+				return;
+			}
 			return this.data.showCondition;
 		},
+
+		/*showCondition: function() {
+			return this.data.showCondition;
+		},*/
 
 		setShowCondition: function(aValue) {
 			this.data.showCondition = aValue;
 		},
 
-		showUpdates: function() {
+		showUpdates: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.showUpdates = aValue;
+				this.wasModified();
+				return;
+			}
 			return this.data.showUpdates;
 		},
+
+		/*showUpdates: function() {
+			return this.data.showUpdates;
+		},*/
 
 		setShowUpdates: function(aValue) {
 			this.data.showUpdates = aValue;
 		},
 
 		// Serialized //
+
+		content: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.content = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.content;
+		},
 
 		getContent: function() {
 			return this.data.content || "Unwritten Choice";
@@ -91,12 +118,30 @@ function(BaseModel, Command) {
 			this.data.content = aValue;
 		},
 
+		condition: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.condition = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.condition;
+		},
+
 		getCondition: function() {
 			return this.data.condition;
 		},
 
 		setCondition: function(aValue) {
 			this.data.condition = aValue;
+		},
+
+		updates: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.updates = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.updates;
 		},
 
 		getUpdates: function() {
@@ -125,6 +170,15 @@ function(BaseModel, Command) {
 				return this.data.destination;
 			}
 			return aId == this.data.destination;
+		},
+
+		destination: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.destination = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.destination;
 		},
 
 		getDestination: function(aValue) {

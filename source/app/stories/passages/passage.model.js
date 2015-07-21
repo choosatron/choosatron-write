@@ -242,8 +242,17 @@ function(BaseModel, Choice) {
 
 		// Serialized //
 
-		setId: function(aValue) {
+		/*setId: function(aValue) {
 			this.data.id = aValue;
+		},*/
+
+		number: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.number = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.number;
 		},
 
 		getNumber: function() {
@@ -256,14 +265,11 @@ function(BaseModel, Choice) {
 		},
 
 		content: function(aValue) {
-			//console.log("getSetContent");
 			if (angular.isDefined(aValue)) {
-				console.log("set content");
 				this.data.content = aValue;
 				this.wasModified();
 				return;
 			}
-			console.log("get content");
 			return this.data.content;
 		},
 
@@ -276,8 +282,21 @@ function(BaseModel, Choice) {
 			this.wasModified();
 		},
 
+		choices: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.choices = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.choices;
+		},
+
 		getChoices: function() {
 			return this.data.choices;
+		},
+
+		setChoices: function(aValue) {
+			this.data.choices = aValue;
 		},
 
 		getChoiceAtIndex: function(aIndex) {
@@ -299,8 +318,13 @@ function(BaseModel, Choice) {
 			return choice;
 		},
 
-		setChoices: function(aValue) {
-			this.data.choices = aValue;
+		entrances: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.entrances = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.entrances;
 		},
 
 		getEntrances: function() {
@@ -311,6 +335,15 @@ function(BaseModel, Choice) {
 			return this.data.entrances[aKey];
 		},
 
+		tags: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.tags = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.tags;
+		},
+
 		getTags: function() {
 			return this.data.tags;
 		},
@@ -319,22 +352,49 @@ function(BaseModel, Choice) {
 			this.data.tags[aKey] = aValue;
 		},
 
-		isStart: function() {
+		isStart: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.isStart = aValue;
+				this.wasModified();
+				return;
+			}
 			return this.data.isStart;
 		},
+
+		/*isStart: function() {
+			return this.data.isStart;
+		},*/
 
 		setIsStart: function(aValue) {
 			this.data.isStart = aValue;
 			this.wasModified();
 		},
 
-		isValid: function() {
+		isValid: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.isValid = aValue;
+				this.wasModified();
+				return;
+			}
 			return this.data.isValid;
 		},
+
+		/*isValid: function() {
+			return this.data.isValid;
+		},*/
 
 		setIsValid: function(aValue) {
 			this.data.isValid = aValue;
 			this.wasModified();
+		},
+
+		endingIndex: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.endingIndex = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.endingIndex;
 		},
 
 		getEndingIndex: function() {
@@ -348,6 +408,15 @@ function(BaseModel, Choice) {
 			}
 		},
 
+		exitType: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.exitType = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.exitType;
+		},
+
 		getExitType: function() {
 			return this.data.exitType;
 		},
@@ -358,6 +427,15 @@ function(BaseModel, Choice) {
 			this.data.exitType = aValue;
 
 			this.wasModified();
+		},
+
+		trashed: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.trashed = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.trashed;
 		},
 
 		getTrashed: function() {

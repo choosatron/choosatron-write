@@ -82,6 +82,15 @@ function(BaseModel, Operator) {
 			this.wasModified();
 		},
 
+		variable: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.variable = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.variable;
+		},
+
 		getVariable: function() {
 			return this.data.variable;
 		},
@@ -91,6 +100,15 @@ function(BaseModel, Operator) {
 			this.wasModified();
 		},
 
+		verb: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.verb = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.verb;
+		},
+
 		getVerb: function() {
 			return this.data.verb;
 		},
@@ -98,6 +116,15 @@ function(BaseModel, Operator) {
 		setVerb: function(aValue) {
 			this.data.verb = aValue;
 			this.wasModified();
+		},
+
+		value: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.value = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.value;
 		},
 
 		getValue: function() {
