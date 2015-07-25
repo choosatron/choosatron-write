@@ -28,11 +28,11 @@ function (Choosatron, $q) {
 	};*/
 
 	this.addSerialDevice = function(aChoosatron) {
-		this.serialDevices[aChoosatron.getDeviceId()] = aChoosatron;
+		this.serialDevices[aChoosatron.deviceId()] = aChoosatron;
 	};
 
 	this.removeSerialDevice = function(aChoosatron) {
-		delete this.serialDevices[aChoosatron.getDeviceId()];
+		delete this.serialDevices[aChoosatron.deviceId()];
 	};
 
 	this.getSerialDevices = function() {
@@ -53,5 +53,13 @@ function (Choosatron, $q) {
 
 	this.getCurrentId = function() {
 		return this.currentId;
+	};
+
+	this.setCurrentDevice = function(aChoosatron) {
+		this.currentId = aChoosatron.deviceId();
+	};
+
+	this.getCurrentDevice = function() {
+		return this.serialDevices[this.currentId];
 	};
 }]);

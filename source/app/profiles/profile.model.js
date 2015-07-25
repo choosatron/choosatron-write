@@ -109,6 +109,15 @@ function(BaseModel, Auth) {
 
 		// Non Serialized //
 
+		cloudAuth: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.cloudAuth = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.cloudAuth;
+		},
+
 		getCloudAuth: function() {
 			return this.data.cloudAuth;
 		},
@@ -119,6 +128,15 @@ function(BaseModel, Auth) {
 
 		// Serialized //
 
+		name: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.name = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.name;
+		},
+
 		getName: function() {
 			return this.data.name;
 		},
@@ -126,6 +144,15 @@ function(BaseModel, Auth) {
 		setName: function(aValue) {
 			this.data.name = aValue;
 			this.wasModified();
+		},
+
+		autosave: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.autosave = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.autosave;
 		},
 
 		getAutosave: function() {
@@ -137,8 +164,26 @@ function(BaseModel, Auth) {
 			this.wasModified();
 		},
 
+		guestAuth: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.guestAuth = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.guestAuth;
+		},
+
 		getGuestAuth: function() {
 			return this.data.guestAuth;
+		},
+
+		choosatrons: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.choosatrons = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.choosatrons;
 		},
 
 		getChoosatrons: function() {
@@ -156,6 +201,15 @@ function(BaseModel, Auth) {
 			console.log(aChoosatron);
 			this.data.choosatrons[aChoosatron.getDeviceId()] = aChoosatron;
 			this.wasModified();
+		},
+
+		entries: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.entries = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.entries;
 		},
 
 		getEntries: function() {
