@@ -3,7 +3,7 @@
 		<p class="h4 pull-left">ChoiceWright</p>
 		<p class="h5 pull-right">
 			<a ng-click="vm.location.path('/profiles')">
-				<span class="glyphicon glyphicon-user"></span> {{vm.profile.name}}
+				<span class="glyphicon glyphicon-user"></span> {{vm.profile.getName()}}
 			</a>
 		</p>
 	</div> -->
@@ -19,32 +19,32 @@
 				</li>
 			</ul>
 		</li>
-		<li class="pull-right"><a ng-click="vm.location.path('/choosatron')"><span class="fa fa-cogs"></span> Choosatron</a></li>
+		<li class="pull-right"><a ng-click="vm.location.path('/choosatrons')"><span class="fa fa-cogs"></span> Choosatron</a></li>
 	</ul>
 </div>
 
 <div class="theme-alt wrap">
-	<div class="container storiesListMenu" ng-show="vm.profile.entries">
-		<div class="btn-group btn-group-justified" ng-if="vm.profile.entries.length > 4">
+	<div class="container storiesListMenu" ng-show="vm.profile.getEntries()">
+		<div class="btn-group btn-group-justified" ng-if="vm.profile.getEntries().length > 4">
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="vm.sortStories('title')">
+				<button class="btn btn-default" ng-click="vm.sortStories('data.title')">
 					<span class="glyphicon glyphicon-font"></span>
 					title
-					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'title' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'title' && vm.storiesSortDesc)}"></span>
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'data.title' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'data.title' && vm.storiesSortDesc)}"></span>
 				</button>
 			</div>
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="vm.sortStories('created')">
+				<button class="btn btn-default" ng-click="vm.sortStories('data.created')">
 					<span class="glyphicon glyphicon-time"></span>
 					created
-					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'created' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'created' && vm.storiesSortDesc)}"></span>
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'data.created' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'data.created' && vm.storiesSortDesc)}"></span>
 				</button>
 			</div>
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="vm.sortStories('modified')">
+				<button class="btn btn-default" ng-click="vm.sortStories('data.modified')">
 					<span class="glyphicon glyphicon-dashboard"></span>
 					modified
-					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'modified' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'modified' && vm.storiesSortDesc)}"></span>
+					<span class="glyphicon ng-class:{'glyphicon-arrow-down': (vm.storiesSort == 'data.modified' && !vm.storiesSortDesc), 'glyphicon-arrow-up': (vm.storiesSort == 'data.modified' && vm.storiesSortDesc)}"></span>
 				</button>
 			</div>
 		</div>
@@ -54,7 +54,7 @@
 		<div class="container">
 			<div class="row storiesList">
 				<ul class="list-unstyled">
-					<li ng-repeat="entry in vm.profile.entries | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation">
+					<li ng-repeat="entry in vm.profile.getEntries() | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation">
 						<div class="tile storyItem">
 							<div class="front">
 								<div class="storyInfo" ng-click="vm.editStory(entry)">

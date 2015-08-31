@@ -6,7 +6,7 @@ angular.module('storyApp.utils')
 		this.context = null;
 
 		this.register = function(names) {
-			for (var i=0; i<names.length; i++) {
+			for (var i = 0; i < names.length; i++) {
 				this.listeners[names[i]] = [];
 			}
 		};

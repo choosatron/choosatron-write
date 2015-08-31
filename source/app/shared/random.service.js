@@ -5,7 +5,7 @@ angular.module('storyApp.utils')
 	this.used = [];
 	this.candidates = [];
 
-	for (var i=97; i<=122; i++) {
+	for (var i = 97; i <= 122; i++) {
 		this.candidates.push(i);
 	}
 
@@ -30,12 +30,12 @@ angular.module('storyApp.utils')
 		return [part(8), part(4), part(4), part(4), part(12)].join('-');
 	};
 
-	this.id = function(len) {
-		len = len || this.defaultLen;
+	this.id = function(aLength) {
+		aLength = aLength || this.defaultLen;
 		var self = this;
 		var build = function() {
 			var value = '';
-			for (var i=0; i<len; i++) {
+			for (var i = 0; i < aLength; i++) {
 				value += self.char();
 			}
 			return value;
@@ -47,7 +47,7 @@ angular.module('storyApp.utils')
 		do {
 			value = build();
 			tries++;
-		} while (tries < len * 10 && this.used.indexOf(value) >= 0);
+		} while (tries < aLength * 10 && this.used.indexOf(value) >= 0);
 
 		return value;
 	};

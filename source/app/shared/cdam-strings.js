@@ -6,6 +6,6 @@
 	CDAM.Strings = {
 		kExitTypeChoices: 'choices',
 		kExitTypeAppend:  'append',
-		kExitTypeEnding:  'ending'
+		kExitTypeEnding:  'ending',
 	};
 }());

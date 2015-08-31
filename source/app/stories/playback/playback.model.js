@@ -2,7 +2,9 @@ angular.module('storyApp.models')
 .factory('Playback', ['BaseModel',
 function(BaseModel) {
 
-	function Playback(data) {
+	function Playback(aData) {
+		this.data = {};
+
 		this.story = null;
 
 		// Holds all of the data being manipulated during playback
@@ -11,37 +13,37 @@ function(BaseModel) {
 		// Stores the array of choice ids selected, in order
 		this.selected = [];
 
-		BaseModel.call(this, data);
+		BaseModel.call(this, aData);
 	}
 
 	Playback.methods = {
 		start: function(aStory) {
 			this.story = aStory;
-			var opening = aStory && aStory.getOpening();
-			this.trim(opening);
-			return opening;
+			var start = aStory && aStory.getStartPsg();
+			this.trim(start);
+			return start;
 		},
 
 		trim: function(aPassage) {
-			if (!aPassage || !aPassage.choices) {
+			if (!aPassage || !aPassage.getChoices()) {
 				return;
 			}
 			var self = this;
-			aPassage.choices.forEach(function(c) {
-				c.hidden = c.condition && !c.condition.empty() && !c.condition.test(self.sandbox);
+			aPassage.getChoices().forEach(function(c) {
+				c.hidden = c.getCondition() && !c.getCondition().isEmpty() && !c.getCondition().test(self.sandbox);
 			});
 		},
 
 		select: function(aChoice) {
-			var choice = aChoice && aChoice.id ? this.story.getChoice(aChoice.id) : aChoice;
+			var choice = aChoice && aChoice.getId() ? this.story.getChoice(aChoice.getId()) : aChoice;
 			if (!choice) {
 				return null;
 			}
 
 			var self = this;
-			this.selected.push(choice.id);
-			if (choice.updates.forEach) {
-				choice.updates.forEach(function(u) {
+			this.selected.push(choice.getId());
+			if (choice.getUpdates().forEach) {
+				choice.getUpdates().forEach(function(u) {
 					u.apply(self.sandbox);
 				});
 			}
@@ -50,7 +52,7 @@ function(BaseModel) {
 				return null;
 			}
 
-			var next = this.story.getPassage(choice.destination);
+			var next = this.story.getPassage(choice.getDestination());
 			this.trim(next);
 
 			return next;

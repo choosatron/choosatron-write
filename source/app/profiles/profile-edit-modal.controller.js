@@ -4,17 +4,19 @@
 	angular.module('storyApp.controllers')
 		.controller('ProfileEditModalCtrl', ProfileEditModalCtrl);
 
-	ProfileEditModalCtrl.$inject = ['$scope', 'profiles', 'Profile', 'authService', 'Auth'];
+	ProfileEditModalCtrl.$inject = ['$scope', 'Profiles', 'Profile', 'authService', 'Auth'];
 
-	function ProfileEditModalCtrl($scope, profiles, Profile, authService, Auth) {
+	function ProfileEditModalCtrl($scope, Profiles, Profile, authService, Auth) {
 		var vm = this;
 
 		// Variables
-		vm.profile     = null;
+		vm.profile = null;
 		vm.editState = 'edit';
 		vm.authStatus = authService.authStatus;
 		vm.openCloudAuth = false;
 		vm.headerText  = '';
+		vm.profileName = '';
+		vm.profileAutosave = false;
 
 		// Private Variables
 
@@ -26,21 +28,20 @@
 		activate();
 
 		function activate() {
-			if (profiles.current) {
-				profiles.editing = new Profile(profiles.current);
-				profiles.editing.cloud = new Auth(profiles.current.cloud);
-				console.log("Orig: " + profiles.current.id + ", Copy: " + profiles.editing.id);
+			if (Profiles.current) {
+				Profiles.editing = new Profile(Profiles.current);
+				Profiles.editing.setCloudAuth(new Auth(Profiles.current.getCloudAuth()));
 				console.log("Editing existing profile");
 			} else {
 				console.log("New Profile Being Created");
-				profiles.editing = new Profile();
+				Profiles.editing = new Profile();
 			}
 
 			$scope.$watch('vm.editState', onRemoteStatusChange);
 
-			vm.profile = profiles.editing;
-
-			console.log("Name: " + vm.profile.name + ", ID: " + vm.profile.id);
+			vm.profile = Profiles.editing;
+			vm.profileName = vm.profile.getName();
+			vm.profileAutosave = vm.profile.getAutosave();
 		}
 
 		function setupCloudLink() {
@@ -52,7 +53,7 @@
 			console.log("updateHeader");
 			if (vm.editState === 'cloud_link') {
 				vm.headerText = "Setup Cloud Account Link";
-			} else if (profiles.current) {
+			} else if (Profiles.current) {
 				vm.headerText = "Edit Your Profile";
 			} else {
 				vm.headerText = "Setup Your Profile";
@@ -60,7 +61,7 @@
 		}
 
 		function cancel() {
-			profiles.editing = null;
+			Profiles.editing = null;
 			$scope.closeThisDialog(0);
 		}
 

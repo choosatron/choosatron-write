@@ -1,20 +1,7 @@
 /**
  * Implementation of the X/YModem protocol over serial.
  * @see http://textfiles.com/programming/ymodem.txt
- *
- * 1024 byte packets 
- *  SENDER				  RECEIVER
-						  "s -k	foo.bar"
-	  "foo.bar open	x.x minutes"
-						  C
-	  STX 01 FE Data[1024] CRC CRC
-						  ACK
-	  STX 02 FD Data[1024] CRC CRC
-						  ACK
-	  STX 03 FC Data[1000] CPMEOF[24] CRC CRC
-						  ACK
-	  EOT
-						  ACK
+ * @see https://code.google.com/p/xtreamerdev/source/browse/trunk/rtdsr/ymodem.c?r=2
 **/
 (function() {
 
@@ -25,6 +12,7 @@ function($q, ArrayBufferFactory, Serial) {
 
 	function Ymodem(serial) {
 		this.serial = serial;
+		this.maxRetries = 3;
 	}
 
 	var SOH = Ymodem.SOH = 0x01;
@@ -80,12 +68,20 @@ function($q, ArrayBufferFactory, Serial) {
 		var deferred = $q.defer();
 		var packet   = this.buildPacket(number, buffer);
 		var send     = this.serial.sendData.bind(this.serial, packet);
+		var self     = this;
+		var tries    = 0;
 
 		function listener(info) {
 			for (var i=0; i<info.data.length; i++) {
 				var byte = info.data[i];
 				if (byte === NAK) {
 					// Retry submission on NAK
+					tries++;
+					if (tries > self.maxTries) {
+						self.abort();
+						deferred.reject();
+						return false;
+					}
 					send();
 					return false;
 				}
@@ -108,6 +104,14 @@ function($q, ArrayBufferFactory, Serial) {
 			.then(this.serial.sendDataUntil.bind(this.serial, EOT, ACK));
 	};
 
+	Ymodem.prototype.abort = function() {
+		var cancan = new ArrayBuffer(2);
+		var view   = new Int8Array(cancan);
+		view[0]    = CAN;
+		view[1]    = CAN;
+		return this.serial.sendData(cancan);
+	};
+
 	Ymodem.prototype.buildPacket = function(number, buffer) {
 		var size  = (number === 0) ? HEADER_SIZE : BLOCK_SIZE;
 		var start = (number === 0) ? SOH : STX;
@@ -127,20 +131,22 @@ function($q, ArrayBufferFactory, Serial) {
 	Ymodem.prototype.crc = function(buffer, size) {
 		var view = new Int16Array(buffer);
 		var crc = 0;
-		for (var i=0; i<size; i++) {
+		for (var i = 0; i < size; i++) {
 			var byte = view[i];
 			crc = crc ^ (byte << 8);
-			for (var y=0; i<8; y++) {
+
+			for (var y = 0; i < 8; y++) {
 				if (crc & 0x8000) {
 					crc = crc << 1 ^ 0x1021;
-				}
-				else {
+				} else {
 					crc = crc << 1;
 				}
 			}
 		}
 		return (crc & 0xFFFF);
 	};
+
+	return Ymodem;
 
 }]);
 

@@ -20,7 +20,8 @@
     "angular-bootstrap": "~0.10.0",
     "angular-ui-utils": "~0.1.1",
     "font-awesome": "~4.2.0",
-    "ngDialog": "~0.3.8"
+    "ngDialog": "~0.3.8",
+    "angular-order-object-by": "~1.1.1"
   },
   "private": true,
   "ignore": [

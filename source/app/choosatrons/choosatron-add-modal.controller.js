@@ -4,19 +4,21 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronAddModalCtrl', ChoosatronAddModalCtrl);
 
-	ChoosatronAddModalCtrl.$inject = ['$scope', '$timeout', 'profiles', 'Profile', 'ChoosatronSerial', 'ChoosatronCloud'];
+	ChoosatronAddModalCtrl.$inject = ['$scope', '$timeout', 'Choosatrons', 'Profiles', 'Profile', 'ChoosatronSerial', 'ChoosatronCloud'];
 
-	function ChoosatronAddModalCtrl($scope, $timeout, profiles, Profile, ChoosatronSerial, ChoosatronCloud) {
+	function ChoosatronAddModalCtrl($scope, $timeout, Choosatrons, Profiles, Profile, ChoosatronSerial, ChoosatronCloud) {
 		var vm = this;
 
 		// Variables
-		vm.profile   = null;
-		vm.state     = '';
-		vm.errors    = [];
-		vm.ports     = [];
-		vm.path      = null;
-		vm.serial    = null;
-		vm.cloud     = null;
+		vm.profile    = null;
+		vm.choosatron = null;
+		vm.state      = '';
+		vm.errors     = [];
+		vm.ports      = [];
+		vm.path       = null;
+		vm.serial     = null;
+		vm.cloud      = null;
+		vm.choosatrons = Choosatrons;
 
 		vm.creds  = {
 			ssid     : '',
@@ -34,9 +36,9 @@
 		activate();
 
 		function activate() {
-			vm.profile = profiles.current;
+			vm.profile = Profiles.current;
 
-			if (vm.profile.cloud.token) {
+			if (vm.profile.getCloudToken()) {
 				vm.state = 'plugin';
 			} else {
 				vm.state = 'no_cloud';
@@ -59,10 +61,13 @@
 			}
 
 			vm.serial = new ChoosatronSerial();
-			vm.cloud  = new ChoosatronCloud(vm.profile.cloud.token);
+			vm.cloud  = new ChoosatronCloud(vm.profile.getCloudToken());
 
 			vm.serial.connect()
-			.then(changeState('connect'))
+			.then(function (aDeviceId) {
+				vm.choosatron = vm.profile.getChoosatron(aDeviceId);
+				changeState('connect');
+			})
 			.catch(changeState('plugin'));
 		}
 
@@ -83,12 +88,12 @@
 		}
 
 		function claim() {
-			if (!vm.serial.coreId) {
+			if (!vm.choosatrons.getCurrentId()) {
 				vm.state = 'connect';
 				vm.errors = ['Could not find a core id for your Choosatron.'];
 				return;
 			}
-			vm.cloud.claim(vm.serial.coreId)
+			vm.cloud.claim(vm.choosatrons.getCurrentId())
 			.then(changeState('claimed'))
 			.catch(changeState('unclaimed'));
 		}

@@ -8,8 +8,8 @@ function(AutoSave, Storage, FileSystemStorageEngine) {
 
 	var storage = new Storage(engine, namespace);
 
-	function FileEntryAutoSave(id, entry, $scope) {
-		engine.area[namespace][id] = entry;
+	function FileEntryAutoSave(aId, aEntry, $scope) {
+		engine.area[namespace][aId] = aEntry;
 		AutoSave.call(this, storage, $scope);
 	}
 

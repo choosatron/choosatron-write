@@ -5,11 +5,11 @@
 	angular.module('storyApp.controllers')
 		.service('ProfileEditModalService', ProfileEditModalService);
 
-	ProfileEditModalService.$inject = ['$q', 'profiles', 'Profile', 'ngDialog'];
+	ProfileEditModalService.$inject = ['$q', 'Profiles', 'Profile', 'ngDialog'];
 
-	function ProfileEditModalService($q, profiles, Profile, ngDialog) {
+	function ProfileEditModalService($q, Profiles, Profile, ngDialog) {
 		this.q        = $q;
-		this.profiles = profiles;
+		this.profiles = Profiles;
 		this.dialog   = ngDialog;
 		this.Profile  = Profile;
 	}
@@ -43,9 +43,9 @@
 		var profiles = this.profiles;
 
 		var openModal = this.open()
-		.then(function (profile) {
-			profiles.select(profile);
-			deferred.resolve(profile);
+		.then(function (aaProfile) {
+			profiles.select(aaProfile);
+			deferred.resolve(aaProfile);
 		}, deferred.reject);
 
 		this.profiles.select(aProfile).then(openModal);
@@ -55,8 +55,8 @@
 
 	// Create a new profile
 	ProfileEditModalService.prototype.create = function() {
-		var aProfile = new this.Profile();
-		return this.edit(aProfile);
+		var profile = new this.Profile();
+		return this.edit(profile);
 	};
 
 })();

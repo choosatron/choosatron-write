@@ -54,16 +54,16 @@ function($q, $timeout, ArrayBufferFactory) {
 	};
 
 
-	// { "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Spark w/ WiFi - Serial Mode)
-	// { "vendorId": 7504, "productId": 24703 } // VID: 0x1D50, PID: 0x607F (Spark w/ WiFi - CORE DFU)
+	// { "vendorId": 7504, "productId": 24701 }, // VID: 0x1D50, PID: 0x607D (Core w/ WiFi - Serial Mode)
+	// { "vendorId": 7504, "productId": 24703 }  // VID: 0x1D50, PID: 0x607F (Core w/ WiFi - CORE DFU)
 
-	function Serial(api) {
+	function Serial(aApi) {
 		this.ports      = [];
 		this.listeners  = [];
 		this.connection = null;
 		this.debug      = false;
 		this.receiver   = this.onReceived.bind(this);
-		this.init(api || chrome.serial);
+		this.init(aApi || chrome.serial);
 	}
 
 	Serial.ConnectionOptions = {
@@ -83,11 +83,12 @@ function($q, $timeout, ArrayBufferFactory) {
 		}
 	};
 
+
 	/**
-	  *¬Inializes the Serial interface
+	  * Inializes the Serial interface
 	 **/
-	Serial.prototype.init = function(api) {
-		this.api = api;
+	Serial.prototype.init = function(aApi) {
+		this.api = aApi;
 		this.api.onReceive.addListener(this.receiver);
 	};
 
@@ -111,7 +112,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Clears out the listeners
+	  * Clears out the listeners
 	 **/
 	Serial.prototype.mute = function() {
 		this.listeners = [];
@@ -119,7 +120,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Adds a one-time listener to this connection. 
+	  * Adds a one-time listener to this connection.
 	 **/
 	Serial.prototype.once = function(callback, toString) {
 		var listener = new Listener(callback, this.connection);
@@ -133,7 +134,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Adds a listener to the current connection
+	  * Adds a listener to the current connection
 	 **/
 	Serial.prototype.listen = function(callback, toString) {
 		var listener = new Listener(callback, this.connection);
@@ -145,7 +146,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Send an ArrayBuffer to the connected port.
+	  * Send an ArrayBuffer to the connected port.
 	 **/
 	Serial.prototype.send = function(str) {
 		if (this.debug) {
@@ -157,7 +158,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Send an ArrayBuffer to the connected port.
+	  * Send an ArrayBuffer to the connected port.
 	 **/
 	Serial.prototype.sendData = function(data) {
 		if (!this.connection) {
@@ -181,7 +182,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Connect to the specified path.
+	  * Connect to the specified path.
 	 **/
 	Serial.prototype.connect = function(path, options) {
 		var deferred = $q.defer();
@@ -192,18 +193,21 @@ function($q, $timeout, ArrayBufferFactory) {
 		options = options || Serial.ConnectionOptions;
 
 		var connected = function(info) {
+			// Check for failure, like trying to connect
+			// to a device no longer plugged in.
+			if (chrome.runtime.lastError) {
+				deferred.reject();
+			} else {
+				self.connection = info;
 
-			self.connection = info;
-
-			if (self.debug) {
-				console.info("Connected", info);
+				if (self.debug) {
+					console.info("Connected", info);
+				}
+				deferred.resolve();
 			}
-
-			deferred.resolve();
 		};
 
 		var connect = function() {
-
 			if (!path && self.ports.length) {
 				path = self.ports[0].path;
 			}
@@ -221,8 +225,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 		if (!this.ports) {
 			this.load().then(connect);
-		}
-		else {
+		} else {
 			connect();
 		}
 
@@ -231,7 +234,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Disconnect from the current connection
+	  * Disconnect from the current connection
 	 **/
 	Serial.prototype.disconnect = function() {
 		var deferred = $q.defer();
@@ -268,7 +271,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		var deferred = $q.defer();
 
 		function readPart(info) {
-			for (var i=0; i<info.data.length; i++) {
+			for (var i = 0; i < info.data.length; i++) {
 				var byte = info.data[i];
 				builder.setInt8(offset, byte);
 				if (byte === untilByte) {
@@ -289,20 +292,20 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	/**
-	  *¬Load up the available ports
+	  * Load up the available ports
 	  * Specify a filter function or regex to limit the list of ports
 	 **/
-	Serial.prototype.load = function(filter) {
+	Serial.prototype.load = function(aFilter) {
 		var deferred = $q.defer();
 		var self = this;
 		this.api.getDevices(function(ports) {
 			ports = ports || [];
-			if (typeof filter === 'function') {
-				self.ports = ports.filter(filter);
+			if (typeof aFilter === 'function') {
+				self.ports = ports.filter(aFilter);
 			}
-			else if (typeof filter === 'string') {
-				self.ports = ports.filter(function(port) {
-					return port.path.match(filter);
+			else if (typeof aFilter === 'string') {
+				self.ports = ports.filter(function(aPort) {
+					return aPort.path.match(aFilter);
 				});
 			}
 			else {
@@ -317,11 +320,11 @@ function($q, $timeout, ArrayBufferFactory) {
 	// Sends out a polling message and returns a promise
 	// that will resolve with an object that maps
 	// ports to received responses
-	Serial.prototype.broadcast = function(msg, options, timeout) {
-		var data = typeof msg !== 'object' ? ArrayBufferFactory.fromString(msg) : msg;
+	Serial.prototype.broadcast = function(aMsg, aOptions, aTimeout) {
+		var data = typeof aMsg !== 'object' ? ArrayBufferFactory.fromString(aMsg) : aMsg;
 		var deferred = $q.defer();
 		var self = this;
-		timeout = timeout || Serial.DefaultTimeout;
+		aTimeout = aTimeout || Serial.DefaultTimeout;
 
 		if (!this.ports.length) {
 			deferred.reject('No ports found');
@@ -329,40 +332,44 @@ function($q, $timeout, ArrayBufferFactory) {
 		}
 
 		if (this.debug) {
-			console.info("Broadcasting", msg, "to", this.ports);
+			console.info("Broadcasting", aMsg, "to", this.ports);
 		}
 
 		var connections = {};
 		var input = {};
 
-		var sent = function(info) {
-			if (info.error) {
-				console.error('Send failed', info);
+		var sent = function(aInfo) {
+			if (aInfo.error) {
+				console.error('Send failed', aInfo);
 			}
 		};
 
-		var transmit = function(port) {
-			self.api.connect(port.path, options, function(con) {
-				connections[con.connectionId] = port.path;
-				if (self.debug) {
-					console.info("Sending broadcast", con);
+		var transmit = function(aPort) {
+			self.api.connect(aPort.path, aOptions, function(aCon) {
+				if (chrome.runtime.lastError || !aCon) {
+					console.warn("Unable to connect to %s, there may already be a connection open.", aPort.path);
+				} else {
+					if (self.debug) {
+						console.info("Sending broadcast", aCon);
+					}
+					connections[aCon.connectionId] = aPort.path;
+					self.api.send(aCon.connectionId, data, sent);
 				}
-				self.api.send(con.connectionId, data, sent);
 			});
 		};
 
-		var received = function(info) {
-			var path = connections[info.connectionId];
+		var received = function(aInfo) {
+			var path = connections[aInfo.connectionId];
 			if (!input[path]) {
-				input[path] = info.text;
+				input[path] = aInfo.text;
 			}
 			else {
-				input[path] += info.text;
+				input[path] += aInfo.text;
 			}
 		};
 
-		var disconnected = function(result) {
-			console.info('disconnected', connections[i], d);
+		var disconnected = function(aResult) {
+			console.info('Broadcast disconnected', aResult);
 		};
 
 		var done = function() {
@@ -377,11 +384,11 @@ function($q, $timeout, ArrayBufferFactory) {
 		};
 
 		this.listen(received, true);
-		for (var i=0; i<this.ports.length; i++) {
+		for (var i = 0; i < this.ports.length; i++) {
 			transmit(this.ports[i]);
 		}
 
-		$timeout(done, timeout);
+		$timeout(done, aTimeout);
 
 		return deferred.promise;
 	};
