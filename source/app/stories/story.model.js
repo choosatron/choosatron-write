@@ -246,8 +246,10 @@ function(BaseModel, Passage) {
 
 		// Named for object loading use in BaseModel
 		loadPassages: function(aPassages) {
-			for (var id in aPassages) {
-				this.setPassage(id, new Passage(aPassages[id]));
+			if (aPassages) {
+				for (var id in aPassages) {
+					this.setPassage(id, new Passage(aPassages[id]));
+				}
 			}
 
 			// TODO: Why do we need to call this?

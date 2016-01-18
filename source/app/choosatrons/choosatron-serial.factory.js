@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial', 'Ymodem', 'Choosatrons',
-function ($q, Serial, Ymodem, Choosatrons) {
+angular.module('storyApp.utils').service('ChoosatronSerial', ['$q', 'Serial', 'Ymodem', 'Choosatrons', 'Choosatron',
+function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 
 	var CMD_MODE = 'c';
 

@@ -42,8 +42,9 @@ function(Random) {
 			for (var key in aData) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
+				//console.log("L: " + loader);
 				if (typeof this[loader] === 'function') {
-					console.log("Loader: %s, key: %s", aData[key], key);
+					//console.log("Loader: %s, key: %s", aData[key], key);
 					this[loader](aData[key]);
 				} else {
 					if (typeof aData[key] != 'undefined') { // TODO: This ok?

@@ -51,6 +51,30 @@ function(BaseModel) {
 
 	Choosatron.methods = {
 
+		loadLast_app: function(aData) {
+			if (aData) {
+				this.data.lastApp = aData;
+			}
+		},
+
+		loadLast_heard: function(aData) {
+			if (aData) {
+				this.data.lastHeard = aData;
+			}
+		},
+
+		loadLast_ip_address: function(aData) {
+			if (aData) {
+				this.data.lastIpAddress = aData;
+			}
+		},
+
+		loadProduct_id: function(aData) {
+			if (aData) {
+				this.data.productId = aData;
+			}
+		},
+
 		updateCloudValues: function(aData) {
 			if (aData.id) {
 				this.data.deviceId = aData.id;

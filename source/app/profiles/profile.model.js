@@ -8,7 +8,7 @@ function(BaseModel, Auth) {
 
 		/* Serialized */
 		// Cloud auth
-		this.data.auth = new Auth(aData && aData.auth);
+		this.data.auth = new Auth();
 
 		this.data.name = '';
 
@@ -27,6 +27,12 @@ function(BaseModel, Auth) {
 	}
 
 	Profile.methods = {
+		
+		loadAuth: function(aData) {
+			if (aData) {
+				this.data.auth = new Auth(aData);
+			}
+		},
 
 		// Add a new entry record
 		saveEntry: function(aEntryId, aStory) {

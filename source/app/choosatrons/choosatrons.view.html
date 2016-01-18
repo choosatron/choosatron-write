@@ -19,7 +19,7 @@
 			</div>
 
 			<ul class="list-unstyled list-choosatrons">
-				<li ng-repeat="choosatron in vm.profile.choosatrons() | orderObjectBy:'data.name':false" class="choosatronItem" ng-class="{connected: choosatron.isOnline()}">
+				<li ng-repeat="choosatron in vm.profile.choosatrons() | orderObjectBy:'data.name':false" class="choosatronItem" ng-class="{connected: choosatron.isOnline}">
 					<div class="header">
 						<h2>{{choosatron.name() || choosatron.deviceId()}}</h2>
 
@@ -33,20 +33,20 @@
 							</div> <!--/.input-group-->
 						</div><!--/.form-->
 
-						<div ng-show="choosatron.isOnline() && !choosatron.mode" class="btn-group">
+						<div ng-show="choosatron.isOnline && !choosatron.mode" class="btn-group">
 							<a ng-click="choosatron.mode = 'rename'" class="btn btn-default"><span class="fa fa-pencil"></span> Rename</a>
 							<a ng-click="vm.loadStories(choosatron)" class="btn btn-default"><span class="fa fa-book"></i> Stories</a>
 							<a ng-click="choosatron.mode = 'advanced'" class="btn btn-default"><span class="fa fa-cog"></i> Advanced</a>
 						</div>
 
 						<div ng-show="choosatron.mode === 'advanced'" class="btn-group">
-							<a class="btn btn-default" ng-show="choosatron.isOnline()" ng-click="vm.flash(choosatron)"><span class="fa fa-refresh"></span> Update Firmware</a>
-							<a class="btn btn-default" ng-show="choosatron.isOnline() && choosatron.productId() !== vm.productId" ng-click="vm.change(choosatron)"><span class="fa fa-bolt"></span> Convert to Choosatron</a>
+							<a class="btn btn-default" ng-show="choosatron.isOnline" ng-click="vm.flash(choosatron)"><span class="fa fa-refresh"></span> Update Firmware</a>
+							<a class="btn btn-default" ng-show="choosatron.isOnline && choosatron.productId !== vm.productId" ng-click="vm.change(choosatron)"><span class="fa fa-bolt"></span> Convert to Choosatron</a>
 							<a class="btn btn-danger" confirm-click="vm.unclaim(choosatron)" confirm-title="Remove Choosatron?" confirm-message="This will release your claim on the Choosatron. Are you sure?"><span class="fa fa-eraser"></span> Unclaim</a>
 							<a class="btn btn-default" ng-click="choosatron.mode = ''">Cancel</a>
 						</div> <!--/.list-icon-menu-->
 
-						<div ng-show="!choosatron.isOnline()">
+						<div ng-show="!choosatron.isOnline">
 							<em>Offline</em>
 							</br>
 							<a class="btn btn-default" ng-click="vm.findOverUsb(choosatron)"><span class="fa fa-plug"></span> Find Over USB</a>
