@@ -8,7 +8,7 @@ function(BaseModel, Auth) {
 
 		/* Serialized */
 		// Cloud auth
-		this.data.cloudAuth = new Auth(aData && aData.cloud);
+		this.data.auth = new Auth(aData && aData.auth);
 
 		this.data.name = '';
 
@@ -32,7 +32,7 @@ function(BaseModel, Auth) {
 		saveEntry: function(aEntryId, aStory) {
 			var entry = {
 				entryId : aEntryId,
-				id: aStory.getId()
+				id: aStory.id()
 			};
 
 			var index = this.findEntryIndex(entry);
@@ -109,22 +109,22 @@ function(BaseModel, Auth) {
 
 		// Non Serialized //
 
-		cloudAuth: function(aValue) {
+		auth: function(aValue) {
 			if (angular.isDefined(aValue)) {
-				this.data.cloudAuth = aValue;
+				this.data.auth = aValue;
 				this.wasModified();
 				return;
 			}
-			return this.data.cloudAuth;
+			return this.data.auth;
 		},
 
-		getCloudAuth: function() {
-			return this.data.cloudAuth;
+		/*getCloudAuth: function() {
+			return this.data.auth;
 		},
 
 		setCloudAuth: function(aValue) {
-			this.data.cloudAuth = aValue;
-		},
+			this.data.auth = aValue;
+		},*/
 
 		// Serialized //
 
@@ -137,14 +137,14 @@ function(BaseModel, Auth) {
 			return this.data.name;
 		},
 
-		getName: function() {
+		/*getName: function() {
 			return this.data.name;
 		},
 
 		setName: function(aValue) {
 			this.data.name = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		autosave: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -155,14 +155,14 @@ function(BaseModel, Auth) {
 			return this.data.autosave;
 		},
 
-		getAutosave: function() {
+		/*getAutosave: function() {
 			return this.data.autosave;
 		},
 
 		setAutosave: function(aValue) {
 			this.data.autosave = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		guestAuth: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -173,9 +173,9 @@ function(BaseModel, Auth) {
 			return this.data.guestAuth;
 		},
 
-		getGuestAuth: function() {
+		/*getGuestAuth: function() {
 			return this.data.guestAuth;
-		},
+		},*/
 
 		choosatrons: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -186,9 +186,9 @@ function(BaseModel, Auth) {
 			return this.data.choosatrons;
 		},
 
-		getChoosatrons: function() {
+		/*getChoosatrons: function() {
 			return this.data.choosatrons;
-		},
+		},*/
 
 		getChoosatron: function(aId) {
 			if (this.data.choosatrons[aId]) {
@@ -199,7 +199,7 @@ function(BaseModel, Auth) {
 		saveChoosatron: function(aChoosatron) {
 			console.log("saveChoosatron");
 			console.log(aChoosatron);
-			this.data.choosatrons[aChoosatron.getDeviceId()] = aChoosatron;
+			this.data.choosatrons[aChoosatron.deviceId()] = aChoosatron;
 			this.wasModified();
 		},
 
@@ -210,7 +210,7 @@ function(BaseModel, Auth) {
 				return;
 			}
 			return this.data.entries;
-		},
+		}/*,
 
 		getEntries: function() {
 			return this.data.entries;
@@ -218,7 +218,7 @@ function(BaseModel, Auth) {
 
 		getEntryAtIndex: function(aIndex) {
 			return this.data.entries[aIndex];
-		}
+		}*/
 
 	};
 

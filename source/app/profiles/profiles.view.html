@@ -23,18 +23,18 @@
 					<li ng-repeat="p in vm.profiles.all" class="col-md-4 col-sm-6 fade-animation">
 
 						<div class="tile">
-							<div class="profileCard front well well-lg" ng-click="vm.pickProfile(p)" ng-class="{'active': p.getId() === vm.profiles.current.getId()}">
-								<h1><span class="glyphicon glyphicon-user"></span> {{p.getName()}}</h1>
+							<div class="profileCard front well well-lg" ng-click="vm.pickProfile(p)" ng-class="{'active': p.id() === vm.profiles.current.id()}">
+								<h1><span class="glyphicon glyphicon-user"></span> {{p.name()}}</h1>
 							</div>
 
-							<div class="profileCard back well well-lg" ng-class="{'active': p.getId() === vm.profiles.current.getId()}">
+							<div class="profileCard back well well-lg" ng-class="{'active': p.id() === vm.profiles.current.id()}">
 								<div class="profileInfo" ng-click="vm.pickProfile(p)">
-									<h2><span class="glyphicon glyphicon-user"></span> {{p.getName()}}</h2>
-									<h3 ng-show="p.getCloudAuth().getUsername()"><span class="fa fa-cloud"></span> {{p.getCloudAuth().getUsername()}}</h3>
+									<h2><span class="glyphicon glyphicon-user"></span> {{p.name()}}</h2>
+									<h3 ng-show="p.auth().username()"><span class="fa fa-cloud"></span> {{p.auth().username()}}</h3>
 									<hr />
 									<ul class="list-unstyled">
-										<li><span class="glyphicon glyphicon-time"></span> Created {{ p.getCreated() | date }}</li>
-										<li><span class="glyphicon glyphicon-book"></span> {{ p.getEntries().length }} {{ p.getEntries().length == 1 ? 'Story' : 'Stories' }}</li>
+										<li><span class="glyphicon glyphicon-time"></span> Created {{ p.created() | date }}</li>
+										<li><span class="glyphicon glyphicon-book"></span> {{ p.entries().length }} {{ p.entries().length == 1 ? 'Story' : 'Stories' }}</li>
 									</ul>
 								</div>
 
@@ -42,7 +42,7 @@
 									<a class="btn btn-default" ng-click="vm.editProfile(p)">
 										<span class="glyphicon glyphicon-edit"></span> Edit profile
 									</a>
-									<a class="btn btn-default" confirm-click="vm.removeProfile(p)" confirm-message="Are you sure you want to remove '{{ p.getName() }}' profile?">
+									<a class="btn btn-default" confirm-click="vm.removeProfile(p)" confirm-message="Are you sure you want to remove '{{ p.name() }}' profile?">
 										<span class="glyphicon glyphicon-trash"></span> Remove
 									</a>
 								</div>

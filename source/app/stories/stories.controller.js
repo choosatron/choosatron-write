@@ -53,8 +53,8 @@
 
 			file.create('json')
 			.then(function(entry) {
-				story.setTitle(entry.name.substr(0, entry.name.lastIndexOf('.')));
-				story.setAuthor(Profiles.current.getName());
+				story.title(entry.name.substr(0, entry.name.lastIndexOf('.')));
+				story.author(Profiles.current.name());
 
 				file.write(entry, story.serialize())
 				.then(function(event) {

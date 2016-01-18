@@ -31,7 +31,7 @@ function(Random) {
 		load: function(aData) {
 			//if (typeof aData !== 'object') {
 			if (aData.data) {
-				//console.log("Not object, use .data");
+				console.log("Not object, use .data");
 				aData = aData.data;
 			}
 			/*jshint -W087 */
@@ -43,7 +43,7 @@ function(Random) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
 				if (typeof this[loader] === 'function') {
-					//console.log("Loader: %s, key: %s", aData[key], key);
+					console.log("Loader: %s, key: %s", aData[key], key);
 					this[loader](aData[key]);
 				} else {
 					if (typeof aData[key] != 'undefined') { // TODO: This ok?
@@ -128,9 +128,9 @@ function(Random) {
 			this.id = Random.id();
 		},
 
-		getId: function() {
+		/*getId: function() {
 			return this.data.id;
-		},
+		},*/
 
 		id: function(aValue) {
 			if (angular.isDefined(aValue)) {

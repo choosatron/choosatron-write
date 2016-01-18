@@ -3,7 +3,7 @@
 		<p class="h4 pull-left">ChoiceWright</p>
 		<p class="h5 pull-right">
 			<a ng-click="vm.location.path('/profiles')">
-				<span class="glyphicon glyphicon-user"></span> {{vm.profile.getName()}}
+				<span class="glyphicon glyphicon-user"></span> {{vm.profile.name()}}
 			</a>
 		</p>
 	</div> -->
@@ -24,8 +24,8 @@
 </div>
 
 <div class="theme-alt wrap">
-	<div class="container storiesListMenu" ng-show="vm.profile.getEntries()">
-		<div class="btn-group btn-group-justified" ng-if="vm.profile.getEntries().length > 4">
+	<div class="container storiesListMenu" ng-show="vm.profile.entries()">
+		<div class="btn-group btn-group-justified" ng-if="vm.profile.entries().length > 4">
 			<div class="btn-group">
 				<button class="btn btn-default" ng-click="vm.sortStories('data.title')">
 					<span class="glyphicon glyphicon-font"></span>
@@ -54,7 +54,7 @@
 		<div class="container">
 			<div class="row storiesList">
 				<ul class="list-unstyled">
-					<li ng-repeat="entry in vm.profile.getEntries() | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation">
+					<li ng-repeat="entry in vm.profile.entries() | orderBy:vm.storiesSort:vm.storiesSortDesc" class="col-md-4 col-sm-6 fade-animation">
 						<div class="tile storyItem">
 							<div class="front">
 								<div class="storyInfo" ng-click="vm.editStory(entry)">

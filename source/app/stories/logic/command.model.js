@@ -31,7 +31,7 @@ function(BaseModel, Operator) {
 		},
 
 		isEmpty: function() {
-			return !this.getVariable() || !this.getVerb() || !this.getValue();
+			return !this.variable() || !this.verb() || !this.value();
 		},
 
 		cast: function(aValue) {
@@ -48,20 +48,20 @@ function(BaseModel, Operator) {
 		},
 
 		apply: function(aSource) {
-			var func = Operator[this.getVerb()];
+			var func = Operator[this.verb()];
 			if (func && func.action) {
-				var data = this.cast(aSource[this.getVariable()] || 0);
-				var value = this.cast(this.getValue());
-				aSource[this.getVariable()] = func.action(data, value);
+				var data = this.cast(aSource[this.variable()] || 0);
+				var value = this.cast(this.value());
+				aSource[this.variable()] = func.action(data, value);
 			}
-			return aSource[this.getVariable()];
+			return aSource[this.variable()];
 		},
 
 		test: function(aSource) {
-			var func = Operator[this.getVerb()];
+			var func = Operator[this.verb()];
 			if (func && func.action) {
-				var data = this.cast(source[this.getVariable()] || 0);
-				var value = this.cast(this.getValue());
+				var data = this.cast(source[this.variable()] || 0);
+				var value = this.cast(this.value());
 				return func.action(data, value);
 			}
 			return false;
@@ -74,7 +74,7 @@ function(BaseModel, Operator) {
 		},
 
 		getCommandStr: function() {
-			return this.getVariable() + ' ' + this.getVerb() + ' ' + this.getValue();
+			return this.variable() + ' ' + this.verb() + ' ' + this.value();
 		},
 
 		setCommandStr: function(aValue) {
@@ -91,14 +91,14 @@ function(BaseModel, Operator) {
 			return this.data.variable;
 		},
 
-		getVariable: function() {
+		/*getVariable: function() {
 			return this.data.variable;
 		},
 
 		setVariable: function(aValue) {
 			this.data.variable = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		verb: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -109,14 +109,14 @@ function(BaseModel, Operator) {
 			return this.data.verb;
 		},
 
-		getVerb: function() {
+		/*getVerb: function() {
 			return this.data.verb;
 		},
 
 		setVerb: function(aValue) {
 			this.data.verb = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		value: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -127,14 +127,14 @@ function(BaseModel, Operator) {
 			return this.data.value;
 		},
 
-		getValue: function() {
+		/*getValue: function() {
 			return this.data.value;
 		},
 
 		setValue: function(aValue) {
 			this.data.value = aValue;
 			this.wasModified();
-		},
+		},*/
 	};
 	BaseModel.extend(Command, Command.methods);
 

@@ -38,7 +38,7 @@
 		function activate() {
 			vm.profile = Profiles.current;
 
-			if (vm.profile.getCloudToken()) {
+			if (vm.profile.auth()) {
 				vm.state = 'plugin';
 			} else {
 				vm.state = 'no_cloud';
@@ -61,7 +61,7 @@
 			}
 
 			vm.serial = new ChoosatronSerial();
-			vm.cloud  = new ChoosatronCloud(vm.profile.getCloudToken());
+			vm.cloud  = new ChoosatronCloud(vm.profile.auth().token());
 
 			vm.serial.connect()
 			.then(function (aDeviceId) {
@@ -88,12 +88,12 @@
 		}
 
 		function claim() {
-			if (!vm.choosatrons.getCurrentId()) {
+			if (!vm.choosatrons.currentId()) {
 				vm.state = 'connect';
 				vm.errors = ['Could not find a core id for your Choosatron.'];
 				return;
 			}
-			vm.cloud.claim(vm.choosatrons.getCurrentId())
+			vm.cloud.claim(vm.choosatrons.currentId())
 			.then(changeState('claimed'))
 			.catch(changeState('unclaimed'));
 		}

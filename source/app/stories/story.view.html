@@ -19,8 +19,8 @@
 					<a ng-click="vm.playbackStory()" ng-hide="vm.playback"><span class="glyphicon glyphicon-play"></span> Play Story</a>
 					<a ng-click="vm.editStory()" ng-show="vm.playback"><span class="glyphicon glyphicon-stop"></span> Edit Story</a>
 				</li>
-				<li ng-hide="vm.profiles.current.getAutosave() || !vm.saveState">
-					<a ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.getId(), vm.story.object())"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</a>
+				<li ng-hide="vm.profiles.current.autosave() || !vm.saveState">
+					<a ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.id(), vm.story.object())"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</a>
 				</li>
 				<li>
 					<span class="dropdown">

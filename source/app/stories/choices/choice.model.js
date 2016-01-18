@@ -110,13 +110,13 @@ function(BaseModel, Command) {
 			return this.data.content;
 		},
 
-		getContent: function() {
+		/*getContent: function() {
 			return this.data.content || "Unwritten Choice";
 		},
 
 		setContent: function(aValue) {
 			this.data.content = aValue;
-		},
+		},*/
 
 		condition: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -127,13 +127,13 @@ function(BaseModel, Command) {
 			return this.data.condition;
 		},
 
-		getCondition: function() {
+		/*getCondition: function() {
 			return this.data.condition;
 		},
 
 		setCondition: function(aValue) {
 			this.data.condition = aValue;
-		},
+		},*/
 
 		updates: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -144,13 +144,13 @@ function(BaseModel, Command) {
 			return this.data.updates;
 		},
 
-		getUpdates: function() {
+		/*getUpdates: function() {
 			return this.data.updates;
 		},
 
 		setUpdates: function(aValue) {
 			this.data.updates = aValue;
-		},
+		},*/
 
 		addUpdate: function(aValue) {
 			this.data.updates.push(aValue);
@@ -158,7 +158,7 @@ function(BaseModel, Command) {
 
 		removeUpdate: function(aValue) {
 			for (var i = 0; i < this.data.updates.length; i++) {
-				if (aValue.getId() === this.data.updates[i]) {
+				if (aValue.id() === this.data.updates[i]) {
 					this.data.updates.splice(i, 1);
 					return;
 				}
@@ -172,6 +172,10 @@ function(BaseModel, Command) {
 			return aId == this.data.destination;
 		},
 
+		clearDestination: function() {
+			this.data.destination = null;
+		},
+
 		destination: function(aValue) {
 			if (angular.isDefined(aValue)) {
 				this.data.destination = aValue;
@@ -179,7 +183,7 @@ function(BaseModel, Command) {
 				return;
 			}
 			return this.data.destination;
-		},
+		}/*,
 
 		getDestination: function(aValue) {
 			return this.data.destination;
@@ -190,7 +194,7 @@ function(BaseModel, Command) {
 				aValue = null;
 			}
 			this.data.destination = aValue;
-		}
+		}*/
 
 	};
 	BaseModel.extend(Choice, Choice.methods);

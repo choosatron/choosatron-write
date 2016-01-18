@@ -38,7 +38,7 @@
 		<div class="animate-switch" ng-switch-when="connect">
 			<h2>Found It!</h2>
 
-			<p>I found a Choosatron with the id <code>{{ vm.choosatrons.getCurrentId() }}</code>. Let's get it connected to the Internet!</p>
+			<p>I found a Choosatron with the id <code>{{ vm.choosatrons.currentId() }}</code>. Let's get it connected to the Internet!</p>
 
 			<input class="form-control" ng-model="vm.creds.ssid" placeholder="WiFi Network Name (SSID)" />
 			<div class="radio">
@@ -98,8 +98,8 @@
 				</ul>
 			</div>
 
-			<pre ng-show="vm.choosatrons.getCurrentId()">The core id is {{ vm.choosatrons.getCurrentId() }}</pre>
-			<pre ng-hide="vm.choosatrons.getCurrentId()">Could not get core id</pre>
+			<pre ng-show="vm.choosatrons.currentId()">The core id is {{ vm.choosatrons.currentId() }}</pre>
+			<pre ng-hide="vm.choosatrons.currentId()">Could not get core id</pre>
 
 			<p>
 				<button type="button" class="btn btn-link" ng-click="vm.cancel()">Cancel</button>

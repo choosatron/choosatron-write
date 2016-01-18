@@ -30,7 +30,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 	this.add = function(aProfile) {
 		// Look for the existing profile to update and shift
 		for (var i = 0; i < this.all.length; i++) {
-			if (this.all[i].getId() == aProfile.getId()) {
+			if (this.all[i].id() == aProfile.id()) {
 				this.all.splice(i, 1);
 				break;
 			}
@@ -42,7 +42,7 @@ function (LocalStorageEngine, Storage, Profile, $q) {
 	this.remove = function(aProfile) {
 		// Look for the existing profile to remove
 		for (var i = 0; i < this.all.length; i++) {
-			if (this.all[i].getId() == aProfile.getId()) {
+			if (this.all[i].id() == aProfile.id()) {
 				this.all.splice(i, 1);
 				break;
 			}

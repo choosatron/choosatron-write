@@ -57,15 +57,15 @@ function(BaseModel, Passage) {
 	Story.methods = {
 
 		getNextPassageNumber: function() {
-			this.setLastPsgNumber(this.getLastPsgNumber() + 1);
-			return this.getLastPsgNumber();
+			this.lastPsgNumber(this.lastPsgNumber() + 1);
+			return this.lastPsgNumber();
 		},
 
 		getStartPsg: function() {
-			if (Object.keys(this.getPassages()).length === 0) {
+			if (Object.keys(this.passages()).length === 0) {
 				this.addPassage(new Passage());
 			}
-			return this.getPassages()[this.getStartId()];
+			return this.passages()[this.startId()];
 		},
 
 		// Return a list of IDs for passages with no parents
@@ -73,12 +73,12 @@ function(BaseModel, Passage) {
 		getOrphans: function() {
 			var destinations = [];
 			this.eachPassage(function(p) {
-				destinations.concat(p.getDestinations());
+				destinations.concat(p.destinations());
 			});
 			var ophans = [];
 			this.eachPassage(function(p) {
-				if ((p.getEntrances().length === 0) &&
-				    (p.getDestinations().length === 0)) {
+				if ((p.entrances().length === 0) &&
+				    (p.destinations().length === 0)) {
 					orphans.push(p);
 				}
 			});
@@ -100,7 +100,7 @@ function(BaseModel, Passage) {
 		getChoice: function(aId) {
 			// TODO: Review
 			var choice = null;
-			this.getPassages().some(function(p) {
+			this.passages().some(function(p) {
 				var c = p.getChoiceById(aId);
 				if (c) {
 					choice = c;
@@ -114,48 +114,48 @@ function(BaseModel, Passage) {
 		linkEntrances: function(aPassage) {
 			for (var pId in aPassage.entrances) {
 				for (var cId in aPassage.getEntranceWithKey(pId)) {
-					this.getPassage(pId).getChoiceById(cId).setDestination(aPassage.getId());
+					this.getPassage(pId).getChoiceById(cId).destination(aPassage.id());
 				}
 			}
 		},
 
 		linkChoices: function(aPassage) {
-			for (var i = 0; i < aPassage.getChoices().length; i++) {
+			for (var i = 0; i < aPassage.choices().length; i++) {
 				this.linkChoice(aPassage, aPassage.getChoiceAtIndex(i));
 			}
 		},
 
 		linkChoice: function(aPassage, aChoice) {
 			if (aChoice.hasDestination()) {
-				this.getPassage(aChoice.getDestination()).addEntrance(aPassage.getId(), aChoice.getId());
+				this.getPassage(aChoice.destination()).addEntrance(aPassage.id(), aChoice.id());
 			}
 		},
 
 		// Nagivate to all choice destinations and remove the
 		// current passage id from it's list of entrances.
 		unlinkChoices: function(aPassage) {
-			for (var i = 0; i < aPassage.getChoices().length; i++) {
+			for (var i = 0; i < aPassage.choices().length; i++) {
 				this.unlinkChoice(aPassage, aPassage.getChoiceAtIndex(i));
 			}
 		},
 
 		unlinkChoice: function(aPassage, aChoice) {
 			if (aChoice.hasDestination()) {
-				this.getPassages(aChoice.getDestination()).removeEntranceChoices(aPassage.getId());
+				this.getPassages(aChoice.destination()).removeEntranceChoices(aPassage.id());
 			}
 		},
 
 		unlinkSingleChoice: function(aPassage, aChoice) {
 			if (aChoice.hasDestination()) {
-				this.getPassages(aChoice.getDestination()).removeEntranceChoice(aPassage.getId(), aChoice.getId());
+				this.getPassages(aChoice.destination()).removeEntranceChoice(aPassage.id(), aChoice.id());
 			}
 		},
 
 		unlinkEntrances: function(aPassage) {
-			for (var entrance in aPassage.getEntrances()) {
-				for (var i = 0; i < this.getPassages(entrance).getChoices().length; i++) {
-					if (this.getPassage(entrance).getChoiceAtIndex(i).getDestination() === aPassage.getId()) {
-						this.getPassage(entrance).getChoiceAtIndex(i).setDestination();
+			for (var entrance in aPassage.entrances()) {
+				for (var i = 0; i < this.getPassages(entrance).choices().length; i++) {
+					if (this.getPassage(entrance).getChoiceAtIndex(i).destination() === aPassage.id()) {
+						this.getPassage(entrance).getChoiceAtIndex(i).clearDestination();
 					}
 				}
 			}
@@ -163,34 +163,34 @@ function(BaseModel, Passage) {
 
 		addPassage: function(aPassage) {
 			// If it's the only passage, it is the start.
-			if (Object.keys(this.getPassages()).length === 0) {
-				this.setStartId(aPassage.getId());
-				aPassage.setIsStart(true);
+			if (Object.keys(this.passages()).length === 0) {
+				this.startId(aPassage.id());
+				aPassage.isStart(true);
 			} else {
 				// If the new passage is set to isStart,
 				// make sure there isn't another isStart passage.
 				if (aPassage.isStart() === true) {
-					if (this.getStartId().length > 0) {
-						this.getPassage(this.getStartId()).setIsStart(false);
-						console.log("Old id: %s, new id: %s", this.getStartId(), aPassage.getId());
+					if (this.startId().length > 0) {
+						this.getPassage(this.startId()).isStart(false);
+						console.log("Old id: %s, new id: %s", this.startId(), aPassage.id());
 					}
-					this.setStartId(aPassage.getId());
+					this.startId(aPassage.id());
 				}
 			}
-			this.setPassage(aPassage.getId(), aPassage);
-			this.getPassage(aPassage.getId()).setNumber(this.getNextPassageNumber());
+			this.setPassage(aPassage.id(), aPassage);
+			this.getPassage(aPassage.id()).number(this.getNextPassageNumber());
 
-			return aPassage.getId();
+			return aPassage.id();
 		},
 
 		deletePassage: function(aId) {
-			if (!this.getPassages()) {
+			if (!this.passages()) {
 				return;
 			}
-			if (aId in this.getPassages()) {
+			if (aId in this.passages()) {
 				this.unlinkChoices(this.getPassage(aId));
 				this.unlinkEntrances(this.getPassage(aId));
-				this.getPassage(aId).setTrashed(true);
+				this.getPassage(aId).trashed(true);
 				//delete this.getPassages()[aId];
 			} else {
 				console.warning("deletePassage: Passage '%s' not found.", aId);
@@ -225,18 +225,18 @@ function(BaseModel, Passage) {
 					cmds.push(aCmd);
 				}
 			}
-			for (var id in this.getPassages()) {
+			for (var id in this.passages()) {
 				console.log(id);
-				console.log(this.getPassage(id).getChoices());
-				for (var i = 0; i < this.getPassage(id).getChoices().length; ++i) {
+				console.log(this.getPassage(id).choices());
+				for (var i = 0; i < this.getPassage(id).choices().length; ++i) {
 					var choice = this.getPassage(id).getChoiceAtIndex(i);
-					if (choice.getCondition()) {
+					if (choice.condition()) {
 					//if (('undefined' !== typeof choice.getCondition()) &&
 					//    (choice.getCondition() !== null)) {
-						cmds.push(choice.getCondition());
+						cmds.push(choice.condition());
 					}
 					if (typeof choice.updates != 'undefined') {
-						choice.getUpdates().forEach(add);
+						choice.updates().forEach(add);
 					}
 				}
 			}
@@ -270,17 +270,17 @@ function(BaseModel, Passage) {
 
 		generatePsgEntrances: function() {
 			// For each passage...
-			for (var findId in this.getPassages()) {
+			for (var findId in this.passages()) {
 				// Reset this passages entrances...
-				this.getPassage(findId).setEntrances({});
+				this.getPassage(findId).entrances({});
 				// We'll iterate over every OTHER passages...
-				for (var currentId in this.getPassages()) {
+				for (var currentId in this.passages()) {
 					// Iterate over every choice in each passage...
-					for (var i = 0; i < this.getPassage(currentId).getChoices().length; i++) {
+					for (var i = 0; i < this.getPassage(currentId).choices().length; i++) {
 						// If a choices destination is our 'findId' passage, create an entrance on 'findId'.
 						if (this.getPassage(currentId).getChoiceAtIndex(i).hasDestination(findId)) {
 							// We keep track if multiple choices from one passage lead to the same destination.
-							this.getPassage(findId).addEntrance(currentId, this.getPassage(currentId).getChoiceAtIndex(i).getId());
+							this.getPassage(findId).addEntrance(currentId, this.getPassage(currentId).getChoiceAtIndex(i).id());
 						}
 					}
 				}
@@ -299,13 +299,13 @@ function(BaseModel, Passage) {
 		},
 
 
-		getOpened: function() {
+		/*getOpened: function() {
 			return this.data.opened;
 		},
 
 		setOpened: function(aValue) {
 			this.data.opened = aValue;
-		},
+		},*/
 
 		setOpenedNow: function() {
 			this.data.opened = Date.now();
@@ -320,13 +320,13 @@ function(BaseModel, Passage) {
 			return this.data.lastPsgNumber;
 		},
 
-		getLastPsgNumber: function() {
+		/*getLastPsgNumber: function() {
 			return this.data.lastPsgNumber;
 		},
 
 		setLastPsgNumber: function(aValue) {
 			this.data.lastPsgNumber = aValue;
-		},
+		},*/
 
 		author: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -338,7 +338,7 @@ function(BaseModel, Passage) {
 		},
 
 
-		getAuthor: function() {
+		/*getAuthor: function() {
 			return this.data.author;
 		},
 
@@ -351,7 +351,7 @@ function(BaseModel, Passage) {
 				return true;
 			}
 			return false;
-		},
+		},*/
 
 		credits: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -363,7 +363,7 @@ function(BaseModel, Passage) {
 		},
 
 
-		getCredits: function() {
+		/*getCredits: function() {
 			return this.data.credits;
 		},
 
@@ -376,7 +376,7 @@ function(BaseModel, Passage) {
 				return true;
 			}
 			return false;
-		},
+		},*/
 
 		contact: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -387,7 +387,7 @@ function(BaseModel, Passage) {
 			return this.data.contact;
 		},
 
-		getContact: function() {
+		/*getContact: function() {
 			return this.data.contact;
 		},
 
@@ -399,7 +399,7 @@ function(BaseModel, Passage) {
 				return true;
 			}
 			return false;
-		},
+		},*/
 
 		/*get title() {
 			console.log("get title");
@@ -429,7 +429,7 @@ function(BaseModel, Passage) {
 			return this.data.title;
 		},
 
-		getTitle: function() {
+		/*getTitle: function() {
 			console.log("getTitle", this);
 			return this.data.title || "Untitled Story";
 		},
@@ -444,7 +444,7 @@ function(BaseModel, Passage) {
 				return true;
 			}
 			return false;
-		},
+		},*/
 
 		subtitle: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -455,7 +455,7 @@ function(BaseModel, Passage) {
 			return this.data.subtitle;
 		},
 
-		getSubtitle: function() {
+		/*getSubtitle: function() {
 			return this.data.subtitle;
 		},
 
@@ -468,7 +468,7 @@ function(BaseModel, Passage) {
 				return true;
 			}
 			return false;
-		},
+		},*/
 
 		description: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -479,14 +479,14 @@ function(BaseModel, Passage) {
 			return this.data.description;
 		},
 
-		getDescription: function() {
+		/*getDescription: function() {
 			return this.data.description;
 		},
 
 		setDescription: function(aValue) {
 			this.data.description = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		published: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -497,17 +497,17 @@ function(BaseModel, Passage) {
 			return this.data.published;
 		},
 
-		getPublished: function() {
+		/*getPublished: function() {
 			return this.data.published;
 		},
 
 		setPublished: function(aValue) {
 			this.data.published = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		setPublishedNow: function() {
-			this.setPublishedOn(new Date());
+			this.published(new Date());
 		},
 
 		version: function(aValue) {
@@ -519,9 +519,9 @@ function(BaseModel, Passage) {
 			return this.data.version;
 		},
 
-		getVersion: function() {
+		/*getVersion: function() {
 			return this.data.version;
-		},
+		},*/
 
 		getVersionStr: function() {
 			var str = this.data.version.major + '.' +
@@ -569,14 +569,14 @@ function(BaseModel, Passage) {
 			return this.data.coverUrl;
 		},
 
-		getCoverUrl: function() {
+		/*getCoverUrl: function() {
 			return this.data.coverUrl;
 		},
 
 		setCoverUrl: function(aValue) {
 			this.data.coverUrl = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		genre: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -587,14 +587,14 @@ function(BaseModel, Passage) {
 			return this.data.genre;
 		},
 
-		getGenre: function() {
+		/*getGenre: function() {
 			return this.data.genre;
 		},
 
 		setGenre: function(aValue) {
 			this.data.genre = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		startId: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -605,14 +605,14 @@ function(BaseModel, Passage) {
 			return this.data.startId;
 		},
 
-		getStartId: function() {
+		/*getStartId: function() {
 			return this.data.startId;
 		},
 
 		setStartId: function(aValue) {
 			this.data.startId = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		passages: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -623,9 +623,9 @@ function(BaseModel, Passage) {
 			return this.data.passages;
 		},
 
-		getPassages: function() {
+		/*getPassages: function() {
 			return this.data.passages;
-		},
+		},*/
 
 		getPassage: function(aKey) {
 			return this.data.passages[aKey];

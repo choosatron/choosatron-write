@@ -7,9 +7,9 @@
 	angular.module('storyApp.controllers')
 		.controller('ChoosatronsCtrl', ChoosatronsCtrl);
 
-	ChoosatronsCtrl.$inject = ['$location', 'Profiles', 'Choosatrons', 'ChoosatronSerial', 'ChoosatronCloud', 'ngDialog', 'PRODUCT_IDS'];
+	ChoosatronsCtrl.$inject = ['$location', 'Profiles', 'Choosatrons', 'Choosatron', 'ChoosatronSerial', 'ChoosatronCloud', 'ngDialog', 'PRODUCT_IDS'];
 
-	function ChoosatronsCtrl($location, Profiles, Choosatrons, ChoosatronSerial, ChoosatronCloud, ngDialog, PRODUCT_IDS) {
+	function ChoosatronsCtrl($location, Profiles, Choosatrons, Choosatron, ChoosatronSerial, ChoosatronCloud, ngDialog, PRODUCT_IDS) {
 		var vm = this;
 
 		// Variables
@@ -53,16 +53,18 @@
 		function activate() {
 			Profiles.load().then(function() {
 				vm.profile = Profiles.current;
-				console.log(vm.profile.getChoosatrons());
+				console.log(vm.profile.choosatrons());
+				console.log(vm.profile.auth());
+				console.log(vm.profile);
 				vm.serial = new ChoosatronSerial();
-				vm.cloud = new ChoosatronCloud(vm.profile.getCloudAuth().getToken());
+				vm.cloud = new ChoosatronCloud(vm.profile.auth().token());
 				loadChoosatrons();
 			});
 		}
 
 		// Creates a command function for a choosatron
 		function command(aChoosatron, aMethod) {
-			vm.cloud.command(aChoosatron.getDeviceId(), aMethod)
+			vm.cloud.command(aChoosatron.deviceId(), aMethod)
 			.then(function(response) {
 				vm.message = {
 					type    : 'info',
@@ -74,7 +76,7 @@
 		// Call a command on the choostron and wait for a
 		// result to be send through an event stream
 		function request(aChoosatron, aMethod) {
-			vm.cloud.request(aChoosatron.getDeviceId(), aMethod)
+			vm.cloud.request(aChoosatron.deviceId(), aMethod)
 			.then(function(response) {
 				vm.message = {
 					type    : 'info',
@@ -121,7 +123,7 @@
 		}
 
 		function loadStories(aChoosatron) {
-			vm.cloud.getStoryInfo(aChoosatron.getDeviceId())
+			vm.cloud.getStoryInfo(aChoosatron.deviceId())
 			.then(function(aStories) {
 				choosatron.stories = aStories;
 				choosatron.mode    = 'stories';
@@ -138,23 +140,23 @@
 		}
 
 		function unclaim(aChoosatron) {
-			vm.cloud.remove(aChoosatron.getDeviceId()).then(loadChoosatrons);
+			vm.cloud.remove(aChoosatron.deviceId()).then(loadChoosatrons);
 		}
 
 		function rename(aChoosatron) {
-			vm.cloud.rename(aChoosatron.getDeviceId(), aChoosatron.newName)
+			vm.cloud.rename(aChoosatron.deviceId(), aChoosatron.newName)
 			.then(loadChoosatrons)
 			.catch(warn('Could not rename your Choosatron!'));
 		}
 
 		function change(aChoosatron) {
-			vm.cloud.changeToChoosatron(aChoosatron.getDeviceId())
+			vm.cloud.changeToChoosatron(aChoosatron.deviceId())
 			.then(inform('A change request has been sent'))
 			.catch(warn('Could not change your device to a Choosatron!'));
 		}
 
 		function flash(aChoosatron) {
-			vm.cloud.flashAsChoosatron(aChoosatron.getDeviceId())
+			vm.cloud.flashAsChoosatron(aChoosatron.deviceId())
 			.then(inform('Firmware is updating! Wait until the purple stops flashing.'))
 			.catch(warn('Could not update your Choosatron!'));
 		}
@@ -173,8 +175,8 @@
 		}
 
 		function selectChoosatron(aChoosatron) {
-			console.log("selectChoosatron: %s", aChoosatron.getDeviceId());
-			//vm.profile.selectChoosatron(aChoosatron.getDeviceId());
+			console.log("selectChoosatron: %s", aChoosatron.deviceId());
+			//vm.profile.selectChoosatron(aChoosatron.deviceId());
 
 			/*vm.serial.connect().then(function() {
 				console.log("Connected to:");

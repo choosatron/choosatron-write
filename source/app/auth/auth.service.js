@@ -8,7 +8,7 @@
 
 	function AuthService(Particle) {
 		this.particle = function(aAuth) {
-			return new Particle(aAuth && aAuth.getToken());
+			return new Particle(aAuth && aAuth.token());
 		};
 		this.authStatus = {
 			remoteState: 'idle',
@@ -19,9 +19,9 @@
 
 	AuthService.prototype.saveToken = function(aAuth, aToken) {
 		var now = +new Date();
-		aAuth.setToken(aToken.access_token);
-		aAuth.setType(aToken.token_type);
-		aAuth.setExpiration(+new Date(now + (aToken.expires_in * 1000)));
+		aAuth.token(aToken.access_token);
+		aAuth.type(aToken.token_type);
+		aAuth.expiration(+new Date(now + (aToken.expires_in * 1000)));
 		this.authStatus.status = 'success';
 		this.authStatus.remoteState = 'idle';
 	};
@@ -32,7 +32,7 @@
 		this.authStatus.remoteState = 'working';
 		var login = this.login.bind(this, aAuth, aPassword);
 		return this.particle(aAuth)
-			.createUser(aAuth.getUsername(), aPassword)
+			.createUser(aAuth.username(), aPassword)
 			.then(login)
 			.catch(onError);
 	};
@@ -44,17 +44,17 @@
 		this.authStatus.status = 'ready';
 		this.authStatus.remoteState = 'working';
 		var params = {
-			username: aAuth.getUsername(),
+			username: aAuth.username(),
 			password: aPassword
 		};
-		if (aAuth.getToken()) {
-			params.access_token = aAuth.getToken();
+		if (aAuth.token()) {
+			params.access_token = aAuth.token();
 		}
 
 		var saveToken = this.saveToken.bind(this, aAuth);
 		var onError = this.onError.bind(this);
 		return this.particle(aAuth)
-			.login(aAuth.getUsername(), aPassword)
+			.login(aAuth.username(), aPassword)
 			.then(saveToken)
 			.catch(onError);
 	};
@@ -79,7 +79,7 @@
 
 	AuthService.prototype.loadDevices = function(aAuth) {
 		return this.particle(aAuth).listDevices.then(function(devices) {
-			aAuth.setDevices(devices);
+			aAuth.devices(devices);
 		});
 	};
 

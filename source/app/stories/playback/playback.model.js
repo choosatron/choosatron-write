@@ -25,25 +25,25 @@ function(BaseModel) {
 		},
 
 		trim: function(aPassage) {
-			if (!aPassage || !aPassage.getChoices()) {
+			if (!aPassage || !aPassage.choices()) {
 				return;
 			}
 			var self = this;
-			aPassage.getChoices().forEach(function(c) {
-				c.hidden = c.getCondition() && !c.getCondition().isEmpty() && !c.getCondition().test(self.sandbox);
+			aPassage.choices().forEach(function(c) {
+				c.hidden = c.cndition() && !c.condition().isEmpty() && !c.condition().test(self.sandbox);
 			});
 		},
 
 		select: function(aChoice) {
-			var choice = aChoice && aChoice.getId() ? this.story.getChoice(aChoice.getId()) : aChoice;
+			var choice = aChoice && aChoice.id() ? this.story.choice(aChoice.id()) : aChoice;
 			if (!choice) {
 				return null;
 			}
 
 			var self = this;
-			this.selected.push(choice.getId());
-			if (choice.getUpdates().forEach) {
-				choice.getUpdates().forEach(function(u) {
+			this.selected.push(choice.id());
+			if (choice.updates().forEach) {
+				choice.updates().forEach(function(u) {
 					u.apply(self.sandbox);
 				});
 			}
@@ -52,7 +52,7 @@ function(BaseModel) {
 				return null;
 			}
 
-			var next = this.story.getPassage(choice.getDestination());
+			var next = this.story.getPassage(choice.destination());
 			this.trim(next);
 
 			return next;

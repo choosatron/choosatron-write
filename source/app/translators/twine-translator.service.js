@@ -22,12 +22,12 @@ function(Story, Passage, Choice) {
 				var pipe = str.indexOf('|');
 				var choice = new Choice();
 				if (pipe < 0) {
-					choice.setContent(str);
-					choice.setDestination(str);
+					choice.content(str);
+					choice.destination(str);
 					return choice;
 				}
-				choice.setContent(str.substr(0, pipe));
-				choice.setDestination(str.substr(pipe + 1));
+				choice.content(str.substr(0, pipe));
+				choice.destination(str.substr(pipe + 1));
 				return choice;
 			}
 
@@ -38,7 +38,7 @@ function(Story, Passage, Choice) {
 				}
 
 				var content = null;
-				aPassage.setContent('');
+				aPassage.content('');
 
 				var hasChoices = false;
 				for (var i = 0; i < aTweeLines.length; i++) {
@@ -57,22 +57,22 @@ function(Story, Passage, Choice) {
 							}
 						}
 
-						aPassage.setContent(contentLines.join('\n'));
+						aPassage.content(contentLines.join('\n'));
 						aTweeLines = aTweeLines.slice(i);
 						break;
 					}
 				}
 
 				if (hasChoices === false) {
-					aPassage.setContent(aTweeLines.join('\n'));
+					aPassage.content(aTweeLines.join('\n'));
 					aTweeLines = [];
 				}
 
 				// Cleanup any trailing newline or carriage return.
-				content = aPassage.getContent();
+				content = aPassage.content();
 				if ((content[content.length - 1] === '\r') ||
 					(content[content.length - 1] === '\n')) {
-					aPassage.setContent(content.slice(0, -1));
+					aPassage.content(content.slice(0, -1));
 					content = '';
 				}
 
@@ -88,20 +88,20 @@ function(Story, Passage, Choice) {
 					}
 				}
 
-				if (aPassage.getChoices().length === 0) {
-					aPassage.setExitType(CDAM.Strings.kExitTypeEnding);
+				if (aPassage.choices().length === 0) {
+					aPassage.exitType(CDAM.Strings.kExitTypeEnding);
 					// Translate the ending quality.
-					if (typeof aPassage.getTags().eq != 'undefined') {
-						aPassage.setEndingIndex(passage.getTags().eq - 1);
+					if (typeof aPassage.tags().eq != 'undefined') {
+						aPassage.endingIndex(passage.tags().eq - 1);
 					} else {
-						aPassage.setEndingIndex(2);
+						aPassage.endingIndex(2);
 					}
-				} else if (aPassage.getChoices().length === 1) {
-					if (aPassage.getChoiceAtIndex(0).getContent() === '<append>') {
-						aPassage.setExitType(CDAM.Strings.kExitTypeAppend);
+				} else if (aPassage.choices().length === 1) {
+					if (aPassage.getChoiceAtIndex(0).content() === '<append>') {
+						aPassage.exitType(CDAM.Strings.kExitTypeAppend);
 						//aPassage.appendLink = aPassage.choices[0];
-					} else if (aPassage.getChoiceAtIndex(0).getContent() === '<continue>') {
-						aPassage.setExitType(CDAM.Strings.kExitTypeChoices);
+					} else if (aPassage.getChoiceAtIndex(0).content() === '<continue>') {
+						aPassage.exitType(CDAM.Strings.kExitTypeChoices);
 						aPassage.getChoiceAtIndex(0).setContent('Continue...');
 					}
 				}
@@ -117,26 +117,26 @@ function(Story, Passage, Choice) {
 				if (!id) continue;
 				switch (id[1].trim()) {
 					case('StoryAuthor'):
-						story.setAuthor(tweeLines.join(''));
+						story.author(tweeLines.join(''));
 						//console.log("Author: " + story.author);
 						break;
 					case('StoryTitle'):
-						story.setTitle(tweeLines.join(''));
+						story.title(tweeLines.join(''));
 						//console.log("Title: " + story.title);
 						break;
 					case('StorySubtitle'):
-						story.setSubtitle(tweeLines.join(''));
+						story.subtitle(tweeLines.join(''));
 						//console.log("Subtitle: " + story.subtitle);
 						break;
 					default: // Parse the text!
 						passage = new Passage();
 						var content = '';
 						//var attrs = reAttributes.exec(id);
-						passage.setId(id[1].trim());
+						passage.id(id[1].trim());
 
-						if (passage.getId() === 'Start') {
+						if (passage.id() === 'Start') {
 							//console.log("Start Passage Found!");
-							passage.setIsStart(true);
+							passage.isStart(true);
 						}
 
 						if (typeof id[2] === 'undefined') {

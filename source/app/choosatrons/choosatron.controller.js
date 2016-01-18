@@ -31,7 +31,7 @@
 				}
 
 				vm.serial = new ChoosatronSerial();
-				vm.cloud = new ChoosatronCloud(vm.profile.getCloudAuth().getToken());
+				vm.cloud = new ChoosatronCloud(vm.profile.auth().token());
 				loadChoosatrons();
 
 				vm.choosatron = Choosatrons.getCurrentDevice();

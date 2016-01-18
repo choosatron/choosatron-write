@@ -71,11 +71,11 @@ Choosatron.prototype.showPassage = function(aPassage) {
 	if (!aPassage) {
 		return;
 	}
-	if (aPassage.getId() == this.passage.getId()) {
+	if (aPassage.id() == this.passage.id()) {
 		return;
 	}
 
-	location.hash = aPassage.getId();
+	location.hash = aPassage.id();
 	this.passage = aPassage;
 
 	var $section = $('.section-inner');
@@ -86,7 +86,7 @@ Choosatron.prototype.showPassage = function(aPassage) {
 	var hidden  = {top: '-' + (height / 2) + 'px'};
 
 	var show = function() {
-		$('.passage').html(aPassage.getContent());
+		$('.passage').html(aPassage.content());
 		this.showChoices(aPassage);
 		this.showFeedback(aPassage);
 		$section.hide().css(preshow).show().animate(shown);
@@ -96,28 +96,28 @@ Choosatron.prototype.showPassage = function(aPassage) {
 }
 
 Choosatron.prototype.showChoices = function(aPassage) {
-	var choices = aPassage && aPassage.getChoices() ? aPassage.getChoices() : [];
+	var choices = aPassage && aPassage.choices() ? aPassage.choices() : [];
 	var html = [];
 	for (var i = 0; i < choices.length; i++) {
-		var choice = '<div class="choice" id="' + choices[i].getId() + '">' + choices[i].getContent() + '</div>';
+		var choice = '<div class="choice" id="' + choices[i].id() + '">' + choices[i].content() + '</div>';
 		html.push(choice);
 	}
 	$('.choices').html(html.join('\n'));
 }
 
 Choosatron.prototype.showFeedback = function(aPassage) {
-	if (aPassage.getEndingIndex() === false) {
+	if (aPassage.endingIndex() === false) {
 		return;
 	}
 }
 
 Choosatron.prototype.bindStory = function() {
 	// Bind the basic data
-	document.title = this.story.getTitle();
-	$('.title').html(this.story.getTitle());
-	$('.author').html(this.story.getAuthor());
+	document.title = this.story.title();
+	$('.title').html(this.story.title());
+	$('.author').html(this.story.author());
 
-	if (!this.story.getPassages()) return;
+	if (!this.story.passages()) return;
 
 	var passage = null;
 
@@ -125,25 +125,25 @@ Choosatron.prototype.bindStory = function() {
 		passage = this.findPassage(location.hash.substr(1));
 	}
 	if (!passage) {
-		passage = this.story.getPassage(this.story.getStartId());
+		passage = this.story.getPassage(this.story.startId());
 	}
 	this.showPassage(passage);
 }
 
 Choosatron.prototype.findPassage = function(aId) {
-	if (!this.story.getPassages()) {
+	if (!this.story.passages()) {
 		return null;
 	}
 	return this.story.getPassage(aId);
 }
 
 Choosatron.prototype.findChoice = function(aId) {
-	if (!this.passage || !this.passage.getChoices()) {
+	if (!this.passage || !this.passage.choices()) {
 		return null;
 	}
 
-	for (var i = 0; i < this.passage.getChoices().length; i++) {
-		if (this.passage.getChoiceAtIndex(i).getId() == aId) {
+	for (var i = 0; i < this.passage.choices().length; i++) {
+		if (this.passage.getChoiceAtIndex(i).id() == aId) {
 			return this.passage.getChoiceAtIndex(i);
 		}
 	}
@@ -155,7 +155,7 @@ Choosatron.prototype.makeChoice = function(aEvent) {
 	if (!choice) {
 		return;
 	}
-	var passage = this.findPassage(choice.getDestination());
+	var passage = this.findPassage(choice.destination());
 	this.showPassage(passage);
 }
 

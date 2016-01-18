@@ -30,7 +30,7 @@
 		function activate() {
 			if (Profiles.current) {
 				Profiles.editing = new Profile(Profiles.current);
-				Profiles.editing.setCloudAuth(new Auth(Profiles.current.getCloudAuth()));
+				Profiles.editing.auth(new Auth(Profiles.current.auth()));
 				console.log("Editing existing profile");
 			} else {
 				console.log("New Profile Being Created");
@@ -40,8 +40,8 @@
 			$scope.$watch('vm.editState', onRemoteStatusChange);
 
 			vm.profile = Profiles.editing;
-			vm.profileName = vm.profile.getName();
-			vm.profileAutosave = vm.profile.getAutosave();
+			vm.profileName = vm.profile.name();
+			vm.profileAutosave = vm.profile.autosave();
 		}
 
 		function setupCloudLink() {

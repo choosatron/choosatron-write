@@ -40,12 +40,13 @@
 					console.log(authService.authStatus.remoteState);
 				} else {
 					console.log(authService.authStatus.remoteState);
-					console.log("Cloud Auth Logged in.", vm.profile.getCloudAuth());
+					console.log("Cloud Auth Logged in.", vm.profile.auth());
 					vm.info = { message: "Logged in to the cloud!" };
 				}
 			};
 			console.log(authService.authStatus.remoteState);
-			authService.login(Profiles.editing.getCloudAuth(), vm.password)
+			Profiles.editing.auth().username(vm.username);
+			authService.login(Profiles.editing.auth(), vm.password)
 				.then(onComplete);
 			console.log(authService.authStatus.remoteState);
 		}
@@ -61,12 +62,13 @@
 					}
 					console.log(authService.authStatus.remoteState);
 				} else {
-					console.log("Cloud Auth Registered", vm.profile.cloud);
+					console.log("Cloud Auth Registered", vm.profile.auth());
 					vm.info = { message: "You've been registered in the cloud!" };
 				}
 			};
 
-			authService.register(Profiles.editing.cloud, vm.password)
+			Profiles.editing.auth().username(vm.username);
+			authService.register(Profiles.editing.auth(), vm.password)
 				.then(onComplete);
 		}
 

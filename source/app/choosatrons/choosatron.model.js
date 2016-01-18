@@ -106,9 +106,9 @@ function(BaseModel) {
 			return this.isWired;
 		},*/
 
-		setWired: function(aValue) {
+		/*setWired: function(aValue) {
 			this.isWired = aValue;
-		},
+		},*/
 
 		serialPath: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -119,13 +119,13 @@ function(BaseModel) {
 			return this.data.serialPath;
 		},
 
-		getSerialPath: function() {
+		/*getSerialPath: function() {
 			return this.serialPath;
 		},
 
 		setSerialPath: function(aValue) {
 			this.serialPath = aValue;
-		},
+		},*/
 
 		/* Serialized */
 
@@ -138,7 +138,7 @@ function(BaseModel) {
 			return this.data.friendlyName;
 		},
 
-		getFriendlyName: function() {
+		/*getFriendlyName: function() {
 			return this.data.friendlyName || "John Doetron (Give me a fun name!)";
 		},
 
@@ -146,7 +146,7 @@ function(BaseModel) {
 			console.log("Set friendly name: " + aValue);
 			this.data.friendlyName = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		ownerName: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -157,7 +157,7 @@ function(BaseModel) {
 			return this.data.ownerName;
 		},
 
-		getOwnerName: function() {
+		/*getOwnerName: function() {
 			return this.data.ownerName || "Unknown";
 		},
 
@@ -165,7 +165,7 @@ function(BaseModel) {
 			console.log("Set owner name: " + aValue);
 			this.data.ownerName = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		ownerCloudUser: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -176,14 +176,14 @@ function(BaseModel) {
 			return this.data.ownerCloudUser;
 		},
 
-		getOwnerCloudUser: function() {
+		/*getOwnerCloudUser: function() {
 			return this.data.ownerCloudUser || "Unknown";
 		},
 
 		setOwnerCloudUser: function(aValue) {
 			this.data.ownerCloudUser = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		version: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -194,9 +194,9 @@ function(BaseModel) {
 			return this.data.version;
 		},
 
-		getVersion: function() {
+		/*getVersion: function() {
 			return this.data.version;
-		},
+		},*/
 
 		getVersionStr: function() {
 			var str = this.data.version.major + '.' +
@@ -231,10 +231,10 @@ function(BaseModel) {
 			return this.data.sharedLocally;
 		},*/
 
-		setSharedLocally: function(aValue) {
+		/*setSharedLocally: function(aValue) {
 			this.data.sharedLocally = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		localAccessToken: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -245,14 +245,14 @@ function(BaseModel) {
 			return this.data.localAccessToken;
 		},
 
-		getLocalAccessToken: function() {
+		/*getLocalAccessToken: function() {
 			return this.data.localAccessToken;
 		},
 
 		setLocalAccessToken: function(aValue) {
 			this.data.localAccessToken = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		isOnline: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -267,9 +267,9 @@ function(BaseModel) {
 			return this.isOnline;
 		},*/
 
-		setOnline: function(aValue) {
+		/*setOnline: function(aValue) {
 			this.isOnline = aValue;
-		},
+		},*/
 
 		deviceId: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -280,13 +280,13 @@ function(BaseModel) {
 			return this.data.deviceId;
 		},
 
-		getDeviceId: function() {
+		/*getDeviceId: function() {
 			return this.data.deviceId;
 		},
 
 		setDeviceId: function(aValue) {
 			this.data.deviceId = aValue;
-		},
+		},*/
 
 		lastApp: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -297,9 +297,9 @@ function(BaseModel) {
 			return this.data.lastApp;
 		},
 
-		getLastApp: function() {
+		/*getLastApp: function() {
 			return this.data.lastApp;
-		},
+		},*/
 
 		lastHeard: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -310,9 +310,9 @@ function(BaseModel) {
 			return this.data.lastHeard;
 		},
 
-		getLastHeard: function() {
+		/*getLastHeard: function() {
 			return this.data.lastHeard;
-		},
+		},*/
 
 		lastIpAddress: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -323,9 +323,9 @@ function(BaseModel) {
 			return this.data.lastIpAddress;
 		},
 
-		getLastIpAddress: function() {
+		/*getLastIpAddress: function() {
 			return this.data.lastIpAddress;
-		},
+		},*/
 
 		name: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -336,14 +336,14 @@ function(BaseModel) {
 			return this.data.name;
 		},
 
-		getName: function() {
+		/*getName: function() {
 			return this.data.name;
 		},
 
 		setName: function(aValue) {
 			this.data.name = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		productId: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -352,7 +352,7 @@ function(BaseModel) {
 				return;
 			}
 			return this.data.productId;
-		},
+		}/*,
 
 		getProductId: function() {
 			return this.data.productId;
@@ -361,7 +361,7 @@ function(BaseModel) {
 		setProductId: function(aValue) {
 			this.data.productId = aValue;
 			this.wasModified();
-		}
+		}*/
 
 	};
 

@@ -33,27 +33,27 @@ function(BaseModel, Choice) {
 	Passage.methods = {
 		/*calculateExitType: function () {
 			if (this.hasEnding()) {
-				this.setExitType(CDAM.Strings.kExitTypeEnding);
+				this.exitType(CDAM.Strings.kExitTypeEnding);
 
 			} else if (this.hasAppend()) {
-				this.setExitType(CDAM.Strings.kExitTypeAppend);
+				this.exitType(CDAM.Strings.kExitTypeAppend);
 
 			} else {
-				this.setExitType(CDAM.Strings.kExitTypeChoices);
+				this.exitType(CDAM.Strings.kExitTypeChoices);
 			}
 		},*/
 
 		// Check if the current exit type is populated.
 		exitIsEmpty: function () {
-			if (this.getExitType() == CDAM.Strings.kExitTypeEnding &&
+			if (this.exitType() == CDAM.Strings.kExitTypeEnding &&
 			    !this.hasEnding()) {
 				return true;
 			}
-			if (this.getExitType() == CDAM.Strings.kExitTypeAppend &&
+			if (this.exitType() == CDAM.Strings.kExitTypeAppend &&
 			    !this.hasAppend()) {
 				return true;
 			}
-			if (this.getExitType() == CDAM.Strings.kExitTypeChoices &&
+			if (this.exitType() == CDAM.Strings.kExitTypeChoices &&
 			    !this.hasChoices()) {
 				return true;
 			}
@@ -63,36 +63,36 @@ function(BaseModel, Choice) {
 		// True if ending tag isn't set, no information loss if switching
 		// exit type.
 		hasEnding: function() {
-			return (this.getEndingIndex() !== false);
+			return (this.endingIndex() !== false);
 		},
 
 		hasAppend: function() {
-			if (this.getExitType() == CDAM.Strings.kExitTypeAppend) {
+			if (this.exitType() == CDAM.Strings.kExitTypeAppend) {
 				return (this.getChoiceAtIndex(0) && this.getChoiceAtIndex(0).hasDestination());
 			}
 			return false;
 		},
 
 		hasChoices: function() {
-			return (this.getChoices() && this.getChoices().length);
+			return (this.choices() && this.choices().length);
 		},
 
 		endingTypeName: function () {
 			if (!this.hasEnding()) {
 				return '';
 			}
-			return CDAM.Config.kEndingTags.titles[this.getEndingIndex()];
+			return CDAM.Config.kEndingTags.titles[this.endingIndex()];
 		},
 
 		abbreviate: function(aLength) {
-			var starter = this.getContent();
+			var starter = this.content();
 			starter = starter.replace(/[^a-zA-Z0-1]/g, '').substr(0, aLength).toLowerCase();
 			var abbr = starter;
 			var i = 1;
-			while (Passage.abbrs[abbr] && Passage.abbrs[abbr] != this.getId()) {
+			while (Passage.abbrs[abbr] && Passage.abbrs[abbr] != this.id()) {
 				abbr = starter + (i++).toString();
 			}
-			Passage.abbrs[abbr] = this.getId();
+			Passage.abbrs[abbr] = this.id();
 			return abbr;
 		},
 
@@ -124,7 +124,7 @@ function(BaseModel, Choice) {
 				this.data.choices = [];
 			}
 			this.data.choices.push(aChoice);
-			return aChoice.getId();
+			return aChoice.id();
 		},
 
 
@@ -151,10 +151,10 @@ function(BaseModel, Choice) {
 		},*/
 
 		removeChoice: function(aChoice) {
-			for (var i = 0; i < this.getChoices().length; i++) {
+			for (var i = 0; i < this.choices().length; i++) {
 				var c = this.getChoiceAtIndex(i);
-				if (c.getId() == aChoice.getId()) {
-					this.getChoices().splice(i, 1);
+				if (c.id() == aChoice.id()) {
+					this.choices().splice(i, 1);
 					break;
 				}
 			}
@@ -173,22 +173,22 @@ function(BaseModel, Choice) {
 			return has;
 		},
 
-		getDestinations: function() {
+		destinations: function() {
 			var ids = [];
 			this.eachChoice(function(c) {
-				if (ids.indexOf(c.getDestination()) < 0) {
-					ids.push(p.getDestination());
+				if (ids.indexOf(c.destination()) < 0) {
+					ids.push(p.destination());
 				}
 			});
 			return ids;
 		},
 
-		getPassageChoice: function(aPassage) {
+		passageChoice: function(aPassage) {
 			var n = 1, matchingChoice;
 
 			this.eachChoice(function (aChoice) {
-				if (aChoice.hasDestination(aPassage.getId())) {
-					matchingChoice = n + '. ' + aChoice.getContent();
+				if (aChoice.hasDestination(aPassage.id())) {
+					matchingChoice = n + '. ' + aChoice.content();
 				}
 
 				n++;
@@ -204,7 +204,7 @@ function(BaseModel, Choice) {
 		// Names for object loading use in BaseModel
 		loadChoices: function(aChoices) {
 			for (var i = 0; i < aChoices.length; i++) {
-				this.getChoices().push(new Choice(aChoices[i]));
+				this.choices().push(new Choice(aChoices[i]));
 			}
 		},
 
@@ -218,25 +218,33 @@ function(BaseModel, Choice) {
 			return o;
 		},
 
-		getAppendLink: function() {
-			if (this.getExitType() == CDAM.Strings.kExitTypeAppend) {
-				return this.data.choices[0];
+		appendLink: function(aValue) {
+			if (this.exitType() == CDAM.Strings.kExitTypeAppend) {
+				if (angular.isDefined(aValue)) {
+					this.data.choices[0] = new Choice(aAppendLink);
+					this.wasModified();
+					return;
+				} else {
+					return this.data.choices[0];
+				}
+			} else {
+				console.warn("Passage isn't an append type.");
 			}
 		},
 
-		setAppendLink: function(aAppendLink) {
+		/*appendLink: function(aAppendLink) {
 			if (this.getExitType() == CDAM.Strings.kExitTypeAppend) {
 				this.data.choices[0] = new Choice(aAppendLink);
 			} else {
 				console.warn("Passage isn't an append type, can't set an append link.");
 			}
-		},
+		},*/
 
 		/* Getters / Setters */
 
 		// Non Serialized //
 
-		getAbbreviation: function() {
+		abbreviation: function() {
 			return this.abbreviate(10);
 		},
 
@@ -255,14 +263,14 @@ function(BaseModel, Choice) {
 			return this.data.number;
 		},
 
-		getNumber: function() {
+		/*getNumber: function() {
 			return this.data.number;
 		},
 
 		setNumber: function(aValue) {
 			this.data.number = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		content: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -273,14 +281,14 @@ function(BaseModel, Choice) {
 			return this.data.content;
 		},
 
-		getContent: function() {
+		/*getContent: function() {
 			return this.data.content || "Unwritten Passage";
 		},
 
 		setContent: function(aValue) {
 			this.data.content = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		choices: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -291,13 +299,13 @@ function(BaseModel, Choice) {
 			return this.data.choices;
 		},
 
-		getChoices: function() {
+		/*getChoices: function() {
 			return this.data.choices;
 		},
 
 		setChoices: function(aValue) {
 			this.data.choices = aValue;
-		},
+		},*/
 
 		getChoiceAtIndex: function(aIndex) {
 			return this.data.choices[aIndex];
@@ -309,7 +317,7 @@ function(BaseModel, Choice) {
 			}
 			var choice = null;
 			var found = this.data.choices.some(function(c) {
-				if (c.getId() == aId) {
+				if (c.id() == aId) {
 					choice = c;
 					return true;
 				}
@@ -327,13 +335,13 @@ function(BaseModel, Choice) {
 			return this.data.entrances;
 		},
 
-		getEntrances: function() {
+		/*getEntrances: function() {
 			return this.data.entrances;
 		},
 
 		getEntranceWithKey: function(aKey) {
 			return this.data.entrances[aKey];
-		},
+		},*/
 
 		tags: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -344,9 +352,9 @@ function(BaseModel, Choice) {
 			return this.data.tags;
 		},
 
-		getTags: function() {
+		/*getTags: function() {
 			return this.data.tags;
-		},
+		},*/
 
 		addTag: function(aKey, aValue) {
 			this.data.tags[aKey] = aValue;
@@ -365,10 +373,10 @@ function(BaseModel, Choice) {
 			return this.data.isStart;
 		},*/
 
-		setIsStart: function(aValue) {
+		/*setIsStart: function(aValue) {
 			this.data.isStart = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		isValid: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -383,10 +391,10 @@ function(BaseModel, Choice) {
 			return this.data.isValid;
 		},*/
 
-		setIsValid: function(aValue) {
+		/*setIsValid: function(aValue) {
 			this.data.isValid = aValue;
 			this.wasModified();
-		},
+		},*/
 
 		endingIndex: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -397,7 +405,7 @@ function(BaseModel, Choice) {
 			return this.data.endingIndex;
 		},
 
-		getEndingIndex: function() {
+		/*getEndingIndex: function() {
 			return this.data.endingIndex;
 		},
 
@@ -406,7 +414,7 @@ function(BaseModel, Choice) {
 				this.data.endingIndex = aValue;
 				this.wasModified();
 			}
-		},
+		},*/
 
 		exitType: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -417,7 +425,7 @@ function(BaseModel, Choice) {
 			return this.data.exitType;
 		},
 
-		getExitType: function() {
+		/*getExitType: function() {
 			return this.data.exitType;
 		},
 
@@ -427,7 +435,7 @@ function(BaseModel, Choice) {
 			this.data.exitType = aValue;
 
 			this.wasModified();
-		},
+		},*/
 
 		trashed: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -436,7 +444,7 @@ function(BaseModel, Choice) {
 				return;
 			}
 			return this.data.trashed;
-		},
+		}/*,
 
 		getTrashed: function() {
 			return this.data.trashed;
@@ -445,7 +453,7 @@ function(BaseModel, Choice) {
 		setTrashed: function(aValue) {
 			this.data.trashed = aValue;
 			this.wasModified();
-		}
+		}*/
 
 	};
 	BaseModel.extend(Passage, Passage.methods);

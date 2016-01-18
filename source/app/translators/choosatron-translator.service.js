@@ -32,8 +32,8 @@
  *     2 VariableCount
  *   StoryBody
  *     PassageCount
- *       (2 bytes: represents # of passages.)
- *     PassageOffset
+ *       (2 bytes: represents # of passages.)set
+ *     PassageOff
  *       (repeats PassageCount times, UInt32 - 4 bytes. First PassageOffset is always 0. # of bytes to access passage)
  *     Passage
  *       Attributes (1 byte)
@@ -190,20 +190,20 @@ function(Random, ArrayBufferFactory) {
 		this.flags4 = 0;
 
 		//var version = new ChoosatronStoryVersion(aStory.getVersionStr());
-		this.storyVersionMajor = aStory.getVersion().major;
-		this.storyVersionMinor = aStory.getVersion().minor;
-		this.storyVersionRevision = aStory.getVersion().revision;
+		this.storyVersionMajor = aStory.version().major;
+		this.storyVersionMinor = aStory.version().minor;
+		this.storyVersionRevision = aStory.version().revision;
 
 		this.rsvd = 0;
 		this.lang = '';
-		this.title = aStory.getTitle();
-		this.subtitle = aStory.getSubtitle();
-		this.author = aStory.getAuthor();
-		this.credits = aStory.getCredits();
-		this.contact = aStory.getContact();
+		this.title = aStory.title();
+		this.subtitle = aStory.subtitle();
+		this.author = aStory.author();
+		this.credits = aStory.credits();
+		this.contact = aStory.contact();
 
-		aStory.setPublishedOn(new Date());
-		this.published = aStory.publishedOn().getTime() / 1000;
+		aStory.published(new Date());
+		this.published = aStory.published().getTime() / 1000;
 	};
 
 
@@ -233,10 +233,10 @@ function(Random, ArrayBufferFactory) {
 
 
 	ChoosatronStoryChoice.prototype.populate = function(aChoice, aKeys) {
-		this.body = aChoice.getContent();
-		if (aChoice.getDestination()) {
+		this.body = aChoice.content();
+		if (aChoice.destination()) {
 			for (var i = 0; i < aKeys.length; i++) {
-				if (aKeys[i] == aChoice.getDestination()) {
+				if (aKeys[i] == aChoice.destination()) {
 					this.passageIndex = i;
 					break;
 				}
@@ -315,9 +315,9 @@ function(Random, ArrayBufferFactory) {
 			choice.populate(aPassage.getChoiceAtIndex(0), aKeys);
 			this.choices.push(choice);
 		} else if (aPassage.hasEnding()) {
-			this.endingValue = CDAM.Config.kEndingTags.values[aPassage.getEndingIndex()] || 3;
+			this.endingValue = CDAM.Config.kEndingTags.values[aPassage.endingIndex()] || 3;
 		} else if (aPassage.hasChoices()) {
-			for (var i = 0; i < aPassage.getChoices().length; i++) {
+			for (var i = 0; i < aPassage.choices().length; i++) {
 				choice = new ChoosatronStoryChoice();
 				choice.populate(aPassage.getChoiceAtIndex(i), aKeys);
 				this.choices.push(choice);
@@ -378,7 +378,7 @@ function(Random, ArrayBufferFactory) {
 	}
 
 	ChoosatronStoryBody.prototype.populate = function(aStory) {
-		var keys = Object.keys(aStory.getPassages());
+		var keys = Object.keys(aStory.passages());
 		for (var i = 0; i < keys.length; i++) {
 			var passage = new ChoosatronStoryPassage();
 			passage.populate(aStory.getPassage(keys[i]), keys);

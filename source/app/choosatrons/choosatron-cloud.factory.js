@@ -70,7 +70,7 @@ angular.module('storyApp')
 
 	ChoosatronCloud.prototype.find = function(aId) {
 		for (var i = 0; i < this.choosatrons.length; i++) {
-			if (this.choosatrons[i].getDeviceId() === aId) {
+			if (this.choosatrons[i].deviceId() === aId) {
 				return this.choosatrons[i];
 			}
 		}

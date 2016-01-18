@@ -133,9 +133,9 @@ function ($q, Serial, Ymodem, Choosatrons) {
 				if (match) {
 					console.log(match);
 					var choosatron = new Choosatron();
-					choosatron.setSerialPath(path);
-					choosatron.setProductId(match[1]);
-					choosatron.setDeviceId(match[2]);
+					choosatron.serialPath(path);
+					choosatron.productId(match[1]);
+					choosatron.deviceId(match[2]);
 					choosatron.setVersion(match[3], match[4], match[5]);
 
 					/*var device = {};
@@ -192,13 +192,6 @@ function ($q, Serial, Ymodem, Choosatrons) {
 		return deferred.promise;
 	};
 
-
-	// Clear WiFi credentials
-	ChoosatronSerial.prototype.clearWifi = function() {
-
-	};
-
-
 	ChoosatronSerial.prototype.command = function(aCommand) {
 		var deferred = $q.defer();
 		var self = this;
@@ -222,6 +215,22 @@ function ($q, Serial, Ymodem, Choosatrons) {
 		}
 
 		this.command(CMD_ADD_STORY)
+			.then(ready)
+			.catch(deferred.reject);
+
+		return deferred.promise;
+	};
+
+	// Clear WiFi credentials
+	ChoosatronSerial.prototype.clearWifi = function() {
+		var deferred = $q.defer();
+		var self = this;
+
+		function ready() {
+			self.modem.send(aFilename, aBuffer);
+		}
+
+		this.command(CMD_CLEAR_WIFI)
 			.then(ready)
 			.catch(deferred.reject);
 

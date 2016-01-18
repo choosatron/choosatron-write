@@ -74,7 +74,7 @@
 					return $location.path('/profiles');
 				}
 
-				var entries = profile.getEntries();
+				var entries = profile.entries();
 				if (!entries || entries.length === 0) {
 					console.error("Profile has no entries. Redirecting to ./stories");
 					return $location.path('/stories');
@@ -111,13 +111,13 @@
 					vm.story = new Story(result.story);
 					vm.story.setOpenedNow();
 
-					vm.storyTitle = vm.story.getTitle();
-					vm.storyAuthor = vm.story.getAuthor();
-					vm.storyGenre = vm.story.getGenre();
-					vm.storyDescription = vm.story.getDescription();
+					vm.storyTitle = vm.story.title();
+					vm.storyAuthor = vm.story.author();
+					vm.storyGenre = vm.story.genre();
+					vm.storyDescription = vm.story.description();
 
 					vm.setPassage(vm.story.getStartPsg(), true);
-					vm.showStoryDetails = vm.story.getPassages().length < 2;
+					vm.showStoryDetails = vm.story.passages().length < 2;
 					loadVariables();
 
 					// Update the entry record
@@ -135,20 +135,20 @@
 			var cmds = vm.story.collectCommands();
 			var vars = [];
 			cmds.forEach(function(cmd) {
-				vars.push(cmd.getVariable());
+				vars.push(cmd.variable());
 			});
 			vm.variables = angular.toJson(vars);
 		}
 
 		function autosave(aResult) {
-			var saver = vm.saver = new FileEntryAutoSave(aResult.story.getId(), aResult.entry, $scope);
+			var saver = vm.saver = new FileEntryAutoSave(aResult.story.id(), aResult.entry, $scope);
 
 			var handleStoryChange = function(nv, ov, scope) {
-				if (Profiles.current.getAutosave() && angular.isDefined(nv)) {
+				if (Profiles.current.autosave() && angular.isDefined(nv)) {
 					console.log("handleStoryChange");
 					console.log(nv);
 					console.log(nv.object());
-					saver.save(aResult.story.getId(), nv.object());
+					saver.save(aResult.story.id(), nv.object());
 				}
 				else {
 					vm.saveState = 'floppy-save';
@@ -207,8 +207,8 @@
 			var passage = new Passage();
 			vm.story.addPassage(passage);
 			if (aEntranceChoice) {
-				aEntranceChoice.setDestination(passage.getId());
-				passage.addEntrance(vm.passage.getId(), aEntranceChoice.getId());
+				aEntranceChoice.destination(passage.id());
+				passage.addEntrance(vm.passage.id(), aEntranceChoice.id());
 			}
 			// Set our current passage to the new one.
 			vm.passage = passage;
@@ -235,11 +235,11 @@
 				// If there is a link from this choice, remove it.
 				if (vm.picking.hasDestination()) {
 					console.log("Changing old destination to new.");
-					vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.getDestination()), vm.picking);
+					vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.destination()), vm.picking);
 				}
 
-				vm.picking.setDestination(aId);
-				vm.story.getPassage(aId).addEntrance(vm.passage.getId(), vm.picking.getId());
+				vm.picking.destination(aId);
+				vm.story.getPassage(aId).addEntrance(vm.passage.id(), vm.picking.id());
 				vm.picking = false;
 			} else {
 				vm.editPassage(aId);
@@ -256,11 +256,11 @@
 			$('.scrollPassages').scrollTop(0);
 
 			if (vm.passage) {
-				var index = vm.navHistory.indexOf(vm.passage.getId());
+				var index = vm.navHistory.indexOf(vm.passage.id());
 				if (index > -1) {
 					vm.navHistory.splice(index, 1);
 				}
-				vm.navHistory.push(vm.passage.getId());
+				vm.navHistory.push(vm.passage.id());
 			}
 
 			if (aPassage !== false) {
@@ -283,9 +283,9 @@
 			console.info("deleting", aPassage);
 			vm.deleted = {
 				type: "passage",
-				title: aPassage.getContent(),
+				title: aPassage.content(),
 				undo: function() {
-					aPassage.setTrashed(false);
+					aPassage.trashed(false);
 					vm.story.addPassage(aPassage);
 					vm.story.linkEntrances(aPassage);
 					vm.story.linkChoices(aPassage);
@@ -299,12 +299,12 @@
 
 			// EDIT:
 
-			vm.story.deletePassage(aPassage.getId());
-			var index = vm.navHistory.indexOf(aPassage.getId());
+			vm.story.deletePassage(aPassage.id());
+			var index = vm.navHistory.indexOf(aPassage.id());
 			if (index > -1) {
 				vm.navHistory.splice(index, 1);
 			}
-			var previous = vm.story.getPassages()[vm.navHistory[-1]] || vm.story.getStartPsg();
+			var previous = vm.story.passages()[vm.navHistory[-1]] || vm.story.getStartPsg();
 			vm.setPassage(previous, false);
 		}
 
@@ -312,16 +312,16 @@
 			var data = {};
 			var onConfirm;
 
-			if (aPassage.getExitType() == aExitType) {
+			if (aPassage.exitType() == aExitType) {
 				return;
 			}
 
 			if (aPassage.exitIsEmpty()) {
-				aPassage.setExitType(aExitType);
+				aPassage.exitType(aExitType);
 				return;
 			}
 
-			switch (aPassage.getExitType()) {
+			switch (aPassage.exitType()) {
 				case CDAM.Strings.kExitTypeEnding:
 					data.willDelete = 'ending value';
 					break;
@@ -346,7 +346,7 @@
 			}
 
 			onConfirm = function (okay) {
-				aPassage.setExitType(aExitType);
+				aPassage.exitType(aExitType);
 			};
 
 			ngDialog.openConfirm({
@@ -369,7 +369,7 @@
 		function deleteChoice(aPassage, aChoice) {
 			vm.deleted  =  {
 				type: "choice",
-				title: aChoice.getContent(),
+				title: aChoice.content(),
 				undo: function() {
 					vm.passage.addChoice(aChoice);
 					vm.story.linkChoice(aPassage, aChoice);
@@ -382,7 +382,7 @@
 
 		function deleteChoiceCondition(aChoice) {
 			aChoice.condition = new Command();
-			aChoice.setShowCondition(false);
+			aChoice.showCondition(false);
 		}
 
 		function addChoiceUpdate(aChoice) {
@@ -391,7 +391,7 @@
 
 		function deleteChoiceUpdate(aChoice, aUpdate) {
 			aChoice.removeUpdate(aUpdate);
-			/*aChoice.updates = aChoice.getUpdates().filter(function(u) {
+			/*aChoice.updates = aChoice.updates().filter(function(u) {
 				return (u.raw != aUpdate.raw);
 			});*/
 		}
