@@ -102,7 +102,7 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 		var self     = this;
 
 		if (Choosatrons.getSerialDevice(aId)) {
-			self.serial.connect(Choosatrons.getSerialDevice(aId).getPath()).then(deferred.resolve).catch(function() {
+			self.serial.connect(Choosatrons.getSerialDevice(aId).serialPath()).then(deferred.resolve).catch(function() {
 				console.log("Failed to connect to: %s", aId);
 				Choosatrons.removeSerialDevice(aId);
 				return deferred.reject;
@@ -136,7 +136,10 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 					choosatron.serialPath(path);
 					choosatron.productId(match[1]);
 					choosatron.deviceId(match[2]);
-					choosatron.setVersion(match[3], match[4], match[5]);
+					choosatron.setVersion(Number(match[3]), Number(match[4]), Number(match[5]));
+					choosatron.isWired(true);
+					choosatron.lastWired(new Date());
+					console.log(choosatron);
 
 					/*var device = {};
 					device.path = path;

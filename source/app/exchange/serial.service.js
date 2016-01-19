@@ -339,6 +339,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		var input = {};
 
 		var sent = function(aInfo) {
+			console.log(aInfo);
 			if (aInfo.error) {
 				console.error('Send failed', aInfo);
 			}
@@ -359,6 +360,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		};
 
 		var received = function(aInfo) {
+			console.log(aInfo);
 			var path = connections[aInfo.connectionId];
 			if (!input[path]) {
 				input[path] = aInfo.text;
@@ -368,6 +370,10 @@ function($q, $timeout, ArrayBufferFactory) {
 			}
 		};
 
+		var flushed = function(aResult) {
+			console.info('Connection flushed', aResult);
+		};
+
 		var disconnected = function(aResult) {
 			console.info('Broadcast disconnected', aResult);
 		};
@@ -375,6 +381,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		var done = function() {
 			self.mute();
 			for (var id in connections) {
+				self.api.flush(parseInt(id), flushed);
 				self.api.disconnect(parseInt(id), disconnected);
 			}
 			if (self.debug) {

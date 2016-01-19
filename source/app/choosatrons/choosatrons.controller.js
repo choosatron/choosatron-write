@@ -53,9 +53,6 @@
 		function activate() {
 			Profiles.load().then(function() {
 				vm.profile = Profiles.current;
-				console.log(vm.profile.choosatrons());
-				console.log(vm.profile.auth());
-				console.log(vm.profile);
 				vm.serial = new ChoosatronSerial();
 				vm.cloud = new ChoosatronCloud(vm.profile.auth().token());
 				loadChoosatrons();
@@ -115,8 +112,11 @@
 			var force = true;
 			vm.cloud.load(force).then(function() {
 				for (var i = 0; i < vm.cloud.choosatrons.length; i++) {
+					console.log(vm.cloud.choosatrons[i]);
 					var choosatron = new Choosatron(vm.cloud.choosatrons[i]);
+					console.log(choosatron);
 					vm.profile.saveChoosatron(choosatron);
+					console.log(vm.profile.choosatrons());
 				}
 				vm.profiles.save();
 			});

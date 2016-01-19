@@ -3,17 +3,20 @@ angular.module('storyApp.models')
 function(BaseModel) {
 
 	function Choosatron(aData) {
+		this.internal = {};
 		this.data = {};
 
 		/* Non Serialized */
 		// Is currently reachable from the Particle Cloud
-		this.lastOnline = null; // Need this? or use lastHeard?
+		this.internal.lastOnline = null; // Need this? or use lastHeard?
 		// Is currently connected via USB
-		this.isWired = false;
-		this.lastWired = null;
+		this.internal.isWired = false;
+		this.internal.lastWired = null;
+		/* These are values received from the cloud. */
+		this.internal.isOnline = false;
 
 		// Serial Path
-		this.serialPath = '';
+		this.internal.serialPath = '';
 
 		// Communicated with the device at least once, verify it exists
 		//this.data.verified = false;
@@ -36,8 +39,7 @@ function(BaseModel) {
 		this.data.sharedLocally = false;
 		this.data.localAccessToken = '';
 
-		/* These are values received from the cloud. */
-		this.isOnline = false;
+
 		// Unique ID of the microcontroller in the Choosatron
 		this.data.deviceId = '';
 		this.data.lastApp = null;
@@ -75,12 +77,18 @@ function(BaseModel) {
 			}
 		},
 
+		loadId: function(aData) {
+			if (aData) {
+				this.data.deviceId = aData;
+			}
+		},
+
 		updateCloudValues: function(aData) {
 			if (aData.id) {
 				this.data.deviceId = aData.id;
 			}
 			if (aData.connected) {
-				this.data.isOnline = aData.connected;
+				this.internal.isOnline = aData.connected;
 			}
 			if (aData.last_heard) {
 				this.data.lastHeard = aData.last_heard;
@@ -119,11 +127,11 @@ function(BaseModel) {
 
 		isWired: function(aValue) {
 			if (angular.isDefined(aValue)) {
-				this.data.isWired = aValue;
+				this.internal.isWired = aValue;
 				this.wasModified();
 				return;
 			}
-			return this.data.isWired;
+			return this.internal.isWired;
 		},
 
 		/*isWired: function() {
@@ -134,13 +142,20 @@ function(BaseModel) {
 			this.isWired = aValue;
 		},*/
 
-		serialPath: function(aValue) {
-			if (angular.isDefined(aValue)) {
-				this.data.serialPath = aValue;
-				this.wasModified();
+		lastWired: function(aValue) {
+			if (angular.isDefine(aValue)) {
+				this.internal.lastWired = aValue;
 				return;
 			}
-			return this.data.serialPath;
+			return this.internal.lastWired;
+		},
+
+		serialPath: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.internal.serialPath = aValue;
+				return;
+			}
+			return this.internal.serialPath;
 		},
 
 		/*getSerialPath: function() {
@@ -280,11 +295,11 @@ function(BaseModel) {
 
 		isOnline: function(aValue) {
 			if (angular.isDefined(aValue)) {
-				this.data.isOnline = aValue;
+				this.internal.isOnline = aValue;
 				this.wasModified();
 				return;
 			}
-			return this.data.isOnline;
+			return this.internal.isOnline;
 		},
 
 		/*isOnline: function() {
