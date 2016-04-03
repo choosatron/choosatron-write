@@ -144,17 +144,12 @@
 					var cObj = vm.cloud.choosatrons[i].attributes;
 					var choosatron = vm.profile.getChoosatron(cObj.id);
 					if (choosatron === null) {
-						console.log("New Choosatron: " + cObj.id);
 						choosatron = new Choosatron(cObj);
 						vm.profile.saveChoosatron(choosatron);
 					} else {
-						// TODO: Test and make sure this updated the original.
-						console.log("Update Choosatron: " + cObj.id);
 						choosatron.updateCloudValues(cObj);
-						choosatron.friendlyName("PICKLES");
 					}
 				}
-				//console.log(vm.profile.choosatrons());
 				vm.profiles.save();
 			});
 		}

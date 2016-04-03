@@ -64,7 +64,7 @@ function(BaseModel) {
 
 		loadConnected: function(aData) {
 			if (aData) {
-				this.data.isOnline = aData;
+				this.internal.isOnline = aData;
 			}
 		},
 
@@ -183,10 +183,8 @@ function(BaseModel) {
 		isOnline: function(aValue) {
 			if (angular.isDefined(aValue)) {
 				this.internal.isOnline = aValue;
-				this.wasModified();
 				return;
 			}
-			console.log("IsOnline: " + this.internal.isOnline);
 			return this.internal.isOnline;
 		},
 
