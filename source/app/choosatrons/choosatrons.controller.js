@@ -21,12 +21,17 @@
 		vm.productId    =  PRODUCT_IDS.choosatron;
 		// The core ID of the choosatron connected over serial.
 		vm.currentId    = null;
+		vm.choosatronSort        = 'name';
+		vm.choosatronSortDesc    = true;
 
 		// Functions
+		vm.activate         =  activate;
 		vm.command          =  command;
 		vm.request          =  request;
 		vm.inform           =  inform;
 		vm.warn             =  warn;
+		vm.newChoosatron    =  newChoosatron;
+		vm.loadChoosatrons  =  loadChoosatrons;
 		vm.loadStories      =  loadStories;
 		vm.unclaim          =  unclaim;
 		vm.rename           =  rename;
@@ -34,7 +39,6 @@
 		vm.flash            =  flash;
 		vm.findOverUsb      =  findOverUsb;
 		vm.selectChoosatron =  selectChoosatron;
-		vm.newChoosatron    =  newChoosatron;
 
 		// Commands that return a value
 		vm.commands  =  {
@@ -55,8 +59,18 @@
 				vm.profile = Profiles.current;
 				vm.serial = new ChoosatronSerial();
 				vm.cloud = new ChoosatronCloud(vm.profile.auth().token());
-				loadChoosatrons();
+				//loadChoosatrons();
 			});
+		}
+
+		function choosatronStories(aSort) {
+			if (vm.choosatronSort == aSort) {
+				vm.choosatronSortDesc = !vm.choosatronSortDesc;
+
+			} else {
+				vm.choosatronSort = aSort;
+				vm.choosatronSortDesc = false;
+			}
 		}
 
 		// Creates a command function for a choosatron
@@ -108,16 +122,39 @@
 			};
 		}
 
+		function newChoosatron() {
+			console.log("newChoosatron");
+			ngDialog.openConfirm({
+				template: 'templates/choosatron-add-modal.view.html',
+				controller: 'ChoosatronAddModalCtrl',
+				data: vm.profile
+			}).then(function (device) {
+				console.log('Modal promise resolved. Value: ', device);
+			}, function (reason) {
+				console.log('Modal promise rejected. Reason: ', reason);
+			});
+		}
+
 		function loadChoosatrons() {
+			console.log("loadChoosatrons");
 			var force = true;
 			vm.cloud.load(force).then(function() {
 				for (var i = 0; i < vm.cloud.choosatrons.length; i++) {
 					console.log(vm.cloud.choosatrons[i]);
-					var choosatron = new Choosatron(vm.cloud.choosatrons[i]);
-					console.log(choosatron);
-					vm.profile.saveChoosatron(choosatron);
-					console.log(vm.profile.choosatrons());
+					var cObj = vm.cloud.choosatrons[i].attributes;
+					var choosatron = vm.profile.getChoosatron(cObj.id);
+					if (choosatron === null) {
+						console.log("New Choosatron: " + cObj.id);
+						choosatron = new Choosatron(cObj);
+						vm.profile.saveChoosatron(choosatron);
+					} else {
+						// TODO: Test and make sure this updated the original.
+						console.log("Update Choosatron: " + cObj.id);
+						choosatron.updateCloudValues(cObj);
+						choosatron.friendlyName("PICKLES");
+					}
 				}
+				//console.log(vm.profile.choosatrons());
 				vm.profiles.save();
 			});
 		}
@@ -190,17 +227,6 @@
 			});
 		}
 
-		function newChoosatron() {
-			ngDialog.openConfirm({
-				template: 'templates/choosatron-add-modal.view.html',
-				controller: 'ChoosatronAddModalCtrl',
-				data: vm.profile
-			}).then(function (device) {
-				console.log('Modal promise resolved. Value: ', device);
-			}, function (reason) {
-				console.log('Modal promise rejected. Reason: ', reason);
-			});
-		}
 	}
 
 })();

@@ -11,67 +11,68 @@
 
 <div class="theme-alt wrap">
 	<div class="scrollable">
-		<div class="container choosatronList">
-
-			<div ng-show="vm.message.content" class="alert alert-{{ vm.message.type }}">
-				<button class="close" data-dismiss="alert"><span>&times;</span></button>
-				{{ vm.message.content }}
-			</div>
-
-			<ul class="list-unstyled list-choosatrons">
-				<li ng-repeat="choosatron in vm.profile.choosatrons() | orderObjectBy:'data.name':false" class="choosatronItem" ng-class="{connected: choosatron.isOnline}">
-					<div class="header">
-						<h2>{{choosatron.name() || choosatron.deviceId()}}</h2>
-
-						<div ng-show="choosatron.mode === 'rename'" class="form">
-							<div class="input-group">
-								<input class="form-control" ng-model="choosatron.newName" placeholder="Enter a new name" />
-								<div class="input-group-btn">
-									<a class="btn btn-primary" ng-click="vm.rename(choosatron)">Rename</a>
-									<a class="btn btn-default" ng-click="choosatron.mode = ''">Cancel</a>
-								</div> <!--/.btn-group-->
-							</div> <!--/.input-group-->
-						</div><!--/.form-->
-
-						<div ng-show="choosatron.isOnline && !choosatron.mode" class="btn-group">
-							<a ng-click="choosatron.mode = 'rename'" class="btn btn-default"><span class="fa fa-pencil"></span> Rename</a>
-							<a ng-click="vm.loadStories(choosatron)" class="btn btn-default"><span class="fa fa-book"></i> Stories</a>
-							<a ng-click="choosatron.mode = 'advanced'" class="btn btn-default"><span class="fa fa-cog"></i> Advanced</a>
-						</div>
-
-						<div ng-show="choosatron.mode === 'advanced'" class="btn-group">
-							<a class="btn btn-default" ng-show="choosatron.isOnline" ng-click="vm.flash(choosatron)"><span class="fa fa-refresh"></span> Update Firmware</a>
-							<a class="btn btn-default" ng-show="choosatron.isOnline && choosatron.productId !== vm.productId" ng-click="vm.change(choosatron)"><span class="fa fa-bolt"></span> Convert to Choosatron</a>
-							<a class="btn btn-danger" confirm-click="vm.unclaim(choosatron)" confirm-title="Remove Choosatron?" confirm-message="This will release your claim on the Choosatron. Are you sure?"><span class="fa fa-eraser"></span> Unclaim</a>
-							<a class="btn btn-default" ng-click="choosatron.mode = ''">Cancel</a>
-						</div> <!--/.list-icon-menu-->
-
-						<div ng-show="!choosatron.isOnline">
-							<em>Offline</em>
-							</br>
-							<a class="btn btn-default" ng-click="vm.findOverUsb(choosatron)"><span class="fa fa-plug"></span> Find Over USB</a>
-						</div>
-					</div>
-
-					<div ng-show="choosatron.mode === 'stories'" class="body">
-						<ul ng-show="choosatron.stories">
-							<li ng-repeat="story in choosatron.stories">{{story}}</li>
-						</ul>
-					</div>
-					<div>
-						<a class="btn btn-default" ng-click="vm.selectChoosatron(choosatron); vm.location.path('choosatron')"> Manage Choosatron</a>
-					</div>
-				</li>
-			</ul>
-			<div class="well welcome" ng-if="Object.keys(vm.profile.choosatrons()).length === 0">
-				<h2>Are you ready to choose your own adventure?</h2>
-				<p>This is the screen where you connect and manage your Choosatron.</p>
-			</div>
-			<div class="well newItem" ng-click="vm.newChoosatron()">
-				<div class="newItemCallout">
-					<h1><span class="glyphicon glyphicon-plus"></span> Add Choosatron</h1>
+		<div class="container">
+			<div class="choosatronList">
+				<div ng-show="vm.message.content" class="alert alert-{{ vm.message.type }}">
+					<button class="close" data-dismiss="alert"><span>&times;</span></button>
+					{{ vm.message.content }}
 				</div>
-			</div>
+
+				<ul class="list-unstyled list-choosatrons">
+					<li ng-repeat="choosatron in vm.profile.choosatrons() | orderObjectBy:'data.name':false" class="choosatronItem" ng-class="{connected: choosatron.isOnline}">
+						<div class="header">
+							<h2>{{choosatron.name || choosatron.deviceId}}</h2>
+
+							<div ng-show="choosatron.mode === 'rename'" class="form">
+								<div class="input-group">
+									<input class="form-control" ng-model="choosatron.newName" placeholder="Enter a new name" />
+									<div class="input-group-btn">
+										<a class="btn btn-primary" ng-click="vm.rename(choosatron)">Rename</a>
+										<a class="btn btn-default" ng-click="choosatron.mode = ''">Cancel</a>
+									</div> <!--/.btn-group-->
+								</div> <!--/.input-group-->
+							</div><!--/.form-->
+
+							<div ng-show="choosatron.isOnline && !choosatron.mode" class="btn-group">
+								<a ng-click="choosatron.mode = 'rename'" class="btn btn-default"><span class="fa fa-pencil"></span> Rename</a>
+								<a ng-click="vm.loadStories(choosatron)" class="btn btn-default"><span class="fa fa-book"></i> Stories</a>
+								<a ng-click="choosatron.mode = 'advanced'" class="btn btn-default"><span class="fa fa-cog"></i> Advanced</a>
+							</div>
+
+							<div ng-show="choosatron.mode === 'advanced'" class="btn-group">
+								<a class="btn btn-default" ng-show="choosatron.isOnline" ng-click="vm.flash(choosatron)"><span class="fa fa-refresh"></span> Update Firmware</a>
+								<a class="btn btn-default" ng-show="choosatron.isOnline && choosatron.productId() !== vm.productId" ng-click="vm.change(choosatron)"><span class="fa fa-bolt"></span> Convert to Choosatron</a>
+								<a class="btn btn-danger" confirm-click="vm.unclaim(choosatron)" confirm-title="Remove Choosatron?" confirm-message="This will release your claim on the Choosatron. Are you sure?"><span class="fa fa-eraser"></span> Unclaim</a>
+								<a class="btn btn-default" ng-click="choosatron.mode = ''">Cancel</a>
+							</div> <!--/.list-icon-menu-->
+
+							<div ng-show="!choosatron.isOnline">
+								<em>Offline</em>
+								</br>
+								<a class="btn btn-default" ng-click="vm.findOverUsb(choosatron)"><span class="fa fa-plug"></span> Find Over USB</a>
+							</div>
+						</div>
+
+						<div ng-show="choosatron.mode === 'stories'" class="body">
+							<ul ng-show="choosatron.stories">
+								<li ng-repeat="story in choosatron.stories">{{story}}</li>
+							</ul>
+						</div>
+						<div>
+							<a class="btn btn-default" ng-click="vm.selectChoosatron(choosatron); vm.location.path('choosatron')"> Manage Choosatron</a>
+						</div>
+					</li>
+				</ul>
+				<div class="well welcome" ng-if="vm.profile.choosatrons().length === 0">
+					<h2>Are you ready to choose your own adventure?</h2>
+					<p>This is the screen where you connect and manage your Choosatron.</p>
+				</div>
+				<div class="well newItem" ng-click="vm.newChoosatron()">
+					<div class="newItemCallout">
+						<h1><span class="glyphicon glyphicon-plus"></span> Add Choosatron</h1>
+					</div>
+				</div>
+			</div><!-- .choosatronList -->
 		</div><!-- .container -->
 	</div><!-- .scrollable -->
 </div><!-- .wrap -->

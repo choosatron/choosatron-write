@@ -12,10 +12,10 @@
   "homepage": "choosatron.com",
   "dependencies": {
     "jquery": "2.2.0",
-    "angular": "1.5.0-rc.0",
-    "angular-mocks": "1.5.0-rc.0",
-    "angular-animate": "1.5.0-rc.0",
-    "angular-route": "1.5.0-rc.0",
+    "angular": "~1.5.x",
+    "angular-mocks": "~1.5.x",
+    "angular-animate": "~1.5.x",
+    "angular-route": "~1.5.x",
     "bootstrap": "~3.3.6",
     "angular-bootstrap": "~1.0.3",
     "angular-ui-utils": "~3.0.0",
@@ -30,5 +30,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "resolutions": {
+    "angular": "~1.5.x"
+  }
 }

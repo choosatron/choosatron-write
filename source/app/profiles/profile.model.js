@@ -1,6 +1,6 @@
 angular.module('storyApp.models')
-.factory('Profile', ['BaseModel', 'Auth',
-function(BaseModel, Auth) {
+.factory('Profile', ['BaseModel', 'Auth', 'Choosatron',
+function(BaseModel, Auth, Choosatron) {
 	function Profile(aData) {
 		this.data = {};
 
@@ -18,7 +18,7 @@ function(BaseModel, Auth) {
 		this.data.guestAuth = {};
 
 		// Saves data to associate with Choosatrons
-		this.data.choosatrons = {};
+		this.data.choosatrons = [];
 
 		// Saves file entry references to a profiles stories
 		this.data.entries = [];
@@ -27,10 +27,19 @@ function(BaseModel, Auth) {
 	}
 
 	Profile.methods = {
-		
+
 		loadAuth: function(aData) {
 			if (aData) {
 				this.data.auth = new Auth(aData);
+			}
+		},
+
+		loadChoosatrons: function(aData) {
+			if (aData) {
+				var length = aData.length;
+				for (var i = 0; i < length; i++) {
+					this.data.choosatrons.push(new Choosatron(aData[i]));
+				}
 			}
 		},
 
@@ -124,14 +133,6 @@ function(BaseModel, Auth) {
 			return this.data.auth;
 		},
 
-		/*getCloudAuth: function() {
-			return this.data.auth;
-		},
-
-		setCloudAuth: function(aValue) {
-			this.data.auth = aValue;
-		},*/
-
 		// Serialized //
 
 		name: function(aValue) {
@@ -143,15 +144,6 @@ function(BaseModel, Auth) {
 			return this.data.name;
 		},
 
-		/*getName: function() {
-			return this.data.name;
-		},
-
-		setName: function(aValue) {
-			this.data.name = aValue;
-			this.wasModified();
-		},*/
-
 		autosave: function(aValue) {
 			if (angular.isDefined(aValue)) {
 				this.data.autosave = aValue;
@@ -160,15 +152,6 @@ function(BaseModel, Auth) {
 			}
 			return this.data.autosave;
 		},
-
-		/*getAutosave: function() {
-			return this.data.autosave;
-		},
-
-		setAutosave: function(aValue) {
-			this.data.autosave = aValue;
-			this.wasModified();
-		},*/
 
 		guestAuth: function(aValue) {
 			if (angular.isDefined(aValue)) {
@@ -179,10 +162,6 @@ function(BaseModel, Auth) {
 			return this.data.guestAuth;
 		},
 
-		/*getGuestAuth: function() {
-			return this.data.guestAuth;
-		},*/
-
 		choosatrons: function(aValue) {
 			if (angular.isDefined(aValue)) {
 				this.data.choosatrons = aValue;
@@ -192,21 +171,36 @@ function(BaseModel, Auth) {
 			return this.data.choosatrons;
 		},
 
-		/*getChoosatrons: function() {
-			return this.data.choosatrons;
-		},*/
-
-		getChoosatron: function(aId) {
-			if (this.data.choosatrons[aId]) {
-				return this.data.choosatrons[aId];
+		getChoosatron: function(aDeviceId) {
+			var length = this.data.choosatrons.length;
+			for (var i = 0; i < length; i++) {
+				if (this.data.choosatrons[i].deviceId() == aDeviceId) {
+					return this.data.choosatrons[i];
+				}
 			}
+			return null;
 		},
 
 		saveChoosatron: function(aChoosatron) {
-			console.log("saveChoosatron");
-			console.log(aChoosatron);
-			this.data.choosatrons[aChoosatron.deviceId()] = aChoosatron;
+			var length = this.data.choosatrons.length;
+			for (var i = 0; i < length; i++) {
+				if (this.data.choosatrons[i].deviceId() == aChoosatron.deviceId) {
+					return false;
+				}
+			}
+			this.data.choosatrons.push(aChoosatron);
 			this.wasModified();
+		},
+
+		removeChoosatron: function(aDeviceId) {
+			var length = this.data.choosatrons.length;
+			for (var i = 0; i < length; i++) {
+				if (this.data.choosatrons[i].deviceId() == aDeviceId) {
+					this.data.choosatrons.splice(i, 1);
+					return true;
+				}
+			}
+			return false;
 		},
 
 		entries: function(aValue) {
@@ -216,15 +210,7 @@ function(BaseModel, Auth) {
 				return;
 			}
 			return this.data.entries;
-		}/*,
-
-		getEntries: function() {
-			return this.data.entries;
-		},
-
-		getEntryAtIndex: function(aIndex) {
-			return this.data.entries[aIndex];
-		}*/
+		}
 
 	};
 
