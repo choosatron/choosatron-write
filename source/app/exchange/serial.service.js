@@ -73,7 +73,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		stopBits   : 'one'
 	};
 
-	Serial.DefaultTimeout = 1000;
+	Serial.DefaultTimeout = 4000;
 
 	// Deconstructor. Must be called explicitly.
 	Serial.prototype.destroy = function() {
