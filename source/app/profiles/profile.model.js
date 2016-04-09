@@ -190,6 +190,7 @@ function(BaseModel, Auth, Choosatron) {
 			}
 			this.data.choosatrons.push(aChoosatron);
 			this.wasModified();
+			return true;
 		},
 
 		removeChoosatron: function(aDeviceId) {

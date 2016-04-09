@@ -10,9 +10,12 @@ function (Choosatron, $q) {
 
 	//this.loaded = false;
 	//this.all = {};
-	this.currentId = null;
+	this.internal = {};
+
+	this.internal.currentId = null;
+	this.internal.serialDevices = {};
 	this.editing = null;
-	this.serialDevices = {};
+
 
 	this.save = function() {
 
@@ -28,38 +31,41 @@ function (Choosatron, $q) {
 	};*/
 
 	this.addSerialDevice = function(aChoosatron) {
-		this.serialDevices[aChoosatron.deviceId()] = aChoosatron;
+		this.internal.serialDevices[aChoosatron.deviceId()] = aChoosatron;
 	};
 
 	this.removeSerialDevice = function(aChoosatron) {
-		delete this.serialDevices[aChoosatron.deviceId()];
+		delete this.internal.serialDevices[aChoosatron.deviceId()];
 	};
 
-	this.getSerialDevices = function() {
-		return this.serialDevices;
+	this.serialDevices = function() {
+		return this.internal.serialDevices;
 	};
 
 	this.getSerialDevice = function(aDeviceId) {
-		return this.serialDevices[aDeviceId];
+		return this.internal.serialDevices[aDeviceId];
 	};
 
 	this.getSerialKeys = function() {
-		return Object.keys(this.serialDevices);
+		return Object.keys(this.internal.serialDevices);
 	};
 
-	this.setCurrentId = function(aValue) {
-		this.currentId = aValue;
+	this.currentId = function(aValue) {
+		if (angular.isDefined(aValue)) {
+			this.internal.currentId = aValue;
+			return;
+		}
+		return this.internal.currentId;
 	};
 
-	this.getCurrentId = function() {
-		return this.currentId;
-	};
-
-	this.setCurrentDevice = function(aChoosatron) {
-		this.currentId = aChoosatron.deviceId();
-	};
-
-	this.getCurrentDevice = function() {
-		return this.serialDevices[this.currentId];
+	this.currentDevice = function(aChoosatron) {
+		if (angular.isDefined(aChoosatron)) {
+			if (!this.internal.serialDevices.hasOwnProperty(aChoosatron.deviceId())) {
+				this.addSerialDevice(aChoosatron);
+			}
+			this.internal.currentId = aChoosatron.deviceId();
+			return;
+		}
+		return this.serialDevices[this.currentId()];
 	};
 }]);

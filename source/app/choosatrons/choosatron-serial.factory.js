@@ -53,7 +53,21 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 
 	// Connect to an existing Choosatron and switch to listening mode
 	ChoosatronSerial.prototype.listen = function() {
-		return this.serial.broadcast(CMD_MODE);
+		return this.serial.broadcast(CMD_MODE + CMD_LISTENING_MODE);
+	};
+
+	ChoosatronSerial.prototype.connectToId = function(aDeviceId) {
+		var deferred = $q.defer();
+		var self     = this;
+
+		if (Choosatrons.getSerialDevice(aDeviceId)) {
+			self.serial.connect(Choosatrons.getSerialDevice(aDeviceId).serialPath()).then(deferred.resolve).catch(function() {
+				console.log("Failed to connect to: %s", aDeviceId);
+				Choosatrons.removeSerialDevice(aDeviceId);
+				return deferred.reject;
+			});
+		}
+		return deferred.promise;
 	};
 
 	// Connects to the first Choosatron device found,
@@ -64,7 +78,7 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 		var deferred = $q.defer();
 		var self     = this;
 
-		function loadPorts() {
+		/*function loadPorts() {
 			return self.serial.load('tty.usb');
 		}
 
@@ -93,25 +107,28 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 			}
 
 			deferred.reject();
-		}
+		}*/
 
-		loadPorts().then(getDeviceId);
+		this.scanForDevices().then(function(aDeviceList) {
+			console.log("ChoosatronSerial-connect: ", aDeviceList);
+			if (aDeviceList && aDeviceList.length > 0) {
+				var device = aDeviceList[0];
+
+				var saveDeviceId = function() {
+					Choosatrons.addSerialDevice(device);
+					deferred.resolve(device.deviceId());
+				};
+				self.serial.connect(device.serialPath()).then(saveDeviceId);
+			} else {
+				deferred.reject();
+			}
+		});
+
+
+		//loadPorts().then(getDeviceId);
 		return deferred.promise;
 	};
 
-	ChoosatronSerial.prototype.connectToId = function(aDeviceId) {
-		var deferred = $q.defer();
-		var self     = this;
-
-		if (Choosatrons.getSerialDevice(aDeviceId)) {
-			self.serial.connect(Choosatrons.getSerialDevice(aDeviceId).serialPath()).then(deferred.resolve).catch(function() {
-				console.log("Failed to connect to: %s", aDeviceId);
-				Choosatrons.removeSerialDevice(aDeviceId);
-				return deferred.reject;
-			});
-		}
-		return deferred.promise;
-	};
 
 	ChoosatronSerial.prototype.scanForDevices = function() {
 		console.log("ChoosatronSerial-scanForDevices");
@@ -129,35 +146,48 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 		}
 
 		function processDeviceIds(aResult) {
+			var deviceList = [];
 			for (var path in aResult) {
 				var msg = aResult[path];
-				var pattern = /\s*([0-9])\:([0-9a-f]{24})\:([0-9])([0-9])([0-9])\s*/;
-				var match = pattern.exec(msg);
-				if (match) {
-					console.log(match);
-					var choosatron = new Choosatron();
-					choosatron.serialPath(path);
-					choosatron.productId(match[1]);
-					choosatron.deviceId(match[2]);
-					choosatron.setVersion(Number(match[3]), Number(match[4]), Number(match[5]));
-					choosatron.isWired(true);
-					choosatron.lastWired(new Date());
-					console.log("New Choosatron: ", choosatron);
-
-					/*var device = {};
-					device.path = path;
-					device.productId = match[1];
-					device.deviceId  = match[2];
-					device.verMajor  = match[3];
-					device.verMinor  = match[4];
-					device.verRev    = match[5];*/
-
-					Choosatrons.addSerialDevice(choosatron);
+				var pattern = '';
+				var match = null;
+				var choosatron = new Choosatron();
+				if (msg.substring(0, 2) == "CM") {
+					pattern = /\s*([0-9])\:([0-9a-f]{24})\:([0-9])([0-9])([0-9])\s*/;
+					match = pattern.exec(msg);
+					if (match) {
+						console.log(match);
+						choosatron.serialPath(path);
+						choosatron.productId(match[1]);
+						choosatron.deviceId(match[2]);
+						choosatron.setVersion(Number(match[3]), Number(match[4]), Number(match[5]));
+						choosatron.isWired(true);
+						choosatron.lastWired(new Date());
+						console.log("New Choosatron: ", choosatron);
+						deviceList.push(choosatron);
+						//Choosatrons.addSerialDevice(choosatron);
+					} else {
+						console.warn("Unable to parse data received: " + msg);
+						deferred.reject();
+					}
 				} else {
-					console.warn("Unable to parse data received: " + msg);
+					pattern = /\s([0-9a-f]{24})\s/;
+					match = pattern.exec(msg);
+					if (match) {
+						console.info('Found a device', path, msg, match);
+						choosatron.serialPath(path);
+						choosatron.deviceId(match[1]);
+						deviceList.push(choosatron);
+						//Choosatrons.addSerialDevice(choosatron);
+						console.log("New Device: ", choosatron);
+					} else {
+						console.warn("Unable to parse data received: " + msg);
+						deferred.reject();
+					}
 				}
+
 			}
-			deferred.resolve();
+			deferred.resolve(deviceList);
 		}
 
 		loadPorts().then(getDeviceId);
@@ -193,7 +223,7 @@ function ($q, Serial, Ymodem, Choosatrons, Choosatron) {
 		}
 
 		this.serial.listen(queue);
-		this.serial.send(CMD_SET_WIFI);
+		this.serial.send(CMD_MODE + CMD_SET_WIFI);
 
 		return deferred.promise;
 	};

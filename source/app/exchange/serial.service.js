@@ -77,7 +77,7 @@ function($q, $timeout, ArrayBufferFactory) {
 		dataBits   : 'eight',
 		parityBit  : 'no',
 		stopBits   : 'one',
-		receiveTimout : 100
+		receiveTimeout : 1000
 	};
 
 	//Serial.DefaultTimeout = 4000;
@@ -140,7 +140,7 @@ function($q, $timeout, ArrayBufferFactory) {
 
 
 	Serial.prototype.onReceiveError = function(aErrorInfo) {
-		if (aErrorInfo.connectionId === this.connectionId) {
+		if (aErrorInfo.connectionId === this.connection.connectionId) {
 			this.onError.dispatch(aErrorInfo.error);
 		}
 	};
@@ -223,7 +223,6 @@ function($q, $timeout, ArrayBufferFactory) {
 	  * Connect to the specified path.
 	 **/
 	Serial.prototype.connect = function(aPath, aOptions) {
-		console.log("Connect");
 		var deferred = $q.defer();
 		if (this.connection) {
 			this.disconnect();
@@ -232,7 +231,6 @@ function($q, $timeout, ArrayBufferFactory) {
 		aOptions = aOptions || Serial.ConnectionOptions;
 
 		var connected = function(aInfo) {
-			console.log("connected");
 			// Check for failure, like trying to connect
 			// to a device no longer plugged in.
 			if (chrome.runtime.lastError || !aInfo) {
@@ -244,9 +242,13 @@ function($q, $timeout, ArrayBufferFactory) {
 				if (self.debug) {
 					console.info("Connected: ", aInfo);
 				}
-				chrome.serial.onReceive.addListener(this.boundOnReceive);
-				chrome.serial.onReceiveError.addListener(this.boundOnReceiveError);
-				this.onConnect.dispatch();
+				if (!self.api.onReceive.hasListeners()) {
+					self.api.onReceive.addListener(self.boundOnReceive);
+				}
+				if (!self.api.onReceiveError.hasListeners()) {
+					self.api.onReceiveError.addListener(self.boundOnReceiveError);
+				}
+				self.onConnect.dispatch();
 				deferred.resolve();
 			}
 		};
@@ -386,7 +388,6 @@ function($q, $timeout, ArrayBufferFactory) {
 		var input = {};
 
 		var sent = function(aInfo) {
-			console.log(aInfo);
 			if (aInfo.error) {
 				console.error('Send failed', aInfo);
 			}
@@ -417,16 +418,11 @@ function($q, $timeout, ArrayBufferFactory) {
 				input[path] += aInfo.text;
 			}
 
-			if (input[path].substring(0, 2) == "CM") {
-				if (input[path].length === 32) {
-					remaining--;
-				}
-			} else if (input[path].length === 41) {
+			if (input[path].substr(input[path].length - 1) == '\n') {
 				remaining--;
 			}
 			//console.log("Remaining: " + remaining);
 			if (remaining === 0) {
-				console.log("Complete!");
 				done();
 			}
 		};

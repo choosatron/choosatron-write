@@ -7,8 +7,8 @@ angular.module('storyApp')
 
 	function Particle(token) {
 		this.baseUrl      = 'https://api.particle.io';
-		this.clientId     = 'Particle';
-		this.clientSecret = 'Particle';
+		this.clientId     = 'Spark';
+		this.clientSecret = 'Spark';
 		this.accessToken  = token;
 		this.version      = 'v1';
 

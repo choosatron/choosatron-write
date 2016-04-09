@@ -59,11 +59,38 @@
 			vm.cSerial = new ChoosatronSerial();
 			vm.cloud  = new ChoosatronCloud(vm.profile.auth().token());
 
-			vm.cSerial.scanForDevices()
-			.then(function (aDeviceId) {
-				vm.choosatron = vm.profile.getChoosatron(aDeviceId);
-				changeState('connect');
-				console.log("scanForDevices: connect");
+			vm.cSerial.connect()
+			.then(function(aDeviceId) {
+				console.log("State change: " + aDeviceId);
+				// Potentially only exists as a serial device.
+				// Must determine if it even has Choosatron firmware, if not then set it up.
+				// Or if it IS a Choosatron, do we already have it in our list?
+				// If not, then add a new Choosatron.
+				var newDevice = vm.choosatrons.getSerialDevice(aDeviceId);
+				var choosatron = vm.profile.getChoosatron(aDeviceId);
+				if (newDevice.productId() === null) {
+					if (choosatron !== null) {
+						console.log("Already have Choosatron, but for some reason it is in listening mode.");
+						vm.cancel();
+						return;
+					}
+					console.log("New device!");
+					vm.claim();
+				} else if (choosatron === null) {
+					console.log("New Choosatron!");
+					vm.choosatrons.currentDevice(newDevice);
+					vm.profile.saveChoosatron(newDevice);
+					vm.choosatron = newDevice;
+					vm.state = 'connect';
+					console.log(vm.profile.choosatrons());
+				} else {
+					// We already have this Choosatron.
+					choosatron.isWired(true);
+					choosatron.lastWired(newDevice.lastWired());
+					choosatron.serialPath(newDevice.serialPath());
+					console.log("Already have device: " + newDevice);
+					vm.cancel();
+				}
 			})
 			.catch(changeState('plugin'));
 		}
@@ -79,7 +106,7 @@
 				$timeout(changeState('connected'), 10000);
 			}
 
-			vm.serial.wifi(vm.creds.ssid, vm.creds.security, vm.creds.password)
+			vm.cSerial.wifi(vm.creds.ssid, vm.creds.security, vm.creds.password)
 			.then(waitToConnect)
 			.catch(changeState('connect'));
 		}
@@ -87,9 +114,10 @@
 		function claim() {
 			if (!vm.choosatrons.currentId()) {
 				vm.state = 'connect';
-				vm.errors = ['Could not find a core id for your Choosatron.'];
+				vm.errors = ['Could not find a device id for your Choosatron.'];
 				return;
 			}
+			console.log("CLAIM");
 			vm.cloud.claim(vm.choosatrons.currentId())
 			.then(changeState('claimed'))
 			.catch(changeState('unclaimed'));
