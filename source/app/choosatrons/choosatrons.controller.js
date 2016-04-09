@@ -140,7 +140,7 @@
 			var force = true;
 			vm.cloud.load(force).then(function() {
 				for (var i = 0; i < vm.cloud.choosatrons.length; i++) {
-					console.log(vm.cloud.choosatrons[i]);
+					//console.log(vm.cloud.choosatrons[i]);
 					var cObj = vm.cloud.choosatrons[i].attributes;
 					var choosatron = vm.profile.getChoosatron(cObj.id);
 					if (choosatron === null) {

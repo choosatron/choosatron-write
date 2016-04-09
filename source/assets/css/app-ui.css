@@ -116,8 +116,9 @@ a[data-target] {
 }
 
 .scrollable {
-	overflow-y: auto;
-	height: 100%;
+	height: 100vh;
+	overflow-y: scroll;
+	position:relative;
 }
 
 .row-gutter-1x {

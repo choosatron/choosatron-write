@@ -39,8 +39,8 @@ function (Choosatron, $q) {
 		return this.serialDevices;
 	};
 
-	this.getSerialDevice = function(aId) {
-		return this.serialDevices[aId];
+	this.getSerialDevice = function(aDeviceId) {
+		return this.serialDevices[aDeviceId];
 	};
 
 	this.getSerialKeys = function() {

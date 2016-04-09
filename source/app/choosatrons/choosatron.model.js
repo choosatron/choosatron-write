@@ -141,8 +141,6 @@ function(BaseModel) {
 				this.data.productId = aData.product_id;
 			}
 			this.wasModified();
-			console.log("Updated Choosatron Values:");
-			console.log(this.data);
 		},
 
 		/*updateValues: function(aChoosatron) {
@@ -173,7 +171,7 @@ function(BaseModel) {
 		},
 
 		lastWired: function(aValue) {
-			if (angular.isDefine(aValue)) {
+			if (angular.isDefined(aValue)) {
 				this.internal.lastWired = aValue;
 				return;
 			}
