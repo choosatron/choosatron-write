@@ -32,6 +32,12 @@ Issues with assignees are more likely to be actively under development. If you'd
 3. `npm install`
 4. `grunt build`
 
+## Handling Repository Updates ##
+
+Over the course of development, there may be updates to the dependencies of the application. Any time the package.json or bower.json files are updated, you should run the following command (or always run it to be safe):
+
+1. `npm install`
+
 ## Installing the App ##
 
 1. **Choosatron Write** is a Chrome Packaged App. You will need to use grunt to build the application before running it as an application.

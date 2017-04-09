@@ -3,23 +3,23 @@
 'use strict';
 
 // Provides access to device features, such as claiming, naming, and pushing.
-// This factory is essentially a wrapper for the spark.js methods.
+// This factory is essentially a wrapper for the particle.js methods.
 angular.module('storyApp')
-	.factory('ChoosatronCloud', ['$q', 'Spark', 'PRODUCT_IDS', 
-		function($q, Spark, PRODUCT_IDS) {
+	.factory('ChoosatronCloud', ['$q', 'Particle', 'PRODUCT_IDS',
+		function($q, Particle, PRODUCT_IDS) {
 
-	function ChoosatronCloud(token) {
+	function ChoosatronCloud(aToken) {
 		this.loaded      = false;
 		this.choosatrons = [];
-		this.spark       = new Spark(token);
+		this.particle       = new Particle(aToken);
 	}
 
 	ChoosatronCloud.serverCode = {
 		notImplemented : -6,
 		maxReached     : -5,
-		busy           : -4,
-		invalidCmd     : -3,
-		invalidIndex   : -2,
+		invalidIndex   : -4,
+		busy           : -3,
+		invalidCmd     : -2,
 		fail           : -1,
 		success        : 0,
 		eventIncoming  : 1,
@@ -38,7 +38,7 @@ angular.module('storyApp')
 
 		var self = this;
 
-		this.spark.listDevicesWithAttributes()
+		this.particle.listDevicesWithAttributes()
 		.then(function(devices) {
 			self.choosatrons = devices;
 			self.loaded = true;
@@ -48,85 +48,85 @@ angular.module('storyApp')
 		return deferred.promise;
 	};
 
-	ChoosatronCloud.prototype.defer = function(method, args) {
+	ChoosatronCloud.prototype.defer = function(aMethod, aArgs) {
 		var deferred = $q.defer();
-		args = args || [];
+		aArgs = aArgs || [];
 
-		console.info("Calling", method, args);
-		this.spark[method]
-			.apply(this.spark, args)
+		console.info("Calling", aMethod, aArgs);
+		this.particle[aMethod]
+			.apply(this.particle, aArgs)
 			.then(deferred.resolve)
 			.catch(deferred.reject);
 
 		return deferred.promise;
 	};
 
-	ChoosatronCloud.prototype.each = function(callback, ctx) {
-		ctx = ctx || this;
-		for (var i=0; i<this.choosatrons.length; i++) {
-			callback.call(ctx, this.choosatrons[i], i, this.choosatrons);
+	ChoosatronCloud.prototype.each = function(aCallback, aCtx) {
+		aCtx = aCtx || this;
+		for (var i = 0; i < this.choosatrons.length; i++) {
+			aCallback.call(aCtx, this.choosatrons[i], i, this.choosatrons);
 		}
 	};
 
-	ChoosatronCloud.prototype.find = function(coreId) {
-		for (var i=0; i<this.choosatrons.length; i++) {
-			if (this.choosatrons[i].deviceId === coreId) {
+	ChoosatronCloud.prototype.find = function(aId) {
+		for (var i = 0; i < this.choosatrons.length; i++) {
+			if (this.choosatrons[i].deviceId() === aId) {
 				return this.choosatrons[i];
 			}
 		}
 		return null;
 	};
 
-	ChoosatronCloud.prototype.claim = function(coreId) {
-		return this.defer('claimCore', [coreId, ChoosatronCloud.productId]);
+	ChoosatronCloud.prototype.claim = function(aId) {
+		return this.defer('claimCore', [aId, ChoosatronCloud.productId]);
 	};
 
-	ChoosatronCloud.prototype.remove = function(coreId) {
-		return this.defer('removeCore', [coreId]);
+	ChoosatronCloud.prototype.remove = function(aId) {
+		return this.defer('removeCore', [aId]);
 	};
 
-	ChoosatronCloud.prototype.changeToChoosatron = function(coreId) {
-		// @todo: Use a Spark object instead of the spark.api once the codebase is updated
-		if (!this.spark.changeProduct) {
+	ChoosatronCloud.prototype.changeToChoosatron = function(aId) {
+		// @todo: Use a Particle object instead of the particle.api once the codebase is updated
+		if (!this.particle.changeProduct) {
 			var deferred = $q.defer();
-			deferred.reject("Spark doesn't support changeProduct yet");
+			deferred.reject("Particle doesn't support changeProduct yet");
 			return deferred.promise;
 		}
 
-		return this.defer('changeProduct', [coreId, ChoosatronCloud.productId, true]);
+		return this.defer('changeProduct', [aId, ChoosatronCloud.productId, true]);
 	};
 
 
 	// Makes a choosatron by flashing its core with the stored binary
-	ChoosatronCloud.prototype.flashAsChoosatron = function(coreId) {
-		return this.flash(coreId, 'bin/choosatron-core.bin');
+	ChoosatronCloud.prototype.flashAsChoosatron = function(aId) {
+		return this.flash(aId, 'bin/choosatron-core.bin');
 	};
 
 
-	ChoosatronCloud.prototype.flash = function(coreId, file) {
-		return this.defer('flashCore', [coreId, file]);
+	ChoosatronCloud.prototype.flash = function(aId, aFile) {
+		return this.defer('flashCore', [aId, aFile]);
 	};
 
 
-	ChoosatronCloud.prototype.rename = function(coreId, name) {
-		return this.defer('renameCore', [coreId, name]);
+	ChoosatronCloud.prototype.rename = function(aId, aName) {
+		return this.defer('renameCore', [aId, aName]);
 	};
 
 
 	// Send a Choosatron command and listen for the response on an event stream
-	ChoosatronCloud.prototype.request = function(coreId, method, args) {
+	ChoosatronCloud.prototype.request = function(aId, aMethod, aArgs) {
 		var deferred = $q.defer();
 		var command  = this.command.bind(this);
 
-		function notified(rsp) {
-			console.info("notified", rsp.event);
-			if (rsp.event !== 'open') {
+		function notified(aReponse) {
+			console.info("notified", aResponse.event);
+			if (aResponse.event !== 'open') {
 				return;
 			}
-			command(coreId, method, args);
+			command(aId, aMethod, aArgs);
 		}
 
-		this.spark.listen(coreId, method)
+		this.particle.listen(aId, aMethod)
 		.then(deferred.resolve, deferred.reject, notified);
 
 		return deferred.promise;
@@ -134,52 +134,60 @@ angular.module('storyApp')
 
 
 	// Send a Choosatron command to a device
-	ChoosatronCloud.prototype.command = function(coreId, method, args) {
-		args = args || '';
-		if (Array.isArray(args)) {
-			args = args.join(ChoosatronCloud.argumentDelimeter);
+	ChoosatronCloud.prototype.command = function(aId, aMethod, aArgs) {
+		aArgs = aArgs || '';
+		if (Array.isArray(aArgs)) {
+			aArgs = aArgs.join(ChoosatronCloud.argumentDelimeter);
 		}
-		if (args.length) {
-			args = ChoosatronCloud.argumentDelimeter + args;
+		if (aArgs.length) {
+			aArgs = ChoosatronCloud.argumentDelimeter + aArgs;
 		}
-		args = method + args;
-		return this.defer('callFunction', [coreId, 'command', args]);
+		aArgs = aMethod + aArgs;
+		return this.defer('callFunction', [aId, 'command', aArgs]);
 	};
 
 
-	ChoosatronCloud.prototype.getIpAddress = function(coreId) {
-		return this.command(coreId, 'get_local_ip');
+	ChoosatronCloud.prototype.getIpAddress = function(aId) {
+		return this.command(aId, 'get_local_ip');
 	};
 
 
 	// Gets all of the story information by looping through indices
 	// until the core responds with an invalid index result
-	ChoosatronCloud.prototype.getStoryInfo = function(coreId) {
+	ChoosatronCloud.prototype.getStoryInfo = function(aId) {
 		var deferred = $q.defer();
 		var cmd = 'get_story_info';
 		var stories = [];
-		var spark = this.spark;
+		var particle = this.particle;
 
 		function loadNextStory() {
-			spark.callFunction(coreId, cmd, [stories.length])
+			console.log("Request story index: %d", stories.length);
+			/*jshint -W087 */
+			//debugger;
+
+			// TODO: Need to catch a response error HERE, not from the listener.
+			// If an index is bad, we get that response right away!
+			particle.callFunction(aId, cmd, ['0' + stories.length])
 			.catch(deferred.reject);
 		}
 
-		function saveInfo(rsp) {
-			if (typeof rsp.data === 'number' && rsp.data < ChoosatronCloud.serverCode.success) {
-				rsp.source.close();
+		function saveInfo(aResponse) {
+			/*jshint -W087 */
+			//debugger;
+			if (typeof aResponse.data === 'number' && aResponse.data < ChoosatronCloud.serverCode.success) {
+				aResponse.source.close();
 				if (rsp.data === ChoosatronCloud.serverCode.invalidIndex) {
 					return deferred.resolve(stories);
 				}
 				else {
-					return deferred.reject(rsp);
+					return deferred.reject(aResponse);
 				}
 			}
-			stories.push(rsp.data);
+			stories.push(aResponse.data);
 			loadNextStory();
 		}
 
-		this.spark.listen(coreId, cmd, true)
+		this.particle.listen(aId, cmd, true)
 			.then(deferred.resolve, deferred.reject, saveInfo);
 
 		loadNextStory();

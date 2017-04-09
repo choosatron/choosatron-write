@@ -12,15 +12,15 @@
 
 	<div class="row">
 		<div class="col-xs-6 h4">
-			<div class="editable-text"><label><span class="glyphicon glyphicon-pencil"></span> <p><input ng-model="vm.story.title" type="text" class="h2 fill-width" placeholder="Story Title" /></p></label></div>
+			<div class="editable-text"><label><span class="glyphicon glyphicon-pencil"></span> <p><input ng-model="vm.story.title" ng-model-options="{ getterSetter: true }"  type="text" class="h2 fill-width" placeholder="Story Title" /></p></label></div>
 
 			<ul class="list-inline list-icon-menu">
 				<li>
 					<a ng-click="vm.playbackStory()" ng-hide="vm.playback"><span class="glyphicon glyphicon-play"></span> Play Story</a>
 					<a ng-click="vm.editStory()" ng-show="vm.playback"><span class="glyphicon glyphicon-stop"></span> Edit Story</a>
 				</li>
-				<li ng-hide="vm.profiles.current.autosave || !vm.saveState">
-					<a ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.id, vm.story)"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</a>
+				<li ng-hide="vm.profiles.current.autosave() || !vm.saveState">
+					<a ng-disabled="vm.saveState == 'transfer'" ng-click="vm.saver.save(vm.story.id(), vm.story.object())"><span class="glyphicon glyphicon-{{vm.saveState}}"></span> Save Changes</a>
 				</li>
 				<li>
 					<span class="dropdown">
@@ -43,17 +43,17 @@
 				<div class="form-group">
 					<label for="input_author" class="col-sm-3 control-label">Author</label>
 					<div class="col-sm-4">
-						<input ng-model="vm.story.author" type="text" class="form-control" id="input_author" placeholder="Author" />
+						<input ng-model="vm.story.author" ng-model-options="{ getterSetter: true }"  type="text" class="form-control" id="input_author" placeholder="Author" />
 					</div>
 					<label for="input_genre" class="col-sm-2 control-label">Genre</label>
 					<div class="col-sm-3">
-						<select ng-model="vm.story.genre" class="form-control" id="input_genre" ng-options="genre for genre in vm.genres" />
+						<select ng-model="vm.story.genre" ng-model-options="{ getterSetter: true }"  class="form-control" id="input_genre" ng-options="genre for genre in vm.genres" />
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="input_credits" class="col-sm-3 control-label">Description</label>
 					<div class="col-sm-9">
-						<textarea ng-model="vm.story.description" class="form-control" rows="3" placeholder="Story Description"></textarea>
+						<textarea ng-model="vm.story.description" ng-model-options="{ getterSetter: true }"  class="form-control" rows="3" placeholder="Story Description"></textarea>
 					</div>
 				</div>
 			</div>

@@ -5,7 +5,7 @@
 			<div class="form-group">
 				<div class="checkbox">
 					<label>
-						<input id="autosave" type="checkbox" ng-model="vm.profile.autosave" />
+						<input id="autosave" type="checkbox" ng-model="vm.profileAutosave" ng-change="vm.profile.autosave(vm.profileAutosave)" />
 						Autosave Stories
 					</label>
 				</div>
@@ -16,7 +16,7 @@
 					<span class="input-group-addon">
 						<span class="glyphicon glyphicon-user"></span>
 					</span>
-					<p><input name="name" ng-model="vm.profile.name" type="text" class="form-control" placeholder="Your Profile Name" ng-minlength='3' ng-maxlength='20' required /></p>
+					<p><input name="name" ng-model="vm.profileName" ng-change="vm.profile.name(vm.profileName)" type="text" class="form-control" placeholder="Your Profile Name" ng-minlength='3' ng-maxlength='20' required /></p>
 					<div class="error" ng-show="edit_profile_form.name.$dirty && edit_profile_form.name.$invalid">
 						<small class="error" ng-show="edit_profile_form.name.$error.required">
 							A profile name is required.
@@ -32,7 +32,7 @@
 			</div>
 
 			<div class="form-group">
-				<h3><span ng-show="vm.profile.cloud.token" class="label label-success">
+				<h3><span ng-show="vm.profile.auth().token()" class="label label-success">
 					<span class="fa fa-chain"></span>
 					 Linked with Cloud
 				</span></h3>
@@ -40,8 +40,8 @@
 				<button type="button" class="btn btn-warning" ng-click="vm.setupCloudLink()">
 					<!-- <span class="fa fa-cloud"></span> -->
 					<span class="fa fa-chain-broken"></span>
-					<span ng-hide="vm.profile.cloud.token">Setup Cloud Link</span>
-					<span ng-show="vm.profile.cloud.token">Update Cloud Link</span>
+					<span ng-hide="vm.profile.auth().token()">Setup Cloud Link</span>
+					<span ng-show="vm.profile.auth().token()">Update Cloud Link</span>
 				</button>
 			</div>
 

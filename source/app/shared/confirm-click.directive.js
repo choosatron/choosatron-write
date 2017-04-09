@@ -1,5 +1,5 @@
 angular.module('storyApp.directives')
-.directive('confirmClick', ['ngDialog', function (ngDialog) {
+.directive('confirmClick', ['ngDialog', function(ngDialog) {
 
 	function openDialog() {
 		ngDialog.openConfirm({

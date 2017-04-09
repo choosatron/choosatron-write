@@ -116,8 +116,9 @@ a[data-target] {
 }
 
 .scrollable {
-	overflow-y: auto;
-	height: 100%;
+	height: 100vh;
+	overflow-y: scroll;
+	position:relative;
 }
 
 .row-gutter-1x {
@@ -199,10 +200,10 @@ var,
 .___________. __   __       _______     _______.
 |           ||  | |  |     |   ____|   /       |
 `---|  |----`|  | |  |     |  |__     |   (----`
-    |  |     |  | |  |     |   __|     \   \    
-    |  |     |  | |  `----.|  |____.----)   |   
-    |__|     |__| |_______||_______|_______/    
-                                                
+    |  |     |  | |  |     |   __|     \   \
+    |  |     |  | |  `----.|  |____.----)   |
+    |__|     |__| |_______||_______|_______/
+
 **/
 .tile {
 	perspective: 600px;
@@ -672,21 +673,21 @@ Y88b  d88PY88b. Y88..88P888    888Y8b.         X88
 		.badge[data-choices="10"]:after, .passageBack[data-choices="10"]:after,
 		.passageLink[data-choices="10"]:after {background-position: -140px -14px;}
 
-		.badge[data-ending="-2"]:after,
-		.passageBack[data-ending="-2"]:after,
-		.passageLink[data-ending="-2"]:after {background-color: #ff3a3a;}
-		.badge[data-ending="-1"]:after,
-		.passageBack[data-ending="-1"]:after,
-		.passageLink[data-ending="-1"]:after {background-color: #ffb03a;}
-		.badge[data-ending="0"]:after,
-		.passageBack[data-ending="0"]:after,
-		.passageLink[data-ending="0"]:after {background-color: #ccc;}
 		.badge[data-ending="1"]:after,
 		.passageBack[data-ending="1"]:after,
-		.passageLink[data-ending="1"]:after {background-color: #00ccff;}
+		.passageLink[data-ending="1"]:after {background-color: #ff3a3a;}
 		.badge[data-ending="2"]:after,
 		.passageBack[data-ending="2"]:after,
-		.passageLink[data-ending="2"]:after {background-color: #3ad83a;}
+		.passageLink[data-ending="2"]:after {background-color: #ffb03a;}
+		.badge[data-ending="3"]:after,
+		.passageBack[data-ending="3"]:after,
+		.passageLink[data-ending="3"]:after {background-color: #ccc;}
+		.badge[data-ending="4"]:after,
+		.passageBack[data-ending="4"]:after,
+		.passageLink[data-ending="4"]:after {background-color: #00ccff;}
+		.badge[data-ending="5"]:after,
+		.passageBack[data-ending="5"]:after,
+		.passageLink[data-ending="5"]:after {background-color: #3ad83a;}
 
 .passageEntrances  {
 	margin-top: 80px;
@@ -1017,12 +1018,12 @@ Y88b  d88PY88b. Y88..88P888    Y88b 888   Y88b. .d88P888 d88PY88b 888888  888Y88
 
 /**
  * choosatron¬
-   ___    _                                        _                             
-  / __|  | |_      ___     ___     ___    __ _    | |_      _ _    ___    _ _    
- | (__   | ' \    / _ \   / _ \   (_-<   / _` |   |  _|    | '_|  / _ \  | ' \   
-  \___|  |_||_|   \___/   \___/   /__/_  \__,_|   _\__|   _|_|_   \___/  |_||_|  
-_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
-"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' 
+   ___    _                                        _
+  / __|  | |_      ___     ___     ___    __ _    | |_      _ _    ___    _ _
+ | (__   | ' \    / _ \   / _ \   (_-<   / _` |   |  _|    | '_|  / _ \  | ' \
+  \___|  |_||_|   \___/   \___/   /__/_  \__,_|   _\__|   _|_|_   \___/  |_||_|
+_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
+"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'
 **/
 
 	.choosatronList .choosatronItem {
@@ -1031,6 +1032,12 @@ _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|
 		border: 1px solid #eee;
 		border-radius: 4px;
 		padding: 10px;
+	}
+
+	.choosatronList .choosatronItem .header {
+		background: url(img/icon_128.png) no-repeat;
+		padding-left: 128px;
+		height: 128px;
 	}
 
 	.choosatronItem.connected, .choosatronItem.connected {
@@ -1115,11 +1122,11 @@ button[disabled] {
 
 /**
  * Animations
-_______       _____                  __________                     
+_______       _____                  __________
 ___    |_________(_)______ _________ __  /___(_)____________________
 __  /| |_  __ \_  /__  __ `__ \  __ `/  __/_  /_  __ \_  __ \_  ___/
-_  ___ |  / / /  / _  / / / / / /_/ // /_ _  / / /_/ /  / / /(__  ) 
-/_/  |_/_/ /_//_/  /_/ /_/ /_/\__,_/ \__/ /_/  \____//_/ /_//____/  
+_  ___ |  / / /  / _  / / / / / /_/ // /_ _  / / /_/ /  / / /(__  )
+/_/  |_/_/ /_//_/  /_/ /_/ /_/\__,_/ \__/ /_/  \____//_/ /_//____/
  **/
 .fade-animation
 {

@@ -3,73 +3,153 @@ angular.module('storyApp.models')
 function(Random) {
 
 	/// Model base class ///
-	function BaseModel(data) {
-		this.id       = Random.id();
-		this.created  = Date.now();
-		this.modified = null;
-		this.opened   = null;
+	function BaseModel(aData) {
+		if (!this.data) {
+			this.data = {};
+		}
+		this.data.id = Random.id();
+		this.data.modified = null;
 
-		if (data) this.load(data);
+		if (aData) {
+			this.load(aData);
+		} else {
+			this.data.created = Date.now();
+		}
 	}
 
 	BaseModel.abbrs = [];
 
-	BaseModel.extend = function(cls, data) {
-		cls.prototype = new BaseModel();
-		cls.constructor = cls;
-		angular.forEach(data, function(func, name) {
-			cls.prototype[name] = func;
+	BaseModel.extend = function(aCls, aData) {
+		aCls.prototype = new BaseModel();
+		aCls.constructor = aCls;
+		angular.forEach(aData, function(func, name) {
+			aCls.prototype[name] = func;
 		});
 	};
 
 	BaseModel.prototype = {
-		load: function(data) {
-			for (var key in data) {
+		load: function(aData) {
+			//if (typeof aData !== 'object') {
+			if (aData.data) {
+				console.log("Not object, use .data");
+				aData = aData.data;
+			}
+			/*jshint -W087 */
+			//debugger;
+
+			//console.log("Object: ", aData);
+
+			for (var key in aData) {
 				var proper = key[0].toUpperCase() + key.slice(1);
 				var loader = 'load' + proper;
+				//console.log("L: " + loader);
 				if (typeof this[loader] === 'function') {
-					this[loader]( data[key] );
-				}
-				else {
-					this[key] = data[key];
+					//console.log("Loader: %s, key: %s", aData[key], key);
+					this[loader](aData[key]);
+				} else {
+					if (typeof aData[key] != 'undefined') { // TODO: This ok?
+						this.data[key] = aData[key];
+					}
 				}
 			}
+			console.log("Class Obj: ", this);
 		},
 
-		each: function(field, callback) {
-			var list = this[field];
-			if (!list) return this;
-			for (var i=0; i < list.length; i++) {
+		each: function(aField, aCallback) {
+			var list = this[aField];
+			if (!list) {
+				return this;
+			}
+			for (var i = 0; i < list.length; i++) {
 				var item = list[i];
-				var stop = callback(item);
+				var stop = aCallback(item);
 				if (stop === false) break;
 			}
 			return this;
+		},
+
+		/*object: function() {
+			var o = {};
+			for (var key in this.data) {
+				var val = this.data[key];
+				if (val instanceof BaseModel) {
+					console.log(val);
+					o[key] = val.serialize();
+				} else {
+					if (typeof val != 'undefined') { // TODO: This ok?
+						o[key] = val;
+					}
+				}
+			}
+			return o;
+		},*/
+
+		object: function() {
+			var o = {};
+			for (var key in this.data) {
+				var val = this.data[key];
+
+				var proper = key[0].toUpperCase() + key.slice(1);
+				var objectifier = 'objectify' + proper;
+				if (typeof this[objectifier] === 'function') {
+					//console.log("Objectifier: %s, key: %s", this.data[key], key);
+					o[key] = this[objectifier](this.data[key]);
+				} else if (val instanceof BaseModel) {
+					console.log(val);
+					o[key] = val.serialize();
+				} else {
+					if (typeof val != 'undefined') { // TODO: This ok?
+						o[key] = val;
+					}
+				}
+			}
+			return o;
+		},
+
+		serialize: function(aPretty) {
+			var o = this.object();
+			//console.log("story: ", o);
+			//console.log("Final Object:");
+			//console.log(o);
+			//var s = angular.toJson(o, aPretty);
+			var s = angular.toJson(o, true);
+			//console.log(angular.toJson(o, true));
+			return s;
+		},
+
+		wasModified: function() {
+			this.data.modified = Date.now();
+		},
+
+		wasOpened: function() {
+			this.data.opened = Date.now();
 		},
 
 		refreshId: function() {
 			this.id = Random.id();
 		},
 
-		object: function() {
-			var o = {};
-			for (var key in this) {
-				var val = this[key];
-				if (val instanceof BaseModel) {
-					o[key] = val.serialize();
-				}
-				else {
-					o[key] = val;
-				}
+		/*getId: function() {
+			return this.data.id;
+		},*/
+
+		id: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.id = aValue;
+				this.wasModified();
+				return;
 			}
-			return o;
+			return this.data.id;
 		},
 
-		serialize: function(pretty) {
-			var o = this.object();
-			var s = angular.toJson(o, pretty);
-			return s;
+		getCreated: function() {
+			return this.data.created;
+		},
+
+		getModified: function() {
+			return this.data.modified;
 		}
+
 	};
 
 	return BaseModel;

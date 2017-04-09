@@ -8,7 +8,7 @@
 					<span class="input-group-addon">
 						<span class="fa fa-envelope"></span>
 					</span>
-					<input class="form-control" ng-model="vm.profile.cloud.username" placeholder="Email" type="email" name="email" required />
+					<input class="form-control" ng-model="vm.username" ng-model-options="{ getterSetter: true }" placeholder="Email" type="email" name="email" required />
 					<div class="error" ng-show="cloud_auth_form.email.$dirty && cloud_auth_form.email.$invalid">
 						<small class="error" ng-show="cloud_auth_form.email.$error.required">
 							A profile name is required.

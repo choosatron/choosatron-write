@@ -2,8 +2,10 @@ angular.module('storyApp.models')
 .factory('Choice', ['BaseModel', 'Command',
 function(BaseModel, Command) {
 	/// Choice ///
-	function Choice(data) {
-		this.content     =  '';
+	function Choice(aData) {
+		this.data = {};
+
+		/* Non Serialized */
 
 		// Used to determine whether conditions are shown in the UI
 		this.showCondition = false;
@@ -11,51 +13,189 @@ function(BaseModel, Command) {
 		// Used to determine whether updates are shown in the UI
 		this.showUpdates = false;
 
-		// These are the conditions used to determine whether this choice is displayed
-		this.condition = new Command();
+		/* Serialized */
 
-		// The id of the passage that this choice links to
-		this.destination = null;
+		this.data.content = '';
+
+		// These are the conditions used to determine whether this choice is displayed
+		this.data.condition = null;
 
 		// The updates to perform when this choice is selected
-		this.updates = [];
+		this.data.updates = [];
 
-		BaseModel.call(this, data);
+		// The id of the passage that this choice links to
+		this.data.destination = '';
+
+		BaseModel.call(this, aData);
 	}
 
 	Choice.methods = {
-		getContent: function () {
-			return this.content || "Unwritten Choice";
-		},
 
-		hasDestination: function(passage) {
-			if ('undefined' == typeof passage) {
-				return this.destination;
+		loadUpdates: function(aUpdates) {
+			this.data.updates = [];
+			for (var i = 0; i < aUpdates.length; i++) {
+				var update = new Command(aUpdates[i]);
+				this.data.updates.push(update);
 			}
-			return passage && passage.id && passage.id == this.destination;
+			this.showUpdates = this.data.updates.length > 0;
 		},
 
-		setDestination: function(passage) {
-			this.destination = passage && passage.id;
-		},
+		// Named for objectifying use in BaseModel
+		objectifyUpdates: function(aUpdates) {
+			var o = [];
 
-		addUpdate: function(update) {
-			this.updates.push(new Command(update));
-		},
-
-		loadUpdates: function(updates) {
-			this.updates = [];
-			for (var i=0; i<updates.length; i++) {
-				var update = new Command(updates[i]);
-				this.updates.push(update);
+			for (var i = 0; i < aUpdates.length; ++i) {
+				o[i] = aUpdates[i].object();
 			}
-			this.showUpdates = this.updates.length > 0;
+			return o;
 		},
 
-		loadCondition: function(condition) {
-			this.condition = new Command(condition);
-			this.showCondition = condition && condition.length;
-		}
+
+		loadCondition: function(aCondition) {
+			if (aCondition !== null) {
+				console.log("Condition: ");
+				console.log(aCondition);
+				console.log("done");
+				this.data.condition = new Command(aCondition);
+				this.showCondition = aCondition && aCondition.length;
+			}
+		},
+
+		/* Getters / Setters */
+
+		// Non Serialized //
+
+		showCondition: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.showCondition = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.showCondition;
+		},
+
+		/*showCondition: function() {
+			return this.data.showCondition;
+		},*/
+
+		setShowCondition: function(aValue) {
+			this.data.showCondition = aValue;
+		},
+
+		showUpdates: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.showUpdates = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.showUpdates;
+		},
+
+		/*showUpdates: function() {
+			return this.data.showUpdates;
+		},*/
+
+		setShowUpdates: function(aValue) {
+			this.data.showUpdates = aValue;
+		},
+
+		// Serialized //
+
+		content: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.content = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.content;
+		},
+
+		/*getContent: function() {
+			return this.data.content || "Unwritten Choice";
+		},
+
+		setContent: function(aValue) {
+			this.data.content = aValue;
+		},*/
+
+		condition: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.condition = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.condition;
+		},
+
+		/*getCondition: function() {
+			return this.data.condition;
+		},
+
+		setCondition: function(aValue) {
+			this.data.condition = aValue;
+		},*/
+
+		updates: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.updates = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.updates;
+		},
+
+		/*getUpdates: function() {
+			return this.data.updates;
+		},
+
+		setUpdates: function(aValue) {
+			this.data.updates = aValue;
+		},*/
+
+		addUpdate: function(aValue) {
+			this.data.updates.push(aValue);
+		},
+
+		removeUpdate: function(aValue) {
+			for (var i = 0; i < this.data.updates.length; i++) {
+				if (aValue.id() === this.data.updates[i]) {
+					this.data.updates.splice(i, 1);
+					return;
+				}
+			}
+		},
+
+		hasDestination: function(aId) {
+			if (typeof aId === 'undefined') {
+				return this.data.destination;
+			}
+			return aId == this.data.destination;
+		},
+
+		clearDestination: function() {
+			this.data.destination = null;
+		},
+
+		destination: function(aValue) {
+			if (angular.isDefined(aValue)) {
+				this.data.destination = aValue;
+				this.wasModified();
+				return;
+			}
+			return this.data.destination;
+		}/*,
+
+		getDestination: function(aValue) {
+			return this.data.destination;
+		},
+
+		setDestination: function(aValue) {
+			if (!aValue) {
+				aValue = null;
+			}
+			this.data.destination = aValue;
+		}*/
+
 	};
 	BaseModel.extend(Choice, Choice.methods);
 

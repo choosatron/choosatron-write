@@ -23,6 +23,6 @@ angular.module('storyApp').constant('AUTH_EVENTS', {
 });
 
 angular.module('storyApp').constant('PRODUCT_IDS', {
-	spark      : 1,
+	core       : 1,
 	choosatron : 7
 });

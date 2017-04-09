@@ -8,12 +8,12 @@
 	<p ng-show="vm.checkShowStoriesMenu()" class="h5 pull-left"><a ng-click="vm.location.path('/stories')"><span class="glyphicon glyphicon-arrow-left"></span> <span class="glyphicon glyphicon-th"></span> Return to Stories Menu</a></p>
 	<p class="h5 pull-right">
 		<!-- <a ng-click="vm.location.path('/profiles')">
-			<span class="glyphicon glyphicon-user"></span> {{vm.profile.name}}
+			<span class="glyphicon glyphicon-user"></span> {{vm.profile.name()}}
 		</a> -->
 		<div ng-show="vm.location.path() != '/profiles'" class="h5 pull-right btn-group btn-group-lg">
 			<button class="btn dropdown-toggle" data-toggle="dropdown">
 				<span class="glyphicon glyphicon-user"></span>
-				{{vm.profile.name}} <span class="caret"></span>
+				{{vm.profile.name()}} <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li>

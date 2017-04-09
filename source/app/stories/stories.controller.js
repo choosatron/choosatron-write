@@ -7,8 +7,8 @@
 	angular.module('storyApp.controllers')
 		.controller('StoriesCtrl', StoriesCtrl);
 
-	StoriesCtrl.$inject = ['$location', 'profiles', 'file', 'translators', 'Story'];
-	function StoriesCtrl($location, profiles, file, translators, Story) {
+	StoriesCtrl.$inject = ['$location', 'Profiles', 'file', 'translators', 'Story'];
+	function StoriesCtrl($location, Profiles, file, translators, Story) {
 		var vm = this;
 
 		// Variables
@@ -28,11 +28,11 @@
 		vm.exportStory = exportStory;
 		vm.importStory = importStory;
 
-		profiles.load().then(function() {
-			if (!profiles.current) {
+		Profiles.load().then(function() {
+			if (!Profiles.current) {
 				return $location.path('/profiles');
 			}
-			vm.profile = profiles.current;
+			vm.profile = Profiles.current;
 		});
 
 		function sortStories(aSort) {
@@ -53,14 +53,14 @@
 
 			file.create('json')
 			.then(function(entry) {
-				story.title = entry.name.substr(0, entry.name.lastIndexOf('.'));
-				story.author = profiles.current.name;
+				story.title(entry.name.substr(0, entry.name.lastIndexOf('.')));
+				story.author(Profiles.current.name());
 
 				file.write(entry, story.serialize())
 				.then(function(event) {
 					var entryId = file.getEntryId(entry);
-					vm.profile.saveEntry(entryId, story);
-					profiles.save().then(function() {
+					Profiles.current.saveEntry(entryId, story);
+					Profiles.save().then(function() {
 						$location.path('/story');
 					}, err);
 				}, err);
@@ -68,15 +68,15 @@
 		}
 
 		function editStory(aEntry) {
-			profiles.current.selectEntry(aEntry);
-			profiles.save().then(function() {
+			Profiles.current.selectEntry(aEntry);
+			Profiles.save().then(function() {
 				$location.path('/story');
 			});
 		}
 
 		function deleteStory(aEntry) {
-			profiles.current.removeEntry(aEntry);
-			profiles.save();
+			Profiles.current.removeEntry(aEntry);
+			Profiles.save();
 		}
 
 		function duplicateStory(aEntry) {
@@ -93,7 +93,7 @@
 					result.story.title = title;
 					file.write(copy, result.story.serialize())
 					.then(function() {
-						profiles.current.saveEntry(copyId, result.story);
+						Profiles.current.saveEntry(copyId, result.story);
 						$location.path('/story');
 					});
 				});
@@ -126,7 +126,7 @@
 					file.write(newFile, story.serialize())
 					.then(function() {
 						var newFileId = file.getEntryId(newFile);
-						var entry = profiles.current.saveEntry(newFileId, story);
+						var entry = Profiles.current.saveEntry(newFileId, story);
 						vm.editStory(entry);
 					});
 				});

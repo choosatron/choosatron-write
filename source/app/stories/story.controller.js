@@ -5,31 +5,36 @@
 		.controller('StoryCtrl', StoryCtrl);
 
 	StoryCtrl.$inject = ['$scope', '$location', '$timeout', 'ngDialog',
-		'profiles', 'translators', 'FileEntryAutoSave',
+		'Profiles', 'translators', 'FileEntryAutoSave',
 		'Story', 'Passage', 'Choice', 'Command', 'Operators', 'Genres'];
 
-	function StoryCtrl($scope, $location, $timeout, ngDialog, profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
+	function StoryCtrl($scope, $location, $timeout, ngDialog, Profiles, translators, FileEntryAutoSave, Story, Passage, Choice, Command, Operators, Genres) {
 		var vm = this;
 
 		// Variables
 		vm.entry              = null;
 		vm.story              = null;
 		vm.passage            = null;
-		vm.profiles           = profiles;
+		vm.profiles           = Profiles;
 		vm.variables          = [];
 
 		vm.operators          = Operators;
 		vm.genres             = Genres;
 		vm.exporters          = translators.exporters();
 		vm.alerts             = [];
-		vm.prevPassage        = null;
+		//vm.prevPassage        = null;
+
+		vm.navHistory         = [];
+
 		vm.picking            = false;
 		vm.deleted            = null;
 		vm.modal              = {confirm_message: ''};
 		vm.showStoryDetails   = false;
 		vm.showPassages       = false;
 		vm.saveState          = 'floppy-disk';
-		vm.exitChangeModal = {};
+		vm.exitChangeModal    = {};
+
+		vm.endingTags   = CDAM.Config.kEndingTags;
 
 		// Functions
 		vm.loadVariables         = loadVariables;
@@ -60,16 +65,16 @@
 
 		function activate() {
 			// Load up the selected story
-			profiles.load()
+			Profiles.load()
 			.then(function() {
-				var profile = profiles.current;
+				var profile = Profiles.current;
 
 				if (!profile) {
 					console.error("No profiles selected. Redirecting to ./profiles");
 					return $location.path('/profiles');
 				}
 
-				var entries = profile.entries;
+				var entries = profile.entries();
 				if (!entries || entries.length === 0) {
 					console.error("Profile has no entries. Redirecting to ./stories");
 					return $location.path('/stories');
@@ -77,6 +82,9 @@
 
 				var entry = entries[0];
 				var entryId = entry.entryId;
+
+				console.log("Current Entry:");
+				console.log(entry);
 
 				if (!entryId) {
 					console.error("No entry id found for entry. Redirecting to ./stories");
@@ -92,19 +100,29 @@
 				translators.restore('json', entryId)
 				.then(function(result) {
 
+					/*jshint -W087 */
+					//debugger;
+
 					if (!result || !result.story) {
 						return $location.path('/stories');
 					}
 
 					// Set the current story and passage
 					vm.story = new Story(result.story);
-					vm.setPassage(vm.story.getOpening(), true);
-					vm.showStoryDetails = vm.story.passages.length < 2;
+					vm.story.setOpenedNow();
+
+					vm.storyTitle = vm.story.title();
+					vm.storyAuthor = vm.story.author();
+					vm.storyGenre = vm.story.genre();
+					vm.storyDescription = vm.story.description();
+
+					vm.setPassage(vm.story.getStartPsg(), true);
+					vm.showStoryDetails = vm.story.passages().length < 2;
 					loadVariables();
 
 					// Update the entry record
-					profiles.current.saveEntry(entryId, vm.story);
-					profiles.save();
+					Profiles.current.saveEntry(entryId, vm.story);
+					Profiles.save();
 
 					// Start autosaving changes
 					autosave(result);
@@ -117,17 +135,20 @@
 			var cmds = vm.story.collectCommands();
 			var vars = [];
 			cmds.forEach(function(cmd) {
-				vars.push(cmd.variable);
+				vars.push(cmd.variable());
 			});
 			vm.variables = angular.toJson(vars);
 		}
 
 		function autosave(aResult) {
-			var saver = vm.saver = new FileEntryAutoSave(aResult.story.id, aResult.entry, $scope);
+			var saver = vm.saver = new FileEntryAutoSave(aResult.story.id(), aResult.entry, $scope);
 
 			var handleStoryChange = function(nv, ov, scope) {
-				if (profiles.current.autosave && angular.isDefined(nv)) {
-					saver.save(aResult.story.id, nv.object());
+				if (Profiles.current.autosave() && angular.isDefined(nv)) {
+					console.log("handleStoryChange");
+					console.log(nv);
+					console.log(nv.object());
+					saver.save(aResult.story.id(), nv.object());
 				}
 				else {
 					vm.saveState = 'floppy-save';
@@ -167,20 +188,41 @@
 			$location.path('/stories');
 		}
 
-		function newPassage(aEntranceChoice) {
-			vm.passage = new Passage();
-			vm.passage.number = vm.story.getNextPassageNumber();
-			vm.story.addPassage(vm.passage);
-			if (aEntranceChoice) {
-				aEntranceChoice.setDestination(vm.passage);
+		function validPickingOption(aPassage) {
+			// Is there ANY reason you can't just link to ANY passage? Even the current one?
+			//return (!vm.picking || vm.passage.exitType != 'append' || vm.passage.id != aItem.id);
+
+			// You don't want to ever append to an append, could cause an endless loop.
+			// You should never need to do this, I think.
+			if (vm.passage.hasAppend() && aPassage.hasAppend()) {
+				return false;
 			}
-			vm.picking = null;
+			return true;
 		}
 
+		// Create a new passage. If a choice is provide,
+		// connect that choice to the new passage and add
+		// the current passage as an entrance passage for it.
+		function newPassage(aEntranceChoice) {
+			var passage = new Passage();
+			vm.story.addPassage(passage);
+			if (aEntranceChoice) {
+				aEntranceChoice.destination(passage.id());
+				passage.addEntrance(vm.passage.id(), aEntranceChoice.id());
+			}
+			// Set our current passage to the new one.
+			vm.passage = passage;
+			vm.picking = false;
+		}
+
+		// When populated with a value,
+		// this triggers the 'picking' css class
+		// in passage.view.html
 		function pickPassage(aChoice) {
 			vm.picking = aChoice;
 		}
 
+		// If the passage exists, return it.
 		function getPassage(aId) {
 			if (!vm.story) {
 				return null;
@@ -188,15 +230,17 @@
 			return vm.story.getPassage(aId);
 		}
 
-		function validPickingOption(aItem) {
-			return (!vm.picking || vm.passage.exitType != 'append' || vm.passage != aItem);
-		}
-
 		function selectPassage(aId) {
 			if (vm.picking) {
-				vm.picking.setDestination(vm.story.getPassage(aId));
-				vm.picking = null;
+				// If there is a link from this choice, remove it.
+				if (vm.picking.hasDestination()) {
+					console.log("Changing old destination to new.");
+					vm.story.unlinkSingleChoice(vm.story.getPassage(vm.picking.destination()), vm.picking);
+				}
 
+				vm.picking.destination(aId);
+				vm.story.getPassage(aId).addEntrance(vm.passage.id(), vm.picking.id());
+				vm.picking = false;
 			} else {
 				vm.editPassage(aId);
 			}
@@ -207,81 +251,102 @@
 		}
 
 		function setPassage(aPassage, aReset) {
+
 			// TODO: Is there an Angular way to access this element in the scope to do this?
 			$('.scrollPassages').scrollTop(0);
 
+			if (vm.passage) {
+				var index = vm.navHistory.indexOf(vm.passage.id());
+				if (index > -1) {
+					vm.navHistory.splice(index, 1);
+				}
+				vm.navHistory.push(vm.passage.id());
+			}
+
+			if (aPassage !== false) {
+				vm.passage = aPassage;
+			} else {
+				console.warning("Tried to set a non-existent passage.");
+				return;
+			}
+
 			if (aReset) {
-				vm.prevPassage = null;
-			}
-			else {
-				vm.prevPassage = vm.passage;
+				vm.navHistory = [];
 			}
 
-			// Collect the entrances just once to improve performance
-			aPassage.entrances = vm.story.collectEntrances(aPassage);
-
-			vm.passage = aPassage;
+			console.log("History: " + vm.navHistory);
 		}
 
 		function deletePassage(aPassage) {
+			// TODO: REDO!!!!
+
 			console.info("deleting", aPassage);
 			vm.deleted = {
 				type: "passage",
-				title: aPassage.content,
+				title: aPassage.content(),
 				undo: function() {
-					aPassage.trashed = false;
+					aPassage.trashed(false);
 					vm.story.addPassage(aPassage);
-					vm.passage = aPassage;
+					vm.story.linkEntrances(aPassage);
+					vm.story.linkChoices(aPassage);
+					vm.setPassage(aPassage, false);
 				}
 			};
 			// The choice paths that link to this passage are not being deleted,
 			// but if they were that would require a change to "undo" ... for now
 			// I'm just checking when a choice is displaying its paths whether
 			// they are linking to a valid passage
-			vm.story.deletePassage(aPassage.id);
-			var previous = vm.prevPassage || vm.story.getOpening();
-			vm.setPassage(previous, true);
+
+			// EDIT:
+
+			vm.story.deletePassage(aPassage.id());
+			var index = vm.navHistory.indexOf(aPassage.id());
+			if (index > -1) {
+				vm.navHistory.splice(index, 1);
+			}
+			var previous = vm.story.passages()[vm.navHistory[-1]] || vm.story.getStartPsg();
+			vm.setPassage(previous, false);
 		}
 
 		function confirmExitTypeChange(aPassage, aExitType) {
 			var data = {};
 			var onConfirm;
 
-			if (aPassage.exitType == aExitType) {
+			if (aPassage.exitType() == aExitType) {
 				return;
 			}
 
 			if (aPassage.exitIsEmpty()) {
-				aPassage.setExitType(aExitType);
+				aPassage.exitType(aExitType);
 				return;
 			}
 
-			switch (aPassage.exitType) {
-				case 'ending':
+			switch (aPassage.exitType()) {
+				case CDAM.Strings.kExitTypeEnding:
 					data.willDelete = 'ending value';
 					break;
-				case 'append':
+				case CDAM.Strings.kExitTypeAppend:
 					data.willDelete = 'append';
 					break;
-				case 'choices':
+				case CDAM.Strings.kExitTypeChoices:
 					data.willDelete = 'choices';
 					break;
 			}
 
 			switch (aExitType) {
-				case 'ending':
+				case CDAM.Strings.kExitTypeEnding:
 					data.changeTo = 'an ending';
 					break;
-				case 'append':
+				case CDAM.Strings.kExitTypeAppend:
 					data.changeTo = 'have an append';
 					break;
-				case 'choices':
+				case CDAM.Strings.kExitTypeChoices:
 					data.changeTo = 'have choices';
 					break;
 			}
 
 			onConfirm = function (okay) {
-				aPassage.setExitType(aExitType);
+				aPassage.exitType(aExitType);
 			};
 
 			ngDialog.openConfirm({
@@ -292,43 +357,51 @@
 			}).then(onConfirm);
 		}
 
+		function hasDestination(aChoice) {
+			return aChoice.hasDestination();
+		}
+
 		function newChoice(aPassage) {
 			var choice = new Choice();
 			aPassage.addChoice(choice);
 		}
 
-		function hasDestination(aChoice) {
-			return aChoice.hasDestination();
-		}
-
 		function deleteChoice(aPassage, aChoice) {
 			vm.deleted  =  {
 				type: "choice",
-				title: aChoice.content,
-				undo: function() {vm.passage.addChoice(aChoice);}
+				title: aChoice.content(),
+				undo: function() {
+					vm.passage.addChoice(aChoice);
+					vm.story.linkChoice(aPassage, aChoice);
+				}
 			};
+			vm.story.unlinkChoice(aPassage, aChoice);
 			aPassage.removeChoice(aChoice);
-		}
 
-		function deleteChoiceUpdate(aChoice, aUpdate) {
-			aChoice.updates = aChoice.updates.filter(function(u) {
-				return (u.raw != aUpdate.raw);
-			});
 		}
 
 		function deleteChoiceCondition(aChoice) {
 			aChoice.condition = new Command();
-			aChoice.showCondition = false;
+			aChoice.showCondition(false);
 		}
 
 		function addChoiceUpdate(aChoice) {
-			aChoice.updates.push(new Command());
+			aChoice.addUpdate(new Command());
 		}
 
+		function deleteChoiceUpdate(aChoice, aUpdate) {
+			aChoice.removeUpdate(aUpdate);
+			/*aChoice.updates = aChoice.updates().filter(function(u) {
+				return (u.raw != aUpdate.raw);
+			});*/
+		}
+
+		// Clear the search field.
 		function clearPassageSearch() {
 			vm.passageSearch = '';
 		}
 
+		// TODO: Research functionality!!!
 		function undoDelete() {
 			if (!vm.deleted) {
 				return;
@@ -337,11 +410,13 @@
 			vm.deleted = null;
 		}
 
+		// Return a JSON serialized copy of the the current story.
 		function jsonStory(aPretty) {
 			if (!vm.story) return '{}';
 			return vm.story.serialize(aPretty);
 		}
 
+		// Export a story as the provided type.
 		function exportStory(aType) {
 			translators.export(aType, vm.story);
 		}

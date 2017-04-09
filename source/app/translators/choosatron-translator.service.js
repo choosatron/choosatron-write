@@ -79,12 +79,12 @@ function(Random, ArrayBufferFactory) {
 
 	var PSG_FLAG_APPEND_INDEX = 7; // 0x80;
 
-	function ChoosatronStoryVersion(version) {
-		var parts = version ? version.toString().split('.') : [];
+	/*function ChoosatronStoryVersion(aVersion) {
+		var parts = aVersion ? aVersion.toString().split('.') : [];
 		this.major = parts.length > 0 ? parts[0] : 0;
 		this.minor = parts.length > 1 ? parts[1] : 0;
 		this.revision = parts.length > 2 ? parts[2] : 0;
-	}
+	}*/
 
 
 	// The header is always 414 bytes
@@ -92,43 +92,43 @@ function(Random, ArrayBufferFactory) {
 	// Properties on this object are defined dynamically to
 	// allow writing directly to the underlying ArrayBuffer
 	// when set.
-	function ChoosatronStoryHeader(story) {
+	function ChoosatronStoryHeader(aStory) {
 		this.size   = 414;
 		this.buffer = new ArrayBuffer(this.size);
 		this.view   = new DataView(this.buffer);
 		var self    = this;
 
-		function intProp(offset, name, setter) {
-			Object.defineProperty(self, name, {
+		function intProp(aOffset, aName, aSetter) {
+			Object.defineProperty(self, aName, {
 				configurable: true,
 				set: function(value) {
-					setter.call(self.view, offset, value, ENDIAN);
+					aSetter.call(self.view, aOffset, value, ENDIAN);
 				}
 			});
 		}
 
-		function int8Prop(offset, name) {
-			intProp(offset, name, self.view.setInt8);
+		function int8Prop(aOffset, aName) {
+			intProp(aOffset, aName, self.view.setInt8);
 		}
 
-		function int16Prop(offset, name) {
-			intProp(offset, name, self.view.setInt16);
+		function int16Prop(aOffset, aName) {
+			intProp(aOffset, aName, self.view.setInt16);
 		}
 
-		function int32Prop(offset, name) {
-			intProp(offset, name, self.view.setInt32);
+		function int32Prop(aOffset, aName) {
+			intProp(aOffset, aName, self.view.setInt32);
 		}
 
-		function stringProp(offset, len, name) {
-			Object.defineProperty(self, name, {
+		function stringProp(aOffset, aLen, aName) {
+			Object.defineProperty(self, aName, {
 				configurable: true,
-				set: function(str) {
-					for (var i=0; i<len; i++) {
-						if (str.length > i) {
-							self.view.setInt8(i + offset, str.charCodeAt(i));
+				set: function(aStr) {
+					for (var i = 0; i < aLen; i++) {
+						if (aStr.length > i) {
+							self.view.setInt8(i + aOffset, aStr.charCodeAt(i));
 						}
 						else {
-							self.view.setInt8(i + offset, 0);
+							self.view.setInt8(i + aOffset, 0);
 						}
 					}
 				}
@@ -169,13 +169,13 @@ function(Random, ArrayBufferFactory) {
 		int32Prop(this.publishedIndex, 'published');
 		int16Prop(412, 'variableCount');
 
-		if (story) {
-			this.populate(story);
+		if (aStory) {
+			this.populate(aStory);
 		}
 	}
 
 
-	ChoosatronStoryHeader.prototype.populate = function(story) {
+	ChoosatronStoryHeader.prototype.populate = function(aStory) {
 		this.populated = SOH;
 
 		this.binaryVersionMajor = 0;
@@ -189,36 +189,36 @@ function(Random, ArrayBufferFactory) {
 		this.flags3 = 0;
 		this.flags4 = 0;
 
-		var version = new ChoosatronStoryVersion(story.version);
-		this.storyVersionMajor = version.major;
-		this.storyVersionMinor = version.minor;
-		this.storyVersionRevision = version.revision;
+		//var version = new ChoosatronStoryVersion(aStory.getVersionStr());
+		this.storyVersionMajor = aStory.version().major;
+		this.storyVersionMinor = aStory.version().minor;
+		this.storyVersionRevision = aStory.version().revision;
 
 		this.rsvd = 0;
 		this.lang = '';
-		this.title = story.title;
-		this.subtitle = story.subtitle;
-		this.author = story.author;
-		this.credits = story.credits;
-		this.contact = story.contact;
+		this.title = aStory.title();
+		this.subtitle = aStory.subtitle();
+		this.author = aStory.author();
+		this.credits = aStory.credits();
+		this.contact = aStory.contact();
 
-		story.published = new Date();
-		this.published = story.published.getTime() / 1000;
+		aStory.published(new Date());
+		this.published = aStory.published().getTime() / 1000;
 	};
 
 
-	function ChoosatronStoryOperation(type, value1, value2) {
-		this.type   = type;
-		this.value1 = value1;
-		this.value2 = value2;
+	function ChoosatronStoryOperation(aType, aValue1, aValue2) {
+		this.type   = aType;
+		this.value1 = aValue1;
+		this.value2 = aValue2;
 	}
 
 
 	// Writes an operation to a DataView and returns the # bytes written
-	ChoosatronStoryOperation.prototype.writeToView = function(offset, view) {
-		view.setInt8(offset, this.type);
-		view.setInt16(offset + 1, this.value1, ENDIAN);
-		view.setInt16(offset + 3, this.value2, ENDIAN);
+	ChoosatronStoryOperation.prototype.writeToView = function(aOffset, aView) {
+		aView.setInt8(aOffset, this.type);
+		aView.setInt16(offset + 1, this.value1, ENDIAN);
+		aView.setInt16(offset + 3, this.value2, ENDIAN);
 		return 4;
 	};
 
@@ -232,27 +232,32 @@ function(Random, ArrayBufferFactory) {
 	}
 
 
-	ChoosatronStoryChoice.prototype.populate = function(story, choice) {
-		this.body = choice.content;
-		if (choice.destination) {
-			this.passageIndex = story.getPassageIndex(choice.destination);
+	ChoosatronStoryChoice.prototype.populate = function(aChoice, aKeys) {
+		this.body = aChoice.content();
+		if (aChoice.destination()) {
+			for (var i = 0; i < aKeys.length; i++) {
+				if (aKeys[i] == aChoice.destination()) {
+					this.passageIndex = i;
+					break;
+				}
+			}
 		}
 	};
 
 
 	// Writes a choice to a DataView and returns the # bytes written
-	ChoosatronStoryChoice.prototype.writeToView = function(startingOffset, view) {
-		var offset = startingOffset;
+	ChoosatronStoryChoice.prototype.writeToView = function(aStartingOffset, aView) {
+		var offset = aStartingOffset;
 		var i, written;
 
-		view.setInt8(offset, this.attributes);
+		aView.setInt8(offset, this.attributes);
 		offset += 1;
 
 		// Conditions
-		view.setInt8(offset, this.conditionOperations.length);
+		aView.setInt8(offset, this.conditionOperations.length);
 		offset += 1;
 		for (i = 0; i < this.conditionOperations.length; i++) {
-			written = this.conditionOperations[i].writeToView(offset, view);
+			written = this.conditionOperations[i].writeToView(offset, aView);
 			offset += written;
 		}
 
@@ -263,28 +268,28 @@ function(Random, ArrayBufferFactory) {
 		var updateOperationsLength = 0;
 		offset += 2;
 
-		view.setInt8(offset, this.updateOperations.length);
+		aView.setInt8(offset, this.updateOperations.length);
 		offset += 1;
 		for (i = 0; i < this.updateOperations.length; i++) {
-			written = this.updateOperations[i].writeToView(offset, view);
+			written = this.updateOperations[i].writeToView(offset, aView);
 			offset += written;
 			updateOperationsLength += written;
 		}
-		view.setInt16(updateOperationsLengthOffset, updateOperationsLength, ENDIAN);
+		aView.setInt16(updateOperationsLengthOffset, updateOperationsLength, ENDIAN);
 
 
 		// Set the choice body size
-		view.setInt16(offset, this.body.length, ENDIAN);
+		aView.setInt16(offset, this.body.length, ENDIAN);
 		offset += 2;
 		for (i = 0; i < this.body.length; i++) {
-			view.setInt8(offset, this.body.charCodeAt(i));
+			aView.setInt8(offset, this.body.charCodeAt(i));
 			offset += 1;
 		}
 
-		view.setInt16(offset, this.passageIndex, ENDIAN);
+		aView.setInt16(offset, this.passageIndex, ENDIAN);
 		offset += 2;
 
-		return offset - startingOffset;
+		return offset - aStartingOffset;
 	};
 
 
@@ -297,98 +302,92 @@ function(Random, ArrayBufferFactory) {
 	}
 
 
-	ChoosatronStoryPassage.prototype.populate = function(story, passage) {
-		if (passage.exitType == 'append') {
-			this.attributes |= 1 << 7;
-		}
-
-		this.body = passage.content;
+	ChoosatronStoryPassage.prototype.populate = function(aPassage, aKeys) {
+		this.body = aPassage.content;
 
 		var choice;
 
-		if (passage.hasAppend()) {
+		if (aPassage.hasAppend()) {
 			// Set the append flag at the proper index.
 			this.attributes |= 1 << PSG_FLAG_APPEND_INDEX;
 			// Append link isn't in the list of choices, so we need to add it here.
 			choice = new ChoosatronStoryChoice();
-			choice.populate(story, passage.appendLink);
+			choice.populate(aPassage.getChoiceAtIndex(0), aKeys);
 			this.choices.push(choice);
-		} else if (passage.hasEnding()) {
-			this.endingValue = passage.endingValue || 0;
-		} else if (passage.hasChoices()) {
-			for (var i = 0; i < passage.choices.length; i++) {
+		} else if (aPassage.hasEnding()) {
+			this.endingValue = CDAM.Config.kEndingTags.values[aPassage.endingIndex()] || 3;
+		} else if (aPassage.hasChoices()) {
+			for (var i = 0; i < aPassage.choices().length; i++) {
 				choice = new ChoosatronStoryChoice();
-				choice.populate(story, passage.choices[i]);
+				choice.populate(aPassage.getChoiceAtIndex(i), aKeys);
 				this.choices.push(choice);
 			}
 		}
 	};
 
 
-	ChoosatronStoryPassage.prototype.writeToView = function(startingOffset, view) {
-		var offset = startingOffset;
+	ChoosatronStoryPassage.prototype.writeToView = function(aStartingOffset, aView) {
+		var offset = aStartingOffset;
 		var i, written;
 
 		// Attributes
-		view.setInt8(offset, this.attributes);
+		aView.setInt8(offset, this.attributes);
 		offset += 1;
 
 		// UpdateOperations
-		view.setInt8(offset, this.updateOperations.length);
+		aView.setInt8(offset, this.updateOperations.length);
 		offset += 1;
-		for (i=0; i<this.updateOperations.length; i++) {
-			written = this.updateOperations[i].writeToView(offset, view);
+		for (i = 0; i < this.updateOperations.length; i++) {
+			written = this.updateOperations[i].writeToView(offset, aView);
 			offset += written;
 		}
 
 		// Body
-		view.setInt16(offset, this.body.length, ENDIAN);
+		aView.setInt16(offset, this.body.length, ENDIAN);
 		offset += 2;
-		for (i=0; i<this.body.length; i++) {
-			view.setInt8(offset, this.body.charCodeAt(i));
+		for (i = 0; i < this.body.length; i++) {
+			aView.setInt8(offset, this.body.charCodeAt(i));
 			offset += 1;
 		}
 
 		// Choices
-		view.setInt8(offset, this.choices.length);
+		aView.setInt8(offset, this.choices.length);
 		offset += 1;
-		for (i=0; i<this.choices.length; i++) {
-			written = this.choices[i].writeToView(offset, view);
+		for (i = 0; i < this.choices.length; i++) {
+			written = this.choices[i].writeToView(offset, aView);
 			offset += written;
 		}
 
 		if (this.endingValue !== false) {
-			view.setInt8(offset, this.endingValue);
+			aView.setInt8(offset, this.endingValue);
 			offset += 1;
 		}
 
-		view.setInt8(offset, ETX);
+		aView.setInt8(offset, ETX);
 		offset += 1;
 
-		return offset - startingOffset;
+		return offset - aStartingOffset;
 	};
 
 
-	function ChoosatronStoryBody(story) {
+	function ChoosatronStoryBody(aStory) {
 		this.passages = [];
-		if (story) {
-			this.populate(story);
+		if (aStory) {
+			this.populate(aStory);
 		}
 	}
 
-	ChoosatronStoryBody.prototype.populate = function(story) {
-		if (!story.passages) {
-			return;
-		}
-		for (var i = 0; i < story.passages.length; i++) {
+	ChoosatronStoryBody.prototype.populate = function(aStory) {
+		var keys = Object.keys(aStory.passages());
+		for (var i = 0; i < keys.length; i++) {
 			var passage = new ChoosatronStoryPassage();
-			passage.populate(story, story.passages[i]);
+			passage.populate(aStory.getPassage(keys[i]), keys);
 			this.passages.push(passage);
 		}
 	};
 
-	ChoosatronStoryBody.prototype.writeToView = function(startingOffset, view) {
-		var offset = startingOffset;
+	ChoosatronStoryBody.prototype.writeToView = function(aStartingOffset, aView) {
+		var offset = aStartingOffset;
 		var passageOffsets = [];
 		var passageOffset = 0; // passage offset is relative
 		var size = 0;
@@ -396,22 +395,22 @@ function(Random, ArrayBufferFactory) {
 		var i, written;
 
 		offset += 2 + (4 * this.passages.length); // Offset start after PassageOffsets
-		for (i=0; i<this.passages.length; i++) {
-			written = this.passages[i].writeToView(offset, view);
+		for (i = 0; i < this.passages.length; i++) {
+			written = this.passages[i].writeToView(offset, aView);
 			passageOffsets.push(passageOffset);
 			passageOffset += written;
 			offset += written;
 		}
 
 		// The final size of the body
-		size = offset - startingOffset;
+		size = offset - aStartingOffset;
 
 		// Rewind to write the passage offsets
-		offset = startingOffset;
-		view.setInt16(offset, this.passages.length, ENDIAN); // PassageCount
+		offset = aStartingOffset;
+		aView.setInt16(offset, this.passages.length, ENDIAN); // PassageCount
 		offset += 2;
-		for (i=0; i<passageOffsets.length; i++) {
-			view.setInt32(offset, passageOffsets[i], ENDIAN);
+		for (i = 0; i < passageOffsets.length; i++) {
+			aView.setInt32(offset, passageOffsets[i], ENDIAN);
 			offset += 4;
 		}
 
@@ -419,9 +418,9 @@ function(Random, ArrayBufferFactory) {
 	};
 
 
-	function ChoosatronStoryFile(story) {
-		this.header = new ChoosatronStoryHeader(story);
-		this.body   = new ChoosatronStoryBody(story);
+	function ChoosatronStoryFile(aStory) {
+		this.header = new ChoosatronStoryHeader(aStory);
+		this.body   = new ChoosatronStoryBody(aStory);
 	}
 
 	ChoosatronStoryFile.prototype.generateArrayBuffer = function() {
@@ -444,8 +443,8 @@ function(Random, ArrayBufferFactory) {
 
 		exportMenuTitle: 'Create a Choosatron File',
 		exports: 'dam',
-		export: function(story) {
-			var file = new ChoosatronStoryFile(story);
+		export: function(aStory) {
+			var file = new ChoosatronStoryFile(aStory);
 			var buffer = file.generateArrayBuffer();
 			return buffer;
 		}
